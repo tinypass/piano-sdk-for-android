@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+def piano = new Properties()
+piano.load(new FileReader(file("piano.properties")))
+def aid = piano['io.piano.aid']
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "io.piano.android.sample"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField "String", "PIANO_AID", "\"$aid\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+dependencies {
+    compile "com.android.support:design:$supportLibraryVersion"
+
+    compile "io.reactivex:rxandroid:$rxAndroidVersion"
+    compile "io.reactivex:rxjava:$rxJavaVersion"
+
+    compile(project(':api')) {
+        exclude module: 'okhttp'
+    }
+    compile project(':oauth');
+    compile project(':composer');
+
+    //compile 'com.squareup.okhttp3:okhttp:3.2.0'
+
+    testCompile 'junit:junit:4.12'
+}
