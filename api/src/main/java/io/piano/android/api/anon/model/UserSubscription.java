@@ -18,7 +18,6 @@ public class UserSubscription {
   private Boolean cancelable = null;
   private Boolean cancelableAndRefundadle = null;
   private String paymentBillingPlanDescription = null;
-
   
   /**
    * User subscription id
@@ -30,6 +29,7 @@ public class UserSubscription {
   public void setSubscriptionId(String subscriptionId) {
     this.subscriptionId = subscriptionId;
   }
+  
   /**
    **/
   public Term getTerm() {
@@ -39,6 +39,7 @@ public class UserSubscription {
   public void setTerm(Term term) {
     this.term = term;
   }
+  
   /**
    * User subscription auto renew
    **/
@@ -49,6 +50,7 @@ public class UserSubscription {
   public void setAutoRenew(Boolean autoRenew) {
     this.autoRenew = autoRenew;
   }
+  
   /**
    * Grace period start date
    **/
@@ -59,6 +61,7 @@ public class UserSubscription {
   public void setGracePeriodStartDate(Date gracePeriodStartDate) {
     this.gracePeriodStartDate = gracePeriodStartDate;
   }
+  
   /**
    * User subscription next bill date
    **/
@@ -69,6 +72,7 @@ public class UserSubscription {
   public void setNextBillDate(Date nextBillDate) {
     this.nextBillDate = nextBillDate;
   }
+  
   /**
    * The start date
    **/
@@ -79,6 +83,7 @@ public class UserSubscription {
   public void setStartDate(Date startDate) {
     this.startDate = startDate;
   }
+  
   /**
    * User subscription status
    **/
@@ -89,6 +94,7 @@ public class UserSubscription {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * Whether this subscription could be cancelled. Cancel means that access no longer be prolongated and current access will be revoked
    **/
@@ -99,6 +105,7 @@ public class UserSubscription {
   public void setCancelable(Boolean cancelable) {
     this.cancelable = cancelable;
   }
+  
   /**
    * Whether this subscription could be cancelled and the payment for the last period could be refunded. Cancel means that access no longer be prolongated and current access will be revoked
    **/
@@ -109,6 +116,7 @@ public class UserSubscription {
   public void setCancelableAndRefundadle(Boolean cancelableAndRefundadle) {
     this.cancelableAndRefundadle = cancelableAndRefundadle;
   }
+  
   /**
    * Term billing plan description
    **/
@@ -119,7 +127,7 @@ public class UserSubscription {
   public void setPaymentBillingPlanDescription(String paymentBillingPlanDescription) {
     this.paymentBillingPlanDescription = paymentBillingPlanDescription;
   }
-
+  
   public static UserSubscription fromJson(JSONObject json) throws JSONException {
     UserSubscription userSubscription = new UserSubscription();
 

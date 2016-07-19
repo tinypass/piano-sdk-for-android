@@ -28,7 +28,6 @@ public class UserMeter {
   private String region = null;
   private String reason = null;
   private String meterName = null;
-
   
   /**
    * The paywall id
@@ -40,6 +39,7 @@ public class UserMeter {
   public void setPaywallId(Integer paywallId) {
     this.paywallId = paywallId;
   }
+  
   /**
    * Current user meter views
    **/
@@ -50,6 +50,7 @@ public class UserMeter {
   public void setViews(Integer views) {
     this.views = views;
   }
+  
   /**
    * How many views left for this meter
    **/
@@ -60,6 +61,7 @@ public class UserMeter {
   public void setViewsLeft(Integer viewsLeft) {
     this.viewsLeft = viewsLeft;
   }
+  
   /**
    * How many views total
    **/
@@ -70,6 +72,7 @@ public class UserMeter {
   public void setMaxViews(Integer maxViews) {
     this.maxViews = maxViews;
   }
+  
   /**
    * User meter cookie name
    **/
@@ -80,6 +83,7 @@ public class UserMeter {
   public void setCookieName(String cookieName) {
     this.cookieName = cookieName;
   }
+  
   /**
    * User meter cookie domain
    **/
@@ -90,6 +94,7 @@ public class UserMeter {
   public void setCookieDomain(String cookieDomain) {
     this.cookieDomain = cookieDomain;
   }
+  
   /**
    * User meter cookie value
    **/
@@ -100,6 +105,7 @@ public class UserMeter {
   public void setCookieValue(String cookieValue) {
     this.cookieValue = cookieValue;
   }
+  
   /**
    * When the meter could should expire
    **/
@@ -110,6 +116,7 @@ public class UserMeter {
   public void setCookieExpires(Integer cookieExpires) {
     this.cookieExpires = cookieExpires;
   }
+  
   /**
    * Track page views
    **/
@@ -120,6 +127,7 @@ public class UserMeter {
   public void setTrackPageView(Boolean trackPageView) {
     this.trackPageView = trackPageView;
   }
+  
   /**
    * Meter state
    **/
@@ -130,6 +138,7 @@ public class UserMeter {
   public void setState(String state) {
     this.state = state;
   }
+  
   /**
    * The offer ID
    **/
@@ -140,6 +149,7 @@ public class UserMeter {
   public void setOfferId(String offerId) {
     this.offerId = offerId;
   }
+  
   /**
    * The template id of the curtain
    **/
@@ -150,6 +160,7 @@ public class UserMeter {
   public void setCurtainTemplateId(String curtainTemplateId) {
     this.curtainTemplateId = curtainTemplateId;
   }
+  
   /**
    * The template id of the reminder
    **/
@@ -160,6 +171,7 @@ public class UserMeter {
   public void setReminderTemplateId(String reminderTemplateId) {
     this.reminderTemplateId = reminderTemplateId;
   }
+  
   /**
    * Whether to show the close button
    **/
@@ -170,6 +182,7 @@ public class UserMeter {
   public void setShowCloseButton(Boolean showCloseButton) {
     this.showCloseButton = showCloseButton;
   }
+  
   /**
    * Whether to show the reminder
    **/
@@ -180,6 +193,7 @@ public class UserMeter {
   public void setShowReminder(Boolean showReminder) {
     this.showReminder = showReminder;
   }
+  
   /**
    * Meter expiration
    **/
@@ -190,6 +204,7 @@ public class UserMeter {
   public void setExpires(Integer expires) {
     this.expires = expires;
   }
+  
   /**
    * Whether renewal is supported
    **/
@@ -200,6 +215,7 @@ public class UserMeter {
   public void setCanRenew(Boolean canRenew) {
     this.canRenew = canRenew;
   }
+  
   /**
    * Renewal days remaining
    **/
@@ -210,6 +226,7 @@ public class UserMeter {
   public void setRenewalDaysRemaining(Integer renewalDaysRemaining) {
     this.renewalDaysRemaining = renewalDaysRemaining;
   }
+  
   /**
    * Country code
    **/
@@ -220,6 +237,7 @@ public class UserMeter {
   public void setCountryCode(String countryCode) {
     this.countryCode = countryCode;
   }
+  
   /**
    * Region
    **/
@@ -230,6 +248,7 @@ public class UserMeter {
   public void setRegion(String region) {
     this.region = region;
   }
+  
   /**
    * Reason
    **/
@@ -240,6 +259,7 @@ public class UserMeter {
   public void setReason(String reason) {
     this.reason = reason;
   }
+  
   /**
    * Current meter name
    **/
@@ -250,7 +270,7 @@ public class UserMeter {
   public void setMeterName(String meterName) {
     this.meterName = meterName;
   }
-
+  
   public static UserMeter fromJson(JSONObject json) throws JSONException {
     UserMeter userMeter = new UserMeter();
 

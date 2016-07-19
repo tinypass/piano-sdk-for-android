@@ -170,7 +170,6 @@ public class PublisherPromotionApi {
    * 
    * @param aid Application aid
    * @param name Promotion name
-   * @param type Promotion type
    * @param newCustomersOnly whether promotion allows new customers only
    * @param startDate The start date
    * @param endDate The end date
@@ -183,9 +182,10 @@ public class PublisherPromotionApi {
    * @param promotionCodePrefix Prefix for all codes
    * @param termDependencyType Type of dependency to terms
    * @param applyToAllBillingPeriods Promotion discount applies to first billing period or all billing periods
+   * @param canBeAppliedOnRenewal Promotion can be applied on renewal
    * @return Promotion
    */
-  public Promotion create(String aid, String name, String type, Boolean newCustomersOnly, Date startDate, Date endDate, String discountType, BigDecimal percentageDiscount, Boolean unlimitedUses, Integer usesAllowed, Boolean neverAllowZero, String fixedPromotionCode, String promotionCodePrefix, String termDependencyType, Boolean applyToAllBillingPeriods) throws ApiException {
+  public Promotion create(String aid, String name, Boolean newCustomersOnly, Date startDate, Date endDate, String discountType, BigDecimal percentageDiscount, Boolean unlimitedUses, Integer usesAllowed, Boolean neverAllowZero, String fixedPromotionCode, String promotionCodePrefix, String termDependencyType, Boolean applyToAllBillingPeriods, Boolean canBeAppliedOnRenewal) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -196,11 +196,6 @@ public class PublisherPromotionApi {
     // verify the required parameter 'name' is set
     if (name == null) {
        throw new ApiException(400, "Missing the required parameter 'name' when calling create");
-    }
-    
-    // verify the required parameter 'type' is set
-    if (type == null) {
-       throw new ApiException(400, "Missing the required parameter 'type' when calling create");
     }
     
     // verify the required parameter 'newCustomersOnly' is set
@@ -239,10 +234,6 @@ public class PublisherPromotionApi {
       
       if (name != null) {
         builder.addTextBody("name", ApiInvoker.parameterToString(name), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (type != null) {
-        builder.addTextBody("type", ApiInvoker.parameterToString(type), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (startDate != null) {
@@ -293,6 +284,10 @@ public class PublisherPromotionApi {
         builder.addTextBody("apply_to_all_billing_periods", ApiInvoker.parameterToString(applyToAllBillingPeriods), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (canBeAppliedOnRenewal != null) {
+        builder.addTextBody("can_be_applied_on_renewal", ApiInvoker.parameterToString(canBeAppliedOnRenewal), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -301,7 +296,6 @@ public class PublisherPromotionApi {
       // normal form params
       formParams.put("aid", ApiInvoker.parameterToString(aid));
       formParams.put("name", ApiInvoker.parameterToString(name));
-      formParams.put("type", ApiInvoker.parameterToString(type));
       formParams.put("start_date", ApiInvoker.parameterToString(startDate));
       formParams.put("end_date", ApiInvoker.parameterToString(endDate));
       formParams.put("new_customers_only", ApiInvoker.parameterToString(newCustomersOnly));
@@ -314,6 +308,7 @@ public class PublisherPromotionApi {
       formParams.put("promotion_code_prefix", ApiInvoker.parameterToString(promotionCodePrefix));
       formParams.put("term_dependency_type", ApiInvoker.parameterToString(termDependencyType));
       formParams.put("apply_to_all_billing_periods", ApiInvoker.parameterToString(applyToAllBillingPeriods));
+      formParams.put("can_be_applied_on_renewal", ApiInvoker.parameterToString(canBeAppliedOnRenewal));
       
     }
 
@@ -712,7 +707,6 @@ public class PublisherPromotionApi {
    * @param promotionId Promotion id
    * @param aid Application aid
    * @param name Promotion name
-   * @param type Promotion type
    * @param discountType Type of promotion discount 
    * @param startDate The start date
    * @param endDate The end date
@@ -725,9 +719,10 @@ public class PublisherPromotionApi {
    * @param promotionCodePrefix Prefix for all codes
    * @param termDependencyType Type of dependency to terms
    * @param applyToAllBillingPeriods Promotion discount applies to first billing period or all billing periods
+   * @param canBeAppliedOnRenewal Promotion can be applied on renewal
    * @return Promotion
    */
-  public Promotion update(String promotionId, String aid, String name, String type, String discountType, Date startDate, Date endDate, Boolean newCustomersOnly, BigDecimal percentageDiscount, Boolean unlimitedUses, Integer usesAllowed, Boolean neverAllowZero, String fixedPromotionCode, String promotionCodePrefix, String termDependencyType, Boolean applyToAllBillingPeriods) throws ApiException {
+  public Promotion update(String promotionId, String aid, String name, String discountType, Date startDate, Date endDate, Boolean newCustomersOnly, BigDecimal percentageDiscount, Boolean unlimitedUses, Integer usesAllowed, Boolean neverAllowZero, String fixedPromotionCode, String promotionCodePrefix, String termDependencyType, Boolean applyToAllBillingPeriods, Boolean canBeAppliedOnRenewal) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'promotionId' is set
@@ -743,11 +738,6 @@ public class PublisherPromotionApi {
     // verify the required parameter 'name' is set
     if (name == null) {
        throw new ApiException(400, "Missing the required parameter 'name' when calling update");
-    }
-    
-    // verify the required parameter 'type' is set
-    if (type == null) {
-       throw new ApiException(400, "Missing the required parameter 'type' when calling update");
     }
     
     // verify the required parameter 'discountType' is set
@@ -790,10 +780,6 @@ public class PublisherPromotionApi {
       
       if (name != null) {
         builder.addTextBody("name", ApiInvoker.parameterToString(name), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (type != null) {
-        builder.addTextBody("type", ApiInvoker.parameterToString(type), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (startDate != null) {
@@ -844,6 +830,10 @@ public class PublisherPromotionApi {
         builder.addTextBody("apply_to_all_billing_periods", ApiInvoker.parameterToString(applyToAllBillingPeriods), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (canBeAppliedOnRenewal != null) {
+        builder.addTextBody("can_be_applied_on_renewal", ApiInvoker.parameterToString(canBeAppliedOnRenewal), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -853,7 +843,6 @@ public class PublisherPromotionApi {
       formParams.put("promotion_id", ApiInvoker.parameterToString(promotionId));
       formParams.put("aid", ApiInvoker.parameterToString(aid));
       formParams.put("name", ApiInvoker.parameterToString(name));
-      formParams.put("type", ApiInvoker.parameterToString(type));
       formParams.put("start_date", ApiInvoker.parameterToString(startDate));
       formParams.put("end_date", ApiInvoker.parameterToString(endDate));
       formParams.put("new_customers_only", ApiInvoker.parameterToString(newCustomersOnly));
@@ -866,6 +855,7 @@ public class PublisherPromotionApi {
       formParams.put("promotion_code_prefix", ApiInvoker.parameterToString(promotionCodePrefix));
       formParams.put("term_dependency_type", ApiInvoker.parameterToString(termDependencyType));
       formParams.put("apply_to_all_billing_periods", ApiInvoker.parameterToString(applyToAllBillingPeriods));
+      formParams.put("can_be_applied_on_renewal", ApiInvoker.parameterToString(canBeAppliedOnRenewal));
       
     }
 

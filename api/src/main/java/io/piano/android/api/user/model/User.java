@@ -11,7 +11,6 @@ public class User {
   private String lastName = null;
   private String email = null;
   private String image1 = null;
-
   
   /**
    * User's UID
@@ -23,6 +22,7 @@ public class User {
   public void setUid(String uid) {
     this.uid = uid;
   }
+  
   /**
    * User's first name
    **/
@@ -33,6 +33,7 @@ public class User {
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
+  
   /**
    * User's last name
    **/
@@ -43,6 +44,7 @@ public class User {
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
+  
   /**
    * User's email address
    **/
@@ -53,6 +55,7 @@ public class User {
   public void setEmail(String email) {
     this.email = email;
   }
+  
   /**
    * User's profile image
    **/
@@ -63,7 +66,7 @@ public class User {
   public void setImage1(String image1) {
     this.image1 = image1;
   }
-
+  
   public static User fromJson(JSONObject json) throws JSONException {
     User user = new User();
 

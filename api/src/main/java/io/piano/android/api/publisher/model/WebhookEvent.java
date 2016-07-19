@@ -20,7 +20,6 @@ public class WebhookEvent {
   private String event = null;
   private String eventType = null;
   private Integer responsesCount = null;
-
   
   /**
    * Webhook id
@@ -32,6 +31,7 @@ public class WebhookEvent {
   public void setWebhookId(String webhookId) {
     this.webhookId = webhookId;
   }
+  
   /**
    * The status
    **/
@@ -42,6 +42,7 @@ public class WebhookEvent {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * Retry count
    **/
@@ -52,6 +53,7 @@ public class WebhookEvent {
   public void setRetried(String retried) {
     this.retried = retried;
   }
+  
   /**
    * The creation date
    **/
@@ -62,6 +64,7 @@ public class WebhookEvent {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * The update date
    **/
@@ -72,6 +75,7 @@ public class WebhookEvent {
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
   }
+  
   /**
    **/
   public WebhookResponse getLastWebhookResponse() {
@@ -81,6 +85,7 @@ public class WebhookEvent {
   public void setLastWebhookResponse(WebhookResponse lastWebhookResponse) {
     this.lastWebhookResponse = lastWebhookResponse;
   }
+  
   /**
    **/
   public User getUser() {
@@ -90,6 +95,7 @@ public class WebhookEvent {
   public void setUser(User user) {
     this.user = user;
   }
+  
   /**
    * Type
    **/
@@ -100,6 +106,7 @@ public class WebhookEvent {
   public void setType(String type) {
     this.type = type;
   }
+  
   /**
    * Event
    **/
@@ -110,6 +117,7 @@ public class WebhookEvent {
   public void setEvent(String event) {
     this.event = event;
   }
+  
   /**
    * The webhook event type
    **/
@@ -120,6 +128,7 @@ public class WebhookEvent {
   public void setEventType(String eventType) {
     this.eventType = eventType;
   }
+  
   /**
    * Responses count
    **/
@@ -130,7 +139,7 @@ public class WebhookEvent {
   public void setResponsesCount(Integer responsesCount) {
     this.responsesCount = responsesCount;
   }
-
+  
   public static WebhookEvent fromJson(JSONObject json) throws JSONException {
     WebhookEvent webhookEvent = new WebhookEvent();
 

@@ -8,7 +8,6 @@ public class WebhookStatus {
   
   private String status = null;
   private String description = null;
-
   
   /**
    * Webhook status
@@ -20,6 +19,7 @@ public class WebhookStatus {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * Webhook status description
    **/
@@ -30,7 +30,7 @@ public class WebhookStatus {
   public void setDescription(String description) {
     this.description = description;
   }
-
+  
   public static WebhookStatus fromJson(JSONObject json) throws JSONException {
     WebhookStatus webhookStatus = new WebhookStatus();
 

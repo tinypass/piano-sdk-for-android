@@ -15,7 +15,6 @@ public class WorldpayConfiguration {
   private Boolean isDisabled = null;
   private Boolean isEditable = null;
   private String properties = null;
-
   
   /**
    * Payment provider configuration identifier
@@ -27,6 +26,7 @@ public class WorldpayConfiguration {
   public void setConfigurationId(String configurationId) {
     this.configurationId = configurationId;
   }
+  
   /**
    * Application ref
    **/
@@ -37,6 +37,7 @@ public class WorldpayConfiguration {
   public void setApp(App app) {
     this.app = app;
   }
+  
   /**
    * Payment provider name
    **/
@@ -47,6 +48,7 @@ public class WorldpayConfiguration {
   public void setSource(String source) {
     this.source = source;
   }
+  
   /**
    * Payment provider source id
    **/
@@ -57,6 +59,7 @@ public class WorldpayConfiguration {
   public void setSourceId(Integer sourceId) {
     this.sourceId = sourceId;
   }
+  
   /**
    * The title
    **/
@@ -67,6 +70,7 @@ public class WorldpayConfiguration {
   public void setTitle(String title) {
     this.title = title;
   }
+  
   /**
    * Is configuration disabled for further using
    **/
@@ -77,6 +81,7 @@ public class WorldpayConfiguration {
   public void setIsDisabled(Boolean isDisabled) {
     this.isDisabled = isDisabled;
   }
+  
   /**
    * Is configuration properties can be still edit
    **/
@@ -87,6 +92,7 @@ public class WorldpayConfiguration {
   public void setIsEditable(Boolean isEditable) {
     this.isEditable = isEditable;
   }
+  
   /**
    * Worldpay properties
    **/
@@ -97,7 +103,7 @@ public class WorldpayConfiguration {
   public void setProperties(String properties) {
     this.properties = properties;
   }
-
+  
   public static WorldpayConfiguration fromJson(JSONObject json) throws JSONException {
     WorldpayConfiguration worldpayConfiguration = new WorldpayConfiguration();
 

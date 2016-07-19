@@ -8,7 +8,6 @@ public class Currency {
   
   private String currencyCode = null;
   private String currencySymbol = null;
-
   
   /**
    * Currency code by ISO 4217 standard
@@ -20,6 +19,7 @@ public class Currency {
   public void setCurrencyCode(String currencyCode) {
     this.currencyCode = currencyCode;
   }
+  
   /**
    * Currency symbol
    **/
@@ -30,7 +30,7 @@ public class Currency {
   public void setCurrencySymbol(String currencySymbol) {
     this.currencySymbol = currencySymbol;
   }
-
+  
   public static Currency fromJson(JSONObject json) throws JSONException {
     Currency currency = new Currency();
 

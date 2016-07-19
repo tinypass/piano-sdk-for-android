@@ -21,7 +21,6 @@ public class PromoCode {
   private Date updateDate = null;
   private String updateBy = null;
   private Boolean deleted = null;
-
   
   /**
    * Promo code id
@@ -33,6 +32,7 @@ public class PromoCode {
   public void setPromoCodeId(String promoCodeId) {
     this.promoCodeId = promoCodeId;
   }
+  
   /**
    * Promotion id
    **/
@@ -43,6 +43,7 @@ public class PromoCode {
   public void setPromotionId(String promotionId) {
     this.promotionId = promotionId;
   }
+  
   /**
    * Promo code
    **/
@@ -53,6 +54,7 @@ public class PromoCode {
   public void setCode(String code) {
     this.code = code;
   }
+  
   /**
    * Assigned email
    **/
@@ -63,6 +65,7 @@ public class PromoCode {
   public void setAssignedEmail(String assignedEmail) {
     this.assignedEmail = assignedEmail;
   }
+  
   /**
    * Promo code reserve_date
    **/
@@ -73,6 +76,7 @@ public class PromoCode {
   public void setReserveDate(Date reserveDate) {
     this.reserveDate = reserveDate;
   }
+  
   /**
    * Promo code state
    **/
@@ -83,6 +87,7 @@ public class PromoCode {
   public void setState(String state) {
     this.state = state;
   }
+  
   /**
    * Promotion code claimed user
    **/
@@ -93,6 +98,7 @@ public class PromoCode {
   public void setClaimedUser(User claimedUser) {
     this.claimedUser = claimedUser;
   }
+  
   /**
    * Promotion code claimed date
    **/
@@ -103,6 +109,7 @@ public class PromoCode {
   public void setClaimedDate(Date claimedDate) {
     this.claimedDate = claimedDate;
   }
+  
   /**
    * The creation date
    **/
@@ -113,6 +120,7 @@ public class PromoCode {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * The user who created the object
    **/
@@ -123,6 +131,7 @@ public class PromoCode {
   public void setCreateBy(String createBy) {
     this.createBy = createBy;
   }
+  
   /**
    * The update date
    **/
@@ -133,6 +142,7 @@ public class PromoCode {
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
   }
+  
   /**
    * The last user to update the object
    **/
@@ -143,6 +153,7 @@ public class PromoCode {
   public void setUpdateBy(String updateBy) {
     this.updateBy = updateBy;
   }
+  
   /**
    * If the object is deleted
    **/
@@ -153,7 +164,7 @@ public class PromoCode {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
-
+  
   public static PromoCode fromJson(JSONObject json) throws JSONException {
     PromoCode promoCode = new PromoCode();
 

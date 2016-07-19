@@ -9,7 +9,6 @@ public class OAuthToken {
   private String accessToken = null;
   private Integer expiresIn = null;
   private String tokenType = null;
-
   
   /**
    * access_token
@@ -21,6 +20,7 @@ public class OAuthToken {
   public void setAccessToken(String accessToken) {
     this.accessToken = accessToken;
   }
+  
   /**
    * expires_in
    **/
@@ -31,6 +31,7 @@ public class OAuthToken {
   public void setExpiresIn(Integer expiresIn) {
     this.expiresIn = expiresIn;
   }
+  
   /**
    * token_type
    **/
@@ -41,7 +42,7 @@ public class OAuthToken {
   public void setTokenType(String tokenType) {
     this.tokenType = tokenType;
   }
-
+  
   public static OAuthToken fromJson(JSONObject json) throws JSONException {
     OAuthToken oAuthToken = new OAuthToken();
 

@@ -9,7 +9,6 @@ public class ResourceTag {
   private String resourceTagId = null;
   private String name = null;
   private String type = null;
-
   
   /**
    * Id for resource tag
@@ -21,6 +20,7 @@ public class ResourceTag {
   public void setResourceTagId(String resourceTagId) {
     this.resourceTagId = resourceTagId;
   }
+  
   /**
    * The name
    **/
@@ -31,6 +31,7 @@ public class ResourceTag {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * The type
    **/
@@ -41,7 +42,7 @@ public class ResourceTag {
   public void setType(String type) {
     this.type = type;
   }
-
+  
   public static ResourceTag fromJson(JSONObject json) throws JSONException {
     ResourceTag resourceTag = new ResourceTag();
 

@@ -8,7 +8,6 @@ public class AccessTokenList {
   
   private String value = null;
   private String cookieDomain = null;
-
   
   /**
    * The encoded access token list value
@@ -20,6 +19,7 @@ public class AccessTokenList {
   public void setValue(String value) {
     this.value = value;
   }
+  
   /**
    * The domain to set the cookie on
    **/
@@ -30,7 +30,7 @@ public class AccessTokenList {
   public void setCookieDomain(String cookieDomain) {
     this.cookieDomain = cookieDomain;
   }
-
+  
   public static AccessTokenList fromJson(JSONObject json) throws JSONException {
     AccessTokenList accessTokenList = new AccessTokenList();
 

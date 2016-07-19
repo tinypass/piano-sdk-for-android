@@ -12,12 +12,13 @@ public class UserPayment {
   private String createDate = null;
   private Boolean renewal = null;
   private Double amount = null;
+  private String price = null;
   private String currency = null;
   private Boolean refundable = null;
   private UserSubscription subscription = null;
   private Term term = null;
   private Double tax = null;
-
+  private String taxBillingPlan = null;
   
   /**
    * User payment id
@@ -29,6 +30,7 @@ public class UserPayment {
   public void setUserPaymentId(String userPaymentId) {
     this.userPaymentId = userPaymentId;
   }
+  
   /**
    * User payment creation date
    **/
@@ -39,6 +41,7 @@ public class UserPayment {
   public void setCreateDate(String createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * User payment renewal
    **/
@@ -49,6 +52,7 @@ public class UserPayment {
   public void setRenewal(Boolean renewal) {
     this.renewal = renewal;
   }
+  
   /**
    * User payment amount
    **/
@@ -59,6 +63,18 @@ public class UserPayment {
   public void setAmount(Double amount) {
     this.amount = amount;
   }
+  
+  /**
+   * Formatted user payment price include/plus tax
+   **/
+  public String getPrice() {
+    return price;
+  }
+
+  public void setPrice(String price) {
+    this.price = price;
+  }
+  
   /**
    * User payment currency
    **/
@@ -69,6 +85,7 @@ public class UserPayment {
   public void setCurrency(String currency) {
     this.currency = currency;
   }
+  
   /**
    * User payment is refundable
    **/
@@ -79,6 +96,7 @@ public class UserPayment {
   public void setRefundable(Boolean refundable) {
     this.refundable = refundable;
   }
+  
   /**
    **/
   public UserSubscription getSubscription() {
@@ -88,6 +106,7 @@ public class UserPayment {
   public void setSubscription(UserSubscription subscription) {
     this.subscription = subscription;
   }
+  
   /**
    **/
   public Term getTerm() {
@@ -97,6 +116,7 @@ public class UserPayment {
   public void setTerm(Term term) {
     this.term = term;
   }
+  
   /**
    * User payment tax
    **/
@@ -107,7 +127,18 @@ public class UserPayment {
   public void setTax(Double tax) {
     this.tax = tax;
   }
+  
+  /**
+   * Tax billing plan
+   **/
+  public String getTaxBillingPlan() {
+    return taxBillingPlan;
+  }
 
+  public void setTaxBillingPlan(String taxBillingPlan) {
+    this.taxBillingPlan = taxBillingPlan;
+  }
+  
   public static UserPayment fromJson(JSONObject json) throws JSONException {
     UserPayment userPayment = new UserPayment();
 
@@ -115,11 +146,13 @@ public class UserPayment {
     userPayment.createDate = json.optString("create_date");
     userPayment.renewal = json.optBoolean("renewal");
     userPayment.amount = json.optDouble("amount");
+    userPayment.price = json.optString("price");
     userPayment.currency = json.optString("currency");
     userPayment.refundable = json.optBoolean("refundable");
     userPayment.subscription = UserSubscription.fromJson(json.optJSONObject("subscription"));
     userPayment.term = Term.fromJson(json.optJSONObject("term"));
     userPayment.tax = json.optDouble("tax");
+    userPayment.taxBillingPlan = json.optString("tax_billing_plan");
     
     return userPayment;
   }

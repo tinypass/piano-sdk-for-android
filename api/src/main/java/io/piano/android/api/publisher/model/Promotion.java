@@ -12,7 +12,6 @@ public class Promotion {
   private String promotionId = null;
   private String aid = null;
   private String name = null;
-  private String type = null;
   private String status = null;
   private String fixedPromotionCode = null;
   private Boolean unlimitedUses = null;
@@ -36,7 +35,7 @@ public class Promotion {
   private Boolean deleted = null;
   private List<PromotionFixedDiscountt> fixedDiscountList = null;
   private Boolean applyToAllBillingPeriods = null;
-
+  private Boolean canBeAppliedOnRenewal = null;
   
   /**
    * Promotion id
@@ -48,6 +47,7 @@ public class Promotion {
   public void setPromotionId(String promotionId) {
     this.promotionId = promotionId;
   }
+  
   /**
    * Application aid
    **/
@@ -58,6 +58,7 @@ public class Promotion {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * Promotion name
    **/
@@ -68,16 +69,7 @@ public class Promotion {
   public void setName(String name) {
     this.name = name;
   }
-  /**
-   * Promotion type
-   **/
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
+  
   /**
    * Status
    **/
@@ -88,6 +80,7 @@ public class Promotion {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * Fixed value for all promotion codes
    **/
@@ -98,6 +91,7 @@ public class Promotion {
   public void setFixedPromotionCode(String fixedPromotionCode) {
     this.fixedPromotionCode = fixedPromotionCode;
   }
+  
   /**
    * Whether to allow unlimited uses
    **/
@@ -108,6 +102,7 @@ public class Promotion {
   public void setUnlimitedUses(Boolean unlimitedUses) {
     this.unlimitedUses = unlimitedUses;
   }
+  
   /**
    * Prefix for all codes
    **/
@@ -118,6 +113,7 @@ public class Promotion {
   public void setPromotionCodePrefix(String promotionCodePrefix) {
     this.promotionCodePrefix = promotionCodePrefix;
   }
+  
   /**
    * whether promotion allows new customers only
    **/
@@ -128,6 +124,7 @@ public class Promotion {
   public void setNewCustomersOnly(Boolean newCustomersOnly) {
     this.newCustomersOnly = newCustomersOnly;
   }
+  
   /**
    * Promotion discount
    **/
@@ -138,6 +135,7 @@ public class Promotion {
   public void setDiscountAmount(Double discountAmount) {
     this.discountAmount = discountAmount;
   }
+  
   /**
    * Promotion discount currency
    **/
@@ -148,6 +146,7 @@ public class Promotion {
   public void setDiscountCurrency(String discountCurrency) {
     this.discountCurrency = discountCurrency;
   }
+  
   /**
    * Formated promotion discount
    **/
@@ -158,6 +157,7 @@ public class Promotion {
   public void setDiscount(String discount) {
     this.discount = discount;
   }
+  
   /**
    * Promotion percentage discount
    **/
@@ -168,6 +168,7 @@ public class Promotion {
   public void setPercentageDiscount(Double percentageDiscount) {
     this.percentageDiscount = percentageDiscount;
   }
+  
   /**
    * Type of promotion discount 
    **/
@@ -178,6 +179,7 @@ public class Promotion {
   public void setDiscountType(String discountType) {
     this.discountType = discountType;
   }
+  
   /**
    * Number of uses allowed by promotion
    **/
@@ -188,6 +190,7 @@ public class Promotion {
   public void setUsesAllowed(Integer usesAllowed) {
     this.usesAllowed = usesAllowed;
   }
+  
   /**
    * Defines how many times promotion has been used
    **/
@@ -198,6 +201,7 @@ public class Promotion {
   public void setUses(Integer uses) {
     this.uses = uses;
   }
+  
   /**
    * Never allow the value of checkout to be zero
    **/
@@ -208,6 +212,7 @@ public class Promotion {
   public void setNeverAllowZero(Boolean neverAllowZero) {
     this.neverAllowZero = neverAllowZero;
   }
+  
   /**
    * Type of dependency to terms
    **/
@@ -218,6 +223,7 @@ public class Promotion {
   public void setTermDependencyType(String termDependencyType) {
     this.termDependencyType = termDependencyType;
   }
+  
   /**
    * The start date
    **/
@@ -228,6 +234,7 @@ public class Promotion {
   public void setStartDate(Date startDate) {
     this.startDate = startDate;
   }
+  
   /**
    * The end date
    **/
@@ -238,6 +245,7 @@ public class Promotion {
   public void setEndDate(Date endDate) {
     this.endDate = endDate;
   }
+  
   /**
    * The creation date
    **/
@@ -248,6 +256,7 @@ public class Promotion {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * The user who created the object
    **/
@@ -258,6 +267,7 @@ public class Promotion {
   public void setCreateBy(String createBy) {
     this.createBy = createBy;
   }
+  
   /**
    * The update date
    **/
@@ -268,6 +278,7 @@ public class Promotion {
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
   }
+  
   /**
    * The last user to update the object
    **/
@@ -278,6 +289,7 @@ public class Promotion {
   public void setUpdateBy(String updateBy) {
     this.updateBy = updateBy;
   }
+  
   /**
    * If the object is deleted
    **/
@@ -288,6 +300,7 @@ public class Promotion {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
+  
   /**
    **/
   public List<PromotionFixedDiscountt> getFixedDiscountList() {
@@ -297,6 +310,7 @@ public class Promotion {
   public void setFixedDiscountList(List<PromotionFixedDiscountt> fixedDiscountList) {
     this.fixedDiscountList = fixedDiscountList;
   }
+  
   /**
    * Promotion discount applies to first billing period or all billing periods
    **/
@@ -307,14 +321,24 @@ public class Promotion {
   public void setApplyToAllBillingPeriods(Boolean applyToAllBillingPeriods) {
     this.applyToAllBillingPeriods = applyToAllBillingPeriods;
   }
+  
+  /**
+   * Promotion can be applied on renewal
+   **/
+  public Boolean getCanBeAppliedOnRenewal() {
+    return canBeAppliedOnRenewal;
+  }
 
+  public void setCanBeAppliedOnRenewal(Boolean canBeAppliedOnRenewal) {
+    this.canBeAppliedOnRenewal = canBeAppliedOnRenewal;
+  }
+  
   public static Promotion fromJson(JSONObject json) throws JSONException {
     Promotion promotion = new Promotion();
 
     promotion.promotionId = json.optString("promotion_id");
     promotion.aid = json.optString("aid");
     promotion.name = json.optString("name");
-    promotion.type = json.optString("type");
     promotion.status = json.optString("status");
     promotion.fixedPromotionCode = json.optString("fixed_promotion_code");
     promotion.unlimitedUses = json.optBoolean("unlimited_uses");
@@ -343,6 +367,7 @@ public class Promotion {
       promotion.fixedDiscountList.add(PromotionFixedDiscountt.fromJson(fixedDiscountListJsonArray.optJSONObject(ii)));
     }
     promotion.applyToAllBillingPeriods = json.optBoolean("apply_to_all_billing_periods");
+    promotion.canBeAppliedOnRenewal = json.optBoolean("can_be_applied_on_renewal");
     
     return promotion;
   }

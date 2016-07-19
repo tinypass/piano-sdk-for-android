@@ -15,7 +15,6 @@ public class TermConversion {
   private String aid = null;
   private Access userAccess = null;
   private Date createDate = null;
-
   
   /**
    * Term conversion id
@@ -27,6 +26,7 @@ public class TermConversion {
   public void setTermConversionId(String termConversionId) {
     this.termConversionId = termConversionId;
   }
+  
   /**
    * The term that was converted
    **/
@@ -37,6 +37,7 @@ public class TermConversion {
   public void setTerm(Term term) {
     this.term = term;
   }
+  
   /**
    * The term conversion type
    **/
@@ -47,6 +48,7 @@ public class TermConversion {
   public void setType(String type) {
     this.type = type;
   }
+  
   /**
    * Application aid
    **/
@@ -57,6 +59,7 @@ public class TermConversion {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * The access that was created as a result of the term conversion
    **/
@@ -67,6 +70,7 @@ public class TermConversion {
   public void setUserAccess(Access userAccess) {
     this.userAccess = userAccess;
   }
+  
   /**
    * The creation date
    **/
@@ -77,7 +81,7 @@ public class TermConversion {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
-
+  
   public static TermConversion fromJson(JSONObject json) throws JSONException {
     TermConversion termConversion = new TermConversion();
 

@@ -18,7 +18,6 @@ public class App {
   private String state = null;
   private String privateKey = null;
   private String apiToken = null;
-
   
   /**
    * Application aid
@@ -30,6 +29,7 @@ public class App {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * Default language
    **/
@@ -40,6 +40,7 @@ public class App {
   public void setDefaultLang(String defaultLang) {
     this.defaultLang = defaultLang;
   }
+  
   /**
    * Application details
    **/
@@ -50,6 +51,7 @@ public class App {
   public void setDetails(String details) {
     this.details = details;
   }
+  
   /**
    * Email address associated with this app
    **/
@@ -60,6 +62,7 @@ public class App {
   public void setEmail(String email) {
     this.email = email;
   }
+  
   /**
    * Application name
    **/
@@ -70,6 +73,7 @@ public class App {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * User token provider
    **/
@@ -80,6 +84,7 @@ public class App {
   public void setUserProvider(String userProvider) {
     this.userProvider = userProvider;
   }
+  
   /**
    * Application website
    **/
@@ -90,6 +95,7 @@ public class App {
   public void setUrl(String url) {
     this.url = url;
   }
+  
   /**
    * Primary image displayed within the dashboard
    **/
@@ -100,6 +106,7 @@ public class App {
   public void setLogo1(String logo1) {
     this.logo1 = logo1;
   }
+  
   /**
    * Secondary image dispalyed within the ticket
    **/
@@ -110,6 +117,7 @@ public class App {
   public void setLogo2(String logo2) {
     this.logo2 = logo2;
   }
+  
   /**
    * Current state of the app
    **/
@@ -120,6 +128,7 @@ public class App {
   public void setState(String state) {
     this.state = state;
   }
+  
   /**
    * The app's private key
    **/
@@ -130,6 +139,7 @@ public class App {
   public void setPrivateKey(String privateKey) {
     this.privateKey = privateKey;
   }
+  
   /**
    * API token
    **/
@@ -140,7 +150,7 @@ public class App {
   public void setApiToken(String apiToken) {
     this.apiToken = apiToken;
   }
-
+  
   public static App fromJson(JSONObject json) throws JSONException {
     App app = new App();
 

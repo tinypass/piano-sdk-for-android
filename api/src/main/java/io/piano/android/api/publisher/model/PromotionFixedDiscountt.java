@@ -9,7 +9,6 @@ public class PromotionFixedDiscountt {
   private String fixedDiscountId = null;
   private String currency = null;
   private String amount = null;
-
   
   /**
    * Fixed discount id
@@ -21,6 +20,7 @@ public class PromotionFixedDiscountt {
   public void setFixedDiscountId(String fixedDiscountId) {
     this.fixedDiscountId = fixedDiscountId;
   }
+  
   /**
    * Fixed discount currency
    **/
@@ -31,6 +31,7 @@ public class PromotionFixedDiscountt {
   public void setCurrency(String currency) {
     this.currency = currency;
   }
+  
   /**
    * Fixed discount amount
    **/
@@ -41,7 +42,7 @@ public class PromotionFixedDiscountt {
   public void setAmount(String amount) {
     this.amount = amount;
   }
-
+  
   public static PromotionFixedDiscountt fromJson(JSONObject json) throws JSONException {
     PromotionFixedDiscountt promotionFixedDiscountt = new PromotionFixedDiscountt();
 

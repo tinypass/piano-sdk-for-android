@@ -13,7 +13,7 @@ android {
 dependencies {
     // optional
     compile 'com.squareup.okhttp:okhttp:2.7.5'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile "com.squareup.okhttp3:okhttp:$okHttp3Version"
 }
 
 apply from: 'https://raw.github.com/tinypass/gradle-mvn-push/master/gradle-mvn-push.gradle'

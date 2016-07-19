@@ -13,7 +13,6 @@ public class WebhookResponse {
   private Date createDate = null;
   private String requestUrl = null;
   private String requestData = null;
-
   
   /**
    * Webhook response status
@@ -25,6 +24,7 @@ public class WebhookResponse {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * Webhook response headers
    **/
@@ -35,6 +35,7 @@ public class WebhookResponse {
   public void setResponseHeaders(String responseHeaders) {
     this.responseHeaders = responseHeaders;
   }
+  
   /**
    * Webhook response body
    **/
@@ -45,6 +46,7 @@ public class WebhookResponse {
   public void setResponseBody(String responseBody) {
     this.responseBody = responseBody;
   }
+  
   /**
    * Webhook response create date
    **/
@@ -55,6 +57,7 @@ public class WebhookResponse {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * Webhook request URL
    **/
@@ -65,6 +68,7 @@ public class WebhookResponse {
   public void setRequestUrl(String requestUrl) {
     this.requestUrl = requestUrl;
   }
+  
   /**
    * Webhook request data
    **/
@@ -75,7 +79,7 @@ public class WebhookResponse {
   public void setRequestData(String requestData) {
     this.requestData = requestData;
   }
-
+  
   public static WebhookResponse fromJson(JSONObject json) throws JSONException {
     WebhookResponse webhookResponse = new WebhookResponse();
 

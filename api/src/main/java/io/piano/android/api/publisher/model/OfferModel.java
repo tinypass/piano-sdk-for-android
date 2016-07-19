@@ -20,7 +20,6 @@ public class OfferModel {
   private Date updateDate = null;
   private User updateBy = null;
   private List<Term> terms = null;
-
   
   /**
    * Application aid
@@ -32,6 +31,7 @@ public class OfferModel {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * The offer name
    **/
@@ -42,6 +42,7 @@ public class OfferModel {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * The offer ID
    **/
@@ -52,6 +53,7 @@ public class OfferModel {
   public void setOfferId(String offerId) {
     this.offerId = offerId;
   }
+  
   /**
    * The status
    **/
@@ -62,6 +64,7 @@ public class OfferModel {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * If the object is deleted
    **/
@@ -72,6 +75,7 @@ public class OfferModel {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
+  
   /**
    * The creation date
    **/
@@ -82,6 +86,7 @@ public class OfferModel {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    **/
   public User getCreateBy() {
@@ -91,6 +96,7 @@ public class OfferModel {
   public void setCreateBy(User createBy) {
     this.createBy = createBy;
   }
+  
   /**
    * The update date
    **/
@@ -101,6 +107,7 @@ public class OfferModel {
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
   }
+  
   /**
    **/
   public User getUpdateBy() {
@@ -110,6 +117,7 @@ public class OfferModel {
   public void setUpdateBy(User updateBy) {
     this.updateBy = updateBy;
   }
+  
   /**
    **/
   public List<Term> getTerms() {
@@ -119,7 +127,7 @@ public class OfferModel {
   public void setTerms(List<Term> terms) {
     this.terms = terms;
   }
-
+  
   public static OfferModel fromJson(JSONObject json) throws JSONException {
     OfferModel offerModel = new OfferModel();
 

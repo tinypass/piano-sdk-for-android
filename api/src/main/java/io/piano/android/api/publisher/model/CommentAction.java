@@ -8,7 +8,6 @@ public class CommentAction {
   
   private String id = null;
   private String caption = null;
-
   
   /**
    * Id of inquiry action
@@ -20,6 +19,7 @@ public class CommentAction {
   public void setId(String id) {
     this.id = id;
   }
+  
   /**
    * Caption of inquiry action
    **/
@@ -30,7 +30,7 @@ public class CommentAction {
   public void setCaption(String caption) {
     this.caption = caption;
   }
-
+  
   public static CommentAction fromJson(JSONObject json) throws JSONException {
     CommentAction commentAction = new CommentAction();
 

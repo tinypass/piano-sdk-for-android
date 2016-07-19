@@ -36,9 +36,13 @@ public class PublisherTermPaymentApi {
    * @param paymentAllowGift Whether the term can be gifted
    * @param description Term description
    * @param verifyOnRenewal Is term should be verified before renewal or it skips this step
+   * @param evtVerificationPeriod External verification period
+   * @param collectAddress Collect address for this term
+   * @param deliveryZone List of delivery zones for this term
+   * @param defaultCountry Pre-selected country for consumers outside of delivery zones
    * @return Term
    */
-  public Term createPaymentTerm(String aid, String rid, String name, String paymentBillingPlan, Integer paymentAllowRenewDays, Boolean paymentForceAutoRenew, Boolean paymentNewCustomersOnly, Boolean paymentTrialNewCustomersOnly, Boolean paymentAllowPromoCodes, Integer paymentRenewGracePeriod, Boolean paymentAllowGift, String description, Boolean verifyOnRenewal) throws ApiException {
+  public Term createPaymentTerm(String aid, String rid, String name, String paymentBillingPlan, Integer paymentAllowRenewDays, Boolean paymentForceAutoRenew, Boolean paymentNewCustomersOnly, Boolean paymentTrialNewCustomersOnly, Boolean paymentAllowPromoCodes, Integer paymentRenewGracePeriod, Boolean paymentAllowGift, String description, Boolean verifyOnRenewal, Integer evtVerificationPeriod, Boolean collectAddress, List<String> deliveryZone, String defaultCountry) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -138,6 +142,22 @@ public class PublisherTermPaymentApi {
         builder.addTextBody("verify_on_renewal", ApiInvoker.parameterToString(verifyOnRenewal), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (evtVerificationPeriod != null) {
+        builder.addTextBody("evt_verification_period", ApiInvoker.parameterToString(evtVerificationPeriod), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (collectAddress != null) {
+        builder.addTextBody("collect_address", ApiInvoker.parameterToString(collectAddress), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (deliveryZone != null) {
+        builder.addTextBody("delivery_zone", ApiInvoker.parameterToString(deliveryZone), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (defaultCountry != null) {
+        builder.addTextBody("default_country", ApiInvoker.parameterToString(defaultCountry), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -157,6 +177,10 @@ public class PublisherTermPaymentApi {
       formParams.put("payment_allow_gift", ApiInvoker.parameterToString(paymentAllowGift));
       formParams.put("description", ApiInvoker.parameterToString(description));
       formParams.put("verify_on_renewal", ApiInvoker.parameterToString(verifyOnRenewal));
+      formParams.put("evt_verification_period", ApiInvoker.parameterToString(evtVerificationPeriod));
+      formParams.put("collect_address", ApiInvoker.parameterToString(collectAddress));
+      formParams.put("delivery_zone", ApiInvoker.parameterToString(deliveryZone));
+      formParams.put("default_country", ApiInvoker.parameterToString(defaultCountry));
       
     }
 
@@ -189,9 +213,13 @@ public class PublisherTermPaymentApi {
    * @param paymentAllowGift Whether the term can be gifted
    * @param description Term description
    * @param verifyOnRenewal Is term should be verified before renewal or it skips this step
+   * @param evtVerificationPeriod External verification period
+   * @param collectAddress Collect address for this term
+   * @param deliveryZone List of delivery zones for this term
+   * @param defaultCountry Pre-selected country for consumers outside of delivery zones
    * @return Term
    */
-  public Term updatePaymentTerm(String termId, String rid, String name, String paymentBillingPlan, Integer paymentAllowRenewDays, Boolean paymentForceAutoRenew, Boolean paymentNewCustomersOnly, Boolean paymentTrialNewCustomersOnly, Boolean paymentAllowPromoCodes, Integer paymentRenewGracePeriod, Boolean paymentAllowGift, String description, Boolean verifyOnRenewal) throws ApiException {
+  public Term updatePaymentTerm(String termId, String rid, String name, String paymentBillingPlan, Integer paymentAllowRenewDays, Boolean paymentForceAutoRenew, Boolean paymentNewCustomersOnly, Boolean paymentTrialNewCustomersOnly, Boolean paymentAllowPromoCodes, Integer paymentRenewGracePeriod, Boolean paymentAllowGift, String description, Boolean verifyOnRenewal, Integer evtVerificationPeriod, Boolean collectAddress, List<String> deliveryZone, String defaultCountry) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'termId' is set
@@ -276,6 +304,22 @@ public class PublisherTermPaymentApi {
         builder.addTextBody("verify_on_renewal", ApiInvoker.parameterToString(verifyOnRenewal), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (evtVerificationPeriod != null) {
+        builder.addTextBody("evt_verification_period", ApiInvoker.parameterToString(evtVerificationPeriod), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (collectAddress != null) {
+        builder.addTextBody("collect_address", ApiInvoker.parameterToString(collectAddress), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (deliveryZone != null) {
+        builder.addTextBody("delivery_zone", ApiInvoker.parameterToString(deliveryZone), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (defaultCountry != null) {
+        builder.addTextBody("default_country", ApiInvoker.parameterToString(defaultCountry), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -295,6 +339,10 @@ public class PublisherTermPaymentApi {
       formParams.put("payment_allow_gift", ApiInvoker.parameterToString(paymentAllowGift));
       formParams.put("description", ApiInvoker.parameterToString(description));
       formParams.put("verify_on_renewal", ApiInvoker.parameterToString(verifyOnRenewal));
+      formParams.put("evt_verification_period", ApiInvoker.parameterToString(evtVerificationPeriod));
+      formParams.put("collect_address", ApiInvoker.parameterToString(collectAddress));
+      formParams.put("delivery_zone", ApiInvoker.parameterToString(deliveryZone));
+      formParams.put("default_country", ApiInvoker.parameterToString(defaultCountry));
       
     }
 

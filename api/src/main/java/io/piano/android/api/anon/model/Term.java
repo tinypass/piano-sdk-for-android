@@ -15,7 +15,6 @@ public class Term {
   private String name = null;
   private String description = null;
   private Date createDate = null;
-
   
   /**
    * Term ID
@@ -27,6 +26,7 @@ public class Term {
   public void setTermId(String termId) {
     this.termId = termId;
   }
+  
   /**
    * Application aid
    **/
@@ -37,6 +37,7 @@ public class Term {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * The resource
    **/
@@ -47,6 +48,7 @@ public class Term {
   public void setResource(Resource resource) {
     this.resource = resource;
   }
+  
   /**
    * Term type
    **/
@@ -57,6 +59,7 @@ public class Term {
   public void setType(String type) {
     this.type = type;
   }
+  
   /**
    * Term name
    **/
@@ -67,6 +70,7 @@ public class Term {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * Term description
    **/
@@ -77,6 +81,7 @@ public class Term {
   public void setDescription(String description) {
     this.description = description;
   }
+  
   /**
    * The creation date
    **/
@@ -87,7 +92,7 @@ public class Term {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
-
+  
   public static Term fromJson(JSONObject json) throws JSONException {
     Term term = new Term();
 

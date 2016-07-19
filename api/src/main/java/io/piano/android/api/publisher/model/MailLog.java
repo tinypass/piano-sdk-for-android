@@ -21,7 +21,6 @@ public class MailLog {
   private String emailName = null;
   private String subject = null;
   private String body = null;
-
   
   /**
    * Email id
@@ -33,6 +32,7 @@ public class MailLog {
   public void setEmailId(String emailId) {
     this.emailId = emailId;
   }
+  
   /**
    * Application ref
    **/
@@ -43,6 +43,7 @@ public class MailLog {
   public void setApp(App app) {
     this.app = app;
   }
+  
   /**
    * The user
    **/
@@ -53,6 +54,7 @@ public class MailLog {
   public void setUser(User user) {
     this.user = user;
   }
+  
   /**
    * Sender
    **/
@@ -63,6 +65,7 @@ public class MailLog {
   public void setSender(String sender) {
     this.sender = sender;
   }
+  
   /**
    * Recipient
    **/
@@ -73,6 +76,7 @@ public class MailLog {
   public void setRecipient(String recipient) {
     this.recipient = recipient;
   }
+  
   /**
    * Reply to
    **/
@@ -83,6 +87,7 @@ public class MailLog {
   public void setReplyTo(String replyTo) {
     this.replyTo = replyTo;
   }
+  
   /**
    * The creation date
    **/
@@ -93,6 +98,7 @@ public class MailLog {
   public void setCreateDate(String createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * Date opened
    **/
@@ -103,6 +109,7 @@ public class MailLog {
   public void setOpenDate(String openDate) {
     this.openDate = openDate;
   }
+  
   /**
    * Status
    **/
@@ -113,6 +120,7 @@ public class MailLog {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * Reject reason
    **/
@@ -123,6 +131,7 @@ public class MailLog {
   public void setRejectReason(String rejectReason) {
     this.rejectReason = rejectReason;
   }
+  
   /**
    * Email name
    **/
@@ -133,6 +142,7 @@ public class MailLog {
   public void setEmailName(String emailName) {
     this.emailName = emailName;
   }
+  
   /**
    * Subject
    **/
@@ -143,6 +153,7 @@ public class MailLog {
   public void setSubject(String subject) {
     this.subject = subject;
   }
+  
   /**
    * Body
    **/
@@ -153,7 +164,7 @@ public class MailLog {
   public void setBody(String body) {
     this.body = body;
   }
-
+  
   public static MailLog fromJson(JSONObject json) throws JSONException {
     MailLog mailLog = new MailLog();
 

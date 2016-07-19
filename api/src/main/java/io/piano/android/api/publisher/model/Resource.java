@@ -21,7 +21,6 @@ public class Resource {
   private String bundleType = null;
   private String purchaseUrl = null;
   private String resourceUrl = null;
-
   
   /**
    * Unique id for resource
@@ -33,6 +32,7 @@ public class Resource {
   public void setRid(String rid) {
     this.rid = rid;
   }
+  
   /**
    * Application aid
    **/
@@ -43,6 +43,7 @@ public class Resource {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * If the object is deleted
    **/
@@ -53,6 +54,7 @@ public class Resource {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
+  
   /**
    * If the object is disabled
    **/
@@ -63,6 +65,7 @@ public class Resource {
   public void setDisabled(Boolean disabled) {
     this.disabled = disabled;
   }
+  
   /**
    * The creation date
    **/
@@ -73,6 +76,7 @@ public class Resource {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * The update date
    **/
@@ -83,6 +87,7 @@ public class Resource {
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
   }
+  
   /**
    * The publish date
    **/
@@ -93,6 +98,7 @@ public class Resource {
   public void setPublishDate(Date publishDate) {
     this.publishDate = publishDate;
   }
+  
   /**
    * The name
    **/
@@ -103,6 +109,7 @@ public class Resource {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * Resource description
    **/
@@ -113,6 +120,7 @@ public class Resource {
   public void setDescription(String description) {
     this.description = description;
   }
+  
   /**
    * Resource image URL
    **/
@@ -123,6 +131,7 @@ public class Resource {
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
   }
+  
   /**
    * Type of resource
    **/
@@ -133,6 +142,7 @@ public class Resource {
   public void setType(String type) {
     this.type = type;
   }
+  
   /**
    * Type of resource bundle
    **/
@@ -143,6 +153,7 @@ public class Resource {
   public void setBundleType(String bundleType) {
     this.bundleType = bundleType;
   }
+  
   /**
    * Purchase page URL
    **/
@@ -153,6 +164,7 @@ public class Resource {
   public void setPurchaseUrl(String purchaseUrl) {
     this.purchaseUrl = purchaseUrl;
   }
+  
   /**
    * Resource URL
    **/
@@ -163,7 +175,7 @@ public class Resource {
   public void setResourceUrl(String resourceUrl) {
     this.resourceUrl = resourceUrl;
   }
-
+  
   public static Resource fromJson(JSONObject json) throws JSONException {
     Resource resource = new Resource();
 

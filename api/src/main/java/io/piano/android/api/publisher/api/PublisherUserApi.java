@@ -405,6 +405,7 @@ public class PublisherUserApi {
    * @param hasConversionTerm Find users which have conversion term
    * @param hasRedeemedPromotion Find users which have redeemed promotion
    * @param includeTrialRedemptions Find users which have reserved trial redemptions. It works together with redeemed promotions and works as &#39;OR&#39; conditions 
+   * @param spentMoneyCurrency Currency of the payments to take into account
    * @param spentMoneyFrom Find users which spent money more than a value
    * @param spentMoneyUntil Find users which spent money less than a value
    * @param spentFromDate Find users which bougth something from a date
@@ -415,7 +416,7 @@ public class PublisherUserApi {
    * @param hadBillingFailure Find users which had problems with billing
    * @param hasPayment Find users which have payment
    * @param activeSubscriptionToResources Find users which have active subscription to selected resources
-   * @param hasActiveSubscription Find users which have payment
+   * @param hasActiveSubscription Find users which have active subscription
    * @param subscriptionStartFrom Find users which have starting subscription from selected date
    * @param subscriptionStartUntil Find users which have starting subscription until selected date
    * @param subscriptionRenewFrom Find users which have renewing subscription from selected date
@@ -443,7 +444,7 @@ public class PublisherUserApi {
    * @param orderDirection Order direction (asc/desc)
    * @return List<User>
    */
-  public List<User> search(String aid, Integer offset, Integer limit, String uid, String name, String email, List<String> accessToResources, List<String> convertedTerms, Date accessFrom, Date accessUntil, Date convertedTermFrom, Date convertedTermUntil, List<String> redeemedPromotions, Date redeemedPromotionFrom, Date redeemedPromotionUntil, Boolean trialPeriod, Boolean hasAccess, Boolean hasConversionTerm, Boolean hasRedeemedPromotion, Boolean includeTrialRedemptions, BigDecimal spentMoneyFrom, BigDecimal spentMoneyUntil, Date spentFromDate, Date spentUntilDate, List<Integer> paymentMethods, Date billingFailureFrom, Date billingFailureUntil, Boolean hadBillingFailure, Boolean hasPayment, List<String> activeSubscriptionToResources, Boolean hasActiveSubscription, Date subscriptionStartFrom, Date subscriptionStartUntil, Date subscriptionRenewFrom, Date subscriptionRenewUntil, Date subscriptionExpireFrom, Date subscriptionExpireUntil, Date trialExpireFrom, Date trialExpireUntil, Boolean hasAnySubscriptions, Boolean hasUnresolvedInquiry, Date submittedInquiryFrom, Date submittedInquiryUntil, Date receivedResponseFrom, Date receivedResponseUntil, Date resolvedInquiryFrom, Date resolvedInquiryUntil, Boolean hasSubmittedInquiry, Boolean hasReceivedResponseInquiry, List<String> dataType, String data, Boolean hasData, Boolean hasResolvedInquiry, String q, String orderBy, String orderDirection) throws ApiException {
+  public List<User> search(String aid, Integer offset, Integer limit, String uid, String name, String email, List<String> accessToResources, List<String> convertedTerms, Date accessFrom, Date accessUntil, Date convertedTermFrom, Date convertedTermUntil, List<String> redeemedPromotions, Date redeemedPromotionFrom, Date redeemedPromotionUntil, Boolean trialPeriod, Boolean hasAccess, Boolean hasConversionTerm, Boolean hasRedeemedPromotion, Boolean includeTrialRedemptions, String spentMoneyCurrency, BigDecimal spentMoneyFrom, BigDecimal spentMoneyUntil, Date spentFromDate, Date spentUntilDate, List<Integer> paymentMethods, Date billingFailureFrom, Date billingFailureUntil, Boolean hadBillingFailure, Boolean hasPayment, List<String> activeSubscriptionToResources, Boolean hasActiveSubscription, Date subscriptionStartFrom, Date subscriptionStartUntil, Date subscriptionRenewFrom, Date subscriptionRenewUntil, Date subscriptionExpireFrom, Date subscriptionExpireUntil, Date trialExpireFrom, Date trialExpireUntil, Boolean hasAnySubscriptions, Boolean hasUnresolvedInquiry, Date submittedInquiryFrom, Date submittedInquiryUntil, Date receivedResponseFrom, Date receivedResponseUntil, Date resolvedInquiryFrom, Date resolvedInquiryUntil, Boolean hasSubmittedInquiry, Boolean hasReceivedResponseInquiry, List<String> dataType, String data, Boolean hasData, Boolean hasResolvedInquiry, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -556,6 +557,10 @@ public class PublisherUserApi {
       
       if (includeTrialRedemptions != null) {
         builder.addTextBody("include_trial_redemptions", ApiInvoker.parameterToString(includeTrialRedemptions), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (spentMoneyCurrency != null) {
+        builder.addTextBody("spent_money_currency", ApiInvoker.parameterToString(spentMoneyCurrency), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (spentMoneyFrom != null) {
@@ -734,6 +739,7 @@ public class PublisherUserApi {
       formParams.put("has_conversion_term", ApiInvoker.parameterToString(hasConversionTerm));
       formParams.put("has_redeemed_promotion", ApiInvoker.parameterToString(hasRedeemedPromotion));
       formParams.put("include_trial_redemptions", ApiInvoker.parameterToString(includeTrialRedemptions));
+      formParams.put("spent_money_currency", ApiInvoker.parameterToString(spentMoneyCurrency));
       formParams.put("spent_money_from", ApiInvoker.parameterToString(spentMoneyFrom));
       formParams.put("spent_money_until", ApiInvoker.parameterToString(spentMoneyUntil));
       formParams.put("spent_from_date", ApiInvoker.parameterToString(spentFromDate));

@@ -14,7 +14,6 @@ public class Resource {
   private String description = null;
   private String imageUrl = null;
   private String purchaseUrl = null;
-
   
   /**
    * Unique id for resource
@@ -26,6 +25,7 @@ public class Resource {
   public void setRid(String rid) {
     this.rid = rid;
   }
+  
   /**
    * Application aid
    **/
@@ -36,6 +36,7 @@ public class Resource {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * The publish date
    **/
@@ -46,6 +47,7 @@ public class Resource {
   public void setPublishDate(Date publishDate) {
     this.publishDate = publishDate;
   }
+  
   /**
    * The name
    **/
@@ -56,6 +58,7 @@ public class Resource {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * Resource description
    **/
@@ -66,6 +69,7 @@ public class Resource {
   public void setDescription(String description) {
     this.description = description;
   }
+  
   /**
    * Resource image URL
    **/
@@ -76,6 +80,7 @@ public class Resource {
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
   }
+  
   /**
    * Purchase page URL
    **/
@@ -86,7 +91,7 @@ public class Resource {
   public void setPurchaseUrl(String purchaseUrl) {
     this.purchaseUrl = purchaseUrl;
   }
-
+  
   public static Resource fromJson(JSONObject json) throws JSONException {
     Resource resource = new Resource();
 

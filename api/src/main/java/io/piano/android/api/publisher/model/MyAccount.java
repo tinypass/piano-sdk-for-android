@@ -7,7 +7,6 @@ import org.json.JSONObject;
 public class MyAccount {
   
   private Boolean enabled = null;
-
   
   /**
    * Is property enabled
@@ -19,7 +18,7 @@ public class MyAccount {
   public void setEnabled(Boolean enabled) {
     this.enabled = enabled;
   }
-
+  
   public static MyAccount fromJson(JSONObject json) throws JSONException {
     MyAccount myAccount = new MyAccount();
 

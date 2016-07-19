@@ -14,7 +14,6 @@ public class Access {
   private Resource resource = null;
   private User user = null;
   private Date expireDate = null;
-
   
   /**
    * The access id
@@ -26,6 +25,7 @@ public class Access {
   public void setAccessId(String accessId) {
     this.accessId = accessId;
   }
+  
   /**
    * Granted == true if the user has access
    **/
@@ -36,6 +36,7 @@ public class Access {
   public void setGranted(Boolean granted) {
     this.granted = granted;
   }
+  
   /**
    * The resource
    **/
@@ -46,6 +47,7 @@ public class Access {
   public void setResource(Resource resource) {
     this.resource = resource;
   }
+  
   /**
    * The user
    **/
@@ -56,6 +58,7 @@ public class Access {
   public void setUser(User user) {
     this.user = user;
   }
+  
   /**
    * The access item expire date; null means unlimited
    **/
@@ -66,7 +69,7 @@ public class Access {
   public void setExpireDate(Date expireDate) {
     this.expireDate = expireDate;
   }
-
+  
   public static Access fromJson(JSONObject json) throws JSONException {
     Access access = new Access();
 

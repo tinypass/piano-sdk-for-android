@@ -7,7 +7,6 @@ import org.json.JSONObject;
 public class ContentAlgorithm {
   
   private Boolean enabled = null;
-
   
   /**
    * Is property enabled
@@ -19,7 +18,7 @@ public class ContentAlgorithm {
   public void setEnabled(Boolean enabled) {
     this.enabled = enabled;
   }
-
+  
   public static ContentAlgorithm fromJson(JSONObject json) throws JSONException {
     ContentAlgorithm contentAlgorithm = new ContentAlgorithm();
 

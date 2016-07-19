@@ -31,7 +31,6 @@ public class OfferTemplateVersion {
   private Boolean published = null;
   private List<ExternalCss> externalCssList = null;
   private Boolean hasPreview = null;
-
   
   /**
    * Offer Template ID
@@ -43,6 +42,7 @@ public class OfferTemplateVersion {
   public void setOfferTemplateId(String offerTemplateId) {
     this.offerTemplateId = offerTemplateId;
   }
+  
   /**
    * Application aid
    **/
@@ -53,6 +53,7 @@ public class OfferTemplateVersion {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * The name
    **/
@@ -63,6 +64,7 @@ public class OfferTemplateVersion {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * The description
    **/
@@ -73,6 +75,7 @@ public class OfferTemplateVersion {
   public void setDescription(String description) {
     this.description = description;
   }
+  
   /**
    * Offer Template documentation
    **/
@@ -83,6 +86,7 @@ public class OfferTemplateVersion {
   public void setDocumentation(String documentation) {
     this.documentation = documentation;
   }
+  
   /**
    * If the object is deleted
    **/
@@ -93,6 +97,7 @@ public class OfferTemplateVersion {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
+  
   /**
    * The creation date
    **/
@@ -103,6 +108,7 @@ public class OfferTemplateVersion {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    **/
   public User getCreateBy() {
@@ -112,6 +118,7 @@ public class OfferTemplateVersion {
   public void setCreateBy(User createBy) {
     this.createBy = createBy;
   }
+  
   /**
    * The update date
    **/
@@ -122,6 +129,7 @@ public class OfferTemplateVersion {
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
   }
+  
   /**
    **/
   public User getUpdateBy() {
@@ -131,6 +139,7 @@ public class OfferTemplateVersion {
   public void setUpdateBy(User updateBy) {
     this.updateBy = updateBy;
   }
+  
   /**
    * The content1 type
    **/
@@ -141,6 +150,7 @@ public class OfferTemplateVersion {
   public void setContent1Type(String content1Type) {
     this.content1Type = content1Type;
   }
+  
   /**
    * The content2 type
    **/
@@ -151,6 +161,7 @@ public class OfferTemplateVersion {
   public void setContent2Type(String content2Type) {
     this.content2Type = content2Type;
   }
+  
   /**
    * content1_value
    **/
@@ -161,6 +172,7 @@ public class OfferTemplateVersion {
   public void setContent1Value(String content1Value) {
     this.content1Value = content1Value;
   }
+  
   /**
    * content2_value
    **/
@@ -171,6 +183,7 @@ public class OfferTemplateVersion {
   public void setContent2Value(String content2Value) {
     this.content2Value = content2Value;
   }
+  
   /**
    * Template version
    **/
@@ -181,6 +194,7 @@ public class OfferTemplateVersion {
   public void setVersion(Integer version) {
     this.version = version;
   }
+  
   /**
    * publish_date
    **/
@@ -191,6 +205,7 @@ public class OfferTemplateVersion {
   public void setPublishDate(Date publishDate) {
     this.publishDate = publishDate;
   }
+  
   /**
    * The type
    **/
@@ -201,6 +216,7 @@ public class OfferTemplateVersion {
   public void setType(String type) {
     this.type = type;
   }
+  
   /**
    * The id of type
    **/
@@ -211,6 +227,7 @@ public class OfferTemplateVersion {
   public void setTypeId(String typeId) {
     this.typeId = typeId;
   }
+  
   /**
    * Whether the template is published
    **/
@@ -221,6 +238,7 @@ public class OfferTemplateVersion {
   public void setPublished(Boolean published) {
     this.published = published;
   }
+  
   /**
    **/
   public List<ExternalCss> getExternalCssList() {
@@ -230,6 +248,7 @@ public class OfferTemplateVersion {
   public void setExternalCssList(List<ExternalCss> externalCssList) {
     this.externalCssList = externalCssList;
   }
+  
   /**
    * Whether template has preview
    **/
@@ -240,7 +259,7 @@ public class OfferTemplateVersion {
   public void setHasPreview(Boolean hasPreview) {
     this.hasPreview = hasPreview;
   }
-
+  
   public static OfferTemplateVersion fromJson(JSONObject json) throws JSONException {
     OfferTemplateVersion offerTemplateVersion = new OfferTemplateVersion();
 

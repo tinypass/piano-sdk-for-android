@@ -33,9 +33,11 @@ public class AnonMeterApi {
    * @param userProvider User token provider
    * @param userRef Encrypted user reference
    * @param meterName Current meter name
+   * @param pageviewId PageView ID
+   * @param tbc The Tinypass browser cookie (tbc)
    * @return UserMeter
    */
-  public UserMeter load(String umc, Long paywallId, String url, String referer, Boolean trackPageView, String transactionId, String userToken, String userProvider, String userRef, String meterName) throws ApiException {
+  public UserMeter load(String umc, Long paywallId, String url, String referer, Boolean trackPageView, String transactionId, String userToken, String userProvider, String userRef, String meterName, String pageviewId, String tbc) throws ApiException {
     Object postBody = null;
     
 
@@ -69,6 +71,10 @@ public class AnonMeterApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "user_ref", userRef));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "meter_name", meterName));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "pageview_id", pageviewId));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "tbc", tbc));
     
 
     

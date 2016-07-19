@@ -20,7 +20,9 @@ public class UserSubscriptionDto {
   private String paymentMethod = null;
   private Boolean accessExpired = null;
   private Boolean inAppPayment = null;
-
+  private String pscSubscriberNumber = null;
+  private String conversionResult = null;
+  private String externalApiName = null;
   
   /**
    * User subscription term name
@@ -32,6 +34,7 @@ public class UserSubscriptionDto {
   public void setTermName(String termName) {
     this.termName = termName;
   }
+  
   /**
    * Term billing plan
    **/
@@ -42,6 +45,7 @@ public class UserSubscriptionDto {
   public void setPaymentBillingPlan(String paymentBillingPlan) {
     this.paymentBillingPlan = paymentBillingPlan;
   }
+  
   /**
    * Resource image URL
    **/
@@ -52,6 +56,7 @@ public class UserSubscriptionDto {
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
   }
+  
   /**
    * User subscription resource name
    **/
@@ -62,6 +67,7 @@ public class UserSubscriptionDto {
   public void setResourceName(String resourceName) {
     this.resourceName = resourceName;
   }
+  
   /**
    * Unique id for resource
    **/
@@ -72,6 +78,7 @@ public class UserSubscriptionDto {
   public void setRid(String rid) {
     this.rid = rid;
   }
+  
   /**
    * User subscription next bill date
    **/
@@ -82,6 +89,7 @@ public class UserSubscriptionDto {
   public void setNextBillDate(String nextBillDate) {
     this.nextBillDate = nextBillDate;
   }
+  
   /**
    * Subscription last payment
    **/
@@ -92,6 +100,7 @@ public class UserSubscriptionDto {
   public void setSubscriptionLastPayment(String subscriptionLastPayment) {
     this.subscriptionLastPayment = subscriptionLastPayment;
   }
+  
   /**
    * User subscription status
    **/
@@ -102,6 +111,7 @@ public class UserSubscriptionDto {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * Credit card expire
    **/
@@ -112,6 +122,7 @@ public class UserSubscriptionDto {
   public void setCreaditCardExpire(String creaditCardExpire) {
     this.creaditCardExpire = creaditCardExpire;
   }
+  
   /**
    * Credit card expires soon
    **/
@@ -122,6 +133,7 @@ public class UserSubscriptionDto {
   public void setCreaditCardExpireSoon(Boolean creaditCardExpireSoon) {
     this.creaditCardExpireSoon = creaditCardExpireSoon;
   }
+  
   /**
    * User subscription id
    **/
@@ -132,6 +144,7 @@ public class UserSubscriptionDto {
   public void setSubscriptionId(String subscriptionId) {
     this.subscriptionId = subscriptionId;
   }
+  
   /**
    * User subscription payment method
    **/
@@ -142,6 +155,7 @@ public class UserSubscriptionDto {
   public void setPaymentMethod(String paymentMethod) {
     this.paymentMethod = paymentMethod;
   }
+  
   /**
    * The access item expired 
    **/
@@ -152,6 +166,7 @@ public class UserSubscriptionDto {
   public void setAccessExpired(Boolean accessExpired) {
     this.accessExpired = accessExpired;
   }
+  
   /**
    * In app payment method
    **/
@@ -162,7 +177,40 @@ public class UserSubscriptionDto {
   public void setInAppPayment(Boolean inAppPayment) {
     this.inAppPayment = inAppPayment;
   }
+  
+  /**
+   * PSC subscriber number
+   **/
+  public String getPscSubscriberNumber() {
+    return pscSubscriberNumber;
+  }
 
+  public void setPscSubscriberNumber(String pscSubscriberNumber) {
+    this.pscSubscriberNumber = pscSubscriberNumber;
+  }
+  
+  /**
+   * Conversion result
+   **/
+  public String getConversionResult() {
+    return conversionResult;
+  }
+
+  public void setConversionResult(String conversionResult) {
+    this.conversionResult = conversionResult;
+  }
+  
+  /**
+   * External API Configuration name
+   **/
+  public String getExternalApiName() {
+    return externalApiName;
+  }
+
+  public void setExternalApiName(String externalApiName) {
+    this.externalApiName = externalApiName;
+  }
+  
   public static UserSubscriptionDto fromJson(JSONObject json) throws JSONException {
     UserSubscriptionDto userSubscriptionDto = new UserSubscriptionDto();
 
@@ -180,6 +228,9 @@ public class UserSubscriptionDto {
     userSubscriptionDto.paymentMethod = json.optString("payment_method");
     userSubscriptionDto.accessExpired = json.optBoolean("access_expired");
     userSubscriptionDto.inAppPayment = json.optBoolean("in_app_payment");
+    userSubscriptionDto.pscSubscriberNumber = json.optString("psc_subscriber_number");
+    userSubscriptionDto.conversionResult = json.optString("conversion_result");
+    userSubscriptionDto.externalApiName = json.optString("external_api_name");
     
     return userSubscriptionDto;
   }

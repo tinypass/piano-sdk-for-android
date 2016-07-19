@@ -11,14 +11,7 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
-
-    compile "io.reactivex:rxandroid:$rxAndroidVersion"
-    compile "io.reactivex:rxjava:$rxJavaVersion"
-
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
-    compile 'com.squareup.retrofit2:converter-scalars:2.0.2'
+    compile "com.squareup.okhttp3:okhttp:$okHttp3Version"
 }
 
 apply from: 'https://raw.github.com/tinypass/gradle-mvn-push/master/gradle-mvn-push.gradle'

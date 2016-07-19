@@ -11,7 +11,6 @@ public class SubscriptionRestrictions {
   private Boolean allowSwitchPaymentMethod = null;
   private Boolean allowSchedulerRenewals = null;
   private Boolean allowFutureRenewals = null;
-
   
   /**
    * Is app allowed to change the next billing date for the subscription
@@ -23,6 +22,7 @@ public class SubscriptionRestrictions {
   public void setAllowChangeNextBillDate(Boolean allowChangeNextBillDate) {
     this.allowChangeNextBillDate = allowChangeNextBillDate;
   }
+  
   /**
    * Is app CAN disable auto-renew BUT cannot enable auto renew if it is disabled
    **/
@@ -33,6 +33,7 @@ public class SubscriptionRestrictions {
   public void setAllowEnableAutoRenew(Boolean allowEnableAutoRenew) {
     this.allowEnableAutoRenew = allowEnableAutoRenew;
   }
+  
   /**
    * Is app allowed to change their user's payemnt method for subscriptions
    **/
@@ -43,6 +44,7 @@ public class SubscriptionRestrictions {
   public void setAllowSwitchPaymentMethod(Boolean allowSwitchPaymentMethod) {
     this.allowSwitchPaymentMethod = allowSwitchPaymentMethod;
   }
+  
   /**
    * Is app allowed to run manually scheduler renewal for the subscription
    **/
@@ -53,6 +55,7 @@ public class SubscriptionRestrictions {
   public void setAllowSchedulerRenewals(Boolean allowSchedulerRenewals) {
     this.allowSchedulerRenewals = allowSchedulerRenewals;
   }
+  
   /**
    * Is app allowed to manually renew subscriptions whcih has next billing date in the future
    **/
@@ -63,7 +66,7 @@ public class SubscriptionRestrictions {
   public void setAllowFutureRenewals(Boolean allowFutureRenewals) {
     this.allowFutureRenewals = allowFutureRenewals;
   }
-
+  
   public static SubscriptionRestrictions fromJson(JSONObject json) throws JSONException {
     SubscriptionRestrictions subscriptionRestrictions = new SubscriptionRestrictions();
 

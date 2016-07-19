@@ -431,23 +431,28 @@ public class PublisherResourceTagApi {
    * Lists bundles for tags
    * 
    * @param aid Application aid
+   * @param includedTagId Included tag IDs
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param orderBy Field to order by
    * @param orderDirection Order direction (asc/desc)
    * @param type Resource type
-   * @param includedTagId Included tag IDs
    * @param q Search value
    * @param disabled Disabled flag
    * @param bundleType Bundle type
    * @return List<Resource>
    */
-  public List<Resource> listBundlesForTags(String aid, Integer offset, Integer limit, String orderBy, String orderDirection, String type, List<String> includedTagId, String q, Boolean disabled, Integer bundleType) throws ApiException {
+  public List<Resource> listBundlesForTags(String aid, List<String> includedTagId, Integer offset, Integer limit, String orderBy, String orderDirection, String type, String q, Boolean disabled, Integer bundleType) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
     if (aid == null) {
        throw new ApiException(400, "Missing the required parameter 'aid' when calling listBundlesForTags");
+    }
+    
+    // verify the required parameter 'includedTagId' is set
+    if (includedTagId == null) {
+       throw new ApiException(400, "Missing the required parameter 'includedTagId' when calling listBundlesForTags");
     }
     
     // verify the required parameter 'offset' is set

@@ -9,7 +9,6 @@ public class WorldpayPaymentMethod {
   
   private List<String> card = null;
   private List<String> apm = null;
-
   
   /**
    **/
@@ -20,6 +19,7 @@ public class WorldpayPaymentMethod {
   public void setCard(List<String> card) {
     this.card = card;
   }
+  
   /**
    **/
   public List<String> getApm() {
@@ -29,7 +29,7 @@ public class WorldpayPaymentMethod {
   public void setApm(List<String> apm) {
     this.apm = apm;
   }
-
+  
   public static WorldpayPaymentMethod fromJson(JSONObject json) throws JSONException {
     WorldpayPaymentMethod worldpayPaymentMethod = new WorldpayPaymentMethod();
 

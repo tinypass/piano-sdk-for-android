@@ -10,7 +10,6 @@ public class TermStats {
   private String totalSale = null;
   private String totalSaleStr = null;
   private String conversion = null;
-
   
   /**
    * Term public id
@@ -22,6 +21,7 @@ public class TermStats {
   public void setPubId(String pubId) {
     this.pubId = pubId;
   }
+  
   /**
    * Term total sale
    **/
@@ -32,6 +32,7 @@ public class TermStats {
   public void setTotalSale(String totalSale) {
     this.totalSale = totalSale;
   }
+  
   /**
    * Term total sale formatd value
    **/
@@ -42,6 +43,7 @@ public class TermStats {
   public void setTotalSaleStr(String totalSaleStr) {
     this.totalSaleStr = totalSaleStr;
   }
+  
   /**
    * Term conversion
    **/
@@ -52,7 +54,7 @@ public class TermStats {
   public void setConversion(String conversion) {
     this.conversion = conversion;
   }
-
+  
   public static TermStats fromJson(JSONObject json) throws JSONException {
     TermStats termStats = new TermStats();
 

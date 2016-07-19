@@ -15,7 +15,6 @@ public class InquiryComment {
   private String email = null;
   private String name = null;
   private String internal = null;
-
   
   /**
    * Comment
@@ -27,6 +26,7 @@ public class InquiryComment {
   public void setCommentId(String commentId) {
     this.commentId = commentId;
   }
+  
   /**
    * Submitter type
    **/
@@ -37,6 +37,7 @@ public class InquiryComment {
   public void setSubmitterType(Integer submitterType) {
     this.submitterType = submitterType;
   }
+  
   /**
    * The creation date
    **/
@@ -47,6 +48,7 @@ public class InquiryComment {
   public void setCreateDate(String createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * Message
    **/
@@ -57,6 +59,7 @@ public class InquiryComment {
   public void setMessage(String message) {
     this.message = message;
   }
+  
   /**
    * The user
    **/
@@ -67,6 +70,7 @@ public class InquiryComment {
   public void setUser(User user) {
     this.user = user;
   }
+  
   /**
    * User's email address
    **/
@@ -77,6 +81,7 @@ public class InquiryComment {
   public void setEmail(String email) {
     this.email = email;
   }
+  
   /**
    * The name
    **/
@@ -87,6 +92,7 @@ public class InquiryComment {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * Internal comment
    **/
@@ -97,7 +103,7 @@ public class InquiryComment {
   public void setInternal(String internal) {
     this.internal = internal;
   }
-
+  
   public static InquiryComment fromJson(JSONObject json) throws JSONException {
     InquiryComment inquiryComment = new InquiryComment();
 

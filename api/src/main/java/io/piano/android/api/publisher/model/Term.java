@@ -1,6 +1,9 @@
 package io.piano.android.api.publisher.model;
 
+import io.piano.android.api.publisher.model.Country;
+import io.piano.android.api.publisher.model.DeliveryZone;
 import io.piano.android.api.publisher.model.Resource;
+import java.util.*;
 import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +32,7 @@ public class Term {
   private Integer paymentRenewGracePeriod = null;
   private Boolean paymentAllowGift = null;
   private String paymentCurrency = null;
+  private Double paymentFirstPrice = null;
   private Boolean customRequireUser = null;
   private Integer customDefaultAccessPeriod = null;
   private String adviewVastUrl = null;
@@ -42,7 +46,9 @@ public class Term {
   private Integer evtGracePeriod = null;
   private String evtItunesBundleId = null;
   private String evtItunesProductId = null;
-
+  private Boolean collectAddress = null;
+  private List<DeliveryZone> deliveryZone = null;
+  private Country defaultCountry = null;
   
   /**
    * Term ID
@@ -54,6 +60,7 @@ public class Term {
   public void setTermId(String termId) {
     this.termId = termId;
   }
+  
   /**
    * Application aid
    **/
@@ -64,6 +71,7 @@ public class Term {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * The resource
    **/
@@ -74,6 +82,7 @@ public class Term {
   public void setResource(Resource resource) {
     this.resource = resource;
   }
+  
   /**
    * Term type
    **/
@@ -84,6 +93,7 @@ public class Term {
   public void setType(String type) {
     this.type = type;
   }
+  
   /**
    * Term name
    **/
@@ -94,6 +104,7 @@ public class Term {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * Term description
    **/
@@ -104,6 +115,7 @@ public class Term {
   public void setDescription(String description) {
     this.description = description;
   }
+  
   /**
    * Is term should be verified before renewal or it skips this step
    **/
@@ -114,6 +126,7 @@ public class Term {
   public void setVerifyOnRenewal(Boolean verifyOnRenewal) {
     this.verifyOnRenewal = verifyOnRenewal;
   }
+  
   /**
    * The creation date
    **/
@@ -124,6 +137,7 @@ public class Term {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * Term billing plan
    **/
@@ -134,6 +148,7 @@ public class Term {
   public void setPaymentBillingPlan(String paymentBillingPlan) {
     this.paymentBillingPlan = paymentBillingPlan;
   }
+  
   /**
    * Term billing plan description
    **/
@@ -144,6 +159,7 @@ public class Term {
   public void setPaymentBillingPlanDescription(String paymentBillingPlanDescription) {
     this.paymentBillingPlanDescription = paymentBillingPlanDescription;
   }
+  
   /**
    * How many days in advance a user can renew
    **/
@@ -154,6 +170,7 @@ public class Term {
   public void setPaymentAllowRenewDays(Integer paymentAllowRenewDays) {
     this.paymentAllowRenewDays = paymentAllowRenewDays;
   }
+  
   /**
    * Payment forces the auto renewal of subscriptions
    **/
@@ -164,6 +181,7 @@ public class Term {
   public void setPaymentForceAutoRenew(Boolean paymentForceAutoRenew) {
     this.paymentForceAutoRenew = paymentForceAutoRenew;
   }
+  
   /**
    * Payment is available custom price
    **/
@@ -174,6 +192,7 @@ public class Term {
   public void setPaymentIsCustomPriceAvailable(Boolean paymentIsCustomPriceAvailable) {
     this.paymentIsCustomPriceAvailable = paymentIsCustomPriceAvailable;
   }
+  
   /**
    * Payment is subscription
    **/
@@ -184,6 +203,7 @@ public class Term {
   public void setPaymentIsSubscription(Boolean paymentIsSubscription) {
     this.paymentIsSubscription = paymentIsSubscription;
   }
+  
   /**
    * Payment has free trial
    **/
@@ -194,6 +214,7 @@ public class Term {
   public void setPaymentHasFreeTrial(Boolean paymentHasFreeTrial) {
     this.paymentHasFreeTrial = paymentHasFreeTrial;
   }
+  
   /**
    * Whether to allow buy only first time
    **/
@@ -204,6 +225,7 @@ public class Term {
   public void setPaymentNewCustomersOnly(Boolean paymentNewCustomersOnly) {
     this.paymentNewCustomersOnly = paymentNewCustomersOnly;
   }
+  
   /**
    * Whether to allow trial period only first time
    **/
@@ -214,6 +236,7 @@ public class Term {
   public void setPaymentTrialNewCustomersOnly(Boolean paymentTrialNewCustomersOnly) {
     this.paymentTrialNewCustomersOnly = paymentTrialNewCustomersOnly;
   }
+  
   /**
    * Whether to allow promo codes to be applied
    **/
@@ -224,6 +247,7 @@ public class Term {
   public void setPaymentAllowPromoCodes(Boolean paymentAllowPromoCodes) {
     this.paymentAllowPromoCodes = paymentAllowPromoCodes;
   }
+  
   /**
    * The number of days after expiration to still allow access to the resource
    **/
@@ -234,6 +258,7 @@ public class Term {
   public void setPaymentRenewGracePeriod(Integer paymentRenewGracePeriod) {
     this.paymentRenewGracePeriod = paymentRenewGracePeriod;
   }
+  
   /**
    * Whether the term can be gifted
    **/
@@ -244,6 +269,7 @@ public class Term {
   public void setPaymentAllowGift(Boolean paymentAllowGift) {
     this.paymentAllowGift = paymentAllowGift;
   }
+  
   /**
    * Currency of the term
    **/
@@ -254,6 +280,18 @@ public class Term {
   public void setPaymentCurrency(String paymentCurrency) {
     this.paymentCurrency = paymentCurrency;
   }
+  
+  /**
+   * First price of the term
+   **/
+  public Double getPaymentFirstPrice() {
+    return paymentFirstPrice;
+  }
+
+  public void setPaymentFirstPrice(Double paymentFirstPrice) {
+    this.paymentFirstPrice = paymentFirstPrice;
+  }
+  
   /**
    * Whether a valid user is required to complete the term
    **/
@@ -264,6 +302,7 @@ public class Term {
   public void setCustomRequireUser(Boolean customRequireUser) {
     this.customRequireUser = customRequireUser;
   }
+  
   /**
    * The default access period
    **/
@@ -274,6 +313,7 @@ public class Term {
   public void setCustomDefaultAccessPeriod(Integer customDefaultAccessPeriod) {
     this.customDefaultAccessPeriod = customDefaultAccessPeriod;
   }
+  
   /**
    * The VAST URL to use
    **/
@@ -284,6 +324,7 @@ public class Term {
   public void setAdviewVastUrl(String adviewVastUrl) {
     this.adviewVastUrl = adviewVastUrl;
   }
+  
   /**
    * The length of time a user gets access for
    **/
@@ -294,6 +335,7 @@ public class Term {
   public void setAdviewAccessPeriod(Integer adviewAccessPeriod) {
     this.adviewAccessPeriod = adviewAccessPeriod;
   }
+  
   /**
    * The access time period 
    **/
@@ -304,6 +346,7 @@ public class Term {
   public void setRegistrationAccessPeriod(Integer registrationAccessPeriod) {
     this.registrationAccessPeriod = registrationAccessPeriod;
   }
+  
   /**
    * The time period after registration that will count it as a valid registration conversion
    **/
@@ -314,6 +357,7 @@ public class Term {
   public void setRegistrationGracePeriod(Integer registrationGracePeriod) {
     this.registrationGracePeriod = registrationGracePeriod;
   }
+  
   /**
    * External API Configuration ID
    **/
@@ -324,6 +368,7 @@ public class Term {
   public void setExternalApiId(String externalApiId) {
     this.externalApiId = externalApiId;
   }
+  
   /**
    * External API Configuration name
    **/
@@ -334,6 +379,7 @@ public class Term {
   public void setExternalApiName(String externalApiName) {
     this.externalApiName = externalApiName;
   }
+  
   /**
    * External verification period
    **/
@@ -344,6 +390,7 @@ public class Term {
   public void setEvtVerificationPeriod(Integer evtVerificationPeriod) {
     this.evtVerificationPeriod = evtVerificationPeriod;
   }
+  
   /**
    * Period to grant access for in days
    **/
@@ -354,6 +401,7 @@ public class Term {
   public void setEvtFixedTimeAccessPeriod(Integer evtFixedTimeAccessPeriod) {
     this.evtFixedTimeAccessPeriod = evtFixedTimeAccessPeriod;
   }
+  
   /**
    * External API grace period
    **/
@@ -364,6 +412,7 @@ public class Term {
   public void setEvtGracePeriod(Integer evtGracePeriod) {
     this.evtGracePeriod = evtGracePeriod;
   }
+  
   /**
    * iTunes bundle id
    **/
@@ -374,6 +423,7 @@ public class Term {
   public void setEvtItunesBundleId(String evtItunesBundleId) {
     this.evtItunesBundleId = evtItunesBundleId;
   }
+  
   /**
    * iTunes  product id
    **/
@@ -384,7 +434,38 @@ public class Term {
   public void setEvtItunesProductId(String evtItunesProductId) {
     this.evtItunesProductId = evtItunesProductId;
   }
+  
+  /**
+   * Collect address for this term
+   **/
+  public Boolean getCollectAddress() {
+    return collectAddress;
+  }
 
+  public void setCollectAddress(Boolean collectAddress) {
+    this.collectAddress = collectAddress;
+  }
+  
+  /**
+   **/
+  public List<DeliveryZone> getDeliveryZone() {
+    return deliveryZone;
+  }
+
+  public void setDeliveryZone(List<DeliveryZone> deliveryZone) {
+    this.deliveryZone = deliveryZone;
+  }
+  
+  /**
+   **/
+  public Country getDefaultCountry() {
+    return defaultCountry;
+  }
+
+  public void setDefaultCountry(Country defaultCountry) {
+    this.defaultCountry = defaultCountry;
+  }
+  
   public static Term fromJson(JSONObject json) throws JSONException {
     Term term = new Term();
 
@@ -409,6 +490,7 @@ public class Term {
     term.paymentRenewGracePeriod = json.optInt("payment_renew_grace_period");
     term.paymentAllowGift = json.optBoolean("payment_allow_gift");
     term.paymentCurrency = json.optString("payment_currency");
+    term.paymentFirstPrice = json.optDouble("payment_first_price");
     term.customRequireUser = json.optBoolean("custom_require_user");
     term.customDefaultAccessPeriod = json.optInt("custom_default_access_period");
     term.adviewVastUrl = json.optString("adview_vast_url");
@@ -422,6 +504,14 @@ public class Term {
     term.evtGracePeriod = json.optInt("evt_grace_period");
     term.evtItunesBundleId = json.optString("evt_itunes_bundle_id");
     term.evtItunesProductId = json.optString("evt_itunes_product_id");
+    term.collectAddress = json.optBoolean("collect_address");
+    term.deliveryZone = new ArrayList<>();
+    JSONArray deliveryZoneJsonArray = json.optJSONArray("delivery_zone");
+    int deliveryZoneLength = deliveryZoneJsonArray.length();
+    for (int ii = 0; ii < deliveryZoneLength; ii++) {
+      term.deliveryZone.add(DeliveryZone.fromJson(deliveryZoneJsonArray.optJSONObject(ii)));
+    }
+    term.defaultCountry = Country.fromJson(json.optJSONObject("default_country"));
     
     return term;
   }

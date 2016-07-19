@@ -9,6 +9,9 @@ import io.piano.android.api.common.*;
 
 public class PianoClient {
 
+	private static final String BASE_PATH_PROD = "https://api.tinypass.com/api/v3";
+	private static final String BASE_PATH_SANDBOX = "https://sandbox.tinypass.com/api/v3";
+
 	private Context context;
 	private String aid;
 	private boolean sandbox;
@@ -22,8 +25,7 @@ public class PianoClient {
 		this.context = context;
 		this.aid = aid;
 		this.sandbox = sandbox;
-		String basePath = sandbox ? "https://sandbox.tinypass.com/api/v3" : "https://api.piano.io/api/v3";
-		this.apiInvoker = new ApiInvoker(basePath, client);
+		this.apiInvoker = new ApiInvoker(sandbox ? BASE_PATH_SANDBOX : BASE_PATH_PROD, client);
 	}
 
 	public String getAid() {
@@ -294,11 +296,46 @@ public class PianoClient {
 		return apiPublisherSubscription;
 	}
 
+	private PublisherSubscriptionCountFailedApi apiPublisherSubscriptionCountFailed;
+
+	public PublisherSubscriptionCountFailedApi getPublisherSubscriptionCountFailedApi() {
+		if (apiPublisherSubscriptionCountFailed == null) apiPublisherSubscriptionCountFailed = new PublisherSubscriptionCountFailedApi(apiInvoker);
+		return apiPublisherSubscriptionCountFailed;
+	}
+
 	private PublisherSubscriptionExportApi apiPublisherSubscriptionExport;
 
 	public PublisherSubscriptionExportApi getPublisherSubscriptionExportApi() {
 		if (apiPublisherSubscriptionExport == null) apiPublisherSubscriptionExport = new PublisherSubscriptionExportApi(apiInvoker);
 		return apiPublisherSubscriptionExport;
+	}
+
+	private PublisherTaxApi apiPublisherTax;
+
+	public PublisherTaxApi getPublisherTaxApi() {
+		if (apiPublisherTax == null) apiPublisherTax = new PublisherTaxApi(apiInvoker);
+		return apiPublisherTax;
+	}
+
+	private PublisherTaxRateApi apiPublisherTaxRate;
+
+	public PublisherTaxRateApi getPublisherTaxRateApi() {
+		if (apiPublisherTaxRate == null) apiPublisherTaxRate = new PublisherTaxRateApi(apiInvoker);
+		return apiPublisherTaxRate;
+	}
+
+	private PublisherTaxTaxJarApi apiPublisherTaxTaxJar;
+
+	public PublisherTaxTaxJarApi getPublisherTaxTaxJarApi() {
+		if (apiPublisherTaxTaxJar == null) apiPublisherTaxTaxJar = new PublisherTaxTaxJarApi(apiInvoker);
+		return apiPublisherTaxTaxJar;
+	}
+
+	private PublisherTaxTinypassApi apiPublisherTaxTinypass;
+
+	public PublisherTaxTinypassApi getPublisherTaxTinypassApi() {
+		if (apiPublisherTaxTinypass == null) apiPublisherTaxTinypass = new PublisherTaxTinypassApi(apiInvoker);
+		return apiPublisherTaxTinypass;
 	}
 
 	private PublisherTermApi apiPublisherTerm;

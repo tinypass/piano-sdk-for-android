@@ -271,18 +271,11 @@ public class PublisherConversionApi {
    * @param aid Application aid
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
+   * @param uid User&#39;s uid
    * @param q Search value
-   * @param orderBy Field to order by
-   * @param orderDirection Order direction (asc/desc)
-   * @param includeType Type of terms to include into the list
-   * @param excludeType Type of terms to exclude from the list
-   * @param termId Term id to list
-   * @param resourceType Type of resource
-   * @param source Type of external API source
-   * @param type Type of term to list
    * @return List<TermConversion>
    */
-  public List<TermConversion> list(String aid, Integer offset, Integer limit, String q, String orderBy, String orderDirection, List<String> includeType, List<String> excludeType, String termId, String resourceType, List<String> source, String type) throws ApiException {
+  public List<TermConversion> list(String aid, Integer offset, Integer limit, String uid, String q) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -314,27 +307,13 @@ public class PublisherConversionApi {
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
     
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "uid", uid));
+    
     queryParams.addAll(ApiInvoker.parameterToPairs("", "q", q));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "offset", offset));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_by", orderBy));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_direction", orderDirection));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("csv", "include_type", includeType));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("csv", "exclude_type", excludeType));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "term_id", termId));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "resource_type", resourceType));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("csv", "source", source));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "type", type));
     
 
     
@@ -372,7 +351,7 @@ public class PublisherConversionApi {
   }
   
   /**
-   * Lists conversions
+   * Lists conversions. Deprecated - use &#39;list&#39;
    * 
    * @param aid Application aid
    * @param offset Offset from which to start returning results

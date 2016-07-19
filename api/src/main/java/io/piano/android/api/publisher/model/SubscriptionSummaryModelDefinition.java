@@ -19,7 +19,6 @@ public class SubscriptionSummaryModelDefinition {
   private String subscriptionRenewedAmount = null;
   private String subscriptionRenewedTpFeeAmount = null;
   private Integer subscriptionRenewedCount = null;
-
   
   /**
    * Date
@@ -31,6 +30,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setDate(String date) {
     this.date = date;
   }
+  
   /**
    * New subscription amount
    **/
@@ -41,6 +41,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setNewSubscriptionAmount(String newSubscriptionAmount) {
     this.newSubscriptionAmount = newSubscriptionAmount;
   }
+  
   /**
    * New subscription TP fee amount
    **/
@@ -51,6 +52,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setNewSubscriptionTpFeeAmount(String newSubscriptionTpFeeAmount) {
     this.newSubscriptionTpFeeAmount = newSubscriptionTpFeeAmount;
   }
+  
   /**
    * New subscription count
    **/
@@ -61,6 +63,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setNewSubscriptionCount(Integer newSubscriptionCount) {
     this.newSubscriptionCount = newSubscriptionCount;
   }
+  
   /**
    * New trial subscription count
    **/
@@ -71,6 +74,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setNewTrialSubscriptionCount(Integer newTrialSubscriptionCount) {
     this.newTrialSubscriptionCount = newTrialSubscriptionCount;
   }
+  
   /**
    * Subscription cancelled count
    **/
@@ -81,6 +85,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setSubscriptionCancelledCount(Integer subscriptionCancelledCount) {
     this.subscriptionCancelledCount = subscriptionCancelledCount;
   }
+  
   /**
    * Subscription failed or expired count
    **/
@@ -91,6 +96,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setSubscriptionFailedOrExpiredCount(Integer subscriptionFailedOrExpiredCount) {
     this.subscriptionFailedOrExpiredCount = subscriptionFailedOrExpiredCount;
   }
+  
   /**
    * Subscription refunded amount
    **/
@@ -101,6 +107,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setSubscriptionRefundedAmount(String subscriptionRefundedAmount) {
     this.subscriptionRefundedAmount = subscriptionRefundedAmount;
   }
+  
   /**
    * Subscription refunded tp fee amount
    **/
@@ -111,6 +118,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setSubscriptionRefundedTpFeeAmount(String subscriptionRefundedTpFeeAmount) {
     this.subscriptionRefundedTpFeeAmount = subscriptionRefundedTpFeeAmount;
   }
+  
   /**
    * Subscription refunded count
    **/
@@ -121,6 +129,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setSubscriptionRefundedCount(Integer subscriptionRefundedCount) {
     this.subscriptionRefundedCount = subscriptionRefundedCount;
   }
+  
   /**
    * Subscription renewed amount
    **/
@@ -131,6 +140,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setSubscriptionRenewedAmount(String subscriptionRenewedAmount) {
     this.subscriptionRenewedAmount = subscriptionRenewedAmount;
   }
+  
   /**
    * Subscription renewed tp fee amount
    **/
@@ -141,6 +151,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setSubscriptionRenewedTpFeeAmount(String subscriptionRenewedTpFeeAmount) {
     this.subscriptionRenewedTpFeeAmount = subscriptionRenewedTpFeeAmount;
   }
+  
   /**
    * Subscription renewed count
    **/
@@ -151,7 +162,7 @@ public class SubscriptionSummaryModelDefinition {
   public void setSubscriptionRenewedCount(Integer subscriptionRenewedCount) {
     this.subscriptionRenewedCount = subscriptionRenewedCount;
   }
-
+  
   public static SubscriptionSummaryModelDefinition fromJson(JSONObject json) throws JSONException {
     SubscriptionSummaryModelDefinition subscriptionSummaryModelDefinition = new SubscriptionSummaryModelDefinition();
 

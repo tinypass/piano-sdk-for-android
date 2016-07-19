@@ -383,9 +383,10 @@ public class PublisherSubscriptionApi {
    * @param nextBillDate Date of next bill
    * @param autoRenew Subscription auto renew
    * @param paymentMethodId Payment method id
+   * @param userAddressId Public id of specific user address
    * @return Boolean
    */
-  public Boolean update(String aid, String subscriptionId, Date nextBillDate, Boolean autoRenew, String paymentMethodId) throws ApiException {
+  public Boolean update(String aid, String subscriptionId, Date nextBillDate, Boolean autoRenew, String paymentMethodId, String userAddressId) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -396,11 +397,6 @@ public class PublisherSubscriptionApi {
     // verify the required parameter 'subscriptionId' is set
     if (subscriptionId == null) {
        throw new ApiException(400, "Missing the required parameter 'subscriptionId' when calling update");
-    }
-    
-    // verify the required parameter 'nextBillDate' is set
-    if (nextBillDate == null) {
-       throw new ApiException(400, "Missing the required parameter 'nextBillDate' when calling update");
     }
     
 
@@ -448,6 +444,10 @@ public class PublisherSubscriptionApi {
         builder.addTextBody("payment_method_id", ApiInvoker.parameterToString(paymentMethodId), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (userAddressId != null) {
+        builder.addTextBody("user_address_id", ApiInvoker.parameterToString(userAddressId), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -459,6 +459,7 @@ public class PublisherSubscriptionApi {
       formParams.put("next_bill_date", ApiInvoker.parameterToString(nextBillDate));
       formParams.put("auto_renew", ApiInvoker.parameterToString(autoRenew));
       formParams.put("payment_method_id", ApiInvoker.parameterToString(paymentMethodId));
+      formParams.put("user_address_id", ApiInvoker.parameterToString(userAddressId));
       
     }
 

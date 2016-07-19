@@ -15,7 +15,6 @@ public class AppFeatures {
   private Composer composer = null;
   private SubscriptionRestrictions subscriptionRestrictions = null;
   private Boolean isPaymentMockEnabled = null;
-
   
   /**
    * Content algorithm enabled
@@ -27,6 +26,7 @@ public class AppFeatures {
   public void setContentAlgorithm(ContentAlgorithm contentAlgorithm) {
     this.contentAlgorithm = contentAlgorithm;
   }
+  
   /**
    * My account enabled
    **/
@@ -37,6 +37,7 @@ public class AppFeatures {
   public void setMyAccount(MyAccount myAccount) {
     this.myAccount = myAccount;
   }
+  
   /**
    * Composer enabled
    **/
@@ -47,6 +48,7 @@ public class AppFeatures {
   public void setComposer(Composer composer) {
     this.composer = composer;
   }
+  
   /**
    * What restrictions are appliable for the app
    **/
@@ -57,6 +59,7 @@ public class AppFeatures {
   public void setSubscriptionRestrictions(SubscriptionRestrictions subscriptionRestrictions) {
     this.subscriptionRestrictions = subscriptionRestrictions;
   }
+  
   /**
    * Is Mock instead of real payment providers enabled
    **/
@@ -67,7 +70,7 @@ public class AppFeatures {
   public void setIsPaymentMockEnabled(Boolean isPaymentMockEnabled) {
     this.isPaymentMockEnabled = isPaymentMockEnabled;
   }
-
+  
   public static AppFeatures fromJson(JSONObject json) throws JSONException {
     AppFeatures appFeatures = new AppFeatures();
 

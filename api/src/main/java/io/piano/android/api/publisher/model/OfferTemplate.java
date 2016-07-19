@@ -22,7 +22,6 @@ public class OfferTemplate {
   private String type = null;
   private String typeId = null;
   private Boolean isPublished = null;
-
   
   /**
    * Offer Template ID
@@ -34,6 +33,7 @@ public class OfferTemplate {
   public void setOfferTemplateId(String offerTemplateId) {
     this.offerTemplateId = offerTemplateId;
   }
+  
   /**
    * Application aid
    **/
@@ -44,6 +44,7 @@ public class OfferTemplate {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * The name
    **/
@@ -54,6 +55,7 @@ public class OfferTemplate {
   public void setName(String name) {
     this.name = name;
   }
+  
   /**
    * The description
    **/
@@ -64,6 +66,7 @@ public class OfferTemplate {
   public void setDescription(String description) {
     this.description = description;
   }
+  
   /**
    * If the object is deleted
    **/
@@ -74,6 +77,7 @@ public class OfferTemplate {
   public void setDeleted(Boolean deleted) {
     this.deleted = deleted;
   }
+  
   /**
    * The creation date
    **/
@@ -84,6 +88,7 @@ public class OfferTemplate {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    **/
   public User getCreateBy() {
@@ -93,6 +98,7 @@ public class OfferTemplate {
   public void setCreateBy(User createBy) {
     this.createBy = createBy;
   }
+  
   /**
    * The update date
    **/
@@ -103,6 +109,7 @@ public class OfferTemplate {
   public void setUpdateDate(Date updateDate) {
     this.updateDate = updateDate;
   }
+  
   /**
    **/
   public User getUpdateBy() {
@@ -112,6 +119,7 @@ public class OfferTemplate {
   public void setUpdateBy(User updateBy) {
     this.updateBy = updateBy;
   }
+  
   /**
    * publish_date
    **/
@@ -122,6 +130,7 @@ public class OfferTemplate {
   public void setPublishDate(Date publishDate) {
     this.publishDate = publishDate;
   }
+  
   /**
    * The version
    **/
@@ -132,6 +141,7 @@ public class OfferTemplate {
   public void setVersion(Integer version) {
     this.version = version;
   }
+  
   /**
    * The type 
    **/
@@ -142,6 +152,7 @@ public class OfferTemplate {
   public void setType(String type) {
     this.type = type;
   }
+  
   /**
    * The type 
    **/
@@ -152,6 +163,7 @@ public class OfferTemplate {
   public void setTypeId(String typeId) {
     this.typeId = typeId;
   }
+  
   /**
    * Published or not
    **/
@@ -162,7 +174,7 @@ public class OfferTemplate {
   public void setIsPublished(Boolean isPublished) {
     this.isPublished = isPublished;
   }
-
+  
   public static OfferTemplate fromJson(JSONObject json) throws JSONException {
     OfferTemplate offerTemplate = new OfferTemplate();
 

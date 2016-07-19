@@ -3,6 +3,7 @@ package io.piano.android.api.publisher.model;
 import io.piano.android.api.publisher.model.Resource;
 import io.piano.android.api.publisher.model.Term;
 import io.piano.android.api.publisher.model.User;
+import io.piano.android.api.publisher.model.UserAddress;
 import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +25,10 @@ public class UserSubscription {
   private Date startDate = null;
   private Boolean cancelable = null;
   private Boolean cancelableAndRefundadle = null;
-
+  private UserAddress userAddress = null;
+  private String pscSubscriberNumber = null;
+  private String externalApiName = null;
+  private String conversionResult = null;
   
   /**
    * User subscription id
@@ -36,6 +40,7 @@ public class UserSubscription {
   public void setSubscriptionId(String subscriptionId) {
     this.subscriptionId = subscriptionId;
   }
+  
   /**
    * User subscription auto renew
    **/
@@ -46,6 +51,7 @@ public class UserSubscription {
   public void setAutoRenew(Boolean autoRenew) {
     this.autoRenew = autoRenew;
   }
+  
   /**
    * User subscription next bill date
    **/
@@ -56,6 +62,7 @@ public class UserSubscription {
   public void setNextBillDate(Date nextBillDate) {
     this.nextBillDate = nextBillDate;
   }
+  
   /**
    * User subscription payment method
    **/
@@ -66,6 +73,7 @@ public class UserSubscription {
   public void setPaymentMethod(String paymentMethod) {
     this.paymentMethod = paymentMethod;
   }
+  
   /**
    * User subscription billing plan
    **/
@@ -76,6 +84,7 @@ public class UserSubscription {
   public void setBillingPlan(String billingPlan) {
     this.billingPlan = billingPlan;
   }
+  
   /**
    * User payment info id
    **/
@@ -86,6 +95,7 @@ public class UserSubscription {
   public void setUserPaymentInfoId(String userPaymentInfoId) {
     this.userPaymentInfoId = userPaymentInfoId;
   }
+  
   /**
    * User subscription status
    **/
@@ -96,6 +106,7 @@ public class UserSubscription {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * User subscription status displayable
    **/
@@ -106,6 +117,7 @@ public class UserSubscription {
   public void setStatusName(String statusName) {
     this.statusName = statusName;
   }
+  
   /**
    **/
   public Term getTerm() {
@@ -115,6 +127,7 @@ public class UserSubscription {
   public void setTerm(Term term) {
     this.term = term;
   }
+  
   /**
    * The resource
    **/
@@ -125,6 +138,7 @@ public class UserSubscription {
   public void setResource(Resource resource) {
     this.resource = resource;
   }
+  
   /**
    * The user
    **/
@@ -135,6 +149,7 @@ public class UserSubscription {
   public void setUser(User user) {
     this.user = user;
   }
+  
   /**
    * The start date
    **/
@@ -145,6 +160,7 @@ public class UserSubscription {
   public void setStartDate(Date startDate) {
     this.startDate = startDate;
   }
+  
   /**
    * Whether this subscription could be cancelled. Cancel means that access no longer be prolongated and current access will be revoked
    **/
@@ -155,6 +171,7 @@ public class UserSubscription {
   public void setCancelable(Boolean cancelable) {
     this.cancelable = cancelable;
   }
+  
   /**
    * Whether this subscription could be cancelled and the payment for the last period could be refunded. Cancel means that access no longer be prolongated and current access will be revoked
    **/
@@ -165,7 +182,51 @@ public class UserSubscription {
   public void setCancelableAndRefundadle(Boolean cancelableAndRefundadle) {
     this.cancelableAndRefundadle = cancelableAndRefundadle;
   }
+  
+  /**
+   * User address entity
+   **/
+  public UserAddress getUserAddress() {
+    return userAddress;
+  }
 
+  public void setUserAddress(UserAddress userAddress) {
+    this.userAddress = userAddress;
+  }
+  
+  /**
+   * PSC subscriber number
+   **/
+  public String getPscSubscriberNumber() {
+    return pscSubscriberNumber;
+  }
+
+  public void setPscSubscriberNumber(String pscSubscriberNumber) {
+    this.pscSubscriberNumber = pscSubscriberNumber;
+  }
+  
+  /**
+   * External API Configuration name
+   **/
+  public String getExternalApiName() {
+    return externalApiName;
+  }
+
+  public void setExternalApiName(String externalApiName) {
+    this.externalApiName = externalApiName;
+  }
+  
+  /**
+   * Conversion result
+   **/
+  public String getConversionResult() {
+    return conversionResult;
+  }
+
+  public void setConversionResult(String conversionResult) {
+    this.conversionResult = conversionResult;
+  }
+  
   public static UserSubscription fromJson(JSONObject json) throws JSONException {
     UserSubscription userSubscription = new UserSubscription();
 
@@ -183,6 +244,10 @@ public class UserSubscription {
     userSubscription.startDate = new Date(json.optLong("start_date") * 1000);
     userSubscription.cancelable = json.optBoolean("cancelable");
     userSubscription.cancelableAndRefundadle = json.optBoolean("cancelable_and_refundadle");
+    userSubscription.userAddress = UserAddress.fromJson(json.optJSONObject("user_address"));
+    userSubscription.pscSubscriberNumber = json.optString("psc_subscriber_number");
+    userSubscription.externalApiName = json.optString("external_api_name");
+    userSubscription.conversionResult = json.optString("conversion_result");
     
     return userSubscription;
   }

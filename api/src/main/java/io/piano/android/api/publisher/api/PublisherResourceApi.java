@@ -800,12 +800,13 @@ public class PublisherResourceApi {
    * @param type Resource type
    * @param includedTagId Included tag IDs
    * @param excludedRid Excluded RIDs
+   * @param includedRid Included RIDs
    * @param q Search value
    * @param disabled Disabled flag
    * @param bundleType Bundle type
    * @return List<Resource>
    */
-  public List<Resource> listResources(String aid, Integer offset, Integer limit, String orderBy, String orderDirection, String type, List<String> includedTagId, List<String> excludedRid, String q, Boolean disabled, Integer bundleType) throws ApiException {
+  public List<Resource> listResources(String aid, Integer offset, Integer limit, String orderBy, String orderDirection, String type, List<String> includedTagId, List<String> excludedRid, List<String> includedRid, String q, Boolean disabled, Integer bundleType) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -855,6 +856,8 @@ public class PublisherResourceApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("csv", "included_tag_id", includedTagId));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("csv", "excluded_rid", excludedRid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("csv", "included_rid", includedRid));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "q", q));
     

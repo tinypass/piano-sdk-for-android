@@ -11,7 +11,6 @@ public class ExternalCss {
   private String status = null;
   private Integer position = null;
   private String externalCssId = null;
-
   
   /**
    * The title
@@ -23,6 +22,7 @@ public class ExternalCss {
   public void setTitle(String title) {
     this.title = title;
   }
+  
   /**
    * The URL of the page
    **/
@@ -33,6 +33,7 @@ public class ExternalCss {
   public void setUrl(String url) {
     this.url = url;
   }
+  
   /**
    * The status
    **/
@@ -43,6 +44,7 @@ public class ExternalCss {
   public void setStatus(String status) {
     this.status = status;
   }
+  
   /**
    * The position
    **/
@@ -53,6 +55,7 @@ public class ExternalCss {
   public void setPosition(Integer position) {
     this.position = position;
   }
+  
   /**
    * External css id
    **/
@@ -63,7 +66,7 @@ public class ExternalCss {
   public void setExternalCssId(String externalCssId) {
     this.externalCssId = externalCssId;
   }
-
+  
   public static ExternalCss fromJson(JSONObject json) throws JSONException {
     ExternalCss externalCss = new ExternalCss();
 

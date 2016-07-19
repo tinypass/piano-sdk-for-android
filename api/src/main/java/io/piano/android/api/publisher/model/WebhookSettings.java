@@ -9,7 +9,6 @@ public class WebhookSettings {
   private String url = null;
   private Boolean enabled = null;
   private Integer version = null;
-
   
   /**
    * Webhook endpoint url
@@ -21,6 +20,7 @@ public class WebhookSettings {
   public void setUrl(String url) {
     this.url = url;
   }
+  
   /**
    * Webhook endpoint enabled
    **/
@@ -31,6 +31,7 @@ public class WebhookSettings {
   public void setEnabled(Boolean enabled) {
     this.enabled = enabled;
   }
+  
   /**
    * Webhook version
    **/
@@ -41,7 +42,7 @@ public class WebhookSettings {
   public void setVersion(Integer version) {
     this.version = version;
   }
-
+  
   public static WebhookSettings fromJson(JSONObject json) throws JSONException {
     WebhookSettings webhookSettings = new WebhookSettings();
 

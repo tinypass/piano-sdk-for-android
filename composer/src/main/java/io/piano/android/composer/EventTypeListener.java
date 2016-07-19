@@ -1,4 +1,8 @@
 package io.piano.android.composer;
 
-public interface EventTypeListener {
+import io.piano.android.composer.model.Event;
+
+interface EventTypeListener<T extends Event> {
+
+    void onExecuted(T event);
 }

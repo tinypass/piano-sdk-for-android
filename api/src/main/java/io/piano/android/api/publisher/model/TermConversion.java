@@ -1,6 +1,7 @@
 package io.piano.android.api.publisher.model;
 
 import io.piano.android.api.publisher.model.Access;
+import io.piano.android.api.publisher.model.PromoCode;
 import io.piano.android.api.publisher.model.Term;
 import io.piano.android.api.publisher.model.UserPayment;
 import io.piano.android.api.publisher.model.UserSubscription;
@@ -20,7 +21,7 @@ public class TermConversion {
   private Date createDate = null;
   private String browserId = null;
   private UserSubscription subscription = null;
-
+  private PromoCode promoCode = null;
   
   /**
    * Term conversion id
@@ -32,6 +33,7 @@ public class TermConversion {
   public void setTermConversionId(String termConversionId) {
     this.termConversionId = termConversionId;
   }
+  
   /**
    * The term that was converted
    **/
@@ -42,6 +44,7 @@ public class TermConversion {
   public void setTerm(Term term) {
     this.term = term;
   }
+  
   /**
    * The term conversion type
    **/
@@ -52,6 +55,7 @@ public class TermConversion {
   public void setType(String type) {
     this.type = type;
   }
+  
   /**
    * Application aid
    **/
@@ -62,6 +66,7 @@ public class TermConversion {
   public void setAid(String aid) {
     this.aid = aid;
   }
+  
   /**
    * The access that was created as a result of the term conversion
    **/
@@ -72,6 +77,7 @@ public class TermConversion {
   public void setUserAccess(Access userAccess) {
     this.userAccess = userAccess;
   }
+  
   /**
    * The payment that was created during term conversion
    **/
@@ -82,6 +88,7 @@ public class TermConversion {
   public void setUserPayment(UserPayment userPayment) {
     this.userPayment = userPayment;
   }
+  
   /**
    * The creation date
    **/
@@ -92,6 +99,7 @@ public class TermConversion {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
+  
   /**
    * Unique browser identifier
    **/
@@ -102,6 +110,7 @@ public class TermConversion {
   public void setBrowserId(String browserId) {
     this.browserId = browserId;
   }
+  
   /**
    * User subscription
    **/
@@ -112,7 +121,18 @@ public class TermConversion {
   public void setSubscription(UserSubscription subscription) {
     this.subscription = subscription;
   }
+  
+  /**
+   * Promo code, if applicable
+   **/
+  public PromoCode getPromoCode() {
+    return promoCode;
+  }
 
+  public void setPromoCode(PromoCode promoCode) {
+    this.promoCode = promoCode;
+  }
+  
   public static TermConversion fromJson(JSONObject json) throws JSONException {
     TermConversion termConversion = new TermConversion();
 
@@ -125,6 +145,7 @@ public class TermConversion {
     termConversion.createDate = new Date(json.optLong("create_date") * 1000);
     termConversion.browserId = json.optString("browser_id");
     termConversion.subscription = UserSubscription.fromJson(json.optJSONObject("subscription"));
+    termConversion.promoCode = PromoCode.fromJson(json.optJSONObject("promo_code"));
     
     return termConversion;
   }

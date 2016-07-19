@@ -29,7 +29,6 @@ public class PaymentInquiry {
   private String source = null;
   private String currency = null;
   private String refundedDate = null;
-
   
   /**
    * Payment inquiry public id
@@ -41,6 +40,7 @@ public class PaymentInquiry {
   public void setPaymentInquiryId(String paymentInquiryId) {
     this.paymentInquiryId = paymentInquiryId;
   }
+  
   /**
    * The resource
    **/
@@ -51,6 +51,7 @@ public class PaymentInquiry {
   public void setResource(Resource resource) {
     this.resource = resource;
   }
+  
   /**
    * Application ref
    **/
@@ -61,6 +62,7 @@ public class PaymentInquiry {
   public void setApp(App app) {
     this.app = app;
   }
+  
   /**
    * Inquiry state
    **/
@@ -71,6 +73,7 @@ public class PaymentInquiry {
   public void setState(Integer state) {
     this.state = state;
   }
+  
   /**
    * Inquiry reason
    **/
@@ -81,6 +84,7 @@ public class PaymentInquiry {
   public void setInquiryReason(String inquiryReason) {
     this.inquiryReason = inquiryReason;
   }
+  
   /**
    * The creation date
    **/
@@ -91,6 +95,7 @@ public class PaymentInquiry {
   public void setCreateDate(String createDate) {
     this.createDate = createDate;
   }
+  
   /**
    **/
   public List<InquiryComment> getInquiryComments() {
@@ -100,6 +105,7 @@ public class PaymentInquiry {
   public void setInquiryComments(List<InquiryComment> inquiryComments) {
     this.inquiryComments = inquiryComments;
   }
+  
   /**
    * Category
    **/
@@ -110,6 +116,7 @@ public class PaymentInquiry {
   public void setCategory(String category) {
     this.category = category;
   }
+  
   /**
    **/
   public User getUpdateStateBy() {
@@ -119,6 +126,7 @@ public class PaymentInquiry {
   public void setUpdateStateBy(User updateStateBy) {
     this.updateStateBy = updateStateBy;
   }
+  
   /**
    * Date when state was updated
    **/
@@ -129,6 +137,7 @@ public class PaymentInquiry {
   public void setUpdateStateDate(String updateStateDate) {
     this.updateStateDate = updateStateDate;
   }
+  
   /**
    * The start date
    **/
@@ -139,6 +148,7 @@ public class PaymentInquiry {
   public void setStartDate(String startDate) {
     this.startDate = startDate;
   }
+  
   /**
    * Expire date
    **/
@@ -149,6 +159,7 @@ public class PaymentInquiry {
   public void setExpireDate(String expireDate) {
     this.expireDate = expireDate;
   }
+  
   /**
    * Date of transaction
    **/
@@ -159,6 +170,7 @@ public class PaymentInquiry {
   public void setTransactionDate(String transactionDate) {
     this.transactionDate = transactionDate;
   }
+  
   /**
    * Transaction id
    **/
@@ -169,6 +181,7 @@ public class PaymentInquiry {
   public void setTransactionId(String transactionId) {
     this.transactionId = transactionId;
   }
+  
   /**
    * spent money
    **/
@@ -179,6 +192,7 @@ public class PaymentInquiry {
   public void setSpentMoney(Double spentMoney) {
     this.spentMoney = spentMoney;
   }
+  
   /**
    * Source
    **/
@@ -189,6 +203,7 @@ public class PaymentInquiry {
   public void setSource(String source) {
     this.source = source;
   }
+  
   /**
    * User payment currency
    **/
@@ -199,6 +214,7 @@ public class PaymentInquiry {
   public void setCurrency(String currency) {
     this.currency = currency;
   }
+  
   /**
    * Refunded date
    **/
@@ -209,7 +225,7 @@ public class PaymentInquiry {
   public void setRefundedDate(String refundedDate) {
     this.refundedDate = refundedDate;
   }
-
+  
   public static PaymentInquiry fromJson(JSONObject json) throws JSONException {
     PaymentInquiry paymentInquiry = new PaymentInquiry();
 

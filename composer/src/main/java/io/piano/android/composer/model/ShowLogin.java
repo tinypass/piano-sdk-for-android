@@ -9,7 +9,7 @@ public class ShowLogin extends Event {
     public static ShowLogin fromJson(JSONObject json) {
         ShowLogin showLogin = new ShowLogin();
 
-        showLogin.userProvider = json.optString("userProvider");
+        showLogin.userProvider = json.optJSONObject("eventParams").optString("userProvider");
 
         return showLogin;
     }

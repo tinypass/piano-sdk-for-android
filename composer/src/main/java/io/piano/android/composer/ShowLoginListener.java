@@ -1,6 +1,6 @@
 package io.piano.android.composer;
 
-public interface ShowLoginListener extends EventTypeListener {
+import io.piano.android.composer.model.ShowLogin;
 
-    void onExecuted(String userProvider);
+public interface ShowLoginListener extends EventTypeListener<ShowLogin> {
 }

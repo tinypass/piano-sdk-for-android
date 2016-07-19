@@ -11,7 +11,6 @@ public class ResourceStats {
   private Integer numCustomers = null;
   private Integer numTerms = null;
   private String tags = null;
-
   
   /**
    * Unique id for resource
@@ -23,6 +22,7 @@ public class ResourceStats {
   public void setRid(String rid) {
     this.rid = rid;
   }
+  
   /**
    * Number of bundles the resource has
    **/
@@ -33,6 +33,7 @@ public class ResourceStats {
   public void setNumBundles(Integer numBundles) {
     this.numBundles = numBundles;
   }
+  
   /**
    * Number of customers the resource has
    **/
@@ -43,6 +44,7 @@ public class ResourceStats {
   public void setNumCustomers(Integer numCustomers) {
     this.numCustomers = numCustomers;
   }
+  
   /**
    * Number of terms the resource has
    **/
@@ -53,6 +55,7 @@ public class ResourceStats {
   public void setNumTerms(Integer numTerms) {
     this.numTerms = numTerms;
   }
+  
   /**
    * The tags of the page
    **/
@@ -63,7 +66,7 @@ public class ResourceStats {
   public void setTags(String tags) {
     this.tags = tags;
   }
-
+  
   public static ResourceStats fromJson(JSONObject json) throws JSONException {
     ResourceStats resourceStats = new ResourceStats();
 
