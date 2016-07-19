@@ -7,7 +7,7 @@ This document details the process of integrating the Piano SDK with your Android
 
 ### Download the Piano SDK
 #### Gradle
-The Piano SDK is available as an AAR via jCenter. To add the `api`, `oauth`, etc. dependencies, open your project’s `build.gradle` and update the `repositories` and `dependencies` blocks as follows:
+The Piano SDK is available as an AAR via jCenter. To add the `api`, `composer`, `oauth`, etc. dependencies, open your project’s `build.gradle` and update the `repositories` and `dependencies` blocks as follows:
 ```
 repositories {
     // ... other project repositories
@@ -18,13 +18,17 @@ repositories {
 
 dependencies {
     // ... other project dependencies
-    compile 'io.piano.android:api:1.0.0-alpha1'
 
-    compile 'io.piano.android:oauth:1.0.0-alpha1' // optional
+    compile 'io.piano.android:api:1.0.0-alpha2'
+
+    compile 'io.piano.android:composer:1.0.0-alpha2'
+
+    compile 'io.piano.android:oauth:1.0.0-alpha2'
 }
 ```
 
 ### Usage
+#### [API](https://api.tinypass.com/api-docs/dist/index.html)
 Initialize `PianoClient` in your Application's `onCreate` method:
 ```
 @Override
@@ -51,8 +55,13 @@ PianoClient pianoClient = ((PianoSampleApplication) getApplication()).getPianoCl
 List<Access> list = pianoClient.getUserAccessApi().list(pianoClient.getAid());
 ```
 
+#### [Composer](https://piano.io/composer/)
+Take a look at [ComposerActivity](sample/src/main/java/io/piano/android/sample/feature/composer/ComposerActivity.java)
+
 ### Sample
 We created a sample app to showcase our SDK and highlight some of the features provided by each API.
+
+Don't forget to specify `io.piano.aid=$YOUR_AID` in `piano.properties` in `sample` before you start importing!
 
 ### License
 ```
