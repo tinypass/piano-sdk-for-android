@@ -40,6 +40,4 @@ dependencies {
     compile project(':api')
     compile project(':oauth')
     compile project(':composer')
-
-    testCompile 'junit:junit:4.12'
 }

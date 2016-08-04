@@ -15,6 +15,11 @@ public class ExperienceResponse {
     public List<Event> events;
 
     public static ExperienceResponse fromJson(JSONObject json) {
+        JSONArray errors = json.optJSONArray("errors");
+        if ((errors != null) && (errors.length() > 0)) {
+            return null;
+        }
+
         ExperienceResponse experienceResponse = new ExperienceResponse();
 
         JSONObject models = json.optJSONObject("models");

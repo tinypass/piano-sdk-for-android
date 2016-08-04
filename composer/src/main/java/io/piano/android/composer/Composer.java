@@ -55,6 +55,7 @@ public final class Composer {
     private static final int RANDOM_STRING_LENGTH = RANDOM_STRING.length();
 
     public static final String USER_PROVIDER_TINYPASS_ACCOUNTS = "tinypass_accounts";
+    public static final String USER_PROVIDER_JANRAIN = "janrain";
 
     private static volatile OkHttpClient okHttpClient;
     private static final Object LOCK = new Object();
@@ -69,7 +70,6 @@ public final class Composer {
     private String userAgent;
     private Map<String, Object> customVariables;
     private String userToken;
-    private String userProvider;
     private String url;
     private String referer;
     private List<String> tags;
@@ -124,17 +124,6 @@ public final class Composer {
 
     public Composer userToken(String userToken) {
         this.userToken = userToken;
-        return this;
-    }
-
-    public Composer userProvider(String userProvider) {
-        this.userProvider = userProvider;
-        return this;
-    }
-
-    public Composer user(String userToken, String userProvider) {
-        userToken(userToken);
-        userProvider(userProvider);
         return this;
     }
 
@@ -200,37 +189,42 @@ public final class Composer {
                 JSONObject json = null;
                 try { json = new JSONObject(jsonStr); } catch (JSONException ignored) {}
 
-                if (json != null) {
-                    ExperienceResponse experienceResponse = ExperienceResponse.fromJson(json);
+                if (json == null) {
+                    return;
+                }
 
-                    SharedPreferences.Editor editor = context.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit();
-                    editor.putString("tbc", experienceResponse.tbc);
-                    editor.putString("xbc", experienceResponse.xbc);
-                    editor.putString("tac", experienceResponse.tac);
-                    editor.apply();
+                ExperienceResponse experienceResponse = ExperienceResponse.fromJson(json);
+                if (experienceResponse == null) {
+                    return;
+                }
 
-                    for (Event event : experienceResponse.events) {
-                        Class<? extends EventTypeListener> eventTypeListenerClass = null;
+                SharedPreferences.Editor editor = context.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit();
+                editor.putString("tbc", experienceResponse.tbc);
+                editor.putString("xbc", experienceResponse.xbc);
+                editor.putString("tac", experienceResponse.tac);
+                editor.apply();
 
-                        if (event instanceof ShowLogin) {
-                            eventTypeListenerClass = ShowLoginListener.class;
-                        } else if (event instanceof MeterActive) {
-                            eventTypeListenerClass = MeterActiveListener.class;
-                        } else if (event instanceof MeterExpired) {
-                            eventTypeListenerClass = MeterExpiredListener.class;
-                        } else if (event instanceof UserSegmentTrue) {
-                            eventTypeListenerClass = UserSegmentTrueListener.class;
-                        } else if (event instanceof UserSegmentFalse) {
-                            eventTypeListenerClass = UserSegmentFalseListener.class;
-                        } else if (event instanceof ExperienceExecute) {
-                            eventTypeListenerClass = ExperienceExecuteListener.class;
-                        } else if (event instanceof NonSite) {
-                            eventTypeListenerClass = NonSiteListener.class;
-                        }
+                for (Event event : experienceResponse.events) {
+                    Class<? extends EventTypeListener> eventTypeListenerClass = null;
 
-                        if (eventTypeListenerClass != null) {
-                            fireListeners(event, findListeners(eventTypeListenerClass, eventTypeListeners));
-                        }
+                    if (event instanceof ShowLogin) {
+                        eventTypeListenerClass = ShowLoginListener.class;
+                    } else if (event instanceof MeterActive) {
+                        eventTypeListenerClass = MeterActiveListener.class;
+                    } else if (event instanceof MeterExpired) {
+                        eventTypeListenerClass = MeterExpiredListener.class;
+                    } else if (event instanceof UserSegmentTrue) {
+                        eventTypeListenerClass = UserSegmentTrueListener.class;
+                    } else if (event instanceof UserSegmentFalse) {
+                        eventTypeListenerClass = UserSegmentFalseListener.class;
+                    } else if (event instanceof ExperienceExecute) {
+                        eventTypeListenerClass = ExperienceExecuteListener.class;
+                    } else if (event instanceof NonSite) {
+                        eventTypeListenerClass = NonSiteListener.class;
+                    }
+
+                    if (eventTypeListenerClass != null) {
+                        fireListeners(event, findListeners(eventTypeListenerClass, eventTypeListeners));
                     }
                 }
             }
@@ -293,9 +287,8 @@ public final class Composer {
             requestBuilder.add("custom_variables", new JSONObject(customVariables).toString());
         }
 
-        if (!TextUtils.isEmpty(userToken) && !TextUtils.isEmpty(userProvider)) {
+        if (!TextUtils.isEmpty(userToken)) {
             requestBuilder.add("user_token", userToken);
-            requestBuilder.add("user_provider", userProvider);
         }
 
         if (!TextUtils.isEmpty(url)) {

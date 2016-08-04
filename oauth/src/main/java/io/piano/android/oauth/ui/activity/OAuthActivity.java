@@ -17,6 +17,8 @@ public class OAuthActivity extends Activity {
 
     private static final String REDIRECT_URI = "piano-sdk-for-android://oauth";
 
+    private static final String ACCESS_TOKEN_PREFIX = "{oauth}";
+
     public static final String EXTRA_ENDPOINT = "endpoint";
     public static final String EXTRA_SANDBOX = "sandbox";
     public static final String EXTRA_AID = "aid";
@@ -46,7 +48,7 @@ public class OAuthActivity extends Activity {
                         if ("access_token".equals(nameValue[0])) {
                             String accessToken = nameValue[1];
                             Intent intent = new Intent();
-                            intent.putExtra(EXTRA_ACCESS_TOKEN, accessToken);
+                            intent.putExtra(EXTRA_ACCESS_TOKEN, ACCESS_TOKEN_PREFIX + accessToken);
                             setResult(RESULT_OK, intent);
                             finish();
                             break;

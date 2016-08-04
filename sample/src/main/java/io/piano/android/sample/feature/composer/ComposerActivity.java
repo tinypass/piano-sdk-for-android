@@ -33,7 +33,7 @@ public class ComposerActivity extends AppCompatActivity {
         String userToken = getSharedPreferences("oauth", MODE_PRIVATE).getString("accessToken", null);
 
         new Composer(this, BuildConfig.PIANO_AID, true)
-                .user(userToken, Composer.USER_PROVIDER_TINYPASS_ACCOUNTS)
+                .userToken(userToken)
                 .tag("tag")
                 .debug(true)
                 .addListener(new ShowLoginListener() {

@@ -14,7 +14,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".feature.composer.ComposerActivity" android:label="Lorem Ipsum" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".feature.composer.ComposerActivity" android:label="Lorem Ipsum" android:theme="@style/AppTheme.NoActionBar" android:configChanges="orientation|keyboardHidden|screenSize"/>
     </application>
 
 </manifest>

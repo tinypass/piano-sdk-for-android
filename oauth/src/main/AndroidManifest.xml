@@ -4,6 +4,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application>
-        <activity android:name=".ui.activity.OAuthActivity"/>
+        <activity android:name=".ui.activity.OAuthActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
     </application>
 </manifest>
