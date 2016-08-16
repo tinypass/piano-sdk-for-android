@@ -40,10 +40,7 @@ public class ComposerActivity extends AppCompatActivity {
                     @Override
                     public void onExecuted(ShowLogin showLogin) {
                         if (Composer.USER_PROVIDER_TINYPASS_ACCOUNTS.equals(showLogin.userProvider)) {
-                            Intent intent = new Intent(ComposerActivity.this, OAuthActivity.class);
-                            intent.putExtra(OAuthActivity.EXTRA_AID, BuildConfig.PIANO_AID);
-                            intent.putExtra(OAuthActivity.EXTRA_SANDBOX, BuildConfig.DEBUG);
-                            startActivityForResult(intent, REQUEST_CODE_OAUTH);
+                            OAuthActivity.start(ComposerActivity.this, REQUEST_CODE_OAUTH, BuildConfig.PIANO_AID, BuildConfig.DEBUG);
                         }
                     }
                 })
