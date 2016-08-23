@@ -2,15 +2,14 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.SalesTaxRateModel;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.SalesTaxRateModel;
 
 public class PublisherTaxRateApi {
 
@@ -21,7 +20,7 @@ public class PublisherTaxRateApi {
   }
   
   /**
-   * Sets Tinypass to charge sales tax rate for selected states
+   * Configure tax rate for selected states
    * 
    * @param aid Application aid
    * @param stateChargeIds States to charge IDs
@@ -100,7 +99,7 @@ public class PublisherTaxRateApi {
   }
   
   /**
-   * Lists sales tax rates for states and charge attribute
+   * Lists tax rates for states and charge attribute
    * 
    * @param aid Application aid
    * @param offset Offset from which to start returning results

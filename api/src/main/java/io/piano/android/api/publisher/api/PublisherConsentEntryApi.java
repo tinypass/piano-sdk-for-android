@@ -9,33 +9,51 @@ import java.util.Map;
 
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-import io.piano.android.api.publisher.model.TaxProviderConfiguration;
+import io.piano.android.api.publisher.model.ConsentBoxEntry;
 
-public class PublisherTaxTinypassApi {
+public class PublisherConsentEntryApi {
 
   private ApiInvoker apiInvoker;
 
-  public PublisherTaxTinypassApi(ApiInvoker apiInvoker) {
+  public PublisherConsentEntryApi(ApiInvoker apiInvoker) {
     this.apiInvoker = apiInvoker;
   }
   
   /**
-   * Creates a new tax provider configuration
+   * Find consent box entries
    * 
    * @param aid Application aid
-   * @return TaxProviderConfiguration
+   * @param uid User&#39;s uid
+   * @param offset Offset
+   * @param limit Limit
+   * @return List<ConsentBoxEntry>
    */
-  public TaxProviderConfiguration createTinypass(String aid) throws ApiException {
+  public List<ConsentBoxEntry> entryList(String aid, String uid, Integer offset, Integer limit) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
     if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling createTinypass");
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling entryList");
+    }
+    
+    // verify the required parameter 'uid' is set
+    if (uid == null) {
+       throw new ApiException(400, "Missing the required parameter 'uid' when calling entryList");
+    }
+    
+    // verify the required parameter 'offset' is set
+    if (offset == null) {
+       throw new ApiException(400, "Missing the required parameter 'offset' when calling entryList");
+    }
+    
+    // verify the required parameter 'limit' is set
+    if (limit == null) {
+       throw new ApiException(400, "Missing the required parameter 'limit' when calling entryList");
     }
     
 
     // create path and map variables
-    String path = "/publisher/tax/tinypass/create";
+    String path = "/publisher/consent/entry/list";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -46,6 +64,12 @@ public class PublisherTaxTinypassApi {
 
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "uid", uid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "offset", offset));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
     
 
     
@@ -72,7 +96,7 @@ public class PublisherTaxTinypassApi {
     try {
       String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return (TaxProviderConfiguration) ApiInvoker.deserialize(response, "", TaxProviderConfiguration.class);
+        return (List<ConsentBoxEntry>) ApiInvoker.deserialize(response, "array", ConsentBoxEntry.class);
       }
       else {
         return null;

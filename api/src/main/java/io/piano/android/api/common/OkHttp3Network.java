@@ -1,8 +1,11 @@
 package io.piano.android.api.common;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
+import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -12,7 +15,11 @@ public class OkHttp3Network implements Network {
     private Call.Factory client;
 
     public OkHttp3Network() {
-        this.client = new OkHttpClient.Builder().build();
+        this.client = new OkHttpClient.Builder()
+                .connectTimeout(10_000, TimeUnit.MILLISECONDS)
+                .readTimeout(60_000, TimeUnit.MILLISECONDS)
+                .writeTimeout(60_000, TimeUnit.MILLISECONDS)
+                .build();
     }
 
     public OkHttp3Network(Call.Factory client) {
@@ -41,6 +48,20 @@ public class OkHttp3Network implements Network {
     }
 
     private okhttp3.RequestBody createRequestBody(RequestBody body) {
-        return null;
+        if (body == null) {
+            return null;
+        }
+
+        Map<String, String> formParams = body.getFormParams();
+        if ((formParams == null) || formParams.isEmpty()) {
+            return null;
+        }
+
+        FormBody.Builder builder = new FormBody.Builder();
+        for (Map.Entry<String, String> entry : formParams.entrySet()) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+
+        return builder.build();
     }
 }

@@ -1,11 +1,78 @@
 package io.piano.android.api;
 
 import android.content.Context;
+import android.text.TextUtils;
 
-import io.piano.android.api.anon.api.*;
-import io.piano.android.api.publisher.api.*;
-import io.piano.android.api.user.api.*;
-import io.piano.android.api.common.*;
+import io.piano.android.api.anon.api.AccessApi;
+import io.piano.android.api.anon.api.AccessTokenApi;
+import io.piano.android.api.anon.api.AnonApi;
+import io.piano.android.api.anon.api.AnonCurrencyListApi;
+import io.piano.android.api.anon.api.AnonCurrencyListWorldpayApi;
+import io.piano.android.api.anon.api.AnonMeterApi;
+import io.piano.android.api.anon.api.ConversionApi;
+import io.piano.android.api.anon.api.ConversionExternalApi;
+import io.piano.android.api.anon.api.ConversionRegistrationApi;
+import io.piano.android.api.anon.api.ExperienceApi;
+import io.piano.android.api.anon.api.OauthApi;
+import io.piano.android.api.anon.api.SubscriptionApi;
+import io.piano.android.api.common.ApiInvoker;
+import io.piano.android.api.common.Network;
+import io.piano.android.api.publisher.api.PublisherAppApi;
+import io.piano.android.api.publisher.api.PublisherAppFeaturesApi;
+import io.piano.android.api.publisher.api.PublisherConsentApi;
+import io.piano.android.api.publisher.api.PublisherConsentEntryApi;
+import io.piano.android.api.publisher.api.PublisherConsentPageApi;
+import io.piano.android.api.publisher.api.PublisherConversionApi;
+import io.piano.android.api.publisher.api.PublisherConversionCustomApi;
+import io.piano.android.api.publisher.api.PublisherConversionExternalApi;
+import io.piano.android.api.publisher.api.PublisherConversionRegistrationApi;
+import io.piano.android.api.publisher.api.PublisherExportApi;
+import io.piano.android.api.publisher.api.PublisherExportCreateAamApi;
+import io.piano.android.api.publisher.api.PublisherExportCreateApi;
+import io.piano.android.api.publisher.api.PublisherExportUpdateApi;
+import io.piano.android.api.publisher.api.PublisherInquiryApi;
+import io.piano.android.api.publisher.api.PublisherOfferApi;
+import io.piano.android.api.publisher.api.PublisherOfferTemplateApi;
+import io.piano.android.api.publisher.api.PublisherOfferTemplateCreateApi;
+import io.piano.android.api.publisher.api.PublisherOfferTermApi;
+import io.piano.android.api.publisher.api.PublisherOfferTermApplicableApi;
+import io.piano.android.api.publisher.api.PublisherOfferTermOfferApi;
+import io.piano.android.api.publisher.api.PublisherPaymentProviderConfigurationGetWorldpayApi;
+import io.piano.android.api.publisher.api.PublisherPromotionApi;
+import io.piano.android.api.publisher.api.PublisherPromotionCodeApi;
+import io.piano.android.api.publisher.api.PublisherPromotionTermApi;
+import io.piano.android.api.publisher.api.PublisherReportConversionApi;
+import io.piano.android.api.publisher.api.PublisherResourceApi;
+import io.piano.android.api.publisher.api.PublisherResourceBundleApi;
+import io.piano.android.api.publisher.api.PublisherResourceStatsApi;
+import io.piano.android.api.publisher.api.PublisherResourceTagApi;
+import io.piano.android.api.publisher.api.PublisherResourceUserApi;
+import io.piano.android.api.publisher.api.PublisherSubscriptionApi;
+import io.piano.android.api.publisher.api.PublisherSubscriptionCountFailedApi;
+import io.piano.android.api.publisher.api.PublisherSubscriptionExportApi;
+import io.piano.android.api.publisher.api.PublisherTaxApi;
+import io.piano.android.api.publisher.api.PublisherTaxRateApi;
+import io.piano.android.api.publisher.api.PublisherTaxTaxJarApi;
+import io.piano.android.api.publisher.api.PublisherTaxTinypassApi;
+import io.piano.android.api.publisher.api.PublisherTermApi;
+import io.piano.android.api.publisher.api.PublisherTermCustomApi;
+import io.piano.android.api.publisher.api.PublisherTermExternalApi;
+import io.piano.android.api.publisher.api.PublisherTermPaymentApi;
+import io.piano.android.api.publisher.api.PublisherTermRegistrationApi;
+import io.piano.android.api.publisher.api.PublisherTermStatsApi;
+import io.piano.android.api.publisher.api.PublisherTermUpdateExternalApiApi;
+import io.piano.android.api.publisher.api.PublisherTestApi;
+import io.piano.android.api.publisher.api.PublisherUserAccessActiveApi;
+import io.piano.android.api.publisher.api.PublisherUserAccessApi;
+import io.piano.android.api.publisher.api.PublisherUserApi;
+import io.piano.android.api.publisher.api.PublisherUserAppApi;
+import io.piano.android.api.publisher.api.PublisherUserEmailApi;
+import io.piano.android.api.publisher.api.PublisherWebhookApi;
+import io.piano.android.api.publisher.api.PublisherWebhookResponseApi;
+import io.piano.android.api.publisher.api.PublisherWebhookSettingsApi;
+import io.piano.android.api.user.api.UserAccessApi;
+import io.piano.android.api.user.api.UserApi;
+import io.piano.android.api.user.api.UserConsentApi;
 
 public class PianoClient {
 
@@ -15,17 +82,31 @@ public class PianoClient {
 	private Context context;
 	private String aid;
 	private boolean sandbox;
+	private String endpoint;
 	private ApiInvoker apiInvoker;
 
 	public PianoClient(Context context, String aid, boolean sandbox) {
-		this(context, aid, sandbox, null);
+		this(context, aid, sandbox, null, null);
 	}
 
 	public PianoClient(Context context, String aid, boolean sandbox, Network client) {
-		this.context = context;
+		this(context, aid, sandbox, null, client);
+	}
+
+	public PianoClient(Context context, String aid, String endpoint) {
+		this(context, aid, false, endpoint, null);
+	}
+
+	public PianoClient(Context context, String aid, String endpoint, Network client) {
+		this(context, aid, false, endpoint, client);
+	}
+
+	private PianoClient(Context context, String aid, boolean sandbox, String endpoint, Network client) {
+		this.context = context.getApplicationContext();
 		this.aid = aid;
 		this.sandbox = sandbox;
-		this.apiInvoker = new ApiInvoker(sandbox ? BASE_PATH_SANDBOX : BASE_PATH_PROD, client);
+		this.endpoint = endpoint;
+		this.apiInvoker = new ApiInvoker(TextUtils.isEmpty(endpoint) ? sandbox ? BASE_PATH_SANDBOX : BASE_PATH_PROD : endpoint, client);
 	}
 
 	public String getAid() {
@@ -34,6 +115,10 @@ public class PianoClient {
 
 	public boolean isSandbox() {
 		return sandbox;
+	}
+
+	public String getEndpoint() {
+		return endpoint;
 	}
 
 	public void setAccessToken(String accessToken) {
@@ -142,6 +227,27 @@ public class PianoClient {
 		return apiPublisherAppFeatures;
 	}
 
+	private PublisherConsentApi apiPublisherConsent;
+
+	public PublisherConsentApi getPublisherConsentApi() {
+		if (apiPublisherConsent == null) apiPublisherConsent = new PublisherConsentApi(apiInvoker);
+		return apiPublisherConsent;
+	}
+
+	private PublisherConsentEntryApi apiPublisherConsentEntry;
+
+	public PublisherConsentEntryApi getPublisherConsentEntryApi() {
+		if (apiPublisherConsentEntry == null) apiPublisherConsentEntry = new PublisherConsentEntryApi(apiInvoker);
+		return apiPublisherConsentEntry;
+	}
+
+	private PublisherConsentPageApi apiPublisherConsentPage;
+
+	public PublisherConsentPageApi getPublisherConsentPageApi() {
+		if (apiPublisherConsentPage == null) apiPublisherConsentPage = new PublisherConsentPageApi(apiInvoker);
+		return apiPublisherConsentPage;
+	}
+
 	private PublisherConversionApi apiPublisherConversion;
 
 	public PublisherConversionApi getPublisherConversionApi() {
@@ -168,6 +274,34 @@ public class PianoClient {
 	public PublisherConversionRegistrationApi getPublisherConversionRegistrationApi() {
 		if (apiPublisherConversionRegistration == null) apiPublisherConversionRegistration = new PublisherConversionRegistrationApi(apiInvoker);
 		return apiPublisherConversionRegistration;
+	}
+
+	private PublisherExportApi apiPublisherExport;
+
+	public PublisherExportApi getPublisherExportApi() {
+		if (apiPublisherExport == null) apiPublisherExport = new PublisherExportApi(apiInvoker);
+		return apiPublisherExport;
+	}
+
+	private PublisherExportCreateApi apiPublisherExportCreate;
+
+	public PublisherExportCreateApi getPublisherExportCreateApi() {
+		if (apiPublisherExportCreate == null) apiPublisherExportCreate = new PublisherExportCreateApi(apiInvoker);
+		return apiPublisherExportCreate;
+	}
+
+	private PublisherExportCreateAamApi apiPublisherExportCreateAam;
+
+	public PublisherExportCreateAamApi getPublisherExportCreateAamApi() {
+		if (apiPublisherExportCreateAam == null) apiPublisherExportCreateAam = new PublisherExportCreateAamApi(apiInvoker);
+		return apiPublisherExportCreateAam;
+	}
+
+	private PublisherExportUpdateApi apiPublisherExportUpdate;
+
+	public PublisherExportUpdateApi getPublisherExportUpdateApi() {
+		if (apiPublisherExportUpdate == null) apiPublisherExportUpdate = new PublisherExportUpdateApi(apiInvoker);
+		return apiPublisherExportUpdate;
 	}
 
 	private PublisherInquiryApi apiPublisherInquiry;
@@ -462,6 +596,13 @@ public class PianoClient {
 	public UserAccessApi getUserAccessApi() {
 		if (apiUserAccess == null) apiUserAccess = new UserAccessApi(apiInvoker);
 		return apiUserAccess;
+	}
+
+	private UserConsentApi apiUserConsent;
+
+	public UserConsentApi getUserConsentApi() {
+		if (apiUserConsent == null) apiUserConsent = new UserConsentApi(apiInvoker);
+		return apiUserConsent;
 	}
 
 }

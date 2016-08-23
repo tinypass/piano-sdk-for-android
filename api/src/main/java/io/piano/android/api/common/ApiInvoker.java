@@ -7,28 +7,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.net.URLEncoder;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
+import java.util.Collection;
 import java.util.Date;
-import java.util.TimeZone;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class ApiInvoker {
 
@@ -280,6 +270,7 @@ public class ApiInvoker {
           }
           */
         }
+        request.setBody(new RequestBody(formParams));
         response = client.execute(request);
       }
 

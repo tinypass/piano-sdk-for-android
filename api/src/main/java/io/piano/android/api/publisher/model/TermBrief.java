@@ -1,6 +1,5 @@
 package io.piano.android.api.publisher.model;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,6 +7,7 @@ public class TermBrief {
   
   private String termId = null;
   private String name = null;
+  private Boolean disabled = null;
   
   /**
    * Term ID
@@ -31,11 +31,23 @@ public class TermBrief {
     this.name = name;
   }
   
+  /**
+   * Term disabled
+   **/
+  public Boolean getDisabled() {
+    return disabled;
+  }
+
+  public void setDisabled(Boolean disabled) {
+    this.disabled = disabled;
+  }
+  
   public static TermBrief fromJson(JSONObject json) throws JSONException {
     TermBrief termBrief = new TermBrief();
 
     termBrief.termId = json.optString("term_id");
     termBrief.name = json.optString("name");
+    termBrief.disabled = json.optBoolean("disabled");
     
     return termBrief;
   }

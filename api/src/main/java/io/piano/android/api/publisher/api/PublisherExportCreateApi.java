@@ -11,47 +11,56 @@ import java.util.Map;
 
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-import io.piano.android.api.publisher.model.User;
+import io.piano.android.api.publisher.model.Export;
 
-public class PublisherUserApi {
+public class PublisherExportCreateApi {
 
   private ApiInvoker apiInvoker;
 
-  public PublisherUserApi(ApiInvoker apiInvoker) {
+  public PublisherExportCreateApi(ApiInvoker apiInvoker) {
     this.apiInvoker = apiInvoker;
   }
   
   /**
-   * Creates a user
+   * Create access report
    * 
    * @param aid Application aid
-   * @param uid User&#39;s uid
-   * @param email User&#39;s email address
-   * @param firstName User&#39;s first name
-   * @param lastName User&#39;s last name
-   * @return User
+   * @param exportName Downloadable report name
+   * @param dateFrom Date from
+   * @param dateTo Date to
+   * @param accessStatus Access status
+   * @param termType Term type
+   * @param termId Term ID
+   * @param nextBillingDate Next billing date
+   * @param lastPaymentStatus Last payment status
+   * @return Export
    */
-  public User create(String aid, String uid, String email, String firstName, String lastName) throws ApiException {
+  public Export createAccessReportExport(String aid, String exportName, Date dateFrom, Date dateTo, String accessStatus, List<String> termType, List<String> termId, Date nextBillingDate, String lastPaymentStatus) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
     if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling create");
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling createAccessReportExport");
     }
     
-    // verify the required parameter 'uid' is set
-    if (uid == null) {
-       throw new ApiException(400, "Missing the required parameter 'uid' when calling create");
+    // verify the required parameter 'exportName' is set
+    if (exportName == null) {
+       throw new ApiException(400, "Missing the required parameter 'exportName' when calling createAccessReportExport");
     }
     
-    // verify the required parameter 'email' is set
-    if (email == null) {
-       throw new ApiException(400, "Missing the required parameter 'email' when calling create");
+    // verify the required parameter 'dateFrom' is set
+    if (dateFrom == null) {
+       throw new ApiException(400, "Missing the required parameter 'dateFrom' when calling createAccessReportExport");
+    }
+    
+    // verify the required parameter 'dateTo' is set
+    if (dateTo == null) {
+       throw new ApiException(400, "Missing the required parameter 'dateTo' when calling createAccessReportExport");
     }
     
 
     // create path and map variables
-    String path = "/publisher/user/create";
+    String path = "/publisher/export/create/accessReportExport";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -60,6 +69,24 @@ public class PublisherUserApi {
     // form params
     Map<String, String> formParams = new HashMap<String, String>();
 
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "export_name", exportName));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "access_status", accessStatus));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("csv", "term_type", termType));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("csv", "term_id", termId));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "next_billing_date", nextBillingDate));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "last_payment_status", lastPaymentStatus));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "date_from", dateFrom));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "date_to", dateTo));
     
 
     
@@ -74,44 +101,19 @@ public class PublisherUserApi {
       // file uploading
       MultipartEntityBuilder builder = MultipartEntityBuilder.create();
       
-      if (aid != null) {
-        builder.addTextBody("aid", ApiInvoker.parameterToString(aid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (uid != null) {
-        builder.addTextBody("uid", ApiInvoker.parameterToString(uid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (email != null) {
-        builder.addTextBody("email", ApiInvoker.parameterToString(email), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (firstName != null) {
-        builder.addTextBody("first_name", ApiInvoker.parameterToString(firstName), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (lastName != null) {
-        builder.addTextBody("last_name", ApiInvoker.parameterToString(lastName), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
       */
     } else {
       // normal form params
-      formParams.put("aid", ApiInvoker.parameterToString(aid));
-      formParams.put("uid", ApiInvoker.parameterToString(uid));
-      formParams.put("email", ApiInvoker.parameterToString(email));
-      formParams.put("first_name", ApiInvoker.parameterToString(firstName));
-      formParams.put("last_name", ApiInvoker.parameterToString(lastName));
       
     }
 
     try {
-      String response = apiInvoker.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, contentType);
+      String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return (User) ApiInvoker.deserialize(response, "", User.class);
+        return (Export) ApiInvoker.deserialize(response, "", Export.class);
       }
       else {
         return null;
@@ -122,28 +124,36 @@ public class PublisherUserApi {
   }
   
   /**
-   * Disables a user
+   * Create daily activity report
    * 
    * @param aid Application aid
-   * @param uid User&#39;s uid
-   * @return void
+   * @param exportName Downloadable report name
+   * @param date Date
+   * @param termType Term type
+   * @param currency Currency
+   * @return Export
    */
-  public void disable(String aid, String uid) throws ApiException {
+  public Export createDailyActivityReportExport(String aid, String exportName, Date date, List<String> termType, String currency) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
     if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling disable");
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling createDailyActivityReportExport");
     }
     
-    // verify the required parameter 'uid' is set
-    if (uid == null) {
-       throw new ApiException(400, "Missing the required parameter 'uid' when calling disable");
+    // verify the required parameter 'exportName' is set
+    if (exportName == null) {
+       throw new ApiException(400, "Missing the required parameter 'exportName' when calling createDailyActivityReportExport");
+    }
+    
+    // verify the required parameter 'date' is set
+    if (date == null) {
+       throw new ApiException(400, "Missing the required parameter 'date' when calling createDailyActivityReportExport");
     }
     
 
     // create path and map variables
-    String path = "/publisher/user/disable";
+    String path = "/publisher/export/create/dailyActivityReportExport";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -152,6 +162,16 @@ public class PublisherUserApi {
     // form params
     Map<String, String> formParams = new HashMap<String, String>();
 
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "export_name", exportName));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "date", date));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("csv", "term_type", termType));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "currency", currency));
     
 
     
@@ -166,112 +186,19 @@ public class PublisherUserApi {
       // file uploading
       MultipartEntityBuilder builder = MultipartEntityBuilder.create();
       
-      if (aid != null) {
-        builder.addTextBody("aid", ApiInvoker.parameterToString(aid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (uid != null) {
-        builder.addTextBody("uid", ApiInvoker.parameterToString(uid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
       */
     } else {
       // normal form params
-      formParams.put("aid", ApiInvoker.parameterToString(aid));
-      formParams.put("uid", ApiInvoker.parameterToString(uid));
       
     }
 
     try {
-      String response = apiInvoker.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, contentType);
+      String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return ;
-      }
-      else {
-        return ;
-      }
-    } catch (ApiException ex) {
-      throw ex;
-    }
-  }
-  
-  /**
-   * Gets a user
-   * 
-   * @param aid Application aid
-   * @param uid User&#39;s uid
-   * @param disabled If the object is disabled
-   * @return User
-   */
-  public User get(String aid, String uid, Boolean disabled) throws ApiException {
-    Object postBody = null;
-    
-    // verify the required parameter 'aid' is set
-    if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling get");
-    }
-    
-    // verify the required parameter 'uid' is set
-    if (uid == null) {
-       throw new ApiException(400, "Missing the required parameter 'uid' when calling get");
-    }
-    
-
-    // create path and map variables
-    String path = "/publisher/user/get";
-
-    // query params
-    List<Pair<String, String>> queryParams = new ArrayList<>();
-    // header params
-    Map<String, String> headerParams = new HashMap<String, String>();
-    // form params
-    Map<String, String> formParams = new HashMap<String, String>();
-
-    
-
-    
-
-    String[] contentTypes = {
-      
-    };
-    String contentType = contentTypes.length > 0 ? contentTypes[0] : "application/json";
-
-    if (contentType.startsWith("multipart/form-data")) {
-      /*
-      // file uploading
-      MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-      
-      if (aid != null) {
-        builder.addTextBody("aid", ApiInvoker.parameterToString(aid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (uid != null) {
-        builder.addTextBody("uid", ApiInvoker.parameterToString(uid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (disabled != null) {
-        builder.addTextBody("disabled", ApiInvoker.parameterToString(disabled), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-
-      HttpEntity httpEntity = builder.build();
-      postBody = httpEntity;
-      */
-    } else {
-      // normal form params
-      formParams.put("aid", ApiInvoker.parameterToString(aid));
-      formParams.put("uid", ApiInvoker.parameterToString(uid));
-      formParams.put("disabled", ApiInvoker.parameterToString(disabled));
-      
-    }
-
-    try {
-      String response = apiInvoker.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, contentType);
-      if(response != null){
-        return (User) ApiInvoker.deserialize(response, "", User.class);
+        return (Export) ApiInvoker.deserialize(response, "", Export.class);
       }
       else {
         return null;
@@ -282,112 +209,221 @@ public class PublisherUserApi {
   }
   
   /**
-   * Lists an app&#39;s users
+   * Create monthly activity report
    * 
    * @param aid Application aid
+   * @param exportName Downloadable report name
+   * @param month Number of month
+   * @param year Year
+   * @param termType Term type
+   * @param currency Currency
+   * @return Export
+   */
+  public Export createMonthlyActivityReportExport(String aid, String exportName, Integer month, Integer year, List<String> termType, String currency) throws ApiException {
+    Object postBody = null;
+    
+    // verify the required parameter 'aid' is set
+    if (aid == null) {
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling createMonthlyActivityReportExport");
+    }
+    
+    // verify the required parameter 'exportName' is set
+    if (exportName == null) {
+       throw new ApiException(400, "Missing the required parameter 'exportName' when calling createMonthlyActivityReportExport");
+    }
+    
+    // verify the required parameter 'month' is set
+    if (month == null) {
+       throw new ApiException(400, "Missing the required parameter 'month' when calling createMonthlyActivityReportExport");
+    }
+    
+    // verify the required parameter 'year' is set
+    if (year == null) {
+       throw new ApiException(400, "Missing the required parameter 'year' when calling createMonthlyActivityReportExport");
+    }
+    
+
+    // create path and map variables
+    String path = "/publisher/export/create/monthlyActivityReportExport";
+
+    // query params
+    List<Pair<String, String>> queryParams = new ArrayList<>();
+    // header params
+    Map<String, String> headerParams = new HashMap<String, String>();
+    // form params
+    Map<String, String> formParams = new HashMap<String, String>();
+
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "export_name", exportName));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "month", month));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "year", year));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("csv", "term_type", termType));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "currency", currency));
+    
+
+    
+
+    String[] contentTypes = {
+      
+    };
+    String contentType = contentTypes.length > 0 ? contentTypes[0] : "application/json";
+
+    if (contentType.startsWith("multipart/form-data")) {
+      /*
+      // file uploading
+      MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+      
+
+      HttpEntity httpEntity = builder.build();
+      postBody = httpEntity;
+      */
+    } else {
+      // normal form params
+      
+    }
+
+    try {
+      String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
+      if(response != null){
+        return (Export) ApiInvoker.deserialize(response, "", Export.class);
+      }
+      else {
+        return null;
+      }
+    } catch (ApiException ex) {
+      throw ex;
+    }
+  }
+  
+  /**
+   * Create subscription detail report
+   * 
+   * @param aid Application aid
+   * @param exportName Downloadable report name
+   * @param dateFrom Report begin date
+   * @param dateTo Report end date
+   * @param selectBy Report filter field
+   * @param searchKeyword Search by keyword
+   * @return Export
+   */
+  public Export createSubscriptionDetailedExport(String aid, String exportName, Date dateFrom, Date dateTo, String selectBy, String searchKeyword) throws ApiException {
+    Object postBody = null;
+    
+    // verify the required parameter 'aid' is set
+    if (aid == null) {
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling createSubscriptionDetailedExport");
+    }
+    
+    // verify the required parameter 'exportName' is set
+    if (exportName == null) {
+       throw new ApiException(400, "Missing the required parameter 'exportName' when calling createSubscriptionDetailedExport");
+    }
+    
+    // verify the required parameter 'dateFrom' is set
+    if (dateFrom == null) {
+       throw new ApiException(400, "Missing the required parameter 'dateFrom' when calling createSubscriptionDetailedExport");
+    }
+    
+    // verify the required parameter 'dateTo' is set
+    if (dateTo == null) {
+       throw new ApiException(400, "Missing the required parameter 'dateTo' when calling createSubscriptionDetailedExport");
+    }
+    
+    // verify the required parameter 'selectBy' is set
+    if (selectBy == null) {
+       throw new ApiException(400, "Missing the required parameter 'selectBy' when calling createSubscriptionDetailedExport");
+    }
+    
+
+    // create path and map variables
+    String path = "/publisher/export/create/subscriptionDetailedExport";
+
+    // query params
+    List<Pair<String, String>> queryParams = new ArrayList<>();
+    // header params
+    Map<String, String> headerParams = new HashMap<String, String>();
+    // form params
+    Map<String, String> formParams = new HashMap<String, String>();
+
+    
+
+    
+
+    String[] contentTypes = {
+      
+    };
+    String contentType = contentTypes.length > 0 ? contentTypes[0] : "application/json";
+
+    if (contentType.startsWith("multipart/form-data")) {
+      /*
+      // file uploading
+      MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+      
+      if (aid != null) {
+        builder.addTextBody("aid", ApiInvoker.parameterToString(aid), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (exportName != null) {
+        builder.addTextBody("export_name", ApiInvoker.parameterToString(exportName), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (dateFrom != null) {
+        builder.addTextBody("date_from", ApiInvoker.parameterToString(dateFrom), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (dateTo != null) {
+        builder.addTextBody("date_to", ApiInvoker.parameterToString(dateTo), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (selectBy != null) {
+        builder.addTextBody("select_by", ApiInvoker.parameterToString(selectBy), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (searchKeyword != null) {
+        builder.addTextBody("search_keyword", ApiInvoker.parameterToString(searchKeyword), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+
+      HttpEntity httpEntity = builder.build();
+      postBody = httpEntity;
+      */
+    } else {
+      // normal form params
+      formParams.put("aid", ApiInvoker.parameterToString(aid));
+      formParams.put("export_name", ApiInvoker.parameterToString(exportName));
+      formParams.put("date_from", ApiInvoker.parameterToString(dateFrom));
+      formParams.put("date_to", ApiInvoker.parameterToString(dateTo));
+      formParams.put("select_by", ApiInvoker.parameterToString(selectBy));
+      formParams.put("search_keyword", ApiInvoker.parameterToString(searchKeyword));
+      
+    }
+
+    try {
+      String response = apiInvoker.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, contentType);
+      if(response != null){
+        return (Export) ApiInvoker.deserialize(response, "", Export.class);
+      }
+      else {
+        return null;
+      }
+    } catch (ApiException ex) {
+      throw ex;
+    }
+  }
+  
+  /**
+   * Create user search report
+   * 
+   * @param aid Application aid
+   * @param exportName Downloadable report name
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
-   * @param disabled If the object is disabled
-   * @param q Search value
-   * @return List<User>
-   */
-  public List<User> list(String aid, Integer offset, Integer limit, Boolean disabled, String q) throws ApiException {
-    Object postBody = null;
-    
-    // verify the required parameter 'aid' is set
-    if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling list");
-    }
-    
-    // verify the required parameter 'offset' is set
-    if (offset == null) {
-       throw new ApiException(400, "Missing the required parameter 'offset' when calling list");
-    }
-    
-    // verify the required parameter 'limit' is set
-    if (limit == null) {
-       throw new ApiException(400, "Missing the required parameter 'limit' when calling list");
-    }
-    
-
-    // create path and map variables
-    String path = "/publisher/user/list";
-
-    // query params
-    List<Pair<String, String>> queryParams = new ArrayList<>();
-    // header params
-    Map<String, String> headerParams = new HashMap<String, String>();
-    // form params
-    Map<String, String> formParams = new HashMap<String, String>();
-
-    
-
-    
-
-    String[] contentTypes = {
-      
-    };
-    String contentType = contentTypes.length > 0 ? contentTypes[0] : "application/json";
-
-    if (contentType.startsWith("multipart/form-data")) {
-      /*
-      // file uploading
-      MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-      
-      if (aid != null) {
-        builder.addTextBody("aid", ApiInvoker.parameterToString(aid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (disabled != null) {
-        builder.addTextBody("disabled", ApiInvoker.parameterToString(disabled), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (q != null) {
-        builder.addTextBody("q", ApiInvoker.parameterToString(q), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (offset != null) {
-        builder.addTextBody("offset", ApiInvoker.parameterToString(offset), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (limit != null) {
-        builder.addTextBody("limit", ApiInvoker.parameterToString(limit), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-
-      HttpEntity httpEntity = builder.build();
-      postBody = httpEntity;
-      */
-    } else {
-      // normal form params
-      formParams.put("aid", ApiInvoker.parameterToString(aid));
-      formParams.put("disabled", ApiInvoker.parameterToString(disabled));
-      formParams.put("q", ApiInvoker.parameterToString(q));
-      formParams.put("offset", ApiInvoker.parameterToString(offset));
-      formParams.put("limit", ApiInvoker.parameterToString(limit));
-      
-    }
-
-    try {
-      String response = apiInvoker.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, contentType);
-      if(response != null){
-        return (List<User>) ApiInvoker.deserialize(response, "array", User.class);
-      }
-      else {
-        return null;
-      }
-    } catch (ApiException ex) {
-      throw ex;
-    }
-  }
-  
-  /**
-   * Searches an app&#39;s users
-   * 
-   * @param aid Application aid
-   * @param offset Offset from which to start returning results
-   * @param limit Maximum index of returned results
-   * @param uid User&#39;s uid
    * @param name Find users which contain a keyword in name
    * @param email Find users which contain a keyword in email
    * @param accessToResources Find users which have access to selected resources
@@ -444,29 +480,34 @@ public class PublisherUserApi {
    * @param q Search value
    * @param orderBy Field to order by
    * @param orderDirection Order direction (asc/desc)
-   * @return List<User>
+   * @return Export
    */
-  public List<User> search(String aid, Integer offset, Integer limit, String uid, String name, String email, List<String> accessToResources, List<String> convertedTerms, Date accessFrom, Date accessUntil, Date convertedTermFrom, Date convertedTermUntil, List<String> redeemedPromotions, Date redeemedPromotionFrom, Date redeemedPromotionUntil, Boolean trialPeriod, Boolean hasAccess, Boolean hasConversionTerm, Boolean hasRedeemedPromotion, Boolean includeTrialRedemptions, String spentMoneyCurrency, BigDecimal spentMoneyFrom, BigDecimal spentMoneyUntil, Date spentFromDate, Date spentUntilDate, List<Integer> paymentMethods, Date billingFailureFrom, Date billingFailureUntil, Boolean hadBillingFailure, Boolean hasPayment, List<String> activeSubscriptionToResources, Boolean hasActiveSubscription, Date subscriptionStartFrom, Date subscriptionStartUntil, Date subscriptionRenewFrom, Date subscriptionRenewUntil, Date subscriptionExpireFrom, Date subscriptionExpireUntil, Date trialExpireFrom, Date trialExpireUntil, Boolean hasAnySubscriptions, Boolean hasUnresolvedInquiry, Date submittedInquiryFrom, Date submittedInquiryUntil, Date receivedResponseFrom, Date receivedResponseUntil, Date resolvedInquiryFrom, Date resolvedInquiryUntil, Boolean hasSubmittedInquiry, Boolean hasReceivedResponseInquiry, List<String> dataType, String data, Boolean hasData, List<String> selectedConsentsMap, Boolean consentChecked, Boolean hasResolvedInquiry, Boolean consentHasData, String q, String orderBy, String orderDirection) throws ApiException {
+  public Export createUserExport(String aid, String exportName, Integer offset, Integer limit, String name, String email, List<String> accessToResources, List<String> convertedTerms, Date accessFrom, Date accessUntil, Date convertedTermFrom, Date convertedTermUntil, List<String> redeemedPromotions, Date redeemedPromotionFrom, Date redeemedPromotionUntil, Boolean trialPeriod, Boolean hasAccess, Boolean hasConversionTerm, Boolean hasRedeemedPromotion, Boolean includeTrialRedemptions, String spentMoneyCurrency, BigDecimal spentMoneyFrom, BigDecimal spentMoneyUntil, Date spentFromDate, Date spentUntilDate, List<Integer> paymentMethods, Date billingFailureFrom, Date billingFailureUntil, Boolean hadBillingFailure, Boolean hasPayment, List<String> activeSubscriptionToResources, Boolean hasActiveSubscription, Date subscriptionStartFrom, Date subscriptionStartUntil, Date subscriptionRenewFrom, Date subscriptionRenewUntil, Date subscriptionExpireFrom, Date subscriptionExpireUntil, Date trialExpireFrom, Date trialExpireUntil, Boolean hasAnySubscriptions, Boolean hasUnresolvedInquiry, Date submittedInquiryFrom, Date submittedInquiryUntil, Date receivedResponseFrom, Date receivedResponseUntil, Date resolvedInquiryFrom, Date resolvedInquiryUntil, Boolean hasSubmittedInquiry, Boolean hasReceivedResponseInquiry, List<String> dataType, String data, Boolean hasData, List<String> selectedConsentsMap, Boolean consentChecked, Boolean hasResolvedInquiry, Boolean consentHasData, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
     if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling search");
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling createUserExport");
+    }
+    
+    // verify the required parameter 'exportName' is set
+    if (exportName == null) {
+       throw new ApiException(400, "Missing the required parameter 'exportName' when calling createUserExport");
     }
     
     // verify the required parameter 'offset' is set
     if (offset == null) {
-       throw new ApiException(400, "Missing the required parameter 'offset' when calling search");
+       throw new ApiException(400, "Missing the required parameter 'offset' when calling createUserExport");
     }
     
     // verify the required parameter 'limit' is set
     if (limit == null) {
-       throw new ApiException(400, "Missing the required parameter 'limit' when calling search");
+       throw new ApiException(400, "Missing the required parameter 'limit' when calling createUserExport");
     }
     
 
     // create path and map variables
-    String path = "/publisher/user/search";
+    String path = "/publisher/export/create/userExport";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -493,8 +534,8 @@ public class PublisherUserApi {
         builder.addTextBody("aid", ApiInvoker.parameterToString(aid), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
-      if (uid != null) {
-        builder.addTextBody("uid", ApiInvoker.parameterToString(uid), ApiInvoker.TEXT_PLAIN_UTF8);
+      if (exportName != null) {
+        builder.addTextBody("export_name", ApiInvoker.parameterToString(exportName), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (name != null) {
@@ -736,7 +777,7 @@ public class PublisherUserApi {
     } else {
       // normal form params
       formParams.put("aid", ApiInvoker.parameterToString(aid));
-      formParams.put("uid", ApiInvoker.parameterToString(uid));
+      formParams.put("export_name", ApiInvoker.parameterToString(exportName));
       formParams.put("name", ApiInvoker.parameterToString(name));
       formParams.put("email", ApiInvoker.parameterToString(email));
       formParams.put("access_to_resources", ApiInvoker.parameterToString(accessToResources));
@@ -801,102 +842,7 @@ public class PublisherUserApi {
     try {
       String response = apiInvoker.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return (List<User>) ApiInvoker.deserialize(response, "array", User.class);
-      }
-      else {
-        return null;
-      }
-    } catch (ApiException ex) {
-      throw ex;
-    }
-  }
-  
-  /**
-   * Updates a user
-   * 
-   * @param aid Application aid
-   * @param uid User&#39;s uid
-   * @param email User&#39;s email address
-   * @param firstName User&#39;s first name
-   * @param lastName User&#39;s last name
-   * @return User
-   */
-  public User update(String aid, String uid, String email, String firstName, String lastName) throws ApiException {
-    Object postBody = null;
-    
-    // verify the required parameter 'aid' is set
-    if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling update");
-    }
-    
-    // verify the required parameter 'uid' is set
-    if (uid == null) {
-       throw new ApiException(400, "Missing the required parameter 'uid' when calling update");
-    }
-    
-
-    // create path and map variables
-    String path = "/publisher/user/update";
-
-    // query params
-    List<Pair<String, String>> queryParams = new ArrayList<>();
-    // header params
-    Map<String, String> headerParams = new HashMap<String, String>();
-    // form params
-    Map<String, String> formParams = new HashMap<String, String>();
-
-    
-
-    
-
-    String[] contentTypes = {
-      
-    };
-    String contentType = contentTypes.length > 0 ? contentTypes[0] : "application/json";
-
-    if (contentType.startsWith("multipart/form-data")) {
-      /*
-      // file uploading
-      MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-      
-      if (aid != null) {
-        builder.addTextBody("aid", ApiInvoker.parameterToString(aid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (uid != null) {
-        builder.addTextBody("uid", ApiInvoker.parameterToString(uid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (email != null) {
-        builder.addTextBody("email", ApiInvoker.parameterToString(email), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (firstName != null) {
-        builder.addTextBody("first_name", ApiInvoker.parameterToString(firstName), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-      if (lastName != null) {
-        builder.addTextBody("last_name", ApiInvoker.parameterToString(lastName), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
-
-      HttpEntity httpEntity = builder.build();
-      postBody = httpEntity;
-      */
-    } else {
-      // normal form params
-      formParams.put("aid", ApiInvoker.parameterToString(aid));
-      formParams.put("uid", ApiInvoker.parameterToString(uid));
-      formParams.put("email", ApiInvoker.parameterToString(email));
-      formParams.put("first_name", ApiInvoker.parameterToString(firstName));
-      formParams.put("last_name", ApiInvoker.parameterToString(lastName));
-      
-    }
-
-    try {
-      String response = apiInvoker.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, contentType);
-      if(response != null){
-        return (User) ApiInvoker.deserialize(response, "", User.class);
+        return (Export) ApiInvoker.deserialize(response, "", Export.class);
       }
       else {
         return null;
