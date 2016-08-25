@@ -125,6 +125,9 @@ public class PianoClient {
 		if (accessToken == null) {
 			apiInvoker.addDefaultHeader("Authorization", null);
 		} else {
+			if (accessToken.startsWith("{oauth}")) {
+				accessToken = accessToken.substring(7);
+			}
 			apiInvoker.addDefaultHeader("Authorization", "Bearer " + accessToken);
 		}
 	}
