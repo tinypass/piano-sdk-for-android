@@ -20,65 +20,18 @@ public class OAuthActivity extends Activity {
 
     private static final String ACCESS_TOKEN_PREFIX = "{oauth}";
 
-    public static final String EXTRA_ENDPOINT = "endpoint";
-    public static final String EXTRA_SANDBOX = "sandbox";
-    public static final String EXTRA_AID = "aid";
-    public static final String EXTRA_DISABLE_SIGN_UP = "disableSignUp";
+    public static final String EXTRA_URL = "url";
+
     public static final String EXTRA_ACCESS_TOKEN = "accessToken";
 
-    public static void start(Context context, int requestCode, String aid) {
-        start(context, requestCode, aid, null, false, null);
-    }
-
-    public static void start(Context context, int requestCode, String aid, boolean sandbox) {
-        start(context, requestCode, aid, null, sandbox, null);
-    }
-
-    public static void start(Context context, int requestCode, String aid, boolean sandbox, boolean disableSignUp) {
-        start(context, requestCode, aid, null, sandbox, disableSignUp);
-    }
-
-    public static void start(Context context, int requestCode, String aid, String endpoint) {
-        start(context, requestCode, aid, endpoint, false, null);
-    }
-
-    public static void start(Context context, int requestCode, String aid, String endpoint, boolean disableSignUp) {
-        start(context, requestCode, aid, endpoint, false, disableSignUp);
-    }
-
-    private static void start(Context context, int requestCode, String aid, String endpoint, boolean sandbox, Boolean disableSignUp) {
-        Intent intent = new Intent(context, OAuthActivity.class);
-        intent.putExtra(EXTRA_AID, aid);
-        if (!TextUtils.isEmpty(endpoint)) {
-            intent.putExtra(EXTRA_ENDPOINT, endpoint);
-        } else if (sandbox) {
-            intent.putExtra(EXTRA_SANDBOX, true);
-        }
-        if (disableSignUp != null) {
-            intent.putExtra(EXTRA_DISABLE_SIGN_UP, disableSignUp.booleanValue());
-        }
-
-        if (context instanceof Activity) {
-            Activity activity = (Activity) context;
-            activity.startActivityForResult(intent, requestCode);
-        } else {
-            context.startActivity(intent);
-        }
-    }
+    public static final String WIDGET_LOGIN = "login";
+    public static final String WIDGET_REGISTER = "register";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle extras = getIntent().getExtras();
-        String aid = extras.getString(EXTRA_AID);
-        String endpoint = extras.getString(EXTRA_ENDPOINT);
-        if (TextUtils.isEmpty(endpoint)) {
-            endpoint = extras.getBoolean(EXTRA_SANDBOX) ? BASE_URL_SANDBOX : BASE_URL_PROD;
-        }
-        boolean disableSignUp = extras.getBoolean(EXTRA_DISABLE_SIGN_UP, true);
-
         setContentView(R.layout.activity_oauth);
+
         WebView webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
@@ -101,14 +54,89 @@ public class OAuthActivity extends Activity {
                 return true;
             }
         });
-        webView.loadUrl(
-                String.format(
-                        "%scheckout/user/loginShow?client_id=%s&redirect_uri=%s&response_type=token&disable_sign_up=%b"
-                        , endpoint
-                        , aid
-                        , REDIRECT_URI
-                        , disableSignUp
-                )
-        );
+
+        String url = getIntent().getStringExtra(EXTRA_URL);
+        webView.loadUrl(url);
+    }
+
+    public static class Builder {
+
+        private Context context;
+        private int requestCode;
+        private String aid;
+        private boolean sandbox;
+        private String endpoint;
+        private Boolean disableSignUp;
+        private String widget;
+
+        private Builder() {}
+
+        public Builder(Context context, String aid) {
+            this.context = context;
+            this.aid = aid;
+        }
+
+        public Builder requestCode(int requestCode) {
+            this.requestCode = requestCode;
+            return this;
+        }
+
+        public Builder sandbox(boolean sandbox) {
+            this.sandbox = sandbox;
+            return this;
+        }
+
+        public Builder endpoint(String endpoint) {
+            this.endpoint = endpoint;
+            return this;
+        }
+
+        public Builder disableSignUp(boolean disableSignUp) {
+            this.disableSignUp = disableSignUp;
+            return this;
+        }
+
+        /**
+         * @param widget {@link #WIDGET_LOGIN} or {@link #WIDGET_REGISTER}
+         */
+        public Builder widget(String widget) {
+            this.widget = widget;
+            return this;
+        }
+
+        public void start() {
+            StringBuilder urlBuilder = new StringBuilder();
+            if (!TextUtils.isEmpty(endpoint)) {
+                urlBuilder.append(endpoint);
+            } else if (sandbox) {
+                urlBuilder.append(BASE_URL_SANDBOX);
+            } else {
+                urlBuilder.append(BASE_URL_PROD);
+            }
+
+            urlBuilder.append("checkout/user/loginShow");
+            urlBuilder.append("?client_id=").append(aid);
+            urlBuilder.append("&redirect_uri=").append(REDIRECT_URI);
+            urlBuilder.append("&response_type=token");
+
+            if (disableSignUp != null) {
+                urlBuilder.append("&disable_sign_up=").append(disableSignUp.booleanValue());
+            }
+
+            if (!TextUtils.isEmpty(widget)) {
+                urlBuilder.append("&widget=").append(widget);
+            }
+
+            Intent intent = new Intent(context, OAuthActivity.class);
+            String url = urlBuilder.toString();
+            intent.putExtra(EXTRA_URL, url);
+
+            if (context instanceof Activity) {
+                Activity activity = (Activity) context;
+                activity.startActivityForResult(intent, requestCode);
+            } else {
+                context.startActivity(intent);
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@ import io.piano.android.api.PianoClient;
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.user.model.Access;
 import io.piano.android.oauth.ui.activity.OAuthActivity;
+import io.piano.android.sample.BuildConfig;
 import io.piano.android.sample.PianoSampleApplication;
 import io.piano.android.sample.R;
 import io.piano.android.sample.feature.composer.ComposerActivity;
@@ -74,11 +75,10 @@ public class MainActivity extends AppCompatActivity {
         buttonLoginOAuth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, OAuthActivity.class);
-                PianoClient pianoClient = ((PianoSampleApplication) getApplication()).getPianoClient();
-                intent.putExtra(OAuthActivity.EXTRA_AID, pianoClient.getAid());
-                intent.putExtra(OAuthActivity.EXTRA_SANDBOX, pianoClient.isSandbox());
-                startActivityForResult(intent, 42);
+                new OAuthActivity.Builder(MainActivity.this, BuildConfig.PIANO_AID)
+                        .requestCode(42)
+                        .sandbox(BuildConfig.DEBUG)
+                        .start();
             }
         });
 

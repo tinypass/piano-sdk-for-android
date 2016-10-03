@@ -32,7 +32,7 @@ public class ComposerActivity extends AppCompatActivity {
 
         String userToken = getSharedPreferences("oauth", MODE_PRIVATE).getString("accessToken", null);
 
-        new Composer(this, BuildConfig.PIANO_AID, true)
+        new Composer(this, BuildConfig.PIANO_AID, BuildConfig.DEBUG)
                 .userToken(userToken)
                 .tag("tag")
                 .debug(true)
@@ -40,7 +40,10 @@ public class ComposerActivity extends AppCompatActivity {
                     @Override
                     public void onExecuted(ShowLogin showLogin) {
                         if (Composer.USER_PROVIDER_TINYPASS_ACCOUNTS.equals(showLogin.userProvider)) {
-                            OAuthActivity.start(ComposerActivity.this, REQUEST_CODE_OAUTH, BuildConfig.PIANO_AID, BuildConfig.DEBUG);
+                            new OAuthActivity.Builder(ComposerActivity.this, BuildConfig.PIANO_AID)
+                                    .requestCode(REQUEST_CODE_OAUTH)
+                                    .sandbox(BuildConfig.DEBUG)
+                                    .start();
                         }
                     }
                 })
