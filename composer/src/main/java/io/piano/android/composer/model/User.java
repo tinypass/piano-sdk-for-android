@@ -13,8 +13,12 @@ public class User {
         User user = new User();
 
         user.uid = json.optString("uid");
-        user.firstName = json.optString("firstName");
-        user.lastName = json.optString("lastName");
+        if (!json.isNull("firstName")) {
+            user.firstName = json.optString("firstName");
+        }
+        if (!json.isNull("lastName")) {
+            user.lastName = json.optString("lastName");
+        }
         user.email = json.optString("email");
 
         return user;

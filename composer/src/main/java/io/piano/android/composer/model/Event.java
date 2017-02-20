@@ -4,6 +4,9 @@ import org.json.JSONObject;
 
 public class Event {
 
+    public EventModuleParams eventModuleParams;
+    public EventExecutionContext eventExecutionContext;
+
     static Event fromJson(JSONObject json) {
         Event event = null;
 
@@ -22,6 +25,11 @@ public class Event {
             event = ExperienceExecute.fromJson(json);
         } else if ("nonSite".equals(eventType)) {
             event = NonSite.fromJson(json);
+        }
+
+        if (event != null) {
+            event.eventModuleParams = EventModuleParams.fromJson(json);
+            event.eventExecutionContext = EventExecutionContext.fromJson(json);
         }
 
         return event;

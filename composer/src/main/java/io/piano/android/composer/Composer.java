@@ -18,11 +18,14 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import io.piano.android.composer.exception.ComposerException;
+import io.piano.android.composer.exception.ComposerExceptionListener;
 import io.piano.android.composer.model.Event;
 import io.piano.android.composer.model.ExperienceExecute;
 import io.piano.android.composer.model.ExperienceResponse;
@@ -78,6 +81,8 @@ public final class Composer {
 
     private List<EventTypeListener> eventTypeListeners;
 
+    private List<ComposerExceptionListener> composerExceptionListeners;
+
     private Composer() {}
 
     public Composer(Context context, String aid) {
@@ -103,6 +108,8 @@ public final class Composer {
         this.tags = new ArrayList<>();
 
         this.eventTypeListeners = new ArrayList<>();
+
+        this.composerExceptionListeners = new ArrayList<>();
 
         ensureOkHttpClient();
     }
@@ -172,6 +179,21 @@ public final class Composer {
         return this;
     }
 
+    public Composer addExceptionListener(ComposerExceptionListener composerExceptionListener) {
+        this.composerExceptionListeners.add(composerExceptionListener);
+        return this;
+    }
+
+    public Composer removeExceptionListener(ComposerExceptionListener composerExceptionListener) {
+        this.composerExceptionListeners.remove(composerExceptionListener);
+        return this;
+    }
+
+    public Composer clearExceptionListeners() {
+        this.composerExceptionListeners.clear();
+        return this;
+    }
+
     public void execute() {
         Request request = new Request.Builder()
                 .url(getBaseUrl() + URL_EXECUTE)
@@ -180,21 +202,33 @@ public final class Composer {
 
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {}
+            public void onFailure(Call call, IOException e) {
+                handleException(e);
+            }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String jsonStr = response.body().string();
-
-                JSONObject json = null;
-                try { json = new JSONObject(jsonStr); } catch (JSONException ignored) {}
-
-                if (json == null) {
+                String jsonStr;
+                try {
+                    jsonStr = response.body().string();
+                } catch (IOException e) {
+                    handleException(e);
                     return;
                 }
 
-                ExperienceResponse experienceResponse = ExperienceResponse.fromJson(json);
-                if (experienceResponse == null) {
+                JSONObject json;
+                try {
+                    json = new JSONObject(jsonStr);
+                } catch (JSONException e) {
+                    handleException(e);
+                    return;
+                }
+
+                ExperienceResponse experienceResponse;
+                try {
+                    experienceResponse = ExperienceResponse.fromJson(json);
+                } catch (Exception e) {
+                    handleException(e);
                     return;
                 }
 
@@ -233,13 +267,33 @@ public final class Composer {
 
     @SuppressWarnings("unchecked")
     private void fireListeners(final Event event, List<? extends EventTypeListener> classifiedEventTypeListeners) {
-        for (final EventTypeListener eventTypeListener : classifiedEventTypeListeners) {
-            HANDLER_MAIN_THREAD.post(new Runnable() {
-                @Override
-                public void run() {
-                    eventTypeListener.onExecuted(event);
-                }
-            });
+        if (!classifiedEventTypeListeners.isEmpty()) {
+            for (final EventTypeListener eventTypeListener : classifiedEventTypeListeners) {
+                HANDLER_MAIN_THREAD.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        eventTypeListener.onExecuted(event);
+                    }
+                });
+            }
+        }
+    }
+
+    private void handleException(final Exception e) {
+        if (!composerExceptionListeners.isEmpty()) {
+            Iterator<ComposerExceptionListener> iterator = composerExceptionListeners.iterator();
+            //noinspection WhileLoopReplaceableByForEach
+            while (iterator.hasNext()) {
+                final ComposerExceptionListener composerExceptionListener = iterator.next();
+                HANDLER_MAIN_THREAD.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        composerExceptionListener.onComposerException(
+                                e instanceof ComposerException ? (ComposerException) e : new ComposerException(e)
+                        );
+                    }
+                });
+            }
         }
     }
 
@@ -356,9 +410,14 @@ public final class Composer {
     private <T extends EventTypeListener> List<T> findListeners(Class<T> classOfT, List<? extends EventTypeListener> eventTypeListeners) {
         List<T> classifiedEventTypeListeners = new ArrayList<>();
 
-        for (EventTypeListener eventTypeListener : eventTypeListeners) {
-            if (classOfT.isInstance(eventTypeListener)) {
-                classifiedEventTypeListeners.add((T) eventTypeListener);
+        if (!eventTypeListeners.isEmpty()) {
+            Iterator<? extends EventTypeListener> iterator = eventTypeListeners.iterator();
+            //noinspection WhileLoopReplaceableByForEach
+            while (iterator.hasNext()) {
+                EventTypeListener eventTypeListener = iterator.next();
+                if (classOfT.isInstance(eventTypeListener)) {
+                    classifiedEventTypeListeners.add((T) eventTypeListener);
+                }
             }
         }
 
