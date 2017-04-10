@@ -7,7 +7,7 @@ This document details the process of integrating the Piano SDK with your Android
 
 ### Download the Piano SDK
 #### Gradle
-The Piano SDK is available as an AAR via jCenter. To add the `api`, `composer`, `oauth`, etc. dependencies, open your project’s `build.gradle` and update the `repositories` and `dependencies` blocks as follows:
+The Piano SDK is available as an AAR via jCenter. To add the `api`, `composer`, `composer-show-template`, `oauth`, etc. dependencies, open your project’s `build.gradle` and update the `repositories` and `dependencies` blocks as follows:
 ```
 repositories {
     // ... other project repositories
@@ -22,6 +22,8 @@ dependencies {
     compile 'io.piano.android:api:1.0.0'
 
     compile 'io.piano.android:composer:1.0.0'
+
+    compile 'io.piano.android:composer-show-template:1.0.0'
 
     compile 'io.piano.android:oauth:1.0.0'
 }
