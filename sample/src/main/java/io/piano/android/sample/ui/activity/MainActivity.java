@@ -22,6 +22,7 @@ import io.piano.android.sample.BuildConfig;
 import io.piano.android.sample.PianoSampleApplication;
 import io.piano.android.sample.R;
 import io.piano.android.sample.feature.composer.ComposerActivity;
+import io.piano.android.sample.feature.composer.ComposerScrollDepthActivity;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -86,6 +87,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, ComposerActivity.class));
+            }
+        });
+
+        findViewById(R.id.button_composer_scroll_depth).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ComposerScrollDepthActivity.class));
             }
         });
 

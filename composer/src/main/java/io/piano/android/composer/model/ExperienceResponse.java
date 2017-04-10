@@ -15,6 +15,8 @@ public class ExperienceResponse {
     public String tbc;
     public String xbc;
     public String tac;
+    public int timeZoneOffsetMillis;
+    public Integer visitTimeoutMinutes;
 
     public List<Event> events;
 
@@ -36,7 +38,16 @@ public class ExperienceResponse {
 
         experienceResponse.xbc = models.optJSONObject("xbc").optString("cookie_value");
 
-        experienceResponse.tac = models.optJSONObject("tac").optString("cookie_value");
+        JSONObject tac = models.optJSONObject("tac");
+        if (!tac.isNull("cookie_value")) {
+            experienceResponse.tac = tac.optString("cookie_value");
+        }
+
+        experienceResponse.timeZoneOffsetMillis = models.optInt("timezone_offset");
+
+        if (models.has("visit_timeout")) {
+            experienceResponse.visitTimeoutMinutes = models.optInt("visit_timeout");
+        }
 
         return experienceResponse;
     }

@@ -73,6 +73,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Composer"/>
+
+            <Button
+                android:id="@+id/button_composer_scroll_depth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Composer Scroll Depth"/>
         </LinearLayout>
     </HorizontalScrollView>
 

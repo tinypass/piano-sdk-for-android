@@ -1,1 +1,1 @@
-include ':sample', ':oauth', ':api', ':composer'
+include ':sample', ':oauth', ':api', ':composer', ':composer-show-template'

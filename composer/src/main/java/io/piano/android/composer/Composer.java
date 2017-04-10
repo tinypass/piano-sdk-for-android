@@ -33,6 +33,7 @@ import io.piano.android.composer.model.MeterActive;
 import io.piano.android.composer.model.MeterExpired;
 import io.piano.android.composer.model.NonSite;
 import io.piano.android.composer.model.ShowLogin;
+import io.piano.android.composer.model.ShowTemplate;
 import io.piano.android.composer.model.UserSegmentFalse;
 import io.piano.android.composer.model.UserSegmentTrue;
 import okhttp3.Call;
@@ -47,9 +48,14 @@ public final class Composer {
 
     private static final String BASE_URL_PROD = "https://buy.tinypass.com/";
     private static final String BASE_URL_SANDBOX = "https://sandbox.tinypass.com/";
+
     private static final String URL_EXECUTE = "xbuilder/experience/executeMobile";
+    private static final String URL_TEMPLATE = "checkout/template/show";
+    private static final String URL_TRACK_EXTERNAL_EVENT = "api/v3/conversion/logAutoMicroConversion";
 
     private static final String PREF = "io.piano.android.composer";
+
+    private static final int VISIT_TIMEOUT_MINUTES_FALLBACK = 30;
 
     private static final CharSequence TAGS_DELIMITER = ",";
     private static final int PROTOCOL_VERSION = 1;
@@ -77,7 +83,13 @@ public final class Composer {
     private String referer;
     private List<String> tags;
     private String zone;
+    private String contentCreated;
+    private String contentAuthor;
+    private String contentSection;
+    private Boolean contentIsNative;
     private CustomParams customParams;
+
+    private String gaClientId;
 
     private List<EventTypeListener> eventTypeListeners;
 
@@ -159,8 +171,36 @@ public final class Composer {
         return this;
     }
 
+    /**
+     * @param contentCreated ISO 8601-formatted string that includes the published date and time of the content
+     */
+    public Composer contentCreated(String contentCreated) {
+        this.contentCreated = contentCreated;
+        return this;
+    }
+
+    public Composer contentAuthor(String contentAuthor) {
+        this.contentAuthor = contentAuthor;
+        return this;
+    }
+
+    public Composer contentSection(String contentSection) {
+        this.contentSection = contentSection;
+        return this;
+    }
+
+    public Composer contentIsNative(Boolean contentIsNative) {
+        this.contentIsNative = contentIsNative;
+        return this;
+    }
+
     public Composer customParams(CustomParams customParams) {
         this.customParams = customParams;
+        return this;
+    }
+
+    public Composer gaClientId(String gaClientId) {
+        this.gaClientId = gaClientId;
         return this;
     }
 
@@ -236,6 +276,10 @@ public final class Composer {
                 editor.putString("tbc", experienceResponse.tbc);
                 editor.putString("xbc", experienceResponse.xbc);
                 editor.putString("tac", experienceResponse.tac);
+                editor.putInt("timeZoneOffsetMillis", experienceResponse.timeZoneOffsetMillis);
+                if (experienceResponse.visitTimeoutMinutes != null) {
+                    editor.putInt("visitTimeoutMinutes", experienceResponse.visitTimeoutMinutes);
+                }
                 editor.apply();
 
                 for (Event event : experienceResponse.events) {
@@ -255,6 +299,12 @@ public final class Composer {
                         eventTypeListenerClass = ExperienceExecuteListener.class;
                     } else if (event instanceof NonSite) {
                         eventTypeListenerClass = NonSiteListener.class;
+                    } else if (event instanceof ShowTemplate) {
+                        ShowTemplate showTemplate = (ShowTemplate) event;
+                        showTemplate.url = createShowTemplateUrl(showTemplate);
+                        showTemplate.endpointUrl = getBaseUrl();
+
+                        eventTypeListenerClass = ShowTemplateListener.class;
                     }
 
                     if (eventTypeListenerClass != null) {
@@ -297,7 +347,7 @@ public final class Composer {
         }
     }
 
-    private void ensureOkHttpClient() {
+    private static void ensureOkHttpClient() {
         if (okHttpClient == null) {
             synchronized (LOCK) {
                 if (okHttpClient == null) {
@@ -323,6 +373,7 @@ public final class Composer {
         String tac = sharedPreferences.getString("tac", null);
         int timeZoneOffset = Calendar.getInstance().getTimeZone().getRawOffset() / 1000 / 60;
         String pageViewId = generatePageViewId();
+        String visitId = getOrCreateVisitId(sharedPreferences);
 
         FormBody.Builder requestBuilder = new FormBody.Builder()
                 .add("aid", aid)
@@ -331,6 +382,7 @@ public final class Composer {
                 .add("protocol_version", String.valueOf(PROTOCOL_VERSION))
                 .add("timezone_offset", String.valueOf(timeZoneOffset))
                 .add("pageview_id", pageViewId)
+                .add("visit_id", visitId)
                 .add("submit_type", "manual");
 
         if (!TextUtils.isEmpty(xbc)) {
@@ -359,6 +411,22 @@ public final class Composer {
 
         if (!TextUtils.isEmpty(zone)) {
             requestBuilder.add("zone", zone);
+        }
+
+        if (!TextUtils.isEmpty(contentCreated)) {
+            requestBuilder.add("content_created", contentCreated);
+        }
+
+        if (!TextUtils.isEmpty(contentAuthor)) {
+            requestBuilder.add("content_author", contentAuthor);
+        }
+
+        if (!TextUtils.isEmpty(contentSection)) {
+            requestBuilder.add("content_section", contentSection);
+        }
+
+        if (contentIsNative != null) {
+            requestBuilder.add("content_is_native", contentIsNative.toString());
         }
 
         if (!TextUtils.isEmpty(tbc)) {
@@ -406,6 +474,51 @@ public final class Composer {
         return randomStringBuilder.toString();
     }
 
+    private String getOrCreateVisitId(SharedPreferences sharedPreferences) {
+        long currentTimeMillis = System.currentTimeMillis();
+
+        long visitIdTimestampMillis = sharedPreferences.getLong("visitIdTimestampMillis", -1);
+        if (visitIdTimestampMillis == -1) {
+            return createVisitId(sharedPreferences, currentTimeMillis);
+        }
+
+        int visitTimeoutMinutes = sharedPreferences.getInt("visitTimeoutMinutes", VISIT_TIMEOUT_MINUTES_FALLBACK);
+        if (visitIdTimestampMillis < currentTimeMillis - visitTimeoutMinutes * 60_000) {
+            return createVisitId(sharedPreferences, currentTimeMillis);
+        }
+
+        int timeZoneOffsetMillis = sharedPreferences.getInt("timeZoneOffsetMillis", 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.ZONE_OFFSET, timeZoneOffsetMillis);
+        if (visitIdTimestampMillis < calendar.getTimeInMillis()) {
+            return createVisitId(sharedPreferences, currentTimeMillis);
+        }
+
+        String visitId = sharedPreferences.getString("visitId", null);
+        sharedPreferences.edit()
+                .putLong("visitIdTimestampMillis", currentTimeMillis)
+                .apply();
+
+        return visitId;
+    }
+
+    private String createVisitId(SharedPreferences sharedPreferences, long currentTimeMillis) {
+        String visitId = generateVisitId();
+        sharedPreferences.edit()
+                .putString("visitId", visitId)
+                .putLong("visitIdTimestampMillis", currentTimeMillis)
+                .apply();
+        return visitId;
+    }
+
+    private String generateVisitId() {
+        return "v-" + generatePageViewId();
+    }
+
     @SuppressWarnings("unchecked")
     private <T extends EventTypeListener> List<T> findListeners(Class<T> classOfT, List<? extends EventTypeListener> eventTypeListeners) {
         List<T> classifiedEventTypeListeners = new ArrayList<>();
@@ -422,5 +535,86 @@ public final class Composer {
         }
 
         return classifiedEventTypeListeners;
+    }
+
+    private String createShowTemplateUrl(ShowTemplate showTemplate) {
+        StringBuilder urlBuilder = new StringBuilder(getBaseUrl());
+
+        urlBuilder.append(URL_TEMPLATE);
+
+        urlBuilder.append("?aid=").append(aid);
+
+        urlBuilder.append("&templateId=").append(showTemplate.templateId);
+
+        if (!TextUtils.isEmpty(userToken)) {
+            urlBuilder.append("&userToken=").append(userToken);
+        }
+
+        if (!customVariables.isEmpty()) {
+            urlBuilder.append("&customVariables=").append(new JSONObject(customVariables).toString());
+        }
+
+        if (showTemplate.eventExecutionContext.activeMetersJson != null) {
+            urlBuilder.append("&activeMeters=").append(showTemplate.eventExecutionContext.activeMetersJson.toString());
+        }
+
+        if (debug) {
+            urlBuilder.append("&debug=").append(debug);
+        }
+
+        urlBuilder.append("&displayMode=").append(ShowTemplate.DISPLAY_MODE_INLINE);
+
+        if (!tags.isEmpty()) {
+            urlBuilder.append("&tags=").append(TextUtils.join(TAGS_DELIMITER, tags));
+        }
+
+        if (!TextUtils.isEmpty(url)) {
+            urlBuilder.append("&url=").append(url);
+        }
+
+        urlBuilder.append("&trackingId=").append(showTemplate.eventExecutionContext.trackingId);
+
+        if (!TextUtils.isEmpty(contentAuthor)) {
+            urlBuilder.append("&contentAuthor=").append(contentAuthor);
+        }
+
+        if (!TextUtils.isEmpty(contentSection)) {
+            urlBuilder.append("&contentSection=").append(contentSection);
+        }
+
+        if (!TextUtils.isEmpty(zone)) {
+            urlBuilder.append("&zone=").append(zone);
+        }
+
+        if (!TextUtils.isEmpty(gaClientId)) {
+            urlBuilder.append("&gaClientId=").append(gaClientId);
+        }
+
+        urlBuilder.append("&os=android");
+
+        return urlBuilder.toString();
+    }
+
+    public static void trackExternalEvent(String endpointUrl, String trackingId) {
+        ensureOkHttpClient();
+
+        FormBody formBody = new FormBody.Builder()
+                .add("tracking_id", trackingId)
+                .add("event_type", "EXTERNAL_EVENT")
+                .add("event_group_id", "close")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(endpointUrl + URL_TRACK_EXTERNAL_EVENT)
+                .post(formBody)
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {}
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {}
+        });
     }
 }

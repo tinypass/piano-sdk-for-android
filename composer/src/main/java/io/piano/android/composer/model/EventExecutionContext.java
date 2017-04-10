@@ -17,6 +17,8 @@ public class EventExecutionContext {
     public String region;
     public String country;
     public List<Access> accessList;
+    public List<ActiveMeter> activeMeters;
+    public JSONArray activeMetersJson;
 
     static EventExecutionContext fromJson(JSONObject json) {
         EventExecutionContext eventExecutionContext = null;
@@ -30,7 +32,7 @@ public class EventExecutionContext {
             eventExecutionContext.executionId = eventExecutionContextJson.optString("executionId");
             eventExecutionContext.trackingId = eventExecutionContextJson.optString("trackingId");
             JSONArray splitTestsJson = eventExecutionContextJson.optJSONArray("splitTests");
-            if (splitTestsJson != null) {
+            if ((splitTestsJson != null) && (splitTestsJson.length() > 0)) {
                 eventExecutionContext.splitTests = new ArrayList<>();
                 for (int ii = 0; ii < splitTestsJson.length(); ii++) {
                     JSONObject splitTestJson = splitTestsJson.optJSONObject(ii);
@@ -43,13 +45,23 @@ public class EventExecutionContext {
             eventExecutionContext.region = eventExecutionContextJson.optString("region");
             eventExecutionContext.country = eventExecutionContextJson.optString("country");
             JSONArray accessListJson = eventExecutionContextJson.optJSONArray("accessList");
-            if (accessListJson != null) {
+            if ((accessListJson != null) && (accessListJson.length() > 0)) {
                 eventExecutionContext.accessList = new ArrayList<>();
                 for (int ii = 0; ii < accessListJson.length(); ii++) {
                     JSONObject accessJson = accessListJson.optJSONObject(ii);
                     Access access = Access.fromJson(accessJson);
                     eventExecutionContext.accessList.add(access);
                 }
+            }
+            JSONArray activeMetersJson = eventExecutionContextJson.optJSONArray("activeMeters");
+            if ((activeMetersJson != null) && (activeMetersJson.length() > 0)) {
+                eventExecutionContext.activeMeters = new ArrayList<>();
+                for (int ii = 0; ii < activeMetersJson.length(); ii++) {
+                    JSONObject activeMeterJson = activeMetersJson.optJSONObject(ii);
+                    ActiveMeter activeMeter = ActiveMeter.fromJson(activeMeterJson);
+                    eventExecutionContext.activeMeters.add(activeMeter);
+                }
+                eventExecutionContext.activeMetersJson = activeMetersJson;
             }
         }
 

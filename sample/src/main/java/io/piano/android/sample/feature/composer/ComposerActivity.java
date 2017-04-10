@@ -6,15 +6,23 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import io.piano.android.composer.Composer;
 import io.piano.android.composer.MeterActiveListener;
 import io.piano.android.composer.MeterExpiredListener;
+import io.piano.android.composer.NonSiteListener;
 import io.piano.android.composer.ShowLoginListener;
+import io.piano.android.composer.ShowTemplateListener;
+import io.piano.android.composer.model.ActiveMeter;
 import io.piano.android.composer.model.MeterActive;
 import io.piano.android.composer.model.MeterExpired;
+import io.piano.android.composer.model.NonSite;
 import io.piano.android.composer.model.ShowLogin;
+import io.piano.android.composer.model.ShowTemplate;
+import io.piano.android.composer.showtemplate.ComposerJs;
+import io.piano.android.composer.showtemplate.ShowTemplateDialogFragment;
 import io.piano.android.oauth.ui.activity.OAuthActivity;
 import io.piano.android.sample.BuildConfig;
 import io.piano.android.sample.R;
@@ -61,6 +69,33 @@ public class ComposerActivity extends AppCompatActivity {
                         Toast.makeText(
                                 ComposerActivity.this, String.format("Meter EXPIRED!\nviews = %s\nviewsLeft = %s\nmaxViews = %s\ntotalViews = %s", meterExpired.views, meterExpired.viewsLeft, meterExpired.maxViews, meterExpired.totalViews), Toast.LENGTH_LONG
                         ).show();
+                    }
+                })
+                .addListener(new ShowTemplateListener() {
+                    @Override
+                    public void onExecuted(ShowTemplate showTemplate) {
+                        ShowTemplateDialogFragment.show(ComposerActivity.this, showTemplate, new ComposerJs() {
+                            @JavascriptInterface
+                            @Override
+                            public void customEvent(String eventData) {
+                                Snackbar.make(findViewById(R.id.app_bar), eventData, Snackbar.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                })
+                .addListener(new NonSiteListener() {
+                    @Override
+                    public void onExecuted(NonSite nonSite) {
+                        if ((nonSite.eventExecutionContext.activeMeters == null) || nonSite.eventExecutionContext.activeMeters.isEmpty()) {
+                            Toast.makeText(
+                                    ComposerActivity.this, "Active meters are null or empty!", Toast.LENGTH_LONG
+                            ).show();
+                        } else {
+                            ActiveMeter activeMeter = nonSite.eventExecutionContext.activeMeters.get(0);
+                            Toast.makeText(
+                                    ComposerActivity.this, String.format("Active meter:\nmeterName = %s\nviews = %s\nviewsLeft = %s\nmaxViews = %s\ntotalViews = %s", activeMeter.meterName, activeMeter.views, activeMeter.viewsLeft, activeMeter.maxViews, activeMeter.totalViews), Toast.LENGTH_LONG
+                            ).show();
+                        }
                     }
                 })
                 .execute();

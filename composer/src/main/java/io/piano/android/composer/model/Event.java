@@ -25,6 +25,8 @@ public class Event {
             event = ExperienceExecute.fromJson(json);
         } else if ("nonSite".equals(eventType)) {
             event = NonSite.fromJson(json);
+        } else if ("showTemplate".equals(eventType)) {
+            event = ShowTemplate.fromJson(json);
         }
 
         if (event != null) {
