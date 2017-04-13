@@ -16,4 +16,7 @@ dependencies {
     compile project(':composer')
 }
 
+group GROUP
+version VERSION_NAME
+
 apply from: 'https://raw.github.com/tinypass/gradle-mvn-push/master/gradle-mvn-push.gradle'

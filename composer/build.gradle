@@ -14,4 +14,7 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$okHttp3Version"
 }
 
+group GROUP
+version VERSION_NAME
+
 apply from: 'https://raw.github.com/tinypass/gradle-mvn-push/master/gradle-mvn-push.gradle'
