@@ -19,13 +19,13 @@ repositories {
 dependencies {
     // ... other project dependencies
 
-    compile 'io.piano.android:api:1.0.1'
+    compile 'io.piano.android:api:1.0.2'
 
-    compile 'io.piano.android:composer:1.0.1'
+    compile 'io.piano.android:composer:1.0.2'
 
-    compile 'io.piano.android:composer-show-template:1.0.1'
+    compile 'io.piano.android:composer-show-template:1.0.2'
 
-    compile 'io.piano.android:oauth:1.0.1'
+    compile 'io.piano.android:oauth:1.0.2'
 }
 ```
 

@@ -10,6 +10,10 @@ android {
     }
 }
 
+configurations {
+    compile.exclude group: 'com.android.support', module: 'support-media-compat'
+}
+
 dependencies {
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
 
@@ -19,4 +23,6 @@ dependencies {
 group GROUP
 version VERSION_NAME
 
-apply from: 'https://raw.github.com/tinypass/gradle-mvn-push/master/gradle-mvn-push.gradle'
+if (!VERSION_NAME.contains("SNAPSHOT")) {
+    apply from: 'https://raw.github.com/tinypass/gradle-mvn-push/master/gradle-mvn-push.gradle'
+}

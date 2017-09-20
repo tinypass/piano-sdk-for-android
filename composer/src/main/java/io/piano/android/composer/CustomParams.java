@@ -1,5 +1,6 @@
 package io.piano.android.composer;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,9 +13,9 @@ public class CustomParams {
     private static final String SCOPE_USER = "user";
     private static final String SCOPE_REQUEST = "request";
 
-    private Map<String, Object> content;
-    private Map<String, Object> user;
-    private Map<String, Object> request;
+    private Map<String, JSONArray> content;
+    private Map<String, JSONArray> user;
+    private Map<String, JSONArray> request;
 
     public CustomParams() {
         this.content = new HashMap<>();
@@ -22,33 +23,18 @@ public class CustomParams {
         this.request = new HashMap<>();
     }
 
-    public CustomParams content(String key, Object value) {
-        content.put(key, value);
+    public CustomParams content(String key, String value) {
+        putKeyValue(content, key, value);
         return this;
     }
 
-    public CustomParams content(Map<String, Object> contentParams) {
-        content.putAll(contentParams);
+    public CustomParams user(String key, String value) {
+        putKeyValue(user, key, value);
         return this;
     }
 
-    public CustomParams user(String key, Object value) {
-        user.put(key, value);
-        return this;
-    }
-
-    public CustomParams user(Map<String, Object> userParams) {
-        user.putAll(userParams);
-        return this;
-    }
-
-    public CustomParams request(String key, Object value) {
-        request.put(key, value);
-        return this;
-    }
-
-    public CustomParams request(Map<String, Object> requestParams) {
-        request.putAll(requestParams);
+    public CustomParams request(String key, String value) {
+        putKeyValue(request, key, value);
         return this;
     }
 
@@ -72,5 +58,14 @@ public class CustomParams {
         }
 
         return customParams.toString();
+    }
+
+    private void putKeyValue(Map<String, JSONArray> scope, String key, String value) {
+        JSONArray jsonArray = scope.get(key);
+        if (jsonArray == null) {
+            jsonArray = new JSONArray();
+            scope.put(key, jsonArray);
+        }
+        jsonArray.put(value);
     }
 }

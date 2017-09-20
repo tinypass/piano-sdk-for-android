@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import io.piano.android.composer.exception.ComposerException;
 import io.piano.android.composer.exception.ComposerExceptionListener;
@@ -46,7 +47,8 @@ import okhttp3.Response;
 
 public final class Composer {
 
-    private static final String BASE_URL_PROD = "https://buy.tinypass.com/";
+    private static final String BASE_URL_EXPERIENCE = "https://experience.tinypass.com/";
+    private static final String BASE_URL_BUY = "https://buy.tinypass.com/";
     private static final String BASE_URL_SANDBOX = "https://sandbox.tinypass.com/";
 
     private static final String URL_EXECUTE = "xbuilder/experience/executeMobile";
@@ -66,8 +68,6 @@ public final class Composer {
     public static final String USER_PROVIDER_TINYPASS_ACCOUNTS = "tinypass_accounts";
     public static final String USER_PROVIDER_JANRAIN = "janrain";
 
-    private static volatile OkHttpClient okHttpClient;
-    private static final Object LOCK = new Object();
     private static final Handler HANDLER_MAIN_THREAD = new Handler(Looper.getMainLooper());
 
     private Context context;
@@ -77,7 +77,7 @@ public final class Composer {
 
     private boolean debug;
     private String userAgent;
-    private Map<String, Object> customVariables;
+    private Map<String, String> customVariables;
     private String userToken;
     private String url;
     private String referer;
@@ -122,8 +122,6 @@ public final class Composer {
         this.eventTypeListeners = new ArrayList<>();
 
         this.composerExceptionListeners = new ArrayList<>();
-
-        ensureOkHttpClient();
     }
 
     public Composer debug(boolean debug) {
@@ -131,13 +129,18 @@ public final class Composer {
         return this;
     }
 
-    public Composer customVariable(String key, Object value) {
+    public Composer customVariable(String key, String value) {
         customVariables.put(key, value);
         return this;
     }
 
-    public Composer customVariables(Map<String, Object> customVariables) {
+    public Composer customVariables(Map<String, String> customVariables) {
         this.customVariables.putAll(customVariables);
+        return this;
+    }
+
+    public Composer clearCustomVariables() {
+        this.customVariables.clear();
         return this;
     }
 
@@ -236,11 +239,11 @@ public final class Composer {
 
     public void execute() {
         Request request = new Request.Builder()
-                .url(getBaseUrl() + URL_EXECUTE)
+                .url(getBaseUrl(true) + URL_EXECUTE)
                 .post(createRequestBody())
                 .build();
 
-        okHttpClient.newCall(request).enqueue(new Callback() {
+        OkHttpClientHolder.OK_HTTP_CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 handleException(e);
@@ -302,7 +305,7 @@ public final class Composer {
                     } else if (event instanceof ShowTemplate) {
                         ShowTemplate showTemplate = (ShowTemplate) event;
                         showTemplate.url = createShowTemplateUrl(showTemplate);
-                        showTemplate.endpointUrl = getBaseUrl();
+                        showTemplate.endpointUrl = getBaseUrl(false);
 
                         eventTypeListenerClass = ShowTemplateListener.class;
                     }
@@ -347,19 +350,9 @@ public final class Composer {
         }
     }
 
-    private static void ensureOkHttpClient() {
-        if (okHttpClient == null) {
-            synchronized (LOCK) {
-                if (okHttpClient == null) {
-                    okHttpClient = new OkHttpClient.Builder().build();
-                }
-            }
-        }
-    }
-
-    private String getBaseUrl() {
+    private String getBaseUrl(boolean isExecute) {
         if (TextUtils.isEmpty(endpoint)) {
-            return sandbox ? BASE_URL_SANDBOX : BASE_URL_PROD;
+            return sandbox ? BASE_URL_SANDBOX : isExecute ? BASE_URL_EXPERIENCE : BASE_URL_BUY;
         } else {
             return endpoint;
         }
@@ -373,7 +366,9 @@ public final class Composer {
         String tac = sharedPreferences.getString("tac", null);
         int timeZoneOffset = Calendar.getInstance().getTimeZone().getRawOffset() / 1000 / 60;
         String pageViewId = generatePageViewId();
+        String oldVisitId = getVisitId(sharedPreferences);
         String visitId = getOrCreateVisitId(sharedPreferences);
+        boolean isNewVisit = !visitId.equals(oldVisitId);
 
         FormBody.Builder requestBuilder = new FormBody.Builder()
                 .add("aid", aid)
@@ -383,6 +378,7 @@ public final class Composer {
                 .add("timezone_offset", String.valueOf(timeZoneOffset))
                 .add("pageview_id", pageViewId)
                 .add("visit_id", visitId)
+                .add("new_visit", String.valueOf(isNewVisit))
                 .add("submit_type", "manual");
 
         if (!TextUtils.isEmpty(xbc)) {
@@ -474,6 +470,10 @@ public final class Composer {
         return randomStringBuilder.toString();
     }
 
+    private String getVisitId(SharedPreferences sharedPreferences) {
+        return sharedPreferences.getString("visitId", null);
+    }
+
     private String getOrCreateVisitId(SharedPreferences sharedPreferences) {
         long currentTimeMillis = System.currentTimeMillis();
 
@@ -498,7 +498,7 @@ public final class Composer {
             return createVisitId(sharedPreferences, currentTimeMillis);
         }
 
-        String visitId = sharedPreferences.getString("visitId", null);
+        String visitId = getVisitId(sharedPreferences);
         sharedPreferences.edit()
                 .putLong("visitIdTimestampMillis", currentTimeMillis)
                 .apply();
@@ -538,7 +538,7 @@ public final class Composer {
     }
 
     private String createShowTemplateUrl(ShowTemplate showTemplate) {
-        StringBuilder urlBuilder = new StringBuilder(getBaseUrl());
+        StringBuilder urlBuilder = new StringBuilder(getBaseUrl(false));
 
         urlBuilder.append(URL_TEMPLATE);
 
@@ -596,8 +596,6 @@ public final class Composer {
     }
 
     public static void trackExternalEvent(String endpointUrl, String trackingId) {
-        ensureOkHttpClient();
-
         FormBody formBody = new FormBody.Builder()
                 .add("tracking_id", trackingId)
                 .add("event_type", "EXTERNAL_EVENT")
@@ -609,12 +607,20 @@ public final class Composer {
                 .post(formBody)
                 .build();
 
-        okHttpClient.newCall(request).enqueue(new Callback() {
+        OkHttpClientHolder.OK_HTTP_CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {}
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {}
         });
+    }
+
+    private static class OkHttpClientHolder {
+
+        private static final OkHttpClient OK_HTTP_CLIENT = new OkHttpClient.Builder()
+                .readTimeout(30_000, TimeUnit.MILLISECONDS)
+                .writeTimeout(30_000, TimeUnit.MILLISECONDS)
+                .build();
     }
 }
