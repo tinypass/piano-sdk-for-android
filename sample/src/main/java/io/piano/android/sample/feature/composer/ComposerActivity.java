@@ -22,7 +22,7 @@ import io.piano.android.composer.model.NonSite;
 import io.piano.android.composer.model.ShowLogin;
 import io.piano.android.composer.model.ShowTemplate;
 import io.piano.android.composer.showtemplate.ComposerJs;
-import io.piano.android.composer.showtemplate.ShowTemplateDialogFragment;
+import io.piano.android.composer.showtemplate.ShowTemplateController;
 import io.piano.android.oauth.ui.activity.OAuthActivity;
 import io.piano.android.sample.BuildConfig;
 import io.piano.android.sample.R;
@@ -30,6 +30,8 @@ import io.piano.android.sample.R;
 public class ComposerActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_OAUTH = 42;
+
+    private ShowTemplateController showTemplateController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +76,20 @@ public class ComposerActivity extends AppCompatActivity {
                 .addListener(new ShowTemplateListener() {
                     @Override
                     public void onExecuted(ShowTemplate showTemplate) {
-                        ShowTemplateDialogFragment.show(ComposerActivity.this, showTemplate, new ComposerJs() {
+                        showTemplateController = ShowTemplateController.show(ComposerActivity.this, showTemplate, new ComposerJs() {
                             @JavascriptInterface
                             @Override
                             public void customEvent(String eventData) {
                                 Snackbar.make(findViewById(R.id.app_bar), eventData, Snackbar.LENGTH_LONG).show();
+                            }
+
+                            @JavascriptInterface
+                            @Override
+                            public void login(String eventData) {
+                                new OAuthActivity.Builder(ComposerActivity.this, BuildConfig.PIANO_AID)
+                                        .requestCode(REQUEST_CODE_OAUTH)
+                                        .sandbox(BuildConfig.DEBUG)
+                                        .start();
                             }
                         });
                     }
@@ -108,6 +119,10 @@ public class ComposerActivity extends AppCompatActivity {
                 String accessToken = data.getStringExtra(OAuthActivity.EXTRA_ACCESS_TOKEN);
                 SharedPreferences sharedPreferences = getSharedPreferences("oauth", MODE_PRIVATE);
                 sharedPreferences.edit().putString("accessToken", accessToken).apply();
+
+                if (showTemplateController != null) {
+                    showTemplateController.reloadWithToken(accessToken);
+                }
 
                 Snackbar.make(findViewById(R.id.app_bar), "accessToken = " + accessToken, Snackbar.LENGTH_LONG).show();
             } else {

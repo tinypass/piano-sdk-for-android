@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import io.piano.android.composer.Composer;
 import io.piano.android.composer.ShowTemplateListener;
 import io.piano.android.composer.model.ShowTemplate;
-import io.piano.android.composer.showtemplate.ShowTemplateDialogFragment;
+import io.piano.android.composer.showtemplate.ShowTemplateController;
 import io.piano.android.sample.BuildConfig;
 import io.piano.android.sample.R;
 
@@ -38,7 +38,7 @@ public class ComposerScrollDepthActivity extends AppCompatActivity {
                         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                             if (!isShown) {
                                 if (v.getScrollY() >= showTemplate.delayBy.value) {
-                                    ShowTemplateDialogFragment.show(ComposerScrollDepthActivity.this, showTemplate);
+                                    ShowTemplateController.show(ComposerScrollDepthActivity.this, showTemplate);
                                     isShown = true;
                                 }
                             }

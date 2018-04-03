@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -14,6 +13,7 @@ dependencies {
     // optional
     compile 'com.squareup.okhttp:okhttp:2.7.5'
     compile "com.squareup.okhttp3:okhttp:$okHttp3Version"
+    compile "com.squareup.okio:okio:$okioVersion"
 }
 
 group GROUP

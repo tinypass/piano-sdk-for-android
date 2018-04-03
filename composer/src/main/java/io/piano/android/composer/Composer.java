@@ -379,7 +379,8 @@ public final class Composer {
                 .add("pageview_id", pageViewId)
                 .add("visit_id", visitId)
                 .add("new_visit", String.valueOf(isNewVisit))
-                .add("submit_type", "manual");
+                .add("submit_type", "manual")
+                .add("sdk_version", BuildConfig.VERSION_NAME);
 
         if (!TextUtils.isEmpty(xbc)) {
             requestBuilder.add("xbc", xbc);
