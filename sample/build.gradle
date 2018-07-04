@@ -31,17 +31,17 @@ android {
 }
 
 configurations {
-    compile.exclude group: 'com.android.support', module: 'support-media-compat'
+    implementation.exclude group: 'com.android.support', module: 'support-media-compat'
 }
 
 dependencies {
-    compile "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
 
-    compile "io.reactivex:rxandroid:$rxAndroidVersion"
-    compile "io.reactivex:rxjava:$rxJavaVersion"
+    implementation "io.reactivex:rxandroid:$rxAndroidVersion"
+    implementation "io.reactivex:rxjava:$rxJavaVersion"
 
-    compile project(':api')
-    compile project(':oauth')
-    compile project(':composer')
-    compile project(':composer-show-template')
+    implementation project(':api')
+    implementation project(':oauth')
+    implementation project(':composer')
+    implementation project(':composer-show-template')
 }

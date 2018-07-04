@@ -10,13 +10,13 @@ android {
 }
 
 configurations {
-    compile.exclude group: 'com.android.support', module: 'support-media-compat'
+    implementation.exclude group: 'com.android.support', module: 'support-media-compat'
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 
-    compile project(':composer')
+    implementation project(':composer')
 }
 
 group GROUP

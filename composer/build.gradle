@@ -14,8 +14,8 @@ android {
 }
 
 dependencies {
-    compile "com.squareup.okhttp3:okhttp:$okHttp3Version"
-    compile "com.squareup.okio:okio:$okioVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okHttp3Version"
+    implementation "com.squareup.okio:okio:$okioVersion"
 }
 
 group GROUP

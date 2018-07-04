@@ -2,4 +2,6 @@
           package="io.piano.android.api">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-sdk android:minSdkVersion="11"/>
 </manifest>
