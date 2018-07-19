@@ -289,9 +289,11 @@ public class PublisherUserApi {
    * @param limit Maximum index of returned results
    * @param disabled If the object is disabled
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
    * @return List<User>
    */
-  public List<User> list(String aid, Integer offset, Integer limit, Boolean disabled, String q) throws ApiException {
+  public List<User> list(String aid, Integer offset, Integer limit, Boolean disabled, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -354,6 +356,14 @@ public class PublisherUserApi {
         builder.addTextBody("limit", ApiInvoker.parameterToString(limit), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (orderBy != null) {
+        builder.addTextBody("order_by", ApiInvoker.parameterToString(orderBy), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (orderDirection != null) {
+        builder.addTextBody("order_direction", ApiInvoker.parameterToString(orderDirection), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -365,6 +375,8 @@ public class PublisherUserApi {
       formParams.put("q", ApiInvoker.parameterToString(q));
       formParams.put("offset", ApiInvoker.parameterToString(offset));
       formParams.put("limit", ApiInvoker.parameterToString(limit));
+      formParams.put("order_by", ApiInvoker.parameterToString(orderBy));
+      formParams.put("order_direction", ApiInvoker.parameterToString(orderDirection));
       
     }
 
@@ -388,65 +400,74 @@ public class PublisherUserApi {
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param uid User&#39;s uid
-   * @param name Find users which contain a keyword in name
-   * @param email Find users which contain a keyword in email
-   * @param accessToResources Find users which have access to selected resources
-   * @param convertedTerms Find users which have conversion terms for selected terms
-   * @param accessFrom Find users which have user access from selected date
-   * @param accessUntil Find users which have user access until selected date
-   * @param convertedTermFrom Find users which have converted term from selected date
-   * @param convertedTermUntil Find users which have converted term until selected date
-   * @param redeemedPromotions Find users which have selected redeemed promotions
-   * @param redeemedPromotionFrom Find users which have redeemed promotions from selected date
-   * @param redeemedPromotionUntil Find users which have redeemed promotions until selected date
-   * @param trialPeriod Find users which have trial subscription
-   * @param hasAccess Find users which have user access (can be expired)
-   * @param hasConversionTerm Find users which have conversion term
-   * @param hasRedeemedPromotion Find users which have redeemed promotion
-   * @param includeTrialRedemptions Find users which have reserved trial redemptions. It works together with redeemed promotions and works as &#39;OR&#39; conditions 
-   * @param spentMoneyCurrency Currency of the payments to take into account
-   * @param spentMoneyFrom Find users which spent money more than a value
-   * @param spentMoneyUntil Find users which spent money less than a value
-   * @param spentFromDate Find users which bougth something from a date
-   * @param spentUntilDate Find users which bougth something until a date
-   * @param paymentMethods Find users which use selected payment methods
-   * @param billingFailureFrom Find users which have problems with autorenew of subscription from a date
-   * @param billingFailureUntil Find users which have problems with autorenew of subscription until a date
-   * @param hadBillingFailure Find users which had problems with billing
-   * @param hasPayment Find users which have payment
-   * @param activeSubscriptionToResources Find users which have active subscription to selected resources
-   * @param hasActiveSubscription Find users which have active subscription
-   * @param subscriptionStartFrom Find users which have starting subscription from selected date
-   * @param subscriptionStartUntil Find users which have starting subscription until selected date
-   * @param subscriptionRenewFrom Find users which have renewing subscription from selected date
-   * @param subscriptionRenewUntil Find users which have renewing subscription until selected date
-   * @param subscriptionExpireFrom Find users which have exipiring subscription from selected date
-   * @param subscriptionExpireUntil Find users which have expiring subscription until selected date
-   * @param trialExpireFrom Find users which have expiring trial subscription from selected date
-   * @param trialExpireUntil Find users which have expiring trial subscription until selected date
-   * @param hasAnySubscriptions Find users with any subscriptions
-   * @param hasUnresolvedInquiry Find users which have unresolved inquiry
-   * @param submittedInquiryFrom Find users which have submitted inquiry from selected date
-   * @param submittedInquiryUntil Find users which have submitted inquiry until selected date
-   * @param receivedResponseFrom Find users which received response from selected date
-   * @param receivedResponseUntil Find users which received response until selected date
-   * @param resolvedInquiryFrom Find users which have resolved inquiry from selected date
-   * @param resolvedInquiryUntil Find users which have resolved inquiry until selected date
-   * @param hasSubmittedInquiry Find users with submitted inquries
-   * @param hasReceivedResponseInquiry Find users with inquiries with response
+   * @param name Finds users who contain this keyword in their names.
+   * @param email Finds users who contain this keyword in their emails.
+   * @param registeredFrom Find users which was registered from selected date
+   * @param registeredUntil Find users which was registered until selected date
+   * @param accessToResources Find users who have access to select resources. Resource IDs (RIDs) are accepted values.
+   * @param convertedTerms Find users who have converted on select terms. Term IDs are accepted values.
+   * @param accessFrom Find users who have any ACTIVE access from this date. The date format is a unix timestamp.
+   * @param accessUntil Find users who have any access until this date. The date format is a unix timestamp.
+   * @param convertedTermFrom Find users who have converted on any term from this date. The date format is a unix timestamp.
+   * @param convertedTermUntil Find users who have converted on any term until this date. The date format is a unix timestamp.
+   * @param redeemedPromotions Find users who have redeemed select promotions. Promotion public IDs are accepted values. Promotion public IDs can be obtained by visiting Manage\u2192Promotions from the Piano Dashboard.
+   * @param redeemedPromotionFrom Find users who have redeemed on any promotion on or after this date. The date format is a unix timestamp.
+   * @param redeemedPromotionUntil Find users who have redeemed on any promotion on or before this date. The date format is a unix timestamp.
+   * @param trialPeriodIsActive Find users who have any trial subscription at the present time.
+   * @param hasTrialPeriod Find users who have any trial subscription at the any time.
+   * @param hasAccess Find users who have any type of access (access that is not expired or will never expire).
+   * @param hasConversionTerm Find users who have converted on any term.
+   * @param hasRedeemedPromotion Find users who have redeemed any promotion and begun their subscription.
+   * @param includeTrialRedemptions Find users who redeemed a promotion, including those redeemed when signing up for a free trial. In these cases, the promotion had not been applied during the period of your search but were applied as soon as the trial period ended.
+   * @param convertedTermTypes Find users who have converted on particular types of terms. The accepted value of each type of term is a number: 0 (N/A), 1 (payment), 2 (ad view), 3 (registration), 4 (newsletter), 5 (external), 6 (custom), 7 (access granted), and 8 (gift).
+   * @param hasConversionTermType Find users which have conversion terms for selected term types
+   * @param spentMoneyCurrency Select the currency of the payments to take into account. Format is ISO 4217 (Ex: USD).
+   * @param spentMoneyFrom Find users who spent above a specified monetary value across all of their purchases and conversions. This value is formatted as a decimal. (Example: 10.03. to represent $10.03 or \u00A310.03 or \u20AC10.03).
+   * @param spentMoneyUntil Find users who spent below a specified monetary value across all of their purchases and conversions. This value is formatted as a decimal. (Ex: 10.03. to represent $10.03 or \u00A310.03 or \u20AC10.03).
+   * @param spentFromDate Find users who bought something on or after this date. The date format is a unix timestamp.
+   * @param spentUntilDate Find users who bought something on or before this date. The date format is a unix timestamp.
+   * @param paymentMethods Find users who have used specific payment methods.The accepted values for each type of payment method: 1 (PayPal), 4 (BrainTree), 6 (TinyPass), 7 (Dwolla), 8 (AmazonMWS), 9 (Coinbase), 11 (PayPalBT), 12 (WorldPay_HPP), 13 (WorldPay_PayPal), 14 (WorldPay_Ideal), 15 (WorldPay_ELV), 16 (Spreedly_CC), 17 (Spreedly_Stripe_CC), 18 (Spreedly_Beanstream), 19 (EdgilPayway), 20 (WorldPay_CC_Token), 21 (Spreedly_PayU_Latam).
+   * @param billingFailureFrom Find users who had problems with auto-renewal of any subscription on or after this date. The date format is a unix timestamp.
+   * @param billingFailureUntil Find users who had problems with auto-renewal of any subscription on or before this date. The date format is a unix timestamp.
+   * @param hadBillingFailure Finds users who had any problems with billing.
+   * @param hasPayment Finds users who have made any payment. Refunded payments are not taken into account. So if user had a payment and refunded it, he will not presented in the result list.
+   * @param upiExtCustomerId Find users which have given external customer id
+   * @param creditCardWillExpire Find users whose cards will expire in selected dates
+   * @param activeSubscriptionToResources Find users who have active subscriptions to specified resources. Resource IDs (RIDs) are accepted values.
+   * @param hasActiveSubscription Finds users who have any active subscription.
+   * @param subscriptionStartFrom Finds users who have any subscription starting on or after this date. The date format is a unix timestamp.
+   * @param subscriptionStartUntil Finds users who have any subscription that started on or before this date. The date format is a unix timestamp.
+   * @param subscriptionRenewFrom Finds users who have any subscription renewing on or after this date. The date format is a unix timestamp.
+   * @param subscriptionRenewUntil Finds users who have any subscription renewing on or before this date. The date format is a unix timestamp.
+   * @param subscriptionExpireFrom Finds users who have any subscription expiring on or after this date. The date format is a unix timestamp.
+   * @param subscriptionExpireUntil Finds users who have any subscription expiring on or before this date. The date format is a unix timestamp.
+   * @param trialExpireFrom Finds users who have any trial subscription expiring on or after this date. The date format is a unix timestamp.
+   * @param trialExpireUntil Finds users who have any trial subscription expiring on or after this date. The date format is a unix timestamp.
+   * @param hasAnySubscriptions Finds users with any subscriptions, including expired and canceled subscriptions.
+   * @param hasUnresolvedInquiry Finds users who have any unresolved inquiry.
+   * @param submittedInquiryFrom Finds users who have any submitted inquiry on or after this date. The date format is a unix timestamp.
+   * @param submittedInquiryUntil Finds users who have any submitted inquiry on or before this date. The date format is a unix timestamp.
+   * @param receivedResponseFrom Finds users who received any inquiry response on or after this date. The date format is a unix timestamp.
+   * @param receivedResponseUntil Finds users who received any inquiry response on or before this date. The date format is a unix timestamp.
+   * @param resolvedInquiryFrom Finds users who have any resolved inquiry on or after this date. The date format is a unix timestamp.
+   * @param resolvedInquiryUntil Finds users who have any resolved inquiry on or before this date. The date format is a unix timestamp.
+   * @param hasSubmittedInquiry Finds users with submitted inquiries.
+   * @param hasReceivedResponseInquiry Finds users with any inquiries that have been responded to.
    * @param dataType Defines searching field
    * @param data Defines search data
    * @param hasData Find users with any data
-   * @param selectedConsentsMap Find user who accept list of consentDataType
-   * @param consentChecked Find checked or unchecked consents
-   * @param hasResolvedInquiry Find users with resolved inquiries
-   * @param consentHasData Find users with accepted consents
+   * @param selectedConsentsMap Consent public IDs are accepted values. Specified values will be used along with consent_checked parameter.
+   * @param consentChecked Finds users who have checked consents. Accepted values: true/false.
+   * @param customFields Finds user with following custom fields
+   * @param source Data source for user searching: VX or CF (id custom fields)
+   * @param hasResolvedInquiry Finds users with any resolved inquiry.
+   * @param consentHasData Finds users who accepted any consent. Accepted values: true/false. If this parameter is false, selected_consents_map and consent_has_data are ignored.
    * @param q Search value
    * @param orderBy Field to order by
    * @param orderDirection Order direction (asc/desc)
    * @return List<User>
    */
-  public List<User> search(String aid, Integer offset, Integer limit, String uid, String name, String email, List<String> accessToResources, List<String> convertedTerms, Date accessFrom, Date accessUntil, Date convertedTermFrom, Date convertedTermUntil, List<String> redeemedPromotions, Date redeemedPromotionFrom, Date redeemedPromotionUntil, Boolean trialPeriod, Boolean hasAccess, Boolean hasConversionTerm, Boolean hasRedeemedPromotion, Boolean includeTrialRedemptions, String spentMoneyCurrency, BigDecimal spentMoneyFrom, BigDecimal spentMoneyUntil, Date spentFromDate, Date spentUntilDate, List<Integer> paymentMethods, Date billingFailureFrom, Date billingFailureUntil, Boolean hadBillingFailure, Boolean hasPayment, List<String> activeSubscriptionToResources, Boolean hasActiveSubscription, Date subscriptionStartFrom, Date subscriptionStartUntil, Date subscriptionRenewFrom, Date subscriptionRenewUntil, Date subscriptionExpireFrom, Date subscriptionExpireUntil, Date trialExpireFrom, Date trialExpireUntil, Boolean hasAnySubscriptions, Boolean hasUnresolvedInquiry, Date submittedInquiryFrom, Date submittedInquiryUntil, Date receivedResponseFrom, Date receivedResponseUntil, Date resolvedInquiryFrom, Date resolvedInquiryUntil, Boolean hasSubmittedInquiry, Boolean hasReceivedResponseInquiry, List<String> dataType, String data, Boolean hasData, List<String> selectedConsentsMap, Boolean consentChecked, Boolean hasResolvedInquiry, Boolean consentHasData, String q, String orderBy, String orderDirection) throws ApiException {
+  public List<User> search(String aid, Integer offset, Integer limit, String uid, String name, String email, Date registeredFrom, Date registeredUntil, List<String> accessToResources, List<String> convertedTerms, Date accessFrom, Date accessUntil, Date convertedTermFrom, Date convertedTermUntil, List<String> redeemedPromotions, Date redeemedPromotionFrom, Date redeemedPromotionUntil, Boolean trialPeriodIsActive, Boolean hasTrialPeriod, Boolean hasAccess, Boolean hasConversionTerm, Boolean hasRedeemedPromotion, Boolean includeTrialRedemptions, List<String> convertedTermTypes, Boolean hasConversionTermType, String spentMoneyCurrency, BigDecimal spentMoneyFrom, BigDecimal spentMoneyUntil, Date spentFromDate, Date spentUntilDate, List<Integer> paymentMethods, Date billingFailureFrom, Date billingFailureUntil, Boolean hadBillingFailure, Boolean hasPayment, String upiExtCustomerId, String creditCardWillExpire, List<String> activeSubscriptionToResources, Boolean hasActiveSubscription, Date subscriptionStartFrom, Date subscriptionStartUntil, Date subscriptionRenewFrom, Date subscriptionRenewUntil, Date subscriptionExpireFrom, Date subscriptionExpireUntil, Date trialExpireFrom, Date trialExpireUntil, Boolean hasAnySubscriptions, Boolean hasUnresolvedInquiry, Date submittedInquiryFrom, Date submittedInquiryUntil, Date receivedResponseFrom, Date receivedResponseUntil, Date resolvedInquiryFrom, Date resolvedInquiryUntil, Boolean hasSubmittedInquiry, Boolean hasReceivedResponseInquiry, List<String> dataType, String data, Boolean hasData, List<String> selectedConsentsMap, Boolean consentChecked, String customFields, String source, Boolean hasResolvedInquiry, Boolean consentHasData, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -505,6 +526,14 @@ public class PublisherUserApi {
         builder.addTextBody("email", ApiInvoker.parameterToString(email), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (registeredFrom != null) {
+        builder.addTextBody("registered_from", ApiInvoker.parameterToString(registeredFrom), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (registeredUntil != null) {
+        builder.addTextBody("registered_until", ApiInvoker.parameterToString(registeredUntil), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
       if (accessToResources != null) {
         builder.addTextBody("access_to_resources", ApiInvoker.parameterToString(accessToResources), ApiInvoker.TEXT_PLAIN_UTF8);
       }
@@ -541,8 +570,12 @@ public class PublisherUserApi {
         builder.addTextBody("redeemed_promotion_until", ApiInvoker.parameterToString(redeemedPromotionUntil), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
-      if (trialPeriod != null) {
-        builder.addTextBody("trial_period", ApiInvoker.parameterToString(trialPeriod), ApiInvoker.TEXT_PLAIN_UTF8);
+      if (trialPeriodIsActive != null) {
+        builder.addTextBody("trial_period_is_active", ApiInvoker.parameterToString(trialPeriodIsActive), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (hasTrialPeriod != null) {
+        builder.addTextBody("has_trial_period", ApiInvoker.parameterToString(hasTrialPeriod), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (hasAccess != null) {
@@ -559,6 +592,14 @@ public class PublisherUserApi {
       
       if (includeTrialRedemptions != null) {
         builder.addTextBody("include_trial_redemptions", ApiInvoker.parameterToString(includeTrialRedemptions), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (convertedTermTypes != null) {
+        builder.addTextBody("converted_term_types", ApiInvoker.parameterToString(convertedTermTypes), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (hasConversionTermType != null) {
+        builder.addTextBody("has_conversion_term_type", ApiInvoker.parameterToString(hasConversionTermType), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (spentMoneyCurrency != null) {
@@ -599,6 +640,14 @@ public class PublisherUserApi {
       
       if (hasPayment != null) {
         builder.addTextBody("has_payment", ApiInvoker.parameterToString(hasPayment), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (upiExtCustomerId != null) {
+        builder.addTextBody("upi_ext_customer_id", ApiInvoker.parameterToString(upiExtCustomerId), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (creditCardWillExpire != null) {
+        builder.addTextBody("credit_card_will_expire", ApiInvoker.parameterToString(creditCardWillExpire), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (activeSubscriptionToResources != null) {
@@ -701,6 +750,14 @@ public class PublisherUserApi {
         builder.addTextBody("consent_checked", ApiInvoker.parameterToString(consentChecked), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (customFields != null) {
+        builder.addTextBody("custom_fields", ApiInvoker.parameterToString(customFields), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (source != null) {
+        builder.addTextBody("source", ApiInvoker.parameterToString(source), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
       if (hasResolvedInquiry != null) {
         builder.addTextBody("has_resolved_inquiry", ApiInvoker.parameterToString(hasResolvedInquiry), ApiInvoker.TEXT_PLAIN_UTF8);
       }
@@ -739,6 +796,8 @@ public class PublisherUserApi {
       formParams.put("uid", ApiInvoker.parameterToString(uid));
       formParams.put("name", ApiInvoker.parameterToString(name));
       formParams.put("email", ApiInvoker.parameterToString(email));
+      formParams.put("registered_from", ApiInvoker.parameterToString(registeredFrom));
+      formParams.put("registered_until", ApiInvoker.parameterToString(registeredUntil));
       formParams.put("access_to_resources", ApiInvoker.parameterToString(accessToResources));
       formParams.put("converted_terms", ApiInvoker.parameterToString(convertedTerms));
       formParams.put("access_from", ApiInvoker.parameterToString(accessFrom));
@@ -748,11 +807,14 @@ public class PublisherUserApi {
       formParams.put("redeemed_promotions", ApiInvoker.parameterToString(redeemedPromotions));
       formParams.put("redeemed_promotion_from", ApiInvoker.parameterToString(redeemedPromotionFrom));
       formParams.put("redeemed_promotion_until", ApiInvoker.parameterToString(redeemedPromotionUntil));
-      formParams.put("trial_period", ApiInvoker.parameterToString(trialPeriod));
+      formParams.put("trial_period_is_active", ApiInvoker.parameterToString(trialPeriodIsActive));
+      formParams.put("has_trial_period", ApiInvoker.parameterToString(hasTrialPeriod));
       formParams.put("has_access", ApiInvoker.parameterToString(hasAccess));
       formParams.put("has_conversion_term", ApiInvoker.parameterToString(hasConversionTerm));
       formParams.put("has_redeemed_promotion", ApiInvoker.parameterToString(hasRedeemedPromotion));
       formParams.put("include_trial_redemptions", ApiInvoker.parameterToString(includeTrialRedemptions));
+      formParams.put("converted_term_types", ApiInvoker.parameterToString(convertedTermTypes));
+      formParams.put("has_conversion_term_type", ApiInvoker.parameterToString(hasConversionTermType));
       formParams.put("spent_money_currency", ApiInvoker.parameterToString(spentMoneyCurrency));
       formParams.put("spent_money_from", ApiInvoker.parameterToString(spentMoneyFrom));
       formParams.put("spent_money_until", ApiInvoker.parameterToString(spentMoneyUntil));
@@ -763,6 +825,8 @@ public class PublisherUserApi {
       formParams.put("billing_failure_until", ApiInvoker.parameterToString(billingFailureUntil));
       formParams.put("had_billing_failure", ApiInvoker.parameterToString(hadBillingFailure));
       formParams.put("has_payment", ApiInvoker.parameterToString(hasPayment));
+      formParams.put("upi_ext_customer_id", ApiInvoker.parameterToString(upiExtCustomerId));
+      formParams.put("credit_card_will_expire", ApiInvoker.parameterToString(creditCardWillExpire));
       formParams.put("active_subscription_to_resources", ApiInvoker.parameterToString(activeSubscriptionToResources));
       formParams.put("has_active_subscription", ApiInvoker.parameterToString(hasActiveSubscription));
       formParams.put("subscription_start_from", ApiInvoker.parameterToString(subscriptionStartFrom));
@@ -788,6 +852,8 @@ public class PublisherUserApi {
       formParams.put("has_data", ApiInvoker.parameterToString(hasData));
       formParams.put("selected_consents_map", ApiInvoker.parameterToString(selectedConsentsMap));
       formParams.put("consent_checked", ApiInvoker.parameterToString(consentChecked));
+      formParams.put("custom_fields", ApiInvoker.parameterToString(customFields));
+      formParams.put("source", ApiInvoker.parameterToString(source));
       formParams.put("has_resolved_inquiry", ApiInvoker.parameterToString(hasResolvedInquiry));
       formParams.put("consent_has_data", ApiInvoker.parameterToString(consentHasData));
       formParams.put("q", ApiInvoker.parameterToString(q));
@@ -850,7 +916,7 @@ public class PublisherUserApi {
     
 
     String[] contentTypes = {
-      
+      "application/x-www-form-urlencoded"
     };
     String contentType = contentTypes.length > 0 ? contentTypes[0] : "application/json";
 

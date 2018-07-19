@@ -2,15 +2,14 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.Term;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.Term;
 
 public class PublisherTermCustomApi {
 
@@ -26,12 +25,12 @@ public class PublisherTermCustomApi {
    * @param aid Application aid
    * @param rid Unique id for resource
    * @param name Term name
-   * @param customDefaultAccessPeriod The default access period
    * @param customRequireUser Whether a valid user is required to complete the term
+   * @param customDefaultAccessPeriod The default access period
    * @param description Term description
    * @return Term
    */
-  public Term createCustomTerm(String aid, String rid, String name, Integer customDefaultAccessPeriod, Boolean customRequireUser, String description) throws ApiException {
+  public Term createCustomTerm(String aid, String rid, String name, Boolean customRequireUser, Integer customDefaultAccessPeriod, String description) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -47,11 +46,6 @@ public class PublisherTermCustomApi {
     // verify the required parameter 'name' is set
     if (name == null) {
        throw new ApiException(400, "Missing the required parameter 'name' when calling createCustomTerm");
-    }
-    
-    // verify the required parameter 'customDefaultAccessPeriod' is set
-    if (customDefaultAccessPeriod == null) {
-       throw new ApiException(400, "Missing the required parameter 'customDefaultAccessPeriod' when calling createCustomTerm");
     }
     
 

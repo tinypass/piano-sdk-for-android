@@ -1,13 +1,11 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.App;
-import io.piano.android.api.publisher.model.InquiryComment;
-import io.piano.android.api.publisher.model.Resource;
-import io.piano.android.api.publisher.model.User;
-import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PaymentInquiry {
   
@@ -139,7 +137,7 @@ public class PaymentInquiry {
   }
   
   /**
-   * The start date
+   * The start date.
    **/
   public String getStartDate() {
     return startDate;

@@ -2,15 +2,14 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.Term;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.Term;
 
 public class PublisherTermRegistrationApi {
 
@@ -26,12 +25,12 @@ public class PublisherTermRegistrationApi {
    * @param aid Application aid
    * @param rid Unique id for resource
    * @param name Term name
-   * @param registrationAccessPeriod The access time period 
    * @param description Term description
+   * @param registrationAccessPeriod The access time period 
    * @param registrationGracePeriod The time period after registration that will count it as a valid registration conversion
    * @return Term
    */
-  public Term createRegistrationTerm(String aid, String rid, String name, Long registrationAccessPeriod, String description, Long registrationGracePeriod) throws ApiException {
+  public Term createRegistrationTerm(String aid, String rid, String name, String description, Long registrationAccessPeriod, Long registrationGracePeriod) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -47,11 +46,6 @@ public class PublisherTermRegistrationApi {
     // verify the required parameter 'name' is set
     if (name == null) {
        throw new ApiException(400, "Missing the required parameter 'name' when calling createRegistrationTerm");
-    }
-    
-    // verify the required parameter 'registrationAccessPeriod' is set
-    if (registrationAccessPeriod == null) {
-       throw new ApiException(400, "Missing the required parameter 'registrationAccessPeriod' when calling createRegistrationTerm");
     }
     
 

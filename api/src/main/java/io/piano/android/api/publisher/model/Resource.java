@@ -1,9 +1,9 @@
 package io.piano.android.api.publisher.model;
 
-import java.util.Date;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class Resource {
   
@@ -18,7 +18,9 @@ public class Resource {
   private String description = null;
   private String imageUrl = null;
   private String type = null;
+  private String typeLabel = null;
   private String bundleType = null;
+  private String bundleTypeLabel = null;
   private String purchaseUrl = null;
   private String resourceUrl = null;
   
@@ -144,6 +146,17 @@ public class Resource {
   }
   
   /**
+   * Label of resource type
+   **/
+  public String getTypeLabel() {
+    return typeLabel;
+  }
+
+  public void setTypeLabel(String typeLabel) {
+    this.typeLabel = typeLabel;
+  }
+  
+  /**
    * Type of resource bundle
    **/
   public String getBundleType() {
@@ -152,6 +165,17 @@ public class Resource {
 
   public void setBundleType(String bundleType) {
     this.bundleType = bundleType;
+  }
+  
+  /**
+   * Label of resource bundle type
+   **/
+  public String getBundleTypeLabel() {
+    return bundleTypeLabel;
+  }
+
+  public void setBundleTypeLabel(String bundleTypeLabel) {
+    this.bundleTypeLabel = bundleTypeLabel;
   }
   
   /**
@@ -190,7 +214,9 @@ public class Resource {
     resource.description = json.optString("description");
     resource.imageUrl = json.optString("image_url");
     resource.type = json.optString("type");
+    resource.typeLabel = json.optString("type_label");
     resource.bundleType = json.optString("bundle_type");
+    resource.bundleTypeLabel = json.optString("bundle_type_label");
     resource.purchaseUrl = json.optString("purchase_url");
     resource.resourceUrl = json.optString("resource_url");
     

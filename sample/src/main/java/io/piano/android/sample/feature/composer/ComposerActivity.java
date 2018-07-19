@@ -10,11 +10,14 @@ import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import io.piano.android.composer.Composer;
+import io.piano.android.composer.CustomParams;
 import io.piano.android.composer.MeterActiveListener;
 import io.piano.android.composer.MeterExpiredListener;
 import io.piano.android.composer.NonSiteListener;
 import io.piano.android.composer.ShowLoginListener;
 import io.piano.android.composer.ShowTemplateListener;
+import io.piano.android.composer.exception.ComposerException;
+import io.piano.android.composer.exception.ComposerExceptionListener;
 import io.piano.android.composer.model.ActiveMeter;
 import io.piano.android.composer.model.MeterActive;
 import io.piano.android.composer.model.MeterExpired;
@@ -37,15 +40,24 @@ public class ComposerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_composer);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         String userToken = getSharedPreferences("oauth", MODE_PRIVATE).getString("accessToken", null);
+
+        CustomParams customParams = new CustomParams()
+                .content("contentKey", "contentValue0")
+                .content("contentKey", "contentValue1")
+                .user("userKey", "userValue")
+                .request("requestKey", "requstValue1")
+                .request("requestKey", "requstValue2")
+                .request("requestKey", "requstValue3");
 
         new Composer(this, BuildConfig.PIANO_AID, BuildConfig.DEBUG)
                 .userToken(userToken)
                 .tag("tag")
                 .debug(true)
+                .customParams(customParams)
                 .addListener(new ShowLoginListener() {
                     @Override
                     public void onExecuted(ShowLogin showLogin) {
@@ -107,6 +119,15 @@ public class ComposerActivity extends AppCompatActivity {
                                     ComposerActivity.this, String.format("Active meter:\nmeterName = %s\nviews = %s\nviewsLeft = %s\nmaxViews = %s\ntotalViews = %s", activeMeter.meterName, activeMeter.views, activeMeter.viewsLeft, activeMeter.maxViews, activeMeter.totalViews), Toast.LENGTH_LONG
                             ).show();
                         }
+                    }
+                })
+                .addExceptionListener(new ComposerExceptionListener() {
+                    @Override
+                    public void onComposerException(ComposerException exception) {
+                        String message = exception.getCause() == null ? exception.getMessage() : exception.getCause().getMessage();
+                        Toast.makeText(
+                                ComposerActivity.this, message, Toast.LENGTH_LONG
+                        ).show();
                     }
                 })
                 .execute();

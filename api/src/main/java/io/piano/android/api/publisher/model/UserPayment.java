@@ -1,8 +1,5 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.Term;
-import io.piano.android.api.publisher.model.UserSubscription;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +16,12 @@ public class UserPayment {
   private Term term = null;
   private Double tax = null;
   private String taxBillingPlan = null;
+  private String paymentMethod = null;
+  private String upiExtCustomerId = null;
+  private String upiExtCustomerIdLabel = null;
+  private String externalTransactionId = null;
+  private String trackingId = null;
+  private String originalPrice = null;
   
   /**
    * User payment id
@@ -139,6 +142,72 @@ public class UserPayment {
     this.taxBillingPlan = taxBillingPlan;
   }
   
+  /**
+   * payment method
+   **/
+  public String getPaymentMethod() {
+    return paymentMethod;
+  }
+
+  public void setPaymentMethod(String paymentMethod) {
+    this.paymentMethod = paymentMethod;
+  }
+  
+  /**
+   * External customer id
+   **/
+  public String getUpiExtCustomerId() {
+    return upiExtCustomerId;
+  }
+
+  public void setUpiExtCustomerId(String upiExtCustomerId) {
+    this.upiExtCustomerId = upiExtCustomerId;
+  }
+  
+  /**
+   * Label for external customer id
+   **/
+  public String getUpiExtCustomerIdLabel() {
+    return upiExtCustomerIdLabel;
+  }
+
+  public void setUpiExtCustomerIdLabel(String upiExtCustomerIdLabel) {
+    this.upiExtCustomerIdLabel = upiExtCustomerIdLabel;
+  }
+  
+  /**
+   * External transaction id
+   **/
+  public String getExternalTransactionId() {
+    return externalTransactionId;
+  }
+
+  public void setExternalTransactionId(String externalTransactionId) {
+    this.externalTransactionId = externalTransactionId;
+  }
+  
+  /**
+   * Tracking id
+   **/
+  public String getTrackingId() {
+    return trackingId;
+  }
+
+  public void setTrackingId(String trackingId) {
+    this.trackingId = trackingId;
+  }
+  
+  /**
+   * Original price
+   **/
+  public String getOriginalPrice() {
+    return originalPrice;
+  }
+
+  public void setOriginalPrice(String originalPrice) {
+    this.originalPrice = originalPrice;
+  }
+  
   public static UserPayment fromJson(JSONObject json) throws JSONException {
     UserPayment userPayment = new UserPayment();
 
@@ -153,6 +222,12 @@ public class UserPayment {
     userPayment.term = Term.fromJson(json.optJSONObject("term"));
     userPayment.tax = json.optDouble("tax");
     userPayment.taxBillingPlan = json.optString("tax_billing_plan");
+    userPayment.paymentMethod = json.optString("payment_method");
+    userPayment.upiExtCustomerId = json.optString("upi_ext_customer_id");
+    userPayment.upiExtCustomerIdLabel = json.optString("upi_ext_customer_id_label");
+    userPayment.externalTransactionId = json.optString("external_transaction_id");
+    userPayment.trackingId = json.optString("tracking_id");
+    userPayment.originalPrice = json.optString("original_price");
     
     return userPayment;
   }

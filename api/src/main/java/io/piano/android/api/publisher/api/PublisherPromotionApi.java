@@ -2,17 +2,16 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.Promotion;
-import java.util.Date;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.Promotion;
 
 public class PublisherPromotionApi {
 
@@ -171,7 +170,7 @@ public class PublisherPromotionApi {
    * @param aid Application aid
    * @param name Promotion name
    * @param newCustomersOnly whether promotion allows new customers only
-   * @param startDate The start date
+   * @param startDate The start date.
    * @param endDate The end date
    * @param discountType Type of promotion discount 
    * @param percentageDiscount Promotion percentage discount
@@ -708,7 +707,7 @@ public class PublisherPromotionApi {
    * @param aid Application aid
    * @param name Promotion name
    * @param discountType Type of promotion discount 
-   * @param startDate The start date
+   * @param startDate The start date.
    * @param endDate The end date
    * @param newCustomersOnly whether promotion allows new customers only
    * @param percentageDiscount Promotion percentage discount

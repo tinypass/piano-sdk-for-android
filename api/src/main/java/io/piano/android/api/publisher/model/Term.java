@@ -1,13 +1,12 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.Country;
-import io.piano.android.api.publisher.model.DeliveryZone;
-import io.piano.android.api.publisher.model.Resource;
-import java.util.*;
-import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Term {
   
@@ -15,12 +14,14 @@ public class Term {
   private String aid = null;
   private Resource resource = null;
   private String type = null;
+  private String typeName = null;
   private String name = null;
   private String description = null;
   private Boolean verifyOnRenewal = null;
   private Date createDate = null;
   private String paymentBillingPlan = null;
   private String paymentBillingPlanDescription = null;
+  private List<Object> paymentBillingPlanTable = null;
   private Integer paymentAllowRenewDays = null;
   private Boolean paymentForceAutoRenew = null;
   private Boolean paymentIsCustomPriceAvailable = null;
@@ -33,6 +34,8 @@ public class Term {
   private Boolean paymentAllowGift = null;
   private String paymentCurrency = null;
   private Double paymentFirstPrice = null;
+  private Schedule schedule = null;
+  private String scheduleBilling = null;
   private Boolean customRequireUser = null;
   private Integer customDefaultAccessPeriod = null;
   private String adviewVastUrl = null;
@@ -46,9 +49,13 @@ public class Term {
   private Integer evtGracePeriod = null;
   private String evtItunesBundleId = null;
   private String evtItunesProductId = null;
+  private String evtGooglePlayProductId = null;
   private Boolean collectAddress = null;
   private List<DeliveryZone> deliveryZone = null;
   private Country defaultCountry = null;
+  private VoucheringPolicy voucheringPolicy = null;
+  private String billingConfig = null;
+  private Boolean isAllowedToChangeSchedulePeriodInPast = null;
   
   /**
    * Term ID
@@ -92,6 +99,17 @@ public class Term {
 
   public void setType(String type) {
     this.type = type;
+  }
+  
+  /**
+   * Term type name
+   **/
+  public String getTypeName() {
+    return typeName;
+  }
+
+  public void setTypeName(String typeName) {
+    this.typeName = typeName;
   }
   
   /**
@@ -158,6 +176,16 @@ public class Term {
 
   public void setPaymentBillingPlanDescription(String paymentBillingPlanDescription) {
     this.paymentBillingPlanDescription = paymentBillingPlanDescription;
+  }
+  
+  /**
+   **/
+  public List<Object> getPaymentBillingPlanTable() {
+    return paymentBillingPlanTable;
+  }
+
+  public void setPaymentBillingPlanTable(List<Object> paymentBillingPlanTable) {
+    this.paymentBillingPlanTable = paymentBillingPlanTable;
   }
   
   /**
@@ -290,6 +318,27 @@ public class Term {
 
   public void setPaymentFirstPrice(Double paymentFirstPrice) {
     this.paymentFirstPrice = paymentFirstPrice;
+  }
+  
+  /**
+   **/
+  public Schedule getSchedule() {
+    return schedule;
+  }
+
+  public void setSchedule(Schedule schedule) {
+    this.schedule = schedule;
+  }
+  
+  /**
+   * The schedule billing
+   **/
+  public String getScheduleBilling() {
+    return scheduleBilling;
+  }
+
+  public void setScheduleBilling(String scheduleBilling) {
+    this.scheduleBilling = scheduleBilling;
   }
   
   /**
@@ -436,6 +485,17 @@ public class Term {
   }
   
   /**
+   * Google Play product id
+   **/
+  public String getEvtGooglePlayProductId() {
+    return evtGooglePlayProductId;
+  }
+
+  public void setEvtGooglePlayProductId(String evtGooglePlayProductId) {
+    this.evtGooglePlayProductId = evtGooglePlayProductId;
+  }
+  
+  /**
    * Collect address for this term
    **/
   public Boolean getCollectAddress() {
@@ -466,6 +526,39 @@ public class Term {
     this.defaultCountry = defaultCountry;
   }
   
+  /**
+   * Vouchering policy for term
+   **/
+  public VoucheringPolicy getVoucheringPolicy() {
+    return voucheringPolicy;
+  }
+
+  public void setVoucheringPolicy(VoucheringPolicy voucheringPolicy) {
+    this.voucheringPolicy = voucheringPolicy;
+  }
+  
+  /**
+   * The type of billing config
+   **/
+  public String getBillingConfig() {
+    return billingConfig;
+  }
+
+  public void setBillingConfig(String billingConfig) {
+    this.billingConfig = billingConfig;
+  }
+  
+  /**
+   * Whether term allows to change its schedule period which was created in past
+   **/
+  public Boolean getIsAllowedToChangeSchedulePeriodInPast() {
+    return isAllowedToChangeSchedulePeriodInPast;
+  }
+
+  public void setIsAllowedToChangeSchedulePeriodInPast(Boolean isAllowedToChangeSchedulePeriodInPast) {
+    this.isAllowedToChangeSchedulePeriodInPast = isAllowedToChangeSchedulePeriodInPast;
+  }
+  
   public static Term fromJson(JSONObject json) throws JSONException {
     Term term = new Term();
 
@@ -473,12 +566,19 @@ public class Term {
     term.aid = json.optString("aid");
     term.resource = Resource.fromJson(json.optJSONObject("resource"));
     term.type = json.optString("type");
+    term.typeName = json.optString("type_name");
     term.name = json.optString("name");
     term.description = json.optString("description");
     term.verifyOnRenewal = json.optBoolean("verify_on_renewal");
     term.createDate = new Date(json.optLong("create_date") * 1000);
     term.paymentBillingPlan = json.optString("payment_billing_plan");
     term.paymentBillingPlanDescription = json.optString("payment_billing_plan_description");
+    term.paymentBillingPlanTable = new ArrayList<>();
+    JSONArray paymentBillingPlanTableJsonArray = json.optJSONArray("payment_billing_plan_table");
+    int paymentBillingPlanTableLength = paymentBillingPlanTableJsonArray.length();
+    for (int ii = 0; ii < paymentBillingPlanTableLength; ii++) {
+      term.paymentBillingPlanTable.add(paymentBillingPlanTableJsonArray.optString(ii));
+    }
     term.paymentAllowRenewDays = json.optInt("payment_allow_renew_days");
     term.paymentForceAutoRenew = json.optBoolean("payment_force_auto_renew");
     term.paymentIsCustomPriceAvailable = json.optBoolean("payment_is_custom_price_available");
@@ -491,6 +591,8 @@ public class Term {
     term.paymentAllowGift = json.optBoolean("payment_allow_gift");
     term.paymentCurrency = json.optString("payment_currency");
     term.paymentFirstPrice = json.optDouble("payment_first_price");
+    term.schedule = Schedule.fromJson(json.optJSONObject("schedule"));
+    term.scheduleBilling = json.optString("schedule_billing");
     term.customRequireUser = json.optBoolean("custom_require_user");
     term.customDefaultAccessPeriod = json.optInt("custom_default_access_period");
     term.adviewVastUrl = json.optString("adview_vast_url");
@@ -504,6 +606,7 @@ public class Term {
     term.evtGracePeriod = json.optInt("evt_grace_period");
     term.evtItunesBundleId = json.optString("evt_itunes_bundle_id");
     term.evtItunesProductId = json.optString("evt_itunes_product_id");
+    term.evtGooglePlayProductId = json.optString("evt_google_play_product_id");
     term.collectAddress = json.optBoolean("collect_address");
     term.deliveryZone = new ArrayList<>();
     JSONArray deliveryZoneJsonArray = json.optJSONArray("delivery_zone");
@@ -512,6 +615,9 @@ public class Term {
       term.deliveryZone.add(DeliveryZone.fromJson(deliveryZoneJsonArray.optJSONObject(ii)));
     }
     term.defaultCountry = Country.fromJson(json.optJSONObject("default_country"));
+    term.voucheringPolicy = VoucheringPolicy.fromJson(json.optJSONObject("vouchering_policy"));
+    term.billingConfig = json.optString("billing_config");
+    term.isAllowedToChangeSchedulePeriodInPast = json.optBoolean("is_allowed_to_change_schedule_period_in_past");
     
     return term;
   }

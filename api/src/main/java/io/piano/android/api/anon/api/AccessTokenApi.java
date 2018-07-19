@@ -2,15 +2,14 @@ package io.piano.android.api.anon.api;
 
 import android.util.Pair;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.anon.model.AccessTokenList;
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AccessTokenApi {
 
@@ -21,7 +20,7 @@ public class AccessTokenApi {
   }
   
   /**
-   * Returns the list tokens list
+   * Returns the list of access tokens
    * 
    * @param aid Application aid
    * @param userToken User token

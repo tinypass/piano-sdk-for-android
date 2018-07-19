@@ -2,15 +2,14 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.Term;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.Term;
 
 public class PublisherTermExternalApi {
 
@@ -33,9 +32,10 @@ public class PublisherTermExternalApi {
    * @param evtVerificationPeriod External verification period
    * @param evtItunesBundleId iTunes bundle id
    * @param evtItunesProductId iTunes  product id
+   * @param evtGooglePlayProductId Google Play product id
    * @return Term
    */
-  public Term createExternalVerificationTerm(String aid, String rid, String externalApiId, String name, String description, Integer evtFixedTimeAccessPeriod, Integer evtGracePeriod, Integer evtVerificationPeriod, String evtItunesBundleId, String evtItunesProductId) throws ApiException {
+  public Term createExternalVerificationTerm(String aid, String rid, String externalApiId, String name, String description, Integer evtFixedTimeAccessPeriod, Integer evtGracePeriod, Integer evtVerificationPeriod, String evtItunesBundleId, String evtItunesProductId, String evtGooglePlayProductId) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -123,6 +123,10 @@ public class PublisherTermExternalApi {
         builder.addTextBody("evt_itunes_product_id", ApiInvoker.parameterToString(evtItunesProductId), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (evtGooglePlayProductId != null) {
+        builder.addTextBody("evt_google_play_product_id", ApiInvoker.parameterToString(evtGooglePlayProductId), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -139,6 +143,7 @@ public class PublisherTermExternalApi {
       formParams.put("evt_verification_period", ApiInvoker.parameterToString(evtVerificationPeriod));
       formParams.put("evt_itunes_bundle_id", ApiInvoker.parameterToString(evtItunesBundleId));
       formParams.put("evt_itunes_product_id", ApiInvoker.parameterToString(evtItunesProductId));
+      formParams.put("evt_google_play_product_id", ApiInvoker.parameterToString(evtGooglePlayProductId));
       
     }
 
@@ -168,9 +173,10 @@ public class PublisherTermExternalApi {
    * @param evtVerificationPeriod External verification period
    * @param evtItunesBundleId iTunes bundle id
    * @param evtItunesProductId iTunes  product id
+   * @param evtGooglePlayProductId Google Play product id
    * @return Term
    */
-  public Term updateExternalVerificationTerm(String termId, String externalApiId, String name, String rid, String description, Integer evtFixedTimeAccessPeriod, Integer evtGracePeriod, Integer evtVerificationPeriod, String evtItunesBundleId, String evtItunesProductId) throws ApiException {
+  public Term updateExternalVerificationTerm(String termId, String externalApiId, String name, String rid, String description, Integer evtFixedTimeAccessPeriod, Integer evtGracePeriod, Integer evtVerificationPeriod, String evtItunesBundleId, String evtItunesProductId, String evtGooglePlayProductId) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'termId' is set
@@ -253,6 +259,10 @@ public class PublisherTermExternalApi {
         builder.addTextBody("evt_itunes_product_id", ApiInvoker.parameterToString(evtItunesProductId), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (evtGooglePlayProductId != null) {
+        builder.addTextBody("evt_google_play_product_id", ApiInvoker.parameterToString(evtGooglePlayProductId), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -269,6 +279,7 @@ public class PublisherTermExternalApi {
       formParams.put("evt_verification_period", ApiInvoker.parameterToString(evtVerificationPeriod));
       formParams.put("evt_itunes_bundle_id", ApiInvoker.parameterToString(evtItunesBundleId));
       formParams.put("evt_itunes_product_id", ApiInvoker.parameterToString(evtItunesProductId));
+      formParams.put("evt_google_play_product_id", ApiInvoker.parameterToString(evtGooglePlayProductId));
       
     }
 

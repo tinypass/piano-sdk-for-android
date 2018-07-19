@@ -2,16 +2,15 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.TermConversion;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.TermConversion;
 
 public class PublisherConversionApi {
 
@@ -28,7 +27,7 @@ public class PublisherConversionApi {
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param q Search value
-   * @param orderBy Field to order by
+   * @param orderBy Field to order by: term_name, resource_type, resource_name
    * @param orderDirection Order direction (asc/desc)
    * @param includeType Type of terms to include into the list
    * @param excludeType Type of terms to exclude from the list
@@ -132,9 +131,10 @@ public class PublisherConversionApi {
    * 
    * @param aid Application aid
    * @param termConversionId Term conversion id
+   * @param accessId The access id
    * @return TermConversion
    */
-  public TermConversion get(String aid, String termConversionId) throws ApiException {
+  public TermConversion get(String aid, String termConversionId, String accessId) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -157,6 +157,8 @@ public class PublisherConversionApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "term_conversion_id", termConversionId));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "access_id", accessId));
     
 
     
@@ -273,9 +275,11 @@ public class PublisherConversionApi {
    * @param limit Maximum index of returned results
    * @param uid User&#39;s uid
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
    * @return List<TermConversion>
    */
-  public List<TermConversion> list(String aid, Integer offset, Integer limit, String uid, String q) throws ApiException {
+  public List<TermConversion> list(String aid, Integer offset, Integer limit, String uid, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -314,6 +318,10 @@ public class PublisherConversionApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "offset", offset));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_by", orderBy));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_direction", orderDirection));
     
 
     
@@ -357,9 +365,11 @@ public class PublisherConversionApi {
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
    * @return List<TermConversion>
    */
-  public List<TermConversion> listAccess(String aid, Integer offset, Integer limit, String q) throws ApiException {
+  public List<TermConversion> listAccess(String aid, Integer offset, Integer limit, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -396,6 +406,10 @@ public class PublisherConversionApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "offset", offset));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_by", orderBy));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_direction", orderDirection));
     
 
     
@@ -439,12 +453,13 @@ public class PublisherConversionApi {
    * @param termId Term ID
    * @param termName Term name
    * @param stepNumber Checkout step number
+   * @param conversionCategory Conversion category
    * @param amount Conversion amount
    * @param currency Conversion currency by ISO 4217 standard
    * @param customParams Custom parameters (any key-value pairs) to save (this value should be a valid JSON object)
    * @return void
    */
-  public void logConversion(String trackingId, String termId, String termName, Integer stepNumber, BigDecimal amount, String currency, String customParams) throws ApiException {
+  public void logConversion(String trackingId, String termId, String termName, Integer stepNumber, String conversionCategory, BigDecimal amount, String currency, String customParams) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'trackingId' is set
@@ -503,6 +518,10 @@ public class PublisherConversionApi {
         builder.addTextBody("step_number", ApiInvoker.parameterToString(stepNumber), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (conversionCategory != null) {
+        builder.addTextBody("conversion_category", ApiInvoker.parameterToString(conversionCategory), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
       if (amount != null) {
         builder.addTextBody("amount", ApiInvoker.parameterToString(amount), ApiInvoker.TEXT_PLAIN_UTF8);
       }
@@ -525,6 +544,7 @@ public class PublisherConversionApi {
       formParams.put("term_id", ApiInvoker.parameterToString(termId));
       formParams.put("term_name", ApiInvoker.parameterToString(termName));
       formParams.put("step_number", ApiInvoker.parameterToString(stepNumber));
+      formParams.put("conversion_category", ApiInvoker.parameterToString(conversionCategory));
       formParams.put("amount", ApiInvoker.parameterToString(amount));
       formParams.put("currency", ApiInvoker.parameterToString(currency));
       formParams.put("custom_params", ApiInvoker.parameterToString(customParams));

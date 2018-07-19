@@ -1,13 +1,9 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.Resource;
-import io.piano.android.api.publisher.model.Term;
-import io.piano.android.api.publisher.model.User;
-import io.piano.android.api.publisher.model.UserAddress;
-import java.util.Date;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class UserSubscription {
   
@@ -19,6 +15,7 @@ public class UserSubscription {
   private String userPaymentInfoId = null;
   private String status = null;
   private String statusName = null;
+  private String statusNameInReports = null;
   private Term term = null;
   private Resource resource = null;
   private User user = null;
@@ -29,6 +26,14 @@ public class UserSubscription {
   private String pscSubscriberNumber = null;
   private String externalApiName = null;
   private String conversionResult = null;
+  private Boolean isInTrial = null;
+  private Date trialPeriodEndDate = null;
+  private Double trialAmount = null;
+  private String trialCurrency = null;
+  private Date endDate = null;
+  private Integer chargeCount = null;
+  private String upiExtCustomerId = null;
+  private String upiExtCustomerIdLabel = null;
   
   /**
    * User subscription id
@@ -119,6 +124,17 @@ public class UserSubscription {
   }
   
   /**
+   * User subscription status displayable in reports
+   **/
+  public String getStatusNameInReports() {
+    return statusNameInReports;
+  }
+
+  public void setStatusNameInReports(String statusNameInReports) {
+    this.statusNameInReports = statusNameInReports;
+  }
+  
+  /**
    **/
   public Term getTerm() {
     return term;
@@ -151,7 +167,7 @@ public class UserSubscription {
   }
   
   /**
-   * The start date
+   * The start date.
    **/
   public Date getStartDate() {
     return startDate;
@@ -227,6 +243,94 @@ public class UserSubscription {
     this.conversionResult = conversionResult;
   }
   
+  /**
+   * Is the user currently in trial period
+   **/
+  public Boolean getIsInTrial() {
+    return isInTrial;
+  }
+
+  public void setIsInTrial(Boolean isInTrial) {
+    this.isInTrial = isInTrial;
+  }
+  
+  /**
+   * Date when trial period ends
+   **/
+  public Date getTrialPeriodEndDate() {
+    return trialPeriodEndDate;
+  }
+
+  public void setTrialPeriodEndDate(Date trialPeriodEndDate) {
+    this.trialPeriodEndDate = trialPeriodEndDate;
+  }
+  
+  /**
+   * Price of the trial period
+   **/
+  public Double getTrialAmount() {
+    return trialAmount;
+  }
+
+  public void setTrialAmount(Double trialAmount) {
+    this.trialAmount = trialAmount;
+  }
+  
+  /**
+   * Currency of the trial period
+   **/
+  public String getTrialCurrency() {
+    return trialCurrency;
+  }
+
+  public void setTrialCurrency(String trialCurrency) {
+    this.trialCurrency = trialCurrency;
+  }
+  
+  /**
+   * Subscription end date
+   **/
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
+  
+  /**
+   * User subscription charge count
+   **/
+  public Integer getChargeCount() {
+    return chargeCount;
+  }
+
+  public void setChargeCount(Integer chargeCount) {
+    this.chargeCount = chargeCount;
+  }
+  
+  /**
+   * External customer id
+   **/
+  public String getUpiExtCustomerId() {
+    return upiExtCustomerId;
+  }
+
+  public void setUpiExtCustomerId(String upiExtCustomerId) {
+    this.upiExtCustomerId = upiExtCustomerId;
+  }
+  
+  /**
+   * Label for external customer id
+   **/
+  public String getUpiExtCustomerIdLabel() {
+    return upiExtCustomerIdLabel;
+  }
+
+  public void setUpiExtCustomerIdLabel(String upiExtCustomerIdLabel) {
+    this.upiExtCustomerIdLabel = upiExtCustomerIdLabel;
+  }
+  
   public static UserSubscription fromJson(JSONObject json) throws JSONException {
     UserSubscription userSubscription = new UserSubscription();
 
@@ -238,6 +342,7 @@ public class UserSubscription {
     userSubscription.userPaymentInfoId = json.optString("user_payment_info_id");
     userSubscription.status = json.optString("status");
     userSubscription.statusName = json.optString("status_name");
+    userSubscription.statusNameInReports = json.optString("status_name_in_reports");
     userSubscription.term = Term.fromJson(json.optJSONObject("term"));
     userSubscription.resource = Resource.fromJson(json.optJSONObject("resource"));
     userSubscription.user = User.fromJson(json.optJSONObject("user"));
@@ -248,6 +353,14 @@ public class UserSubscription {
     userSubscription.pscSubscriberNumber = json.optString("psc_subscriber_number");
     userSubscription.externalApiName = json.optString("external_api_name");
     userSubscription.conversionResult = json.optString("conversion_result");
+    userSubscription.isInTrial = json.optBoolean("is_in_trial");
+    userSubscription.trialPeriodEndDate = new Date(json.optLong("trial_period_end_date") * 1000);
+    userSubscription.trialAmount = json.optDouble("trial_amount");
+    userSubscription.trialCurrency = json.optString("trial_currency");
+    userSubscription.endDate = new Date(json.optLong("end_date") * 1000);
+    userSubscription.chargeCount = json.optInt("charge_count");
+    userSubscription.upiExtCustomerId = json.optString("upi_ext_customer_id");
+    userSubscription.upiExtCustomerIdLabel = json.optString("upi_ext_customer_id_label");
     
     return userSubscription;
   }

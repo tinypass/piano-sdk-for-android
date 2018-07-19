@@ -1,11 +1,12 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.PromotionFixedDiscountt;
-import java.util.*;
-import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Promotion {
   
@@ -225,7 +226,7 @@ public class Promotion {
   }
   
   /**
-   * The start date
+   * The start date.
    **/
   public Date getStartDate() {
     return startDate;

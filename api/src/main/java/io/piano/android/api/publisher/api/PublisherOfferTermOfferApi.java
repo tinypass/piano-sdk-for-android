@@ -2,15 +2,14 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.OfferModel;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.OfferModel;
 
 public class PublisherOfferTermOfferApi {
 
@@ -28,9 +27,11 @@ public class PublisherOfferTermOfferApi {
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
    * @return List<OfferModel>
    */
-  public List<OfferModel> listOfferByTerm(String aid, String termId, Integer offset, Integer limit, String q) throws ApiException {
+  public List<OfferModel> listOfferByTerm(String aid, String termId, Integer offset, Integer limit, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -74,6 +75,10 @@ public class PublisherOfferTermOfferApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "offset", offset));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_by", orderBy));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_direction", orderDirection));
     
 
     

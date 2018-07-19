@@ -1,10 +1,9 @@
 package io.piano.android.api.anon.model;
 
-import io.piano.android.api.anon.model.Term;
-import java.util.Date;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class UserSubscription {
   
@@ -74,7 +73,7 @@ public class UserSubscription {
   }
   
   /**
-   * The start date
+   * The start date.
    **/
   public Date getStartDate() {
     return startDate;

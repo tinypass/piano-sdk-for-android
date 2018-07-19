@@ -2,15 +2,14 @@ package io.piano.android.api.anon.api;
 
 import android.util.Pair;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.anon.model.Access;
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AccessApi {
 
@@ -27,12 +26,13 @@ public class AccessApi {
    * @param aid Application aid
    * @param tpAccessTokenV2 The Tinypass access token (v2)
    * @param umc The Tinypass user meter cookie (umc)
+   * @param crossApp Provide cross application access for resource
    * @param userToken User token
    * @param userProvider User token provider
    * @param userRef Encrypted user reference
    * @return Access
    */
-  public Access check(String rid, String aid, String tpAccessTokenV2, String umc, String userToken, String userProvider, String userRef) throws ApiException {
+  public Access check(String rid, String aid, String tpAccessTokenV2, String umc, Boolean crossApp, String userToken, String userProvider, String userRef) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'rid' is set
@@ -64,6 +64,8 @@ public class AccessApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "tp_access_token_v2", tpAccessTokenV2));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "umc", umc));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "cross_app", crossApp));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "user_token", userToken));
     
@@ -107,19 +109,23 @@ public class AccessApi {
   }
   
   /**
-   * Returns the list accesses for user
+   * Returns access list for user
    * 
    * @param aid Application aid
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param active whether the object is active
+   * @param expandBundled Expand bundled accesses
+   * @param crossApp Provide cross application access for resource
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
    * @param userToken User token
    * @param userProvider User token provider
    * @param userRef Encrypted user reference
    * @return List<Access>
    */
-  public List<Access> list(String aid, Integer offset, Integer limit, Boolean active, String q, String userToken, String userProvider, String userRef) throws ApiException {
+  public List<Access> list(String aid, Integer offset, Integer limit, Boolean active, Boolean expandBundled, Boolean crossApp, String q, String orderBy, String orderDirection, String userToken, String userProvider, String userRef) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -153,11 +159,19 @@ public class AccessApi {
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "active", active));
     
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "expand_bundled", expandBundled));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "cross_app", crossApp));
+    
     queryParams.addAll(ApiInvoker.parameterToPairs("", "q", q));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "offset", offset));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_by", orderBy));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_direction", orderDirection));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "user_token", userToken));
     

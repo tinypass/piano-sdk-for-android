@@ -2,15 +2,14 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.OfferTemplateVersion;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.OfferTemplateVersion;
 
 public class PublisherOfferTemplateCreateApi {
 
@@ -26,9 +25,11 @@ public class PublisherOfferTemplateCreateApi {
    * @param aid Application aid
    * @param name The name
    * @param description The description
+   * @param categoryId The id of Category
+   * @param historyComment Offer Template History Comment
    * @return OfferTemplateVersion
    */
-  public OfferTemplateVersion createEmpty(String aid, String name, String description) throws ApiException {
+  public OfferTemplateVersion createEmpty(String aid, String name, String description, String categoryId, String historyComment) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -78,6 +79,14 @@ public class PublisherOfferTemplateCreateApi {
         builder.addTextBody("description", ApiInvoker.parameterToString(description), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (categoryId != null) {
+        builder.addTextBody("category_id", ApiInvoker.parameterToString(categoryId), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (historyComment != null) {
+        builder.addTextBody("history_comment", ApiInvoker.parameterToString(historyComment), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -87,6 +96,8 @@ public class PublisherOfferTemplateCreateApi {
       formParams.put("aid", ApiInvoker.parameterToString(aid));
       formParams.put("name", ApiInvoker.parameterToString(name));
       formParams.put("description", ApiInvoker.parameterToString(description));
+      formParams.put("category_id", ApiInvoker.parameterToString(categoryId));
+      formParams.put("history_comment", ApiInvoker.parameterToString(historyComment));
       
     }
 

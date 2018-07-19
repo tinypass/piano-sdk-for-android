@@ -1,6 +1,5 @@
 package io.piano.android.api.publisher.model;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +13,7 @@ public class UserSubscriptionDto {
   private String nextBillDate = null;
   private String subscriptionLastPayment = null;
   private String status = null;
+  private String statusLabel = null;
   private String creaditCardExpire = null;
   private Boolean creaditCardExpireSoon = null;
   private String subscriptionId = null;
@@ -23,6 +23,7 @@ public class UserSubscriptionDto {
   private String pscSubscriberNumber = null;
   private String conversionResult = null;
   private String externalApiName = null;
+  private Integer chargeCount = null;
   
   /**
    * User subscription term name
@@ -110,6 +111,17 @@ public class UserSubscriptionDto {
 
   public void setStatus(String status) {
     this.status = status;
+  }
+  
+  /**
+   * User subscription status label
+   **/
+  public String getStatusLabel() {
+    return statusLabel;
+  }
+
+  public void setStatusLabel(String statusLabel) {
+    this.statusLabel = statusLabel;
   }
   
   /**
@@ -211,6 +223,17 @@ public class UserSubscriptionDto {
     this.externalApiName = externalApiName;
   }
   
+  /**
+   * User subscription charge count
+   **/
+  public Integer getChargeCount() {
+    return chargeCount;
+  }
+
+  public void setChargeCount(Integer chargeCount) {
+    this.chargeCount = chargeCount;
+  }
+  
   public static UserSubscriptionDto fromJson(JSONObject json) throws JSONException {
     UserSubscriptionDto userSubscriptionDto = new UserSubscriptionDto();
 
@@ -222,6 +245,7 @@ public class UserSubscriptionDto {
     userSubscriptionDto.nextBillDate = json.optString("next_bill_date");
     userSubscriptionDto.subscriptionLastPayment = json.optString("subscription_last_payment");
     userSubscriptionDto.status = json.optString("status");
+    userSubscriptionDto.statusLabel = json.optString("status_label");
     userSubscriptionDto.creaditCardExpire = json.optString("creadit_card_expire");
     userSubscriptionDto.creaditCardExpireSoon = json.optBoolean("creadit_card_expire_soon");
     userSubscriptionDto.subscriptionId = json.optString("subscription_id");
@@ -231,6 +255,7 @@ public class UserSubscriptionDto {
     userSubscriptionDto.pscSubscriberNumber = json.optString("psc_subscriber_number");
     userSubscriptionDto.conversionResult = json.optString("conversion_result");
     userSubscriptionDto.externalApiName = json.optString("external_api_name");
+    userSubscriptionDto.chargeCount = json.optInt("charge_count");
     
     return userSubscriptionDto;
   }

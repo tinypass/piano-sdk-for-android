@@ -2,16 +2,15 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.Access;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.Access;
 
 public class PublisherUserAccessApi {
 
@@ -22,14 +21,15 @@ public class PublisherUserAccessApi {
   }
   
   /**
-   * Checks user access
-   * 
+   * Check if user has access to a specific resource
+   * Returns an Access object if the user has access to specific resource
    * @param aid Application aid
    * @param uid User&#39;s uid
    * @param rid Unique id for resource
+   * @param crossApp Provide cross application access for resource
    * @return Access
    */
-  public Access checkAccess(String aid, String uid, String rid) throws ApiException {
+  public Access checkAccess(String aid, String uid, String rid, Boolean crossApp) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -64,6 +64,8 @@ public class PublisherUserAccessApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "uid", uid));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "rid", rid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "cross_app", crossApp));
     
 
     
@@ -292,10 +294,14 @@ public class PublisherUserAccessApi {
    * @param uid User&#39;s uid
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
+   * @param expandBundled Expand bundled accesses
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
+   * @param crossApp Provide cross application access for resource
    * @return List<Access>
    */
-  public List<Access> listAccess(String aid, String uid, Integer offset, Integer limit, String q) throws ApiException {
+  public List<Access> listAccess(String aid, String uid, Integer offset, Integer limit, Boolean expandBundled, String q, String orderBy, String orderDirection, Boolean crossApp) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -334,11 +340,19 @@ public class PublisherUserAccessApi {
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "uid", uid));
     
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "expand_bundled", expandBundled));
+    
     queryParams.addAll(ApiInvoker.parameterToPairs("", "q", q));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "offset", offset));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_by", orderBy));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_direction", orderDirection));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "cross_app", crossApp));
     
 
     

@@ -2,40 +2,40 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.common.ApiException;
-import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class PublisherUserAccessActiveApi {
+import io.piano.android.api.common.ApiException;
+import io.piano.android.api.common.ApiInvoker;
+import io.piano.android.api.publisher.model.EdgilPaywayConfiguration;
+
+public class PublisherPaymentProviderConfigurationGetEdgilApi {
 
   private ApiInvoker apiInvoker;
 
-  public PublisherUserAccessActiveApi(ApiInvoker apiInvoker) {
+  public PublisherPaymentProviderConfigurationGetEdgilApi(ApiInvoker apiInvoker) {
     this.apiInvoker = apiInvoker;
   }
   
   /**
-   * Count active accesses
+   * Gets payment provider configuration for Edgil Payway
    * 
    * @param aid Application aid
-   * @return Integer
+   * @return EdgilPaywayConfiguration
    */
-  public Integer count(String aid) throws ApiException {
+  public EdgilPaywayConfiguration getEdgilPaywayConfiguration(String aid) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
     if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling count");
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling getEdgilPaywayConfiguration");
     }
     
 
     // create path and map variables
-    String path = "/publisher/user/access/active/count";
+    String path = "/publisher/payment/provider/configuration/get/edgil/payway";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -44,6 +44,8 @@ public class PublisherUserAccessActiveApi {
     // form params
     Map<String, String> formParams = new HashMap<String, String>();
 
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
     
 
     
@@ -58,24 +60,19 @@ public class PublisherUserAccessActiveApi {
       // file uploading
       MultipartEntityBuilder builder = MultipartEntityBuilder.create();
       
-      if (aid != null) {
-        builder.addTextBody("aid", ApiInvoker.parameterToString(aid), ApiInvoker.TEXT_PLAIN_UTF8);
-      }
-      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
       */
     } else {
       // normal form params
-      formParams.put("aid", ApiInvoker.parameterToString(aid));
       
     }
 
     try {
-      String response = apiInvoker.invokeAPI(path, "POST", queryParams, postBody, headerParams, formParams, contentType);
+      String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return (Integer) ApiInvoker.deserialize(response, "", Integer.class);
+        return (EdgilPaywayConfiguration) ApiInvoker.deserialize(response, "", EdgilPaywayConfiguration.class);
       }
       else {
         return null;

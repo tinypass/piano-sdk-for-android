@@ -2,15 +2,14 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.Term;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.Term;
 
 public class PublisherTermPaymentApi {
 
@@ -40,9 +39,11 @@ public class PublisherTermPaymentApi {
    * @param collectAddress Collect address for this term
    * @param deliveryZone List of delivery zones for this term
    * @param defaultCountry Pre-selected country for consumers outside of delivery zones
+   * @param scheduleId The schedule ID
+   * @param scheduleBillingModel The schedule billing model
    * @return Term
    */
-  public Term createPaymentTerm(String aid, String rid, String name, String paymentBillingPlan, Integer paymentAllowRenewDays, Boolean paymentForceAutoRenew, Boolean paymentNewCustomersOnly, Boolean paymentTrialNewCustomersOnly, Boolean paymentAllowPromoCodes, Integer paymentRenewGracePeriod, Boolean paymentAllowGift, String description, Boolean verifyOnRenewal, Integer evtVerificationPeriod, Boolean collectAddress, List<String> deliveryZone, String defaultCountry) throws ApiException {
+  public Term createPaymentTerm(String aid, String rid, String name, String paymentBillingPlan, Integer paymentAllowRenewDays, Boolean paymentForceAutoRenew, Boolean paymentNewCustomersOnly, Boolean paymentTrialNewCustomersOnly, Boolean paymentAllowPromoCodes, Integer paymentRenewGracePeriod, Boolean paymentAllowGift, String description, Boolean verifyOnRenewal, Integer evtVerificationPeriod, Boolean collectAddress, List<String> deliveryZone, String defaultCountry, String scheduleId, String scheduleBillingModel) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -58,11 +59,6 @@ public class PublisherTermPaymentApi {
     // verify the required parameter 'name' is set
     if (name == null) {
        throw new ApiException(400, "Missing the required parameter 'name' when calling createPaymentTerm");
-    }
-    
-    // verify the required parameter 'paymentBillingPlan' is set
-    if (paymentBillingPlan == null) {
-       throw new ApiException(400, "Missing the required parameter 'paymentBillingPlan' when calling createPaymentTerm");
     }
     
 
@@ -158,6 +154,14 @@ public class PublisherTermPaymentApi {
         builder.addTextBody("default_country", ApiInvoker.parameterToString(defaultCountry), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (scheduleId != null) {
+        builder.addTextBody("schedule_id", ApiInvoker.parameterToString(scheduleId), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (scheduleBillingModel != null) {
+        builder.addTextBody("schedule_billing_model", ApiInvoker.parameterToString(scheduleBillingModel), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -181,6 +185,8 @@ public class PublisherTermPaymentApi {
       formParams.put("collect_address", ApiInvoker.parameterToString(collectAddress));
       formParams.put("delivery_zone", ApiInvoker.parameterToString(deliveryZone));
       formParams.put("default_country", ApiInvoker.parameterToString(defaultCountry));
+      formParams.put("schedule_id", ApiInvoker.parameterToString(scheduleId));
+      formParams.put("schedule_billing_model", ApiInvoker.parameterToString(scheduleBillingModel));
       
     }
 
@@ -217,9 +223,11 @@ public class PublisherTermPaymentApi {
    * @param collectAddress Collect address for this term
    * @param deliveryZone List of delivery zones for this term
    * @param defaultCountry Pre-selected country for consumers outside of delivery zones
+   * @param scheduleId The schedule ID
+   * @param scheduleBillingModel The schedule billing model
    * @return Term
    */
-  public Term updatePaymentTerm(String termId, String rid, String name, String paymentBillingPlan, Integer paymentAllowRenewDays, Boolean paymentForceAutoRenew, Boolean paymentNewCustomersOnly, Boolean paymentTrialNewCustomersOnly, Boolean paymentAllowPromoCodes, Integer paymentRenewGracePeriod, Boolean paymentAllowGift, String description, Boolean verifyOnRenewal, Integer evtVerificationPeriod, Boolean collectAddress, List<String> deliveryZone, String defaultCountry) throws ApiException {
+  public Term updatePaymentTerm(String termId, String rid, String name, String paymentBillingPlan, Integer paymentAllowRenewDays, Boolean paymentForceAutoRenew, Boolean paymentNewCustomersOnly, Boolean paymentTrialNewCustomersOnly, Boolean paymentAllowPromoCodes, Integer paymentRenewGracePeriod, Boolean paymentAllowGift, String description, Boolean verifyOnRenewal, Integer evtVerificationPeriod, Boolean collectAddress, List<String> deliveryZone, String defaultCountry, String scheduleId, String scheduleBillingModel) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'termId' is set
@@ -320,6 +328,14 @@ public class PublisherTermPaymentApi {
         builder.addTextBody("default_country", ApiInvoker.parameterToString(defaultCountry), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (scheduleId != null) {
+        builder.addTextBody("schedule_id", ApiInvoker.parameterToString(scheduleId), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (scheduleBillingModel != null) {
+        builder.addTextBody("schedule_billing_model", ApiInvoker.parameterToString(scheduleBillingModel), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -343,6 +359,8 @@ public class PublisherTermPaymentApi {
       formParams.put("collect_address", ApiInvoker.parameterToString(collectAddress));
       formParams.put("delivery_zone", ApiInvoker.parameterToString(deliveryZone));
       formParams.put("default_country", ApiInvoker.parameterToString(defaultCountry));
+      formParams.put("schedule_id", ApiInvoker.parameterToString(scheduleId));
+      formParams.put("schedule_billing_model", ApiInvoker.parameterToString(scheduleBillingModel));
       
     }
 

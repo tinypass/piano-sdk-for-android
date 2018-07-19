@@ -2,15 +2,14 @@ package io.piano.android.api.anon.api;
 
 import android.util.Pair;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.anon.model.OAuthToken;
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public class OauthApi {
 
@@ -26,13 +25,22 @@ public class OauthApi {
    * @param clientId Client ID of OAuth authorize
    * @param clientSecret Client secret of OAuth authorize
    * @param code OAuth code of OAuth authorize
+   * @param refreshToken OAuth refresh token of OAuth authorize
    * @param grantType Grant type of OAuth authorize
    * @param redirectUri Redirect URI of OAuth authorize
+   * @param username Username
+   * @param password Password
+   * @param state State
    * @param deviceId Device ID
    * @return OAuthToken
    */
-  public OAuthToken authToken(String clientId, String clientSecret, String code, String grantType, String redirectUri, String deviceId) throws ApiException {
+  public OAuthToken authToken(String clientId, String clientSecret, String code, String refreshToken, String grantType, String redirectUri, String username, String password, String state, String deviceId) throws ApiException {
     Object postBody = null;
+    
+    // verify the required parameter 'clientId' is set
+    if (clientId == null) {
+       throw new ApiException(400, "Missing the required parameter 'clientId' when calling authToken");
+    }
     
 
     // create path and map variables
@@ -71,12 +79,28 @@ public class OauthApi {
         builder.addTextBody("code", ApiInvoker.parameterToString(code), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (refreshToken != null) {
+        builder.addTextBody("refresh_token", ApiInvoker.parameterToString(refreshToken), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
       if (grantType != null) {
         builder.addTextBody("grant_type", ApiInvoker.parameterToString(grantType), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (redirectUri != null) {
         builder.addTextBody("redirect_uri", ApiInvoker.parameterToString(redirectUri), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (username != null) {
+        builder.addTextBody("username", ApiInvoker.parameterToString(username), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (password != null) {
+        builder.addTextBody("password", ApiInvoker.parameterToString(password), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (state != null) {
+        builder.addTextBody("state", ApiInvoker.parameterToString(state), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
       if (deviceId != null) {
@@ -92,8 +116,12 @@ public class OauthApi {
       formParams.put("client_id", ApiInvoker.parameterToString(clientId));
       formParams.put("client_secret", ApiInvoker.parameterToString(clientSecret));
       formParams.put("code", ApiInvoker.parameterToString(code));
+      formParams.put("refresh_token", ApiInvoker.parameterToString(refreshToken));
       formParams.put("grant_type", ApiInvoker.parameterToString(grantType));
       formParams.put("redirect_uri", ApiInvoker.parameterToString(redirectUri));
+      formParams.put("username", ApiInvoker.parameterToString(username));
+      formParams.put("password", ApiInvoker.parameterToString(password));
+      formParams.put("state", ApiInvoker.parameterToString(state));
       formParams.put("device_id", ApiInvoker.parameterToString(deviceId));
       
     }

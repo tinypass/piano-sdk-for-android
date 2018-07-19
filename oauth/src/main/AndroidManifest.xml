@@ -7,5 +7,6 @@
 
     <application>
         <activity android:name=".ui.activity.OAuthActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name=".ui.activity.PianoIdOAuthActivity" android:configChanges="orientation|keyboardHidden|screenSize"/>
     </application>
 </manifest>

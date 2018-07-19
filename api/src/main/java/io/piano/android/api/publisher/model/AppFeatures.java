@@ -1,10 +1,5 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.Composer;
-import io.piano.android.api.publisher.model.ContentAlgorithm;
-import io.piano.android.api.publisher.model.MyAccount;
-import io.piano.android.api.publisher.model.SubscriptionRestrictions;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,7 +9,9 @@ public class AppFeatures {
   private MyAccount myAccount = null;
   private Composer composer = null;
   private SubscriptionRestrictions subscriptionRestrictions = null;
+  private RedemptionPage redemptionPage = null;
   private Boolean isPaymentMockEnabled = null;
+  private Boolean isPublisherDashboardLocalizationEnabled = null;
   
   /**
    * Content algorithm enabled
@@ -61,6 +58,17 @@ public class AppFeatures {
   }
   
   /**
+   * Is app allowed to use system redemption page
+   **/
+  public RedemptionPage getRedemptionPage() {
+    return redemptionPage;
+  }
+
+  public void setRedemptionPage(RedemptionPage redemptionPage) {
+    this.redemptionPage = redemptionPage;
+  }
+  
+  /**
    * Is Mock instead of real payment providers enabled
    **/
   public Boolean getIsPaymentMockEnabled() {
@@ -71,6 +79,17 @@ public class AppFeatures {
     this.isPaymentMockEnabled = isPaymentMockEnabled;
   }
   
+  /**
+   * Is publisher dashboard localization enabled
+   **/
+  public Boolean getIsPublisherDashboardLocalizationEnabled() {
+    return isPublisherDashboardLocalizationEnabled;
+  }
+
+  public void setIsPublisherDashboardLocalizationEnabled(Boolean isPublisherDashboardLocalizationEnabled) {
+    this.isPublisherDashboardLocalizationEnabled = isPublisherDashboardLocalizationEnabled;
+  }
+  
   public static AppFeatures fromJson(JSONObject json) throws JSONException {
     AppFeatures appFeatures = new AppFeatures();
 
@@ -78,7 +97,9 @@ public class AppFeatures {
     appFeatures.myAccount = MyAccount.fromJson(json.optJSONObject("my_account"));
     appFeatures.composer = Composer.fromJson(json.optJSONObject("composer"));
     appFeatures.subscriptionRestrictions = SubscriptionRestrictions.fromJson(json.optJSONObject("subscription_restrictions"));
+    appFeatures.redemptionPage = RedemptionPage.fromJson(json.optJSONObject("redemption_page"));
     appFeatures.isPaymentMockEnabled = json.optBoolean("is_payment_mock_enabled");
+    appFeatures.isPublisherDashboardLocalizationEnabled = json.optBoolean("is_publisher_dashboard_localization_enabled");
     
     return appFeatures;
   }

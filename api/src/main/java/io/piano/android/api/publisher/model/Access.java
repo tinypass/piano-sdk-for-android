@@ -1,19 +1,19 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.Resource;
-import io.piano.android.api.publisher.model.User;
-import java.util.Date;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class Access {
   
   private String accessId = null;
+  private String parentAccessId = null;
   private Boolean granted = null;
   private Resource resource = null;
   private User user = null;
   private Date expireDate = null;
+  private Date startDate = null;
   
   /**
    * The access id
@@ -24,6 +24,17 @@ public class Access {
 
   public void setAccessId(String accessId) {
     this.accessId = accessId;
+  }
+  
+  /**
+   * The access parent id (for accesses from bundled resources)
+   **/
+  public String getParentAccessId() {
+    return parentAccessId;
+  }
+
+  public void setParentAccessId(String parentAccessId) {
+    this.parentAccessId = parentAccessId;
   }
   
   /**
@@ -70,14 +81,27 @@ public class Access {
     this.expireDate = expireDate;
   }
   
+  /**
+   * The start date.
+   **/
+  public Date getStartDate() {
+    return startDate;
+  }
+
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+  
   public static Access fromJson(JSONObject json) throws JSONException {
     Access access = new Access();
 
     access.accessId = json.optString("access_id");
+    access.parentAccessId = json.optString("parent_access_id");
     access.granted = json.optBoolean("granted");
     access.resource = Resource.fromJson(json.optJSONObject("resource"));
     access.user = User.fromJson(json.optJSONObject("user"));
     access.expireDate = new Date(json.optLong("expire_date") * 1000);
+    access.startDate = new Date(json.optLong("start_date") * 1000);
     
     return access;
   }

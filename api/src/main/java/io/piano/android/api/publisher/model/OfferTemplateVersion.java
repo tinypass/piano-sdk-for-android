@@ -1,16 +1,17 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.ExternalCss;
-import io.piano.android.api.publisher.model.User;
-import java.util.*;
-import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class OfferTemplateVersion {
   
   private String offerTemplateId = null;
+  private Boolean isStatic = null;
   private String aid = null;
   private String name = null;
   private String description = null;
@@ -28,9 +29,15 @@ public class OfferTemplateVersion {
   private Date publishDate = null;
   private String type = null;
   private String typeId = null;
+  private String categoryId = null;
+  private String thumbnailImageUrl = null;
+  private String liveThumbnailImageUrl = null;
   private Boolean published = null;
   private List<ExternalCss> externalCssList = null;
   private Boolean hasPreview = null;
+  private String status = null;
+  private List<OfferTemplateVariant> variantList = null;
+  private List<OfferTemplateContentField> contentFieldList = null;
   
   /**
    * Offer Template ID
@@ -41,6 +48,17 @@ public class OfferTemplateVersion {
 
   public void setOfferTemplateId(String offerTemplateId) {
     this.offerTemplateId = offerTemplateId;
+  }
+  
+  /**
+   * Is static template
+   **/
+  public Boolean getIsStatic() {
+    return isStatic;
+  }
+
+  public void setIsStatic(Boolean isStatic) {
+    this.isStatic = isStatic;
   }
   
   /**
@@ -229,6 +247,39 @@ public class OfferTemplateVersion {
   }
   
   /**
+   * The id of Category
+   **/
+  public String getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(String categoryId) {
+    this.categoryId = categoryId;
+  }
+  
+  /**
+   * Thumbnail image URL
+   **/
+  public String getThumbnailImageUrl() {
+    return thumbnailImageUrl;
+  }
+
+  public void setThumbnailImageUrl(String thumbnailImageUrl) {
+    this.thumbnailImageUrl = thumbnailImageUrl;
+  }
+  
+  /**
+   * Live thumbnail image URL
+   **/
+  public String getLiveThumbnailImageUrl() {
+    return liveThumbnailImageUrl;
+  }
+
+  public void setLiveThumbnailImageUrl(String liveThumbnailImageUrl) {
+    this.liveThumbnailImageUrl = liveThumbnailImageUrl;
+  }
+  
+  /**
    * Whether the template is published
    **/
   public Boolean getPublished() {
@@ -260,10 +311,42 @@ public class OfferTemplateVersion {
     this.hasPreview = hasPreview;
   }
   
+  /**
+   * status
+   **/
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+  
+  /**
+   **/
+  public List<OfferTemplateVariant> getVariantList() {
+    return variantList;
+  }
+
+  public void setVariantList(List<OfferTemplateVariant> variantList) {
+    this.variantList = variantList;
+  }
+  
+  /**
+   **/
+  public List<OfferTemplateContentField> getContentFieldList() {
+    return contentFieldList;
+  }
+
+  public void setContentFieldList(List<OfferTemplateContentField> contentFieldList) {
+    this.contentFieldList = contentFieldList;
+  }
+  
   public static OfferTemplateVersion fromJson(JSONObject json) throws JSONException {
     OfferTemplateVersion offerTemplateVersion = new OfferTemplateVersion();
 
     offerTemplateVersion.offerTemplateId = json.optString("offer_template_id");
+    offerTemplateVersion.isStatic = json.optBoolean("is_static");
     offerTemplateVersion.aid = json.optString("aid");
     offerTemplateVersion.name = json.optString("name");
     offerTemplateVersion.description = json.optString("description");
@@ -281,6 +364,9 @@ public class OfferTemplateVersion {
     offerTemplateVersion.publishDate = new Date(json.optLong("publish_date") * 1000);
     offerTemplateVersion.type = json.optString("type");
     offerTemplateVersion.typeId = json.optString("type_id");
+    offerTemplateVersion.categoryId = json.optString("category_id");
+    offerTemplateVersion.thumbnailImageUrl = json.optString("thumbnail_image_url");
+    offerTemplateVersion.liveThumbnailImageUrl = json.optString("live_thumbnail_image_url");
     offerTemplateVersion.published = json.optBoolean("published");
     offerTemplateVersion.externalCssList = new ArrayList<>();
     JSONArray externalCssListJsonArray = json.optJSONArray("external_css_list");
@@ -289,6 +375,19 @@ public class OfferTemplateVersion {
       offerTemplateVersion.externalCssList.add(ExternalCss.fromJson(externalCssListJsonArray.optJSONObject(ii)));
     }
     offerTemplateVersion.hasPreview = json.optBoolean("has_preview");
+    offerTemplateVersion.status = json.optString("status");
+    offerTemplateVersion.variantList = new ArrayList<>();
+    JSONArray variantListJsonArray = json.optJSONArray("variant_list");
+    int variantListLength = variantListJsonArray.length();
+    for (int ii = 0; ii < variantListLength; ii++) {
+      offerTemplateVersion.variantList.add(OfferTemplateVariant.fromJson(variantListJsonArray.optJSONObject(ii)));
+    }
+    offerTemplateVersion.contentFieldList = new ArrayList<>();
+    JSONArray contentFieldListJsonArray = json.optJSONArray("content_field_list");
+    int contentFieldListLength = contentFieldListJsonArray.length();
+    for (int ii = 0; ii < contentFieldListLength; ii++) {
+      offerTemplateVersion.contentFieldList.add(OfferTemplateContentField.fromJson(contentFieldListJsonArray.optJSONObject(ii)));
+    }
     
     return offerTemplateVersion;
   }

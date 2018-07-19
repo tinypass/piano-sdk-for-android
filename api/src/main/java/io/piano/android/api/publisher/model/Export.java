@@ -15,6 +15,7 @@ public class Export {
   private Integer exportRecords = null;
   private String exportStatus = null;
   private String reportType = null;
+  private Boolean exportRepeatable = null;
   private String filterData = null;
   
   /**
@@ -106,6 +107,17 @@ public class Export {
   }
   
   /**
+   * If downloadable report is repeatable
+   **/
+  public Boolean getExportRepeatable() {
+    return exportRepeatable;
+  }
+
+  public void setExportRepeatable(Boolean exportRepeatable) {
+    this.exportRepeatable = exportRepeatable;
+  }
+  
+  /**
    * Filter data
    **/
   public String getFilterData() {
@@ -127,6 +139,7 @@ public class Export {
     export.exportRecords = json.optInt("export_records");
     export.exportStatus = json.optString("export_status");
     export.reportType = json.optString("report_type");
+    export.exportRepeatable = json.optBoolean("export_repeatable");
     export.filterData = json.optString("filter_data");
     
     return export;

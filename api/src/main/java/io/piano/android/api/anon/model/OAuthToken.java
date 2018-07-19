@@ -1,6 +1,5 @@
 package io.piano.android.api.anon.model;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,6 +7,7 @@ public class OAuthToken {
   
   private String accessToken = null;
   private Integer expiresIn = null;
+  private String refreshToken = null;
   private String tokenType = null;
   
   /**
@@ -33,6 +33,17 @@ public class OAuthToken {
   }
   
   /**
+   * refresh_token
+   **/
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
+  
+  /**
    * token_type
    **/
   public String getTokenType() {
@@ -48,6 +59,7 @@ public class OAuthToken {
 
     oAuthToken.accessToken = json.optString("access_token");
     oAuthToken.expiresIn = json.optInt("expires_in");
+    oAuthToken.refreshToken = json.optString("refresh_token");
     oAuthToken.tokenType = json.optString("token_type");
     
     return oAuthToken;

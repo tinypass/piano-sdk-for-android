@@ -5,64 +5,54 @@ import android.text.TextUtils;
 
 import io.piano.android.api.anon.api.AccessApi;
 import io.piano.android.api.anon.api.AccessTokenApi;
-import io.piano.android.api.anon.api.AnonApi;
-import io.piano.android.api.anon.api.AnonCurrencyListApi;
-import io.piano.android.api.anon.api.AnonCurrencyListWorldpayApi;
-import io.piano.android.api.anon.api.AnonMeterApi;
+import io.piano.android.api.anon.api.AnonErrorApi;
+import io.piano.android.api.anon.api.AnonUserApi;
 import io.piano.android.api.anon.api.ConversionApi;
 import io.piano.android.api.anon.api.ConversionExternalApi;
 import io.piano.android.api.anon.api.ConversionRegistrationApi;
-import io.piano.android.api.anon.api.ExperienceApi;
 import io.piano.android.api.anon.api.OauthApi;
 import io.piano.android.api.anon.api.SubscriptionApi;
 import io.piano.android.api.common.ApiInvoker;
 import io.piano.android.api.common.Network;
+import io.piano.android.api.publisher.api.PublisherAdblockerApi;
 import io.piano.android.api.publisher.api.PublisherAppApi;
 import io.piano.android.api.publisher.api.PublisherAppFeaturesApi;
-import io.piano.android.api.publisher.api.PublisherConsentApi;
-import io.piano.android.api.publisher.api.PublisherConsentEntryApi;
-import io.piano.android.api.publisher.api.PublisherConsentPageApi;
 import io.piano.android.api.publisher.api.PublisherConversionApi;
 import io.piano.android.api.publisher.api.PublisherConversionCustomApi;
+import io.piano.android.api.publisher.api.PublisherConversionDataApi;
 import io.piano.android.api.publisher.api.PublisherConversionExternalApi;
 import io.piano.android.api.publisher.api.PublisherConversionRegistrationApi;
 import io.piano.android.api.publisher.api.PublisherExportApi;
 import io.piano.android.api.publisher.api.PublisherExportCreateAamApi;
 import io.piano.android.api.publisher.api.PublisherExportCreateApi;
-import io.piano.android.api.publisher.api.PublisherExportUpdateApi;
+import io.piano.android.api.publisher.api.PublisherGdprApi;
 import io.piano.android.api.publisher.api.PublisherInquiryApi;
 import io.piano.android.api.publisher.api.PublisherOfferApi;
 import io.piano.android.api.publisher.api.PublisherOfferTemplateApi;
 import io.piano.android.api.publisher.api.PublisherOfferTemplateCreateApi;
+import io.piano.android.api.publisher.api.PublisherOfferTemplateUpdateApi;
+import io.piano.android.api.publisher.api.PublisherOfferTemplateVariantApi;
 import io.piano.android.api.publisher.api.PublisherOfferTermApi;
-import io.piano.android.api.publisher.api.PublisherOfferTermApplicableApi;
 import io.piano.android.api.publisher.api.PublisherOfferTermOfferApi;
-import io.piano.android.api.publisher.api.PublisherPaymentProviderConfigurationGetWorldpayApi;
+import io.piano.android.api.publisher.api.PublisherPaymentProviderConfigurationCreateEdgilApi;
+import io.piano.android.api.publisher.api.PublisherPaymentProviderConfigurationGetEdgilApi;
 import io.piano.android.api.publisher.api.PublisherPromotionApi;
 import io.piano.android.api.publisher.api.PublisherPromotionCodeApi;
 import io.piano.android.api.publisher.api.PublisherPromotionTermApi;
-import io.piano.android.api.publisher.api.PublisherReportConversionApi;
 import io.piano.android.api.publisher.api.PublisherResourceApi;
 import io.piano.android.api.publisher.api.PublisherResourceBundleApi;
 import io.piano.android.api.publisher.api.PublisherResourceStatsApi;
 import io.piano.android.api.publisher.api.PublisherResourceTagApi;
 import io.piano.android.api.publisher.api.PublisherResourceUserApi;
 import io.piano.android.api.publisher.api.PublisherSubscriptionApi;
-import io.piano.android.api.publisher.api.PublisherSubscriptionCountFailedApi;
-import io.piano.android.api.publisher.api.PublisherSubscriptionExportApi;
-import io.piano.android.api.publisher.api.PublisherTaxApi;
-import io.piano.android.api.publisher.api.PublisherTaxRateApi;
-import io.piano.android.api.publisher.api.PublisherTaxTaxJarApi;
-import io.piano.android.api.publisher.api.PublisherTaxTinypassApi;
 import io.piano.android.api.publisher.api.PublisherTermApi;
 import io.piano.android.api.publisher.api.PublisherTermCustomApi;
 import io.piano.android.api.publisher.api.PublisherTermExternalApi;
+import io.piano.android.api.publisher.api.PublisherTermGiftApi;
 import io.piano.android.api.publisher.api.PublisherTermPaymentApi;
 import io.piano.android.api.publisher.api.PublisherTermRegistrationApi;
 import io.piano.android.api.publisher.api.PublisherTermStatsApi;
-import io.piano.android.api.publisher.api.PublisherTermUpdateExternalApiApi;
 import io.piano.android.api.publisher.api.PublisherTestApi;
-import io.piano.android.api.publisher.api.PublisherUserAccessActiveApi;
 import io.piano.android.api.publisher.api.PublisherUserAccessApi;
 import io.piano.android.api.publisher.api.PublisherUserApi;
 import io.piano.android.api.publisher.api.PublisherUserAppApi;
@@ -72,7 +62,6 @@ import io.piano.android.api.publisher.api.PublisherWebhookResponseApi;
 import io.piano.android.api.publisher.api.PublisherWebhookSettingsApi;
 import io.piano.android.api.user.api.UserAccessApi;
 import io.piano.android.api.user.api.UserApi;
-import io.piano.android.api.user.api.UserConsentApi;
 
 public class PianoClient {
 
@@ -146,32 +135,18 @@ public class PianoClient {
 		return apiAccessToken;
 	}
 
-	private AnonApi apiAnon;
+	private AnonErrorApi apiAnonError;
 
-	public AnonApi getAnonApi() {
-		if (apiAnon == null) apiAnon = new AnonApi(apiInvoker);
-		return apiAnon;
+	public AnonErrorApi getAnonErrorApi() {
+		if (apiAnonError == null) apiAnonError = new AnonErrorApi(apiInvoker);
+		return apiAnonError;
 	}
 
-	private AnonCurrencyListApi apiAnonCurrencyList;
+	private AnonUserApi apiAnonUser;
 
-	public AnonCurrencyListApi getAnonCurrencyListApi() {
-		if (apiAnonCurrencyList == null) apiAnonCurrencyList = new AnonCurrencyListApi(apiInvoker);
-		return apiAnonCurrencyList;
-	}
-
-	private AnonCurrencyListWorldpayApi apiAnonCurrencyListWorldpay;
-
-	public AnonCurrencyListWorldpayApi getAnonCurrencyListWorldpayApi() {
-		if (apiAnonCurrencyListWorldpay == null) apiAnonCurrencyListWorldpay = new AnonCurrencyListWorldpayApi(apiInvoker);
-		return apiAnonCurrencyListWorldpay;
-	}
-
-	private AnonMeterApi apiAnonMeter;
-
-	public AnonMeterApi getAnonMeterApi() {
-		if (apiAnonMeter == null) apiAnonMeter = new AnonMeterApi(apiInvoker);
-		return apiAnonMeter;
+	public AnonUserApi getAnonUserApi() {
+		if (apiAnonUser == null) apiAnonUser = new AnonUserApi(apiInvoker);
+		return apiAnonUser;
 	}
 
 	private ConversionApi apiConversion;
@@ -195,13 +170,6 @@ public class PianoClient {
 		return apiConversionRegistration;
 	}
 
-	private ExperienceApi apiExperience;
-
-	public ExperienceApi getExperienceApi() {
-		if (apiExperience == null) apiExperience = new ExperienceApi(apiInvoker);
-		return apiExperience;
-	}
-
 	private OauthApi apiOauth;
 
 	public OauthApi getOauthApi() {
@@ -214,6 +182,13 @@ public class PianoClient {
 	public SubscriptionApi getSubscriptionApi() {
 		if (apiSubscription == null) apiSubscription = new SubscriptionApi(apiInvoker);
 		return apiSubscription;
+	}
+
+	private PublisherAdblockerApi apiPublisherAdblocker;
+
+	public PublisherAdblockerApi getPublisherAdblockerApi() {
+		if (apiPublisherAdblocker == null) apiPublisherAdblocker = new PublisherAdblockerApi(apiInvoker);
+		return apiPublisherAdblocker;
 	}
 
 	private PublisherAppApi apiPublisherApp;
@@ -230,27 +205,6 @@ public class PianoClient {
 		return apiPublisherAppFeatures;
 	}
 
-	private PublisherConsentApi apiPublisherConsent;
-
-	public PublisherConsentApi getPublisherConsentApi() {
-		if (apiPublisherConsent == null) apiPublisherConsent = new PublisherConsentApi(apiInvoker);
-		return apiPublisherConsent;
-	}
-
-	private PublisherConsentEntryApi apiPublisherConsentEntry;
-
-	public PublisherConsentEntryApi getPublisherConsentEntryApi() {
-		if (apiPublisherConsentEntry == null) apiPublisherConsentEntry = new PublisherConsentEntryApi(apiInvoker);
-		return apiPublisherConsentEntry;
-	}
-
-	private PublisherConsentPageApi apiPublisherConsentPage;
-
-	public PublisherConsentPageApi getPublisherConsentPageApi() {
-		if (apiPublisherConsentPage == null) apiPublisherConsentPage = new PublisherConsentPageApi(apiInvoker);
-		return apiPublisherConsentPage;
-	}
-
 	private PublisherConversionApi apiPublisherConversion;
 
 	public PublisherConversionApi getPublisherConversionApi() {
@@ -263,6 +217,13 @@ public class PianoClient {
 	public PublisherConversionCustomApi getPublisherConversionCustomApi() {
 		if (apiPublisherConversionCustom == null) apiPublisherConversionCustom = new PublisherConversionCustomApi(apiInvoker);
 		return apiPublisherConversionCustom;
+	}
+
+	private PublisherConversionDataApi apiPublisherConversionData;
+
+	public PublisherConversionDataApi getPublisherConversionDataApi() {
+		if (apiPublisherConversionData == null) apiPublisherConversionData = new PublisherConversionDataApi(apiInvoker);
+		return apiPublisherConversionData;
 	}
 
 	private PublisherConversionExternalApi apiPublisherConversionExternal;
@@ -300,11 +261,11 @@ public class PianoClient {
 		return apiPublisherExportCreateAam;
 	}
 
-	private PublisherExportUpdateApi apiPublisherExportUpdate;
+	private PublisherGdprApi apiPublisherGdpr;
 
-	public PublisherExportUpdateApi getPublisherExportUpdateApi() {
-		if (apiPublisherExportUpdate == null) apiPublisherExportUpdate = new PublisherExportUpdateApi(apiInvoker);
-		return apiPublisherExportUpdate;
+	public PublisherGdprApi getPublisherGdprApi() {
+		if (apiPublisherGdpr == null) apiPublisherGdpr = new PublisherGdprApi(apiInvoker);
+		return apiPublisherGdpr;
 	}
 
 	private PublisherInquiryApi apiPublisherInquiry;
@@ -335,18 +296,25 @@ public class PianoClient {
 		return apiPublisherOfferTemplateCreate;
 	}
 
+	private PublisherOfferTemplateUpdateApi apiPublisherOfferTemplateUpdate;
+
+	public PublisherOfferTemplateUpdateApi getPublisherOfferTemplateUpdateApi() {
+		if (apiPublisherOfferTemplateUpdate == null) apiPublisherOfferTemplateUpdate = new PublisherOfferTemplateUpdateApi(apiInvoker);
+		return apiPublisherOfferTemplateUpdate;
+	}
+
+	private PublisherOfferTemplateVariantApi apiPublisherOfferTemplateVariant;
+
+	public PublisherOfferTemplateVariantApi getPublisherOfferTemplateVariantApi() {
+		if (apiPublisherOfferTemplateVariant == null) apiPublisherOfferTemplateVariant = new PublisherOfferTemplateVariantApi(apiInvoker);
+		return apiPublisherOfferTemplateVariant;
+	}
+
 	private PublisherOfferTermApi apiPublisherOfferTerm;
 
 	public PublisherOfferTermApi getPublisherOfferTermApi() {
 		if (apiPublisherOfferTerm == null) apiPublisherOfferTerm = new PublisherOfferTermApi(apiInvoker);
 		return apiPublisherOfferTerm;
-	}
-
-	private PublisherOfferTermApplicableApi apiPublisherOfferTermApplicable;
-
-	public PublisherOfferTermApplicableApi getPublisherOfferTermApplicableApi() {
-		if (apiPublisherOfferTermApplicable == null) apiPublisherOfferTermApplicable = new PublisherOfferTermApplicableApi(apiInvoker);
-		return apiPublisherOfferTermApplicable;
 	}
 
 	private PublisherOfferTermOfferApi apiPublisherOfferTermOffer;
@@ -356,11 +324,18 @@ public class PianoClient {
 		return apiPublisherOfferTermOffer;
 	}
 
-	private PublisherPaymentProviderConfigurationGetWorldpayApi apiPublisherPaymentProviderConfigurationGetWorldpay;
+	private PublisherPaymentProviderConfigurationCreateEdgilApi apiPublisherPaymentProviderConfigurationCreateEdgil;
 
-	public PublisherPaymentProviderConfigurationGetWorldpayApi getPublisherPaymentProviderConfigurationGetWorldpayApi() {
-		if (apiPublisherPaymentProviderConfigurationGetWorldpay == null) apiPublisherPaymentProviderConfigurationGetWorldpay = new PublisherPaymentProviderConfigurationGetWorldpayApi(apiInvoker);
-		return apiPublisherPaymentProviderConfigurationGetWorldpay;
+	public PublisherPaymentProviderConfigurationCreateEdgilApi getPublisherPaymentProviderConfigurationCreateEdgilApi() {
+		if (apiPublisherPaymentProviderConfigurationCreateEdgil == null) apiPublisherPaymentProviderConfigurationCreateEdgil = new PublisherPaymentProviderConfigurationCreateEdgilApi(apiInvoker);
+		return apiPublisherPaymentProviderConfigurationCreateEdgil;
+	}
+
+	private PublisherPaymentProviderConfigurationGetEdgilApi apiPublisherPaymentProviderConfigurationGetEdgil;
+
+	public PublisherPaymentProviderConfigurationGetEdgilApi getPublisherPaymentProviderConfigurationGetEdgilApi() {
+		if (apiPublisherPaymentProviderConfigurationGetEdgil == null) apiPublisherPaymentProviderConfigurationGetEdgil = new PublisherPaymentProviderConfigurationGetEdgilApi(apiInvoker);
+		return apiPublisherPaymentProviderConfigurationGetEdgil;
 	}
 
 	private PublisherPromotionApi apiPublisherPromotion;
@@ -382,13 +357,6 @@ public class PianoClient {
 	public PublisherPromotionTermApi getPublisherPromotionTermApi() {
 		if (apiPublisherPromotionTerm == null) apiPublisherPromotionTerm = new PublisherPromotionTermApi(apiInvoker);
 		return apiPublisherPromotionTerm;
-	}
-
-	private PublisherReportConversionApi apiPublisherReportConversion;
-
-	public PublisherReportConversionApi getPublisherReportConversionApi() {
-		if (apiPublisherReportConversion == null) apiPublisherReportConversion = new PublisherReportConversionApi(apiInvoker);
-		return apiPublisherReportConversion;
 	}
 
 	private PublisherResourceApi apiPublisherResource;
@@ -433,48 +401,6 @@ public class PianoClient {
 		return apiPublisherSubscription;
 	}
 
-	private PublisherSubscriptionCountFailedApi apiPublisherSubscriptionCountFailed;
-
-	public PublisherSubscriptionCountFailedApi getPublisherSubscriptionCountFailedApi() {
-		if (apiPublisherSubscriptionCountFailed == null) apiPublisherSubscriptionCountFailed = new PublisherSubscriptionCountFailedApi(apiInvoker);
-		return apiPublisherSubscriptionCountFailed;
-	}
-
-	private PublisherSubscriptionExportApi apiPublisherSubscriptionExport;
-
-	public PublisherSubscriptionExportApi getPublisherSubscriptionExportApi() {
-		if (apiPublisherSubscriptionExport == null) apiPublisherSubscriptionExport = new PublisherSubscriptionExportApi(apiInvoker);
-		return apiPublisherSubscriptionExport;
-	}
-
-	private PublisherTaxApi apiPublisherTax;
-
-	public PublisherTaxApi getPublisherTaxApi() {
-		if (apiPublisherTax == null) apiPublisherTax = new PublisherTaxApi(apiInvoker);
-		return apiPublisherTax;
-	}
-
-	private PublisherTaxRateApi apiPublisherTaxRate;
-
-	public PublisherTaxRateApi getPublisherTaxRateApi() {
-		if (apiPublisherTaxRate == null) apiPublisherTaxRate = new PublisherTaxRateApi(apiInvoker);
-		return apiPublisherTaxRate;
-	}
-
-	private PublisherTaxTaxJarApi apiPublisherTaxTaxJar;
-
-	public PublisherTaxTaxJarApi getPublisherTaxTaxJarApi() {
-		if (apiPublisherTaxTaxJar == null) apiPublisherTaxTaxJar = new PublisherTaxTaxJarApi(apiInvoker);
-		return apiPublisherTaxTaxJar;
-	}
-
-	private PublisherTaxTinypassApi apiPublisherTaxTinypass;
-
-	public PublisherTaxTinypassApi getPublisherTaxTinypassApi() {
-		if (apiPublisherTaxTinypass == null) apiPublisherTaxTinypass = new PublisherTaxTinypassApi(apiInvoker);
-		return apiPublisherTaxTinypass;
-	}
-
 	private PublisherTermApi apiPublisherTerm;
 
 	public PublisherTermApi getPublisherTermApi() {
@@ -494,6 +420,13 @@ public class PianoClient {
 	public PublisherTermExternalApi getPublisherTermExternalApi() {
 		if (apiPublisherTermExternal == null) apiPublisherTermExternal = new PublisherTermExternalApi(apiInvoker);
 		return apiPublisherTermExternal;
+	}
+
+	private PublisherTermGiftApi apiPublisherTermGift;
+
+	public PublisherTermGiftApi getPublisherTermGiftApi() {
+		if (apiPublisherTermGift == null) apiPublisherTermGift = new PublisherTermGiftApi(apiInvoker);
+		return apiPublisherTermGift;
 	}
 
 	private PublisherTermPaymentApi apiPublisherTermPayment;
@@ -517,13 +450,6 @@ public class PianoClient {
 		return apiPublisherTermStats;
 	}
 
-	private PublisherTermUpdateExternalApiApi apiPublisherTermUpdateExternalApi;
-
-	public PublisherTermUpdateExternalApiApi getPublisherTermUpdateExternalApiApi() {
-		if (apiPublisherTermUpdateExternalApi == null) apiPublisherTermUpdateExternalApi = new PublisherTermUpdateExternalApiApi(apiInvoker);
-		return apiPublisherTermUpdateExternalApi;
-	}
-
 	private PublisherTestApi apiPublisherTest;
 
 	public PublisherTestApi getPublisherTestApi() {
@@ -543,13 +469,6 @@ public class PianoClient {
 	public PublisherUserAccessApi getPublisherUserAccessApi() {
 		if (apiPublisherUserAccess == null) apiPublisherUserAccess = new PublisherUserAccessApi(apiInvoker);
 		return apiPublisherUserAccess;
-	}
-
-	private PublisherUserAccessActiveApi apiPublisherUserAccessActive;
-
-	public PublisherUserAccessActiveApi getPublisherUserAccessActiveApi() {
-		if (apiPublisherUserAccessActive == null) apiPublisherUserAccessActive = new PublisherUserAccessActiveApi(apiInvoker);
-		return apiPublisherUserAccessActive;
 	}
 
 	private PublisherUserAppApi apiPublisherUserApp;
@@ -599,13 +518,6 @@ public class PianoClient {
 	public UserAccessApi getUserAccessApi() {
 		if (apiUserAccess == null) apiUserAccess = new UserAccessApi(apiInvoker);
 		return apiUserAccess;
-	}
-
-	private UserConsentApi apiUserConsent;
-
-	public UserConsentApi getUserConsentApi() {
-		if (apiUserConsent == null) apiUserConsent = new UserConsentApi(apiInvoker);
-		return apiUserConsent;
 	}
 
 }

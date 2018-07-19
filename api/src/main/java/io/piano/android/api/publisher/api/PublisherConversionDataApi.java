@@ -1,41 +1,47 @@
-package io.piano.android.api.anon.api;
+package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.common.ApiException;
-import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class ExperienceApi {
+import io.piano.android.api.common.ApiException;
+import io.piano.android.api.common.ApiInvoker;
+import io.piano.android.api.publisher.model.TermConversionData;
+
+public class PublisherConversionDataApi {
 
   private ApiInvoker apiInvoker;
 
-  public ExperienceApi(ApiInvoker apiInvoker) {
+  public PublisherConversionDataApi(ApiInvoker apiInvoker) {
     this.apiInvoker = apiInvoker;
   }
   
   /**
-   * Returns initialization js script
+   * Get a conversion data
    * 
    * @param aid Application aid
-   * @return String
+   * @param termConversionId Term conversion id
+   * @return TermConversionData
    */
-  public String script(String aid) throws ApiException {
+  public TermConversionData getData(String aid, String termConversionId) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
     if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling script");
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling getData");
+    }
+    
+    // verify the required parameter 'termConversionId' is set
+    if (termConversionId == null) {
+       throw new ApiException(400, "Missing the required parameter 'termConversionId' when calling getData");
     }
     
 
     // create path and map variables
-    String path = "/experience/script";
+    String path = "/publisher/conversion/data/get";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -46,6 +52,8 @@ public class ExperienceApi {
 
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "term_conversion_id", termConversionId));
     
 
     
@@ -72,7 +80,7 @@ public class ExperienceApi {
     try {
       String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return (String) ApiInvoker.deserialize(response, "", String.class);
+        return (TermConversionData) ApiInvoker.deserialize(response, "", TermConversionData.class);
       }
       else {
         return null;

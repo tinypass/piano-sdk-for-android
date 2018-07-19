@@ -66,6 +66,7 @@ public final class Composer {
     private static final int RANDOM_STRING_LENGTH = RANDOM_STRING.length();
 
     public static final String USER_PROVIDER_TINYPASS_ACCOUNTS = "tinypass_accounts";
+    public static final String USER_PROVIDER_PIANO_ID = "piano_id";
     public static final String USER_PROVIDER_JANRAIN = "janrain";
 
     private static final Handler HANDLER_MAIN_THREAD = new Handler(Looper.getMainLooper());

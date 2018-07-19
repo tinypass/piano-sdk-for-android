@@ -1,8 +1,9 @@
 package io.piano.android.api.anon.model;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class User {
   
@@ -10,6 +11,7 @@ public class User {
   private String email = null;
   private String firstName = null;
   private String lastName = null;
+  private Date createDate = null;
   
   /**
    * User's UID
@@ -55,6 +57,17 @@ public class User {
     this.lastName = lastName;
   }
   
+  /**
+   * User creation date
+   **/
+  public Date getCreateDate() {
+    return createDate;
+  }
+
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
+  }
+  
   public static User fromJson(JSONObject json) throws JSONException {
     User user = new User();
 
@@ -62,6 +75,7 @@ public class User {
     user.email = json.optString("email");
     user.firstName = json.optString("first_name");
     user.lastName = json.optString("last_name");
+    user.createDate = new Date(json.optLong("create_date") * 1000);
     
     return user;
   }

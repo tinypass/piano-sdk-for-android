@@ -1,9 +1,15 @@
 package io.piano.android.api.publisher.model;
 
-import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class User {
   
@@ -13,6 +19,8 @@ public class User {
   private String uid = null;
   private String image1 = null;
   private Date createDate = null;
+  private Boolean resetPasswordEmailSent = null;
+  private List<Map> customFields = null;
   
   /**
    * User's first name
@@ -80,6 +88,27 @@ public class User {
     this.createDate = createDate;
   }
   
+  /**
+   * Is reset password email sent
+   **/
+  public Boolean getResetPasswordEmailSent() {
+    return resetPasswordEmailSent;
+  }
+
+  public void setResetPasswordEmailSent(Boolean resetPasswordEmailSent) {
+    this.resetPasswordEmailSent = resetPasswordEmailSent;
+  }
+  
+  /**
+   **/
+  public List<Map> getCustomFields() {
+    return customFields;
+  }
+
+  public void setCustomFields(List<Map> customFields) {
+    this.customFields = customFields;
+  }
+  
   public static User fromJson(JSONObject json) throws JSONException {
     User user = new User();
 
@@ -89,6 +118,20 @@ public class User {
     user.uid = json.optString("uid");
     user.image1 = json.optString("image1");
     user.createDate = new Date(json.optLong("create_date") * 1000);
+    user.resetPasswordEmailSent = json.optBoolean("reset_password_email_sent");
+    user.customFields = new ArrayList<>();
+    JSONArray customFieldsJsonArray = json.optJSONArray("custom_fields");
+    int customFieldsLength = customFieldsJsonArray.length();
+    for (int ii = 0; ii < customFieldsLength; ii++) {
+      Map map = new HashMap();
+      JSONObject jsonObject = customFieldsJsonArray.optJSONObject(ii);
+      Iterator<String> keys = jsonObject.keys();
+      while (keys.hasNext()) {
+          String key = keys.next();
+          map.put(key, jsonObject.get(key));
+      }
+      user.customFields.add(map);
+    }
     
     return user;
   }

@@ -21,10 +21,10 @@ public class ComposerScrollDepthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_composer_scroll_depth);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        nestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
+        nestedScrollView = findViewById(R.id.nested_scroll_view);
 
         ShowTemplateListener showTemplateListener = new ShowTemplateListener() {
             @Override

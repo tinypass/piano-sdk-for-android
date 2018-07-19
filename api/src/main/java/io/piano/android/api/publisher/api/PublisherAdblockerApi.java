@@ -2,33 +2,29 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-
-public class PublisherReportConversionApi {
+public class PublisherAdblockerApi {
 
   private ApiInvoker apiInvoker;
 
-  public PublisherReportConversionApi(ApiInvoker apiInvoker) {
+  public PublisherAdblockerApi(ApiInvoker apiInvoker) {
     this.apiInvoker = apiInvoker;
   }
   
   /**
-   * Get conversion report for an app and given dates
+   * Get AdBlocker detection script
    * 
    * @param aid Application aid
-   * @param startDate The start date
-   * @param endDate The end date
    * @return String
    */
-  public String get(String aid, Date startDate, Date endDate) throws ApiException {
+  public String get(String aid) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -36,19 +32,9 @@ public class PublisherReportConversionApi {
        throw new ApiException(400, "Missing the required parameter 'aid' when calling get");
     }
     
-    // verify the required parameter 'startDate' is set
-    if (startDate == null) {
-       throw new ApiException(400, "Missing the required parameter 'startDate' when calling get");
-    }
-    
-    // verify the required parameter 'endDate' is set
-    if (endDate == null) {
-       throw new ApiException(400, "Missing the required parameter 'endDate' when calling get");
-    }
-    
 
     // create path and map variables
-    String path = "/publisher/report/conversion/get";
+    String path = "/publisher/adblocker/get";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -59,10 +45,6 @@ public class PublisherReportConversionApi {
 
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "start_date", startDate));
-    
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "end_date", endDate));
     
 
     

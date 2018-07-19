@@ -2,15 +2,14 @@ package io.piano.android.api.user.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.user.model.Access;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.user.model.Access;
 
 public class UserAccessApi {
 
@@ -25,9 +24,10 @@ public class UserAccessApi {
    * 
    * @param aid Application aid
    * @param rid Unique id for resource
+   * @param crossApp Provide cross application access for resource
    * @return String
    */
-  public String checkJWT(String aid, String rid) throws ApiException {
+  public String checkJWT(String aid, String rid, Boolean crossApp) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -55,6 +55,8 @@ public class UserAccessApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "rid", rid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "cross_app", crossApp));
     
 
     
@@ -92,7 +94,7 @@ public class UserAccessApi {
   }
   
   /**
-   * Gets an access item
+   * Gets access details for current user
    * 
    * @param accessId The access id
    * @return Access
@@ -155,12 +157,14 @@ public class UserAccessApi {
   }
   
   /**
-   * Access list
+   * Query list of access for current user
    * 
    * @param aid Application aid
+   * @param expandBundled Expand bundled accesses
+   * @param crossApp Provide cross application access for resource
    * @return List<Access>
    */
-  public List<Access> list(String aid) throws ApiException {
+  public List<Access> list(String aid, Boolean expandBundled, Boolean crossApp) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -181,6 +185,10 @@ public class UserAccessApi {
 
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "expand_bundled", expandBundled));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "cross_app", crossApp));
     
 
     

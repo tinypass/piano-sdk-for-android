@@ -2,41 +2,39 @@ package io.piano.android.api.anon.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.anon.model.Currency;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-
-public class AnonCurrencyListApi {
+public class AnonErrorApi {
 
   private ApiInvoker apiInvoker;
 
-  public AnonCurrencyListApi(ApiInvoker apiInvoker) {
+  public AnonErrorApi(ApiInvoker apiInvoker) {
     this.apiInvoker = apiInvoker;
   }
   
   /**
-   * Get operable currencies for app
+   * Logs error to database
    * 
-   * @param aid Application aid
-   * @return List<Currency>
+   * @param logMessage 
+   * @return void
    */
-  public List<Currency> listOperable(String aid) throws ApiException {
+  public void logError(String logMessage) throws ApiException {
     Object postBody = null;
     
-    // verify the required parameter 'aid' is set
-    if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling listOperable");
+    // verify the required parameter 'logMessage' is set
+    if (logMessage == null) {
+       throw new ApiException(400, "Missing the required parameter 'logMessage' when calling logError");
     }
     
 
     // create path and map variables
-    String path = "/anon/currency/list/operable";
+    String path = "/anon/error/log";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -46,7 +44,7 @@ public class AnonCurrencyListApi {
     Map<String, String> formParams = new HashMap<String, String>();
 
     
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "log_message", logMessage));
     
 
     
@@ -73,10 +71,10 @@ public class AnonCurrencyListApi {
     try {
       String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return (List<Currency>) ApiInvoker.deserialize(response, "array", Currency.class);
+        return ;
       }
       else {
-        return null;
+        return ;
       }
     } catch (ApiException ex) {
       throw ex;
@@ -84,16 +82,16 @@ public class AnonCurrencyListApi {
   }
   
   /**
-   * Get available currencies in the system
    * 
-   * @return List<Currency>
+   * 
+   * @return void
    */
-  public List<Currency> listSupported() throws ApiException {
+  public void logErrorPreFlight() throws ApiException {
     Object postBody = null;
     
 
     // create path and map variables
-    String path = "/anon/currency/list/supported";
+    String path = "/anon/error/log";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -126,12 +124,12 @@ public class AnonCurrencyListApi {
     }
 
     try {
-      String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
+      String response = apiInvoker.invokeAPI(path, "OPTIONS", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return (List<Currency>) ApiInvoker.deserialize(response, "array", Currency.class);
+        return ;
       }
       else {
-        return null;
+        return ;
       }
     } catch (ApiException ex) {
       throw ex;

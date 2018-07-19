@@ -2,47 +2,47 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.Term;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-
-public class PublisherOfferTermApplicableApi {
+public class PublisherGdprApi {
 
   private ApiInvoker apiInvoker;
 
-  public PublisherOfferTermApplicableApi(ApiInvoker apiInvoker) {
+  public PublisherGdprApi(ApiInvoker apiInvoker) {
     this.apiInvoker = apiInvoker;
   }
   
   /**
-   * Lists applicable terms to offer
+   * Accepts GDPR request
    * 
    * @param aid Application aid
-   * @param offerId The offer ID
-   * @return List<Term>
+   * @param dataSubjectRequest A JSON Web token
+   * @param uid User&#39;s uid
+   * @param tbc The Tinypass browser cookie (tbc)
+   * @return String
    */
-  public List<Term> listApplicableTerms(String aid, String offerId) throws ApiException {
+  public String check(String aid, String dataSubjectRequest, String uid, String tbc) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
     if (aid == null) {
-       throw new ApiException(400, "Missing the required parameter 'aid' when calling listApplicableTerms");
+       throw new ApiException(400, "Missing the required parameter 'aid' when calling check");
     }
     
-    // verify the required parameter 'offerId' is set
-    if (offerId == null) {
-       throw new ApiException(400, "Missing the required parameter 'offerId' when calling listApplicableTerms");
+    // verify the required parameter 'dataSubjectRequest' is set
+    if (dataSubjectRequest == null) {
+       throw new ApiException(400, "Missing the required parameter 'dataSubjectRequest' when calling check");
     }
     
 
     // create path and map variables
-    String path = "/publisher/offer/term/applicable/list";
+    String path = "/publisher/gdpr/oath";
 
     // query params
     List<Pair<String, String>> queryParams = new ArrayList<>();
@@ -54,7 +54,11 @@ public class PublisherOfferTermApplicableApi {
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "aid", aid));
     
-    queryParams.addAll(ApiInvoker.parameterToPairs("", "offer_id", offerId));
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "uid", uid));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "tbc", tbc));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "dataSubjectRequest", dataSubjectRequest));
     
 
     
@@ -81,7 +85,7 @@ public class PublisherOfferTermApplicableApi {
     try {
       String response = apiInvoker.invokeAPI(path, "GET", queryParams, postBody, headerParams, formParams, contentType);
       if(response != null){
-        return (List<Term>) ApiInvoker.deserialize(response, "array", Term.class);
+        return (String) ApiInvoker.deserialize(response, "", String.class);
       }
       else {
         return null;

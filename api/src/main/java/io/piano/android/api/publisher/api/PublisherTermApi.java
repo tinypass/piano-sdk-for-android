@@ -2,15 +2,14 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.Term;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.Term;
 
 public class PublisherTermApi {
 
@@ -27,7 +26,7 @@ public class PublisherTermApi {
    * @param limit Maximum index of returned results
    * @param promotionId Promotion id
    * @param q Search value
-   * @param orderBy Field to order by
+   * @param orderBy Field to order by: term_name, resource_type, resource_name
    * @param orderDirection Order direction (asc/desc)
    * @param includeType Type of terms to include into the list
    * @param excludeType Type of terms to exclude from the list
@@ -128,7 +127,7 @@ public class PublisherTermApi {
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param q Search value
-   * @param orderBy Field to order by
+   * @param orderBy Field to order by: term_name, resource_type, resource_name
    * @param orderDirection Order direction (asc/desc)
    * @param includeType Type of terms to include into the list
    * @param excludeType Type of terms to exclude from the list
@@ -364,7 +363,7 @@ public class PublisherTermApi {
    * @param limit Maximum index of returned results
    * @param rid Unique id for resource
    * @param q Search value
-   * @param orderBy Field to order by
+   * @param orderBy Field to order by: term_name, resource_type, resource_name
    * @param orderDirection Order direction (asc/desc)
    * @param includeType Type of terms to include into the list
    * @param excludeType Type of terms to exclude from the list

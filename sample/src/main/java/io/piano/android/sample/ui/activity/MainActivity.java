@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -18,6 +19,7 @@ import io.piano.android.api.PianoClient;
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.user.model.Access;
 import io.piano.android.oauth.ui.activity.OAuthActivity;
+import io.piano.android.oauth.ui.activity.PianoIdOAuthActivity;
 import io.piano.android.sample.BuildConfig;
 import io.piano.android.sample.PianoSampleApplication;
 import io.piano.android.sample.R;
@@ -37,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonLogin;
     private Button buttonLoginOAuth;
 
-    private Button buttonClearAccessToken;
     private Button buttonListAccess;
 
     @Override
@@ -45,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editTextEmail = (EditText) findViewById(R.id.edit_text_email);
-        editTextPassword = (EditText) findViewById(R.id.edit_text_password);
+        editTextEmail = findViewById(R.id.edit_text_email);
+        editTextPassword = findViewById(R.id.edit_text_password);
 
-        buttonLogin = (Button) findViewById(R.id.button_login);
+        buttonLogin = findViewById(R.id.button_login);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,12 +73,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonLoginOAuth = (Button) findViewById(R.id.button_login_oauth);
+        buttonLoginOAuth = findViewById(R.id.button_login_oauth);
         buttonLoginOAuth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new OAuthActivity.Builder(MainActivity.this, BuildConfig.PIANO_AID)
                         .requestCode(42)
+                        .sandbox(BuildConfig.DEBUG)
+                        .start();
+            }
+        });
+
+        findViewById(R.id.button_piano_id_oauth).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new PianoIdOAuthActivity.Builder(MainActivity.this, BuildConfig.PIANO_AID)
+                        .requestCode(4242)
                         .sandbox(BuildConfig.DEBUG)
                         .start();
             }
@@ -97,25 +108,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        buttonClearAccessToken = (Button) findViewById(R.id.button_clear_access_token);
-        buttonClearAccessToken.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button_clear_access_token).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getSharedPreferences("oauth", MODE_PRIVATE);
                 sharedPreferences.edit().remove("accessToken").apply();
+
+                CookieManager.getInstance().removeAllCookie();
+
                 ((PianoSampleApplication) getApplication()).getPianoClient().setAccessToken(null);
-                Snackbar.make(buttonClearAccessToken, "signed out!", Snackbar.LENGTH_SHORT).show();
+
+                Snackbar.make(v, "signed out!", Snackbar.LENGTH_SHORT).show();
             }
         });
 
-        buttonListAccess = (Button) findViewById(R.id.button_list_access);
+        buttonListAccess = findViewById(R.id.button_list_access);
         buttonListAccess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getSharedPreferences("oauth", MODE_PRIVATE);
                 String accessToken = sharedPreferences.getString("accessToken", null);
                 if (TextUtils.isEmpty(accessToken)) {
-                    Snackbar.make(buttonListAccess, "login with piano.io first!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, "login with piano.io first!", Snackbar.LENGTH_SHORT).show();
                 } else {
                     listAccess();
                 }
@@ -125,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (42 == requestCode) {
+        if ((42 == requestCode) || (4242 == requestCode)) {
             if (RESULT_OK == resultCode) {
                 String accessToken = data.getStringExtra(OAuthActivity.EXTRA_ACCESS_TOKEN);
                 Snackbar.make(buttonLoginOAuth, "accessToken = " + accessToken, Snackbar.LENGTH_SHORT).show();
@@ -167,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 List<Access> list;
                 try {
                     PianoClient pianoClient = ((PianoSampleApplication) getApplication()).getPianoClient();
-                    list = pianoClient.getUserAccessApi().list(pianoClient.getAid());
+                    list = pianoClient.getUserAccessApi().list(pianoClient.getAid(), null, null);
                 } catch (ApiException e) {
                     throw OnErrorThrowable.from(e);
                 }

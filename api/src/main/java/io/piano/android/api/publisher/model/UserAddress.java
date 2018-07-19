@@ -1,8 +1,5 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.Country;
-import io.piano.android.api.publisher.model.Region;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,11 +10,13 @@ public class UserAddress {
   private Country country = null;
   private String city = null;
   private String postalCode = null;
+  private String companyName = null;
   private String firstName = null;
   private String lastName = null;
   private String address1 = null;
   private String address2 = null;
   private String phone = null;
+  private String additionalFields = null;
   
   /**
    * Public id of specific user address
@@ -70,6 +69,17 @@ public class UserAddress {
 
   public void setPostalCode(String postalCode) {
     this.postalCode = postalCode;
+  }
+  
+  /**
+   * company_name
+   **/
+  public String getCompanyName() {
+    return companyName;
+  }
+
+  public void setCompanyName(String companyName) {
+    this.companyName = companyName;
   }
   
   /**
@@ -127,6 +137,17 @@ public class UserAddress {
     this.phone = phone;
   }
   
+  /**
+   * Additional address fields (json)
+   **/
+  public String getAdditionalFields() {
+    return additionalFields;
+  }
+
+  public void setAdditionalFields(String additionalFields) {
+    this.additionalFields = additionalFields;
+  }
+  
   public static UserAddress fromJson(JSONObject json) throws JSONException {
     UserAddress userAddress = new UserAddress();
 
@@ -135,11 +156,13 @@ public class UserAddress {
     userAddress.country = Country.fromJson(json.optJSONObject("country"));
     userAddress.city = json.optString("city");
     userAddress.postalCode = json.optString("postal_code");
+    userAddress.companyName = json.optString("company_name");
     userAddress.firstName = json.optString("first_name");
     userAddress.lastName = json.optString("last_name");
     userAddress.address1 = json.optString("address1");
     userAddress.address2 = json.optString("address2");
     userAddress.phone = json.optString("phone");
+    userAddress.additionalFields = json.optString("additional_fields");
     
     return userAddress;
   }

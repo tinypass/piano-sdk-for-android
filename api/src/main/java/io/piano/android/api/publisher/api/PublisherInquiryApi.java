@@ -2,17 +2,16 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.PaymentInquiry;
-import io.piano.android.api.publisher.model.InquiryComment;
-import io.piano.android.api.publisher.model.CommentAction;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.CommentAction;
+import io.piano.android.api.publisher.model.InquiryComment;
+import io.piano.android.api.publisher.model.PaymentInquiry;
 
 public class PublisherInquiryApi {
 
@@ -409,9 +408,11 @@ public class PublisherInquiryApi {
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
    * @return List<PaymentInquiry>
    */
-  public List<PaymentInquiry> list(String aid, String uid, Integer offset, Integer limit, String q) throws ApiException {
+  public List<PaymentInquiry> list(String aid, String uid, Integer offset, Integer limit, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -455,6 +456,10 @@ public class PublisherInquiryApi {
     queryParams.addAll(ApiInvoker.parameterToPairs("", "offset", offset));
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_by", orderBy));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_direction", orderDirection));
     
 
     

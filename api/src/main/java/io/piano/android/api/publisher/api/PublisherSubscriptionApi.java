@@ -2,17 +2,16 @@ package io.piano.android.api.publisher.api;
 
 import android.util.Pair;
 
-import io.piano.android.api.publisher.model.UserSubscription;
+import java.util.ArrayList;
 import java.util.Date;
-import io.piano.android.api.publisher.model.UserSubscriptionDto;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.piano.android.api.common.ApiException;
 import io.piano.android.api.common.ApiInvoker;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import io.piano.android.api.publisher.model.UserSubscription;
+import io.piano.android.api.publisher.model.UserSubscriptionDto;
 
 public class PublisherSubscriptionApi {
 
@@ -177,19 +176,22 @@ public class PublisherSubscriptionApi {
   }
   
   /**
-   * Lists subscriptions
+   * Lists subscriptions.
    * 
    * @param aid Application aid
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param type The type
-   * @param startDate The start date
-   * @param endDate The end date
+   * @param startDate The start date. If you use a date-range filter without &#39;select_by&#39; parameter, method will return result filtered by &#39;update date&#39;.To specify filter field use &#39;select_by&#39; parameter.
+   * @param endDate The end date. If you use a date-range filter without &#39;select_by&#39; parameter, method will return result filtered by &#39;update date&#39;.To specify filter field use &#39;select_by&#39; parameter.
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
    * @param selectBy Filter subscription date field
+   * @param status Subscription status
    * @return List<UserSubscription>
    */
-  public List<UserSubscription> list(String aid, Integer offset, Integer limit, String type, Date startDate, Date endDate, String q, String selectBy) throws ApiException {
+  public List<UserSubscription> list(String aid, Integer offset, Integer limit, String type, Date startDate, Date endDate, String q, String orderBy, String orderDirection, String selectBy, String status) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -233,7 +235,13 @@ public class PublisherSubscriptionApi {
     
     queryParams.addAll(ApiInvoker.parameterToPairs("", "limit", limit));
     
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_by", orderBy));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "order_direction", orderDirection));
+    
     queryParams.addAll(ApiInvoker.parameterToPairs("", "select_by", selectBy));
+    
+    queryParams.addAll(ApiInvoker.parameterToPairs("", "status", status));
     
 
     
@@ -278,9 +286,11 @@ public class PublisherSubscriptionApi {
    * @param offset Offset from which to start returning results
    * @param limit Maximum index of returned results
    * @param q Search value
+   * @param orderBy Field to order by
+   * @param orderDirection Order direction (asc/desc)
    * @return List<UserSubscriptionDto>
    */
-  public List<UserSubscriptionDto> stats(String aid, String uid, Integer offset, Integer limit, String q) throws ApiException {
+  public List<UserSubscriptionDto> stats(String aid, String uid, Integer offset, Integer limit, String q, String orderBy, String orderDirection) throws ApiException {
     Object postBody = null;
     
     // verify the required parameter 'aid' is set
@@ -348,6 +358,14 @@ public class PublisherSubscriptionApi {
         builder.addTextBody("limit", ApiInvoker.parameterToString(limit), ApiInvoker.TEXT_PLAIN_UTF8);
       }
       
+      if (orderBy != null) {
+        builder.addTextBody("order_by", ApiInvoker.parameterToString(orderBy), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
+      if (orderDirection != null) {
+        builder.addTextBody("order_direction", ApiInvoker.parameterToString(orderDirection), ApiInvoker.TEXT_PLAIN_UTF8);
+      }
+      
 
       HttpEntity httpEntity = builder.build();
       postBody = httpEntity;
@@ -359,6 +377,8 @@ public class PublisherSubscriptionApi {
       formParams.put("q", ApiInvoker.parameterToString(q));
       formParams.put("offset", ApiInvoker.parameterToString(offset));
       formParams.put("limit", ApiInvoker.parameterToString(limit));
+      formParams.put("order_by", ApiInvoker.parameterToString(orderBy));
+      formParams.put("order_direction", ApiInvoker.parameterToString(orderDirection));
       
     }
 

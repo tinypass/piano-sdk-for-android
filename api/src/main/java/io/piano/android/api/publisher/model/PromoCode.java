@@ -1,10 +1,9 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.User;
-import java.util.Date;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class PromoCode {
   
@@ -21,6 +20,7 @@ public class PromoCode {
   private Date updateDate = null;
   private String updateBy = null;
   private Boolean deleted = null;
+  private String lastOriginalPrice = null;
   
   /**
    * Promo code id
@@ -165,6 +165,17 @@ public class PromoCode {
     this.deleted = deleted;
   }
   
+  /**
+   * Promo code last original price
+   **/
+  public String getLastOriginalPrice() {
+    return lastOriginalPrice;
+  }
+
+  public void setLastOriginalPrice(String lastOriginalPrice) {
+    this.lastOriginalPrice = lastOriginalPrice;
+  }
+  
   public static PromoCode fromJson(JSONObject json) throws JSONException {
     PromoCode promoCode = new PromoCode();
 
@@ -181,6 +192,7 @@ public class PromoCode {
     promoCode.updateDate = new Date(json.optLong("update_date") * 1000);
     promoCode.updateBy = json.optString("update_by");
     promoCode.deleted = json.optBoolean("deleted");
+    promoCode.lastOriginalPrice = json.optString("last_original_price");
     
     return promoCode;
   }

@@ -1,14 +1,9 @@
 package io.piano.android.api.publisher.model;
 
-import io.piano.android.api.publisher.model.Access;
-import io.piano.android.api.publisher.model.PromoCode;
-import io.piano.android.api.publisher.model.Term;
-import io.piano.android.api.publisher.model.UserPayment;
-import io.piano.android.api.publisher.model.UserSubscription;
-import java.util.Date;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class TermConversion {
   
@@ -22,6 +17,7 @@ public class TermConversion {
   private String browserId = null;
   private UserSubscription subscription = null;
   private PromoCode promoCode = null;
+  private UserPaymentInfo userPaymentInfo = null;
   
   /**
    * Term conversion id
@@ -133,6 +129,17 @@ public class TermConversion {
     this.promoCode = promoCode;
   }
   
+  /**
+   * The payment info that was used during term conversion
+   **/
+  public UserPaymentInfo getUserPaymentInfo() {
+    return userPaymentInfo;
+  }
+
+  public void setUserPaymentInfo(UserPaymentInfo userPaymentInfo) {
+    this.userPaymentInfo = userPaymentInfo;
+  }
+  
   public static TermConversion fromJson(JSONObject json) throws JSONException {
     TermConversion termConversion = new TermConversion();
 
@@ -146,6 +153,7 @@ public class TermConversion {
     termConversion.browserId = json.optString("browser_id");
     termConversion.subscription = UserSubscription.fromJson(json.optJSONObject("subscription"));
     termConversion.promoCode = PromoCode.fromJson(json.optJSONObject("promo_code"));
+    termConversion.userPaymentInfo = UserPaymentInfo.fromJson(json.optJSONObject("user_payment_info"));
     
     return termConversion;
   }
