@@ -44,6 +44,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ConnectionSpec;
+import okhttp3.TlsVersion;
+import javax.net.ssl.SSLContext;
+import java.security.NoSuchAlgorithmException;
+import java.security.KeyManagementException;
+import okhttp3.CipherSuite;
+import java.util.Collections;
+import android.util.Log;
 
 public final class Composer {
 
@@ -244,7 +252,7 @@ public final class Composer {
                 .post(createRequestBody())
                 .build();
 
-        OkHttpClientHolder.OK_HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+        okHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 handleException(e);
@@ -609,7 +617,7 @@ public final class Composer {
                 .post(formBody)
                 .build();
 
-        OkHttpClientHolder.OK_HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+        okHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {}
 
@@ -618,11 +626,51 @@ public final class Composer {
         });
     }
 
-    private static class OkHttpClientHolder {
+    private static OkHttpClient okHttpClient() {
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder()
+            .readTimeout(30_000, TimeUnit.MILLISECONDS)
+            .writeTimeout(30_000, TimeUnit.MILLISECONDS);
 
-        private static final OkHttpClient OK_HTTP_CLIENT = new OkHttpClient.Builder()
-                .readTimeout(30_000, TimeUnit.MILLISECONDS)
-                .writeTimeout(30_000, TimeUnit.MILLISECONDS)
-                .build();
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                final SSLContext sc = SSLContext.getInstance("TLSv1.2");
+                sc.init(null, null, null);
+
+                final ConnectionSpec cs = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                    .tlsVersions(TlsVersion.TLS_1_1, TlsVersion.TLS_1_2)
+                    .cipherSuites(CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+                                  CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA,
+                                  CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+                                  CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA,
+                                  CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                                  CipherSuite.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                                  CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+                                  CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+                                  CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256,
+                                  CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA,
+                                  CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA256,
+                                  CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                                  CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+                                  CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+                                  CipherSuite.TLS_RSA_WITH_AES_256_GCM_SHA384,
+                                  CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA,
+                                  CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA256)
+                    .build();
+
+                List<ConnectionSpec> specs = new ArrayList<>();
+                specs.add(cs);
+                specs.add(ConnectionSpec.MODERN_TLS);
+                specs.add(ConnectionSpec.COMPATIBLE_TLS);
+                specs.add(ConnectionSpec.CLEARTEXT);
+
+                builder.sslSocketFactory(new Tls12SocketFactory(sc.getSocketFactory()))
+                    .connectionSpecs(specs);
+            } catch(Exception e) {
+                e.printStackTrace();
+                Log.e("Composer", "Error while setting TLS 1.2", e);
+            }
+        }
+
+        return builder.build();
     }
 }
