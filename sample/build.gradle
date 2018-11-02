@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "io.piano.android.sample"
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -35,6 +35,8 @@ configurations {
 }
 
 dependencies {
+    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
     implementation "com.android.support:design:$supportLibraryVersion"
 
     implementation "io.reactivex:rxandroid:$rxAndroidVersion"

@@ -548,6 +548,10 @@ public final class Composer {
 
         urlBuilder.append("&templateId=").append(showTemplate.templateId);
 
+        if (!TextUtils.isEmpty(showTemplate.templateVariantId)) {
+            urlBuilder.append("&templateVariantId=").append(showTemplate.templateVariantId);
+        }
+
         if (!TextUtils.isEmpty(userToken)) {
             urlBuilder.append("&userToken=").append(userToken);
         }

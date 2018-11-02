@@ -8,7 +8,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -34,11 +34,11 @@ task clean(type: Delete) {
 }
 
 ext {
-    compileSdkVersion = 27
+    compileSdkVersion = 28
 
-    supportLibraryVersion = '27.1.1'
+    supportLibraryVersion = '28.0.0'
     okHttp3Version = '3.11.0'
-    okioVersion = '1.15.0'
+    okioVersion = '1.16.0'
     rxAndroidVersion = '1.2.1'
     rxJavaVersion = '1.3.8'
 }

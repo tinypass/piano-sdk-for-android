@@ -11,6 +11,7 @@ public class ShowTemplate extends Event {
     public String endpointUrl;
 
     public String templateId;
+    public String templateVariantId;
     public String displayMode;
     public String containerSelector;
     public DelayBy delayBy;
@@ -22,6 +23,7 @@ public class ShowTemplate extends Event {
         JSONObject eventParams = json.optJSONObject("eventParams");
 
         showTemplate.templateId = eventParams.optString("templateId");
+        showTemplate.templateVariantId = eventParams.optString("templateVariantId");
         showTemplate.displayMode = eventParams.optString("displayMode");
         showTemplate.containerSelector = eventParams.optString("containerSelector");
         showTemplate.delayBy = DelayBy.fromJson(eventParams.optJSONObject("delayBy"));

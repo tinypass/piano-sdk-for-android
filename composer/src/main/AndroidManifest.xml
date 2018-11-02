@@ -2,6 +2,4 @@
     package="io.piano.android.composer">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
-    <uses-sdk android:minSdkVersion="11"/>
 </manifest>
