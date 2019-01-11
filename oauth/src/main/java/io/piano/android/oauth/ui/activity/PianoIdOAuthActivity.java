@@ -7,6 +7,11 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+/**
+ * Use {@link io.piano.android.oauth.client.PianoIdClient} instead
+ * @deprecated
+ */
+@Deprecated
 public class PianoIdOAuthActivity extends BaseOAuthActivity {
 
     private static final String BASE_URL_PROD = "https://id.piano.io/";

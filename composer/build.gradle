@@ -4,7 +4,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 16
         versionName VERSION_NAME
     }
 
