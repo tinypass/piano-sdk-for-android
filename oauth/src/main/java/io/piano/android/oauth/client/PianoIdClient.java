@@ -32,7 +32,8 @@ public class PianoIdClient {
 
     private static final Handler HANDLER_MAIN_THREAD = new Handler(Looper.getMainLooper());
 
-    private static final String REDIRECT_URI_BASE = ".piano.id.oauth://success";
+    private static final String REDIRECT_URI_PROTOCOL = "piano.id.oauth";
+    private static final String REDIRECT_URI_HOST = "success";
 
     private static final String BASE_URL_API_PROD = "https://buy.tinypass.com/";
     private static final String BASE_URL_OAUTH_PROD = "https://id.tinypass.com/";
@@ -279,7 +280,7 @@ public class PianoIdClient {
                     .encodedPath(URL_AUTHORIZE)
                     .appendQueryParameter("client_id", aid)
                     .appendQueryParameter("response_type", "token")
-                    .appendQueryParameter("redirect_uri", aid.toLowerCase() + REDIRECT_URI_BASE)
+                    .appendQueryParameter("redirect_uri", REDIRECT_URI_PROTOCOL + "." + aid.toLowerCase() + "://" + REDIRECT_URI_HOST)
                     .appendQueryParameter("force_redirect", "1");
 
             if (disableSignUp != null) {

@@ -35,7 +35,7 @@
 
                 <!--<data-->
                     <!--android:host="success"-->
-                    <!--android:scheme="<PUBLISHER_AID_LOWERCASE>.piano.id.oauth" />-->
+                    <!--android:scheme="piano.id.oauth.<PUBLISHER_AID_LOWERCASE>" />-->
             <!--</intent-filter>-->
         <!--</activity>-->
 

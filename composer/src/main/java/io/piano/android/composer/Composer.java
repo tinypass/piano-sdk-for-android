@@ -2,6 +2,7 @@ package io.piano.android.composer;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -540,65 +541,62 @@ public final class Composer {
     }
 
     private String createShowTemplateUrl(ShowTemplate showTemplate) {
-        StringBuilder urlBuilder = new StringBuilder(getBaseUrl(false));
-
-        urlBuilder.append(URL_TEMPLATE);
-
-        urlBuilder.append("?aid=").append(aid);
-
-        urlBuilder.append("&templateId=").append(showTemplate.templateId);
+        Uri.Builder uriBuilder = Uri.parse(getBaseUrl(false)).buildUpon()
+                .encodedPath(URL_TEMPLATE)
+                .appendQueryParameter("aid", aid)
+                .appendQueryParameter("templateId", showTemplate.templateId);
 
         if (!TextUtils.isEmpty(showTemplate.templateVariantId)) {
-            urlBuilder.append("&templateVariantId=").append(showTemplate.templateVariantId);
+            uriBuilder.appendQueryParameter("templateVariantId", showTemplate.templateVariantId);
         }
 
         if (!TextUtils.isEmpty(userToken)) {
-            urlBuilder.append("&userToken=").append(userToken);
+            uriBuilder.appendQueryParameter("userToken", userToken);
         }
 
         if (!customVariables.isEmpty()) {
-            urlBuilder.append("&customVariables=").append(new JSONObject(customVariables).toString());
+            uriBuilder.appendQueryParameter("customVariables", new JSONObject(customVariables).toString());
         }
 
         if (showTemplate.eventExecutionContext.activeMetersJson != null) {
-            urlBuilder.append("&activeMeters=").append(showTemplate.eventExecutionContext.activeMetersJson.toString());
+            uriBuilder.appendQueryParameter("activeMeters", showTemplate.eventExecutionContext.activeMetersJson.toString());
         }
 
         if (debug) {
-            urlBuilder.append("&debug=").append(debug);
+            uriBuilder.appendQueryParameter("debug", String.valueOf(debug));
         }
 
-        urlBuilder.append("&displayMode=").append(ShowTemplate.DISPLAY_MODE_INLINE);
+        uriBuilder.appendQueryParameter("displayMode", ShowTemplate.DISPLAY_MODE_INLINE);
 
         if (!tags.isEmpty()) {
-            urlBuilder.append("&tags=").append(TextUtils.join(TAGS_DELIMITER, tags));
+            uriBuilder.appendQueryParameter("tags", TextUtils.join(TAGS_DELIMITER, tags));
         }
 
         if (!TextUtils.isEmpty(url)) {
-            urlBuilder.append("&url=").append(url);
+            uriBuilder.appendQueryParameter("url", url);
         }
 
-        urlBuilder.append("&trackingId=").append(showTemplate.eventExecutionContext.trackingId);
+        uriBuilder.appendQueryParameter("trackingId", showTemplate.eventExecutionContext.trackingId);
 
         if (!TextUtils.isEmpty(contentAuthor)) {
-            urlBuilder.append("&contentAuthor=").append(contentAuthor);
+            uriBuilder.appendQueryParameter("contentAuthor", contentAuthor);
         }
 
         if (!TextUtils.isEmpty(contentSection)) {
-            urlBuilder.append("&contentSection=").append(contentSection);
+            uriBuilder.appendQueryParameter("contentSection", contentSection);
         }
 
         if (!TextUtils.isEmpty(zone)) {
-            urlBuilder.append("&zone=").append(zone);
+            uriBuilder.appendQueryParameter("zone", zone);
         }
 
         if (!TextUtils.isEmpty(gaClientId)) {
-            urlBuilder.append("&gaClientId=").append(gaClientId);
+            uriBuilder.appendQueryParameter("gaClientId", gaClientId);
         }
 
-        urlBuilder.append("&os=android");
+        uriBuilder.appendQueryParameter("os", "android");
 
-        return urlBuilder.toString();
+        return uriBuilder.build().toString();
     }
 
     public static void trackExternalEvent(String endpointUrl, String trackingId) {
