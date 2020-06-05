@@ -1,18 +1,17 @@
 package io.piano.android.composer.model;
 
-import org.json.JSONObject;
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
+@Keep
 public class SplitTest {
+    @NonNull
+    @SerializedName("variantId")
+    public String variantId = "";
 
-    public String variantId;
-    public String variantName;
-
-    static SplitTest fromJson(JSONObject json) {
-        SplitTest splitTest = new SplitTest();
-
-        splitTest.variantId = json.optString("variantId");
-        splitTest.variantName = json.optString("variantName");
-
-        return splitTest;
-    }
+    @NonNull
+    @SerializedName("variantName")
+    public String variantName = "";
 }

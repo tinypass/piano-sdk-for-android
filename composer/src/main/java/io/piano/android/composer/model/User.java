@@ -1,26 +1,26 @@
 package io.piano.android.composer.model;
 
-import org.json.JSONObject;
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.google.gson.annotations.SerializedName;
+
+@Keep
 public class User {
+    @NonNull
+    @SerializedName("uid")
+    public String userId = "";
 
-    public String uid;
+    @Nullable
+    @SerializedName("firstName")
     public String firstName;
+
+    @Nullable
+    @SerializedName("lastName")
     public String lastName;
-    public String email;
 
-    static User fromJson(JSONObject json) {
-        User user = new User();
-
-        user.uid = json.optString("uid");
-        if (!json.isNull("firstName")) {
-            user.firstName = json.optString("firstName");
-        }
-        if (!json.isNull("lastName")) {
-            user.lastName = json.optString("lastName");
-        }
-        user.email = json.optString("email");
-
-        return user;
-    }
+    @NonNull
+    @SerializedName("email")
+    public String email = "";
 }

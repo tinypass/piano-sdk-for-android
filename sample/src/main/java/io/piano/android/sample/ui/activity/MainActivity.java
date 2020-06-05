@@ -1,237 +1,206 @@
 package io.piano.android.sample.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
-import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.piano.android.api.PianoClient;
-import io.piano.android.api.common.ApiException;
 import io.piano.android.api.user.model.Access;
-import io.piano.android.oauth.exception.OAuthException;
-import io.piano.android.oauth.ui.activity.OAuthActivity;
-import io.piano.android.oauth.client.PianoIdClient;
-import io.piano.android.sample.BuildConfig;
+import io.piano.android.id.PianoId;
+import io.piano.android.id.PianoIdException;
+import io.piano.android.id.models.PianoIdToken;
 import io.piano.android.sample.PianoSampleApplication;
 import io.piano.android.sample.R;
 import io.piano.android.sample.feature.composer.ComposerActivity;
 import io.piano.android.sample.feature.composer.ComposerScrollDepthActivity;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.exceptions.OnErrorThrowable;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText editTextEmail;
-    private EditText editTextPassword;
-
-    private Button buttonLogin;
-    private Button buttonLoginOAuth;
+    private static int PIANO_ID_REQUEST_CODE = 1;
 
     private Button buttonListAccess;
 
-    private PianoIdClient pianoIdClient;
+    private CompositeDisposable subscriptions = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((PianoSampleApplication) getApplication()).loadSettings();
+
         setContentView(R.layout.activity_main);
-
-        pianoIdClient = new PianoIdClient.Builder(MainActivity.this, BuildConfig.PIANO_AID)
-                .requestCode(43)
-                .sandbox(BuildConfig.DEBUG)
-                .build();
-
-        editTextEmail = findViewById(R.id.edit_text_email);
-        editTextPassword = findViewById(R.id.edit_text_password);
-
-        buttonLogin = findViewById(R.id.button_login);
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean runApiCall = true;
-
-                Editable email = editTextEmail.getText();
-                if (TextUtils.isEmpty(email)) {
-                    editTextEmail.setError("Required!");
-                    runApiCall = false;
-                }
-
-                Editable password = editTextPassword.getText();
-                if (TextUtils.isEmpty(password)) {
-                    editTextPassword.setError("Required!");
-                    runApiCall = false;
-                }
-
-                if (runApiCall) {
-                    authenticate(email.toString(), password.toString());
-                }
-            }
-        });
-
-        buttonLoginOAuth = findViewById(R.id.button_login_oauth);
-        buttonLoginOAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new OAuthActivity.Builder(MainActivity.this, BuildConfig.PIANO_AID)
-                        .requestCode(42)
-                        .sandbox(BuildConfig.DEBUG)
-                        .start();
-            }
-        });
-
-        findViewById(R.id.button_piano_id_oauth).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pianoIdClient.signIn();
-            }
-        });
-
-        findViewById(R.id.button_composer_example).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ComposerActivity.class));
-            }
-        });
-
-        findViewById(R.id.button_composer_scroll_depth).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ComposerScrollDepthActivity.class));
-            }
-        });
-
-        findViewById(R.id.button_clear_access_token).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences sharedPreferences = getSharedPreferences("oauth", MODE_PRIVATE);
-                String accessToken = sharedPreferences.getString("accessToken", null);
-                sharedPreferences.edit().remove("accessToken").apply();
-
-                if (pianoIdClient != null) {
-                    pianoIdClient.signOut(accessToken, new PianoIdClient.OAuthCallback() {
-                        @Override
-                        public void onFailure(OAuthException e) {
-                        }
-
-                        @Override
-                        public void onSuccess() {
-                        }
-                    });
-                }
-
-                CookieManager.getInstance().removeAllCookie();
-
-                ((PianoSampleApplication) getApplication()).getPianoClient().setAccessToken(null);
-
-                Snackbar.make(v, "signed out!", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-
         buttonListAccess = findViewById(R.id.button_list_access);
-        buttonListAccess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences sharedPreferences = getSharedPreferences("oauth", MODE_PRIVATE);
-                String accessToken = sharedPreferences.getString("accessToken", null);
-                if (TextUtils.isEmpty(accessToken)) {
-                    Snackbar.make(v, "login with piano.io first!", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    listAccess();
-                }
+
+        if (isDeepLink()) {
+            Timber.d("We processed deep link");
+        }
+
+        final Button pianoIdSignInButtonActivity = findViewById(R.id.button_piano_id_activity);
+        pianoIdSignInButtonActivity.setOnClickListener(v -> {
+            Intent intent = PianoId.signIn().getIntent(MainActivity.this);
+            startActivityForResult(intent, PIANO_ID_REQUEST_CODE);
+        });
+
+        findViewById(R.id.button_composer_example).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ComposerActivity.class))
+        );
+
+        findViewById(R.id.button_composer_scroll_depth).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ComposerScrollDepthActivity.class))
+        );
+
+        findViewById(R.id.button_clear_access_token).setOnClickListener(v -> {
+            PianoSampleApplication application = (PianoSampleApplication) getApplication();
+
+            PianoIdToken pianoIdToken = application.getPianoIdToken();
+            if (pianoIdToken != null) {
+                PianoId.signOut(pianoIdToken.accessToken);
+                application.removePianoIdToken();
+            } else {
+                PianoId.signOut("tmp");
+            }
+
+            CookieManager cookieManager = CookieManager.getInstance();
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(MainActivity.this);
+                cookieSyncManager.startSync();
+
+                cookieManager.removeAllCookie();
+
+                cookieSyncManager.stopSync();
+            } else {
+                cookieManager.removeAllCookies(null);
+            }
+
+            ((PianoSampleApplication) getApplication()).getPianoClient().setAccessToken(null);
+
+            Snackbar.make(v, "signed out!", Snackbar.LENGTH_SHORT).show();
+        });
+
+        buttonListAccess.setOnClickListener(v -> {
+            SharedPreferences sharedPreferences = getSharedPreferences("oauth", MODE_PRIVATE);
+            String accessToken = sharedPreferences.getString("accessToken", null);
+            if (TextUtils.isEmpty(accessToken)) {
+                Snackbar.make(v, "login with piano.io first!", Snackbar.LENGTH_SHORT).show();
+            } else {
+                listAccess();
             }
         });
+
+        PianoIdToken token = ((PianoSampleApplication) getApplication()).getPianoIdToken();
+        if (token != null) {
+            Snackbar.make(buttonListAccess, token.accessToken, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((42 == requestCode) || 43 == requestCode) {
-            if (RESULT_OK == resultCode) {
-                String accessToken = data.getStringExtra(OAuthActivity.EXTRA_ACCESS_TOKEN);
-                Snackbar.make(buttonLoginOAuth, "accessToken = " + accessToken, Snackbar.LENGTH_SHORT).show();
+        super.onActivityResult(requestCode, resultCode, data);
 
-                SharedPreferences sharedPreferencesOAuth = getSharedPreferences("oauth", MODE_PRIVATE);
-                sharedPreferencesOAuth.edit().putString("accessToken", accessToken).apply();
-                ((PianoSampleApplication) getApplication()).getPianoClient().setAccessToken(accessToken);
+        if (requestCode == PIANO_ID_REQUEST_CODE) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    try {
+                        PianoIdToken token = PianoId.getResultFromIntent(data);
+                        setAccessToken(token);
+                    } catch (PianoIdException e) {
+                        Timber.e(e);
+                        Snackbar.make(buttonListAccess, e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    }
+                    break;
+                case RESULT_CANCELED:
+                    Snackbar.make(buttonListAccess, "OAuth cancelled", Snackbar.LENGTH_SHORT).show();
+                    break;
+                case PianoId.RESULT_ERROR:
+                    Snackbar.make(buttonListAccess, "Result error", Snackbar.LENGTH_SHORT).show();
+                    break;
             }
+
         }
     }
 
-    private void authenticate(final String email, final String password) {
-        Observable.fromCallable(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                // your API call
-                return email + "/" + password;
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Object>() {
-            @Override
-            public void onCompleted() {}
+    @Override
+    protected void onStop() {
+        subscriptions.dispose();
+        super.onStop();
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Snackbar.make(buttonLogin, e.getMessage(), Snackbar.LENGTH_SHORT).show();
-            }
+    private void setAccessToken(PianoIdToken token) {
+        ((PianoSampleApplication) getApplication()).setPianoIdToken(token);
 
-            @Override
-            public void onNext(Object o) {
-                Snackbar.make(buttonLogin, "authentication completed: " + o, Snackbar.LENGTH_SHORT).show();
-            }
-        });
+        Snackbar.make(buttonListAccess, "accessToken = " + token.accessToken, Snackbar.LENGTH_SHORT).show();
     }
 
     private void listAccess() {
-        Observable.fromCallable(new Callable<List<Access>>() {
-            @Override
-            public List<Access> call() throws Exception {
-                List<Access> list;
-                try {
-                    PianoClient pianoClient = ((PianoSampleApplication) getApplication()).getPianoClient();
-                    list = pianoClient.getUserAccessApi().list(pianoClient.getAid(), null, null);
-                } catch (ApiException e) {
-                    throw OnErrorThrowable.from(e);
-                }
+        subscriptions.add(
+                Observable
+                        .fromCallable(() -> {
+                            List<Access> list;
+                            PianoClient pianoClient = ((PianoSampleApplication) getApplication()).getPianoClient();
+                            list = pianoClient.getUserAccessApi().list(pianoClient.getAid(), null, null);
+                            return list != null ? list : new ArrayList<Access>();
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                accesses -> {
+                                    if (accesses.isEmpty()) {
+                                        Snackbar.make(buttonListAccess, "no access", Snackbar.LENGTH_SHORT).show();
+                                    } else {
+                                        StringBuilder accessBuilder = new StringBuilder("Here's what you can access:\n");
+                                        for (Access access : accesses) {
+                                            accessBuilder.append(access.getResource().getName()).append(", ");
+                                        }
+                                        accessBuilder.delete(accessBuilder.length() - 2, accessBuilder.length());
 
-                return list;
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<Access>>() {
-            @Override
-            public void onCompleted() {}
+                                        Snackbar.make(buttonListAccess, accessBuilder.toString(), Snackbar.LENGTH_INDEFINITE).setAction("Great!", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                            }
+                                        }).show();
+                                    }
+                                },
+                                e -> Snackbar.make(buttonListAccess, e.getMessage(), Snackbar.LENGTH_SHORT).show()
+                        )
+        );
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                Snackbar.make(buttonListAccess, e.getMessage(), Snackbar.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNext(List<Access> accesses) {
-                if ((accesses == null) || accesses.isEmpty()) {
-                    Snackbar.make(buttonListAccess, "no access", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    StringBuilder accessBuilder = new StringBuilder("Here's what you can access:\n");
-                    for (Access access : accesses) {
-                        accessBuilder.append(access.getResource().getName()).append(", ");
-                    }
-                    accessBuilder.delete(accessBuilder.length() - 2, accessBuilder.length());
-
-                    Snackbar.make(buttonListAccess, accessBuilder.toString(), Snackbar.LENGTH_INDEFINITE).setAction("Great!", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {}
-                    }).show();
-                }
-            }
-        });
+    boolean isDeepLink() {
+        Uri uri = getIntent().getData();
+        if (uri == null)
+            return false;
+        PianoIdToken token = null;
+        try {
+            token = PianoId.processUri(uri);
+        } catch (PianoIdException exc) {
+            Timber.e(exc, "Auth unsuccessful");
+        }
+        if (token != null) {
+            Timber.d("Auth successful");
+            setAccessToken(token);
+        } else {
+            Timber.d("App deep link");
+        }
+        return true;
     }
 }

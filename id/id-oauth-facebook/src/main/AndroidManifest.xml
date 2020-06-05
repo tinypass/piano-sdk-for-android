@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.piano.android.id.facebook">
+    <application>
+        <activity
+            android:name="io.piano.android.id.facebook.FacebookSignInActivity"
+            android:exported="true"/>
+    </application>
+</manifest>

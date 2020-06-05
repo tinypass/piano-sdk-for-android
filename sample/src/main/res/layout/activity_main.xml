@@ -11,34 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edit_text_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text|textEmailAddress"
-                android:hint="Email"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/edit_text_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text|textPassword"
-                android:hint="Password"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/button_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Login"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -47,16 +19,10 @@
             android:text="Already member?"/>
 
         <Button
-            android:id="@+id/button_login_oauth"
+            android:id="@+id/button_piano_id_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login via piano.io"/>
-
-        <Button
-            android:id="@+id/button_piano_id_oauth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Login via Piano Id"/>
+            android:text="Login via Piano ID (Activity)"/>
 
     </LinearLayout>
 

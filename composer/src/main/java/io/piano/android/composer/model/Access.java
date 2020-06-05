@@ -1,22 +1,23 @@
 package io.piano.android.composer.model;
 
-import org.json.JSONObject;
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
+@Keep
 public class Access {
+    @NonNull
+    @SerializedName("rid")
+    public String resourceId = "";
 
-    public String rid;
-    public String resourceName;
+    @NonNull
+    @SerializedName("resourceName")
+    public String resourceName = "";
+
+    @SerializedName("expireDate")
     public int expireDate;
+
+    @SerializedName("daysUntilExpiration")
     public int daysUntilExpiration;
-
-    static Access fromJson(JSONObject json) {
-        Access access = new Access();
-
-        access.rid = json.optString("rid");
-        access.resourceName = json.optString("resourceName");
-        access.expireDate = json.optInt("expireDate");
-        access.daysUntilExpiration = json.optInt("daysUntilExpiration");
-
-        return access;
-    }
 }

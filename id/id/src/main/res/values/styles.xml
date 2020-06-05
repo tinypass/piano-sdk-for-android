@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Piano" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
+        <item name="piano_id_progressbar_color">#325CA4</item>
+    </style>
+    <style name="Theme.Piano.IdAuth" />
+</resources>

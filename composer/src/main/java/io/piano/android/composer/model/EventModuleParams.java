@@ -1,24 +1,17 @@
 package io.piano.android.composer.model;
 
-import org.json.JSONObject;
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
+@Keep
 public class EventModuleParams {
+    @NonNull
+    @SerializedName("moduleId")
+    public String moduleId = "";
 
-    public String moduleId;
-    public String moduleName;
-
-    static EventModuleParams fromJson(JSONObject json) {
-        EventModuleParams eventModuleParams = null;
-
-        if (!json.isNull("eventModuleParams")) {
-            eventModuleParams = new EventModuleParams();
-
-            JSONObject eventModuleParamsJson = json.optJSONObject("eventModuleParams");
-
-            eventModuleParams.moduleId = eventModuleParamsJson.optString("moduleId");
-            eventModuleParams.moduleName = eventModuleParamsJson.optString("moduleName");
-        }
-
-        return eventModuleParams;
-    }
+    @NonNull
+    @SerializedName("moduleName")
+    public String moduleName = "";
 }

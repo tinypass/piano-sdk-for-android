@@ -1,38 +1,38 @@
 package io.piano.android.sample.feature.composer;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Arrays;
+import java.util.Collection;
+
 import io.piano.android.composer.Composer;
-import io.piano.android.composer.CustomParams;
-import io.piano.android.composer.MeterActiveListener;
-import io.piano.android.composer.MeterExpiredListener;
-import io.piano.android.composer.NonSiteListener;
-import io.piano.android.composer.ShowLoginListener;
-import io.piano.android.composer.ShowTemplateListener;
-import io.piano.android.composer.exception.ComposerException;
-import io.piano.android.composer.exception.ComposerExceptionListener;
-import io.piano.android.composer.model.ActiveMeter;
-import io.piano.android.composer.model.MeterActive;
-import io.piano.android.composer.model.MeterExpired;
-import io.piano.android.composer.model.NonSite;
-import io.piano.android.composer.model.ShowLogin;
-import io.piano.android.composer.model.ShowTemplate;
+import io.piano.android.composer.listeners.EventTypeListener;
+import io.piano.android.composer.listeners.MeterListener;
+import io.piano.android.composer.listeners.NonSiteListener;
+import io.piano.android.composer.listeners.ShowLoginListener;
+import io.piano.android.composer.listeners.ShowTemplateListener;
+import io.piano.android.composer.model.CustomParameters;
+import io.piano.android.composer.model.ExperienceRequest;
+import io.piano.android.composer.model.events.EventType;
 import io.piano.android.composer.showtemplate.ComposerJs;
 import io.piano.android.composer.showtemplate.ShowTemplateController;
-import io.piano.android.oauth.ui.activity.OAuthActivity;
-import io.piano.android.sample.BuildConfig;
+import io.piano.android.id.PianoId;
+import io.piano.android.id.PianoIdException;
+import io.piano.android.id.models.PianoIdToken;
+import io.piano.android.sample.PianoSampleApplication;
 import io.piano.android.sample.R;
+import timber.log.Timber;
 
 public class ComposerActivity extends AppCompatActivity {
-
-    private static final int REQUEST_CODE_OAUTH = 42;
+    private static final int PIANO_ID_REQUEST_CODE = 1;
 
     private ShowTemplateController showTemplateController;
 
@@ -43,52 +43,42 @@ public class ComposerActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String userToken = getSharedPreferences("oauth", MODE_PRIVATE).getString("accessToken", null);
+        PianoIdToken token = ((PianoSampleApplication)getApplication()).getPianoIdToken();
+        String accessToken = token != null ? token.accessToken : null;
 
-        CustomParams customParams = new CustomParams()
+        CustomParameters customParameters = new CustomParameters()
                 .content("contentKey", "contentValue0")
                 .content("contentKey", "contentValue1")
                 .user("userKey", "userValue")
                 .request("requestKey", "requstValue1")
                 .request("requestKey", "requstValue2")
                 .request("requestKey", "requstValue3");
-
-        new Composer(this, BuildConfig.PIANO_AID, BuildConfig.DEBUG)
-                .userToken(userToken)
+        ExperienceRequest request = new ExperienceRequest.Builder()
                 .tag("tag")
                 .debug(true)
-                .customParams(customParams)
-                .addListener(new ShowLoginListener() {
-                    @Override
-                    public void onExecuted(ShowLogin showLogin) {
-                        if (Composer.USER_PROVIDER_TINYPASS_ACCOUNTS.equals(showLogin.userProvider)) {
-                            new OAuthActivity.Builder(ComposerActivity.this, BuildConfig.PIANO_AID)
-                                    .requestCode(REQUEST_CODE_OAUTH)
-                                    .sandbox(BuildConfig.DEBUG)
-                                    .start();
-                        }
-                    }
-                })
-                .addListener(new MeterActiveListener() {
-                    @Override
-                    public void onExecuted(MeterActive meterActive) {
-                        Toast.makeText(
-                                ComposerActivity.this, String.format("Meter ACTIVE!\nviews = %s\nviewsLeft = %s\nmaxViews = %s\ntotalViews = %s", meterActive.views, meterActive.viewsLeft, meterActive.maxViews, meterActive.totalViews), Toast.LENGTH_LONG
-                        ).show();
-                    }
-                })
-                .addListener(new MeterExpiredListener() {
-                    @Override
-                    public void onExecuted(MeterExpired meterExpired) {
-                        Toast.makeText(
-                                ComposerActivity.this, String.format("Meter EXPIRED!\nviews = %s\nviewsLeft = %s\nmaxViews = %s\ntotalViews = %s", meterExpired.views, meterExpired.viewsLeft, meterExpired.maxViews, meterExpired.totalViews), Toast.LENGTH_LONG
-                        ).show();
-                    }
-                })
-                .addListener(new ShowTemplateListener() {
-                    @Override
-                    public void onExecuted(ShowTemplate showTemplate) {
-                        showTemplateController = ShowTemplateController.show(ComposerActivity.this, showTemplate, new ComposerJs() {
+                .customParams(customParameters)
+                .build();
+
+        Collection<EventTypeListener<? extends EventType>> listeners = Arrays.asList(
+                (ShowLoginListener) event -> {
+                    String message = String.format("[%s] %s", Thread.currentThread().getName(), event.eventData.userProvider);
+                    Toast.makeText(
+                            ComposerActivity.this, message, Toast.LENGTH_LONG
+                    ).show();
+                    signIn(event.eventData.userProvider);
+                },
+                (MeterListener) event -> {
+                    String message = String.format("[%s] Meter state: %s\nviews = %s\nviewsLeft = %s\nmaxViews = %s\ntotalViews = %s", Thread.currentThread().getName(), event.eventData.state.name(), event.eventData.views, event.eventData.viewsLeft, event.eventData.maxViews, event.eventData.totalViews);
+                    Toast.makeText(
+                            ComposerActivity.this, message, Toast.LENGTH_LONG
+                    ).show();
+                },
+                (ShowTemplateListener) event -> {
+                    String message = String.format("[%s] %s", Thread.currentThread().getName(), event.eventData);
+                    Toast.makeText(
+                            ComposerActivity.this, message, Toast.LENGTH_LONG
+                    ).show();
+                    showTemplateController = ShowTemplateController.show(ComposerActivity.this, event, new ComposerJs() {
                             @JavascriptInterface
                             @Override
                             public void customEvent(String eventData) {
@@ -98,57 +88,69 @@ public class ComposerActivity extends AppCompatActivity {
                             @JavascriptInterface
                             @Override
                             public void login(String eventData) {
-                                new OAuthActivity.Builder(ComposerActivity.this, BuildConfig.PIANO_AID)
-                                        .requestCode(REQUEST_CODE_OAUTH)
-                                        .sandbox(BuildConfig.DEBUG)
-                                        .start();
+                                signIn(Composer.USER_PROVIDER_PIANO_ID);
                             }
                         });
+                },
+                (NonSiteListener) event -> {
+                    String message = null;
+                    if ((event.eventExecutionContext.activeMeters == null) || event.eventExecutionContext.activeMeters.isEmpty()) {
+                        message = String.format("[%s] Active meters are null or empty!", Thread.currentThread().getName());
+                    } else {
+                        io.piano.android.composer.model.ActiveMeter activeMeter = event.eventExecutionContext.activeMeters.get(0);
+                        message = String.format("[%s] Active meter:\nmeterName = %s\nviews = %s\nviewsLeft = %s\nmaxViews = %s\ntotalViews = %s", Thread.currentThread().getName(), activeMeter.meterName, activeMeter.views, activeMeter.viewsLeft, activeMeter.maxViews, activeMeter.totalViews);
                     }
-                })
-                .addListener(new NonSiteListener() {
-                    @Override
-                    public void onExecuted(NonSite nonSite) {
-                        if ((nonSite.eventExecutionContext.activeMeters == null) || nonSite.eventExecutionContext.activeMeters.isEmpty()) {
-                            Toast.makeText(
-                                    ComposerActivity.this, "Active meters are null or empty!", Toast.LENGTH_LONG
-                            ).show();
-                        } else {
-                            ActiveMeter activeMeter = nonSite.eventExecutionContext.activeMeters.get(0);
-                            Toast.makeText(
-                                    ComposerActivity.this, String.format("Active meter:\nmeterName = %s\nviews = %s\nviewsLeft = %s\nmaxViews = %s\ntotalViews = %s", activeMeter.meterName, activeMeter.views, activeMeter.viewsLeft, activeMeter.maxViews, activeMeter.totalViews), Toast.LENGTH_LONG
-                            ).show();
-                        }
-                    }
-                })
-                .addExceptionListener(new ComposerExceptionListener() {
-                    @Override
-                    public void onComposerException(ComposerException exception) {
-                        String message = exception.getCause() == null ? exception.getMessage() : exception.getCause().getMessage();
-                        Toast.makeText(
-                                ComposerActivity.this, message, Toast.LENGTH_LONG
-                        ).show();
-                    }
-                })
-                .execute();
+
+                    Toast.makeText(
+                            ComposerActivity.this, message, Toast.LENGTH_LONG
+                    ).show();
+                }
+        );
+        Composer.getInstance().getExperience(request, listeners, exception -> {
+            String message = String.format("[%s] %s", Thread.currentThread().getName(), exception.getCause() == null ? exception.getMessage() : exception.getCause().getMessage());
+            Toast.makeText(
+                    ComposerActivity.this, message, Toast.LENGTH_LONG
+            ).show();
+        });
+    }
+
+    private void setAccessToken(PianoIdToken token) {
+        ((PianoSampleApplication) getApplication()).setPianoIdToken(token);
+
+        if (showTemplateController != null) {
+            showTemplateController.reloadWithToken(token.accessToken);
+        }
+
+        Snackbar.make(findViewById(R.id.app_bar), "accessToken = " + token.accessToken, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void signIn(String userProvider) {
+        startActivityForResult(PianoId.signIn().getIntent(this), PIANO_ID_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (REQUEST_CODE_OAUTH == requestCode) {
-            if (RESULT_OK == resultCode) {
-                String accessToken = data.getStringExtra(OAuthActivity.EXTRA_ACCESS_TOKEN);
-                SharedPreferences sharedPreferences = getSharedPreferences("oauth", MODE_PRIVATE);
-                sharedPreferences.edit().putString("accessToken", accessToken).apply();
+        super.onActivityResult(requestCode, resultCode, data);
 
-                if (showTemplateController != null) {
-                    showTemplateController.reloadWithToken(accessToken);
-                }
-
-                Snackbar.make(findViewById(R.id.app_bar), "accessToken = " + accessToken, Snackbar.LENGTH_LONG).show();
-            } else {
-                Snackbar.make(findViewById(R.id.app_bar), "User cancelled logging in!", Snackbar.LENGTH_SHORT).show();
+        if (requestCode == PIANO_ID_REQUEST_CODE) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    try {
+                        PianoIdToken token = PianoId.getResultFromIntent(data);
+                        setAccessToken(token);
+                    } catch (PianoIdException e) {
+                        Timber.e(e);
+                        Snackbar.make(findViewById(R.id.app_bar), e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    }
+                    break;
+                case RESULT_CANCELED:
+                    Snackbar.make(findViewById(R.id.app_bar), "OAuth cancelled", Snackbar.LENGTH_SHORT).show();
+                    break;
+                case PianoId.RESULT_ERROR:
+                    Snackbar.make(findViewById(R.id.app_bar), "Result error", Snackbar.LENGTH_SHORT).show();
+                    break;
             }
+
         }
     }
 }

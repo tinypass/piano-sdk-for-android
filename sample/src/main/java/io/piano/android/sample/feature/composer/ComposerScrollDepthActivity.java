@@ -1,15 +1,21 @@
 package io.piano.android.sample.feature.composer;
 
 import android.os.Bundle;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+
+import java.util.Collections;
 
 import io.piano.android.composer.Composer;
-import io.piano.android.composer.ShowTemplateListener;
-import io.piano.android.composer.model.ShowTemplate;
+import io.piano.android.composer.listeners.ShowTemplateListener;
+import io.piano.android.composer.model.Event;
+import io.piano.android.composer.model.ExperienceRequest;
+import io.piano.android.composer.model.events.ShowTemplate;
 import io.piano.android.composer.showtemplate.ShowTemplateController;
-import io.piano.android.sample.BuildConfig;
 import io.piano.android.sample.R;
 
 public class ComposerScrollDepthActivity extends AppCompatActivity {
@@ -28,8 +34,9 @@ public class ComposerScrollDepthActivity extends AppCompatActivity {
 
         ShowTemplateListener showTemplateListener = new ShowTemplateListener() {
             @Override
-            public void onExecuted(final ShowTemplate showTemplate) {
-                if (showTemplate.isDelayedByScroll()) {
+            public void onExecuted(@NonNull Event<ShowTemplate> event) {
+                ShowTemplate showTemplate = event.eventData;
+                if (showTemplate.delayBy.isDelayedByScroll()) {
                     nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 
                         private boolean isShown;
@@ -38,7 +45,7 @@ public class ComposerScrollDepthActivity extends AppCompatActivity {
                         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                             if (!isShown) {
                                 if (v.getScrollY() >= showTemplate.delayBy.value) {
-                                    ShowTemplateController.show(ComposerScrollDepthActivity.this, showTemplate);
+                                    ShowTemplateController.show(ComposerScrollDepthActivity.this, event);
                                     isShown = true;
                                 }
                             }
@@ -48,8 +55,15 @@ public class ComposerScrollDepthActivity extends AppCompatActivity {
             }
         };
 
-        new Composer(this, BuildConfig.PIANO_AID, BuildConfig.DEBUG)
-                .addListener(showTemplateListener)
-                .execute();
+        ExperienceRequest request = new ExperienceRequest.Builder()
+                .debug(true)
+                .build();
+
+        Composer.getInstance().getExperience(request, Collections.singletonList(showTemplateListener), exception -> {
+            String message = String.format("[%s] %s", Thread.currentThread().getName(), exception.getCause() == null ? exception.getMessage() : exception.getCause().getMessage());
+            Toast.makeText(
+                    ComposerScrollDepthActivity.this, message, Toast.LENGTH_LONG
+            ).show();
+        });
     }
 }

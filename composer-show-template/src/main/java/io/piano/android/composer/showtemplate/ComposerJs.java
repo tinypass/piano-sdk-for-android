@@ -2,21 +2,21 @@ package io.piano.android.composer.showtemplate;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import androidx.fragment.app.DialogFragment;
+
 import io.piano.android.composer.Composer;
 
-public class ComposerJs {
+public class ComposerJs implements ClosableJs {
 
     private static final Handler HANDLER_MAIN_THREAD = new Handler(Looper.getMainLooper());
 
     public DialogFragment dialogFragment;
     public WebView webView;
 
-    private String endpointUrl;
     private String trackingId;
 
     public ComposerJs() {
@@ -30,14 +30,13 @@ public class ComposerJs {
         this.webView = webView;
     }
 
-    void init(String endpointUrl, String trackingId) {
-        this.endpointUrl =  endpointUrl;
+    void init(String trackingId) {
         this.trackingId = trackingId;
     }
 
     @JavascriptInterface
     public final void close(String eventData) {
-        Composer.trackExternalEvent(endpointUrl, trackingId);
+        Composer.getInstance().trackExternalEvent(trackingId);
 
         closeOverridden(eventData);
     }

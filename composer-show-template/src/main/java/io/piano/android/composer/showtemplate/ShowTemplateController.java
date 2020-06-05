@@ -4,17 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
 
+import androidx.fragment.app.FragmentActivity;
+
 import io.piano.android.composer.model.DelayBy;
-import io.piano.android.composer.model.ShowTemplate;
+import io.piano.android.composer.model.Event;
+import io.piano.android.composer.model.events.ShowTemplate;
 
 import static android.view.View.VISIBLE;
-import static io.piano.android.composer.model.ShowTemplate.DISPLAY_MODE_INLINE;
-import static io.piano.android.composer.model.ShowTemplate.DISPLAY_MODE_MODAL;
 
 public class ShowTemplateController {
 
@@ -42,26 +42,28 @@ public class ShowTemplateController {
         }
     }
 
-    public static ShowTemplateController show(final Context context, final ShowTemplate showTemplate) {
-        return show(context, showTemplate, null);
+    public static ShowTemplateController show(final Context context, final Event<ShowTemplate> showTemplateEvent) {
+        return show(context, showTemplateEvent, null);
     }
 
-    public static ShowTemplateController show(final Context context, final ShowTemplate showTemplate, final Object javascriptInterface) {
-        if (DISPLAY_MODE_MODAL.equals(showTemplate.displayMode)) {
-            return showModal(context, showTemplate, javascriptInterface);
-        } else if (DISPLAY_MODE_INLINE.equals(showTemplate.displayMode)) {
-            return showInline(context, showTemplate, javascriptInterface);
+    public static ShowTemplateController show(final Context context, final Event<ShowTemplate> showTemplateEvent, final Object javascriptInterface) {
+        switch (showTemplateEvent.eventData.displayMode) {
+            case MODAL:
+                return showModal(context, showTemplateEvent, javascriptInterface);
+            case INLINE:
+                return showInline(context, showTemplateEvent, javascriptInterface);
         }
 
         return null;
     }
 
-    private static ShowTemplateController showModal(final Context context, ShowTemplate showTemplate, Object javascriptInterface) {
+    private static ShowTemplateController showModal(final Context context, Event<ShowTemplate> showTemplateEvent, Object javascriptInterface) {
         if (!(context instanceof FragmentActivity)) {
             return null;
         }
 
         final ShowTemplateDialogFragment fragment = new ShowTemplateDialogFragment();
+        ShowTemplate showTemplate = showTemplateEvent.eventData;
 
         boolean cancelable = showTemplate.showCloseButton;
         if (!cancelable) {
@@ -74,12 +76,11 @@ public class ShowTemplateController {
 
         Bundle args = new Bundle();
         args.putString("url", showTemplate.url);
-        args.putString("endpointUrl", showTemplate.endpointUrl);
-        args.putString("trackingId", showTemplate.eventExecutionContext.trackingId);
+        args.putString("trackingId", showTemplateEvent.eventExecutionContext.trackingId);
         fragment.setArguments(args);
 
         boolean showImmediately = true;
-        if (DelayBy.TYPE_TIME.equals(showTemplate.delayBy.type)) {
+        if (showTemplate.delayBy.type == DelayBy.DelayType.TIME) {
             final int delaySecs = showTemplate.delayBy.value;
             if (delaySecs > 0) {
                 showImmediately = false;
@@ -102,7 +103,8 @@ public class ShowTemplateController {
         return new ShowTemplateController(fragment);
     }
 
-    private static ShowTemplateController showInline(final Context context, final ShowTemplate showTemplate, Object javascriptInterface) {
+    private static ShowTemplateController showInline(final Context context, final Event<ShowTemplate> showTemplateEvent, Object javascriptInterface) {
+        ShowTemplate showTemplate = showTemplateEvent.eventData;
         if (TextUtils.isEmpty(showTemplate.containerSelector)) {
             return null;
         }
@@ -118,10 +120,10 @@ public class ShowTemplateController {
         }
 
         final WebView webView = (WebView) view;
-        InitWebViewHelper.initWebView(null, webView, javascriptInterface, showTemplate.endpointUrl, showTemplate.eventExecutionContext.trackingId);
+        InitWebViewHelper.initWebView(null, webView, javascriptInterface, showTemplateEvent.eventExecutionContext.trackingId);
 
         boolean showImmediately = true;
-        if (DelayBy.TYPE_TIME.equals(showTemplate.delayBy.type)) {
+        if (showTemplate.delayBy.type == DelayBy.DelayType.TIME) {
             final int delaySecs = showTemplate.delayBy.value;
             if (delaySecs > 0) {
                 showImmediately = false;

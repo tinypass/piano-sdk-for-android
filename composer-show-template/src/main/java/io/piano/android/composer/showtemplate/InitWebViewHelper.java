@@ -1,14 +1,20 @@
 package io.piano.android.composer.showtemplate;
 
-import android.support.v4.app.DialogFragment;
+import android.os.Build;
 import android.webkit.WebView;
+
+import androidx.fragment.app.DialogFragment;
 
 class InitWebViewHelper {
 
     private static final String JAVASCRIPT_INTERFACE = "PianoAndroid";
 
-    static void initWebView(DialogFragment dialogFragment, WebView webView, Object javascriptInterface, String endpointUrl, String trackingId) {
+    static void initWebView(DialogFragment dialogFragment, WebView webView, Object javascriptInterface, String trackingId) {
         webView.getSettings().setJavaScriptEnabled(true);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
+            webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+        }
 
         if (javascriptInterface == null) {
             if (dialogFragment == null) {
@@ -24,7 +30,7 @@ class InitWebViewHelper {
 
         if (javascriptInterface instanceof ComposerJs) {
             ComposerJs composerJs = (ComposerJs) javascriptInterface;
-            composerJs.init(endpointUrl, trackingId);
+            composerJs.init(trackingId);
         }
 
         webView.addJavascriptInterface(javascriptInterface, JAVASCRIPT_INTERFACE);

@@ -300,10 +300,6 @@ public class ApiInvoker {
       Class.forName("okhttp3.OkHttpClient");
       return new OkHttp3Network();
     } catch (ClassNotFoundException ignored) {}
-    try {
-      Class.forName("com.squareup.okhttp.OkHttpClient");
-      return new OkHttpNetwork();
-    } catch (ClassNotFoundException ignored) {}
     return new HttpUrlConnectionNetwork();
   }
 }

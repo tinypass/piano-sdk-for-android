@@ -1,21 +1,31 @@
 package io.piano.android.composer.model;
 
-import org.json.JSONObject;
+import androidx.annotation.Keep;
+import androidx.annotation.Nullable;
 
+import com.google.gson.annotations.SerializedName;
+
+@Keep
 public class DelayBy {
+    @Nullable
+    @SerializedName("type")
+    public DelayType type;
 
-    public static final String TYPE_TIME = "time";
-    public static final String TYPE_SCROLL = "scroll";
-
-    public String type;
+    @SerializedName("value")
     public int value;
 
-    public static DelayBy fromJson(JSONObject json) {
-        DelayBy delayBy = new DelayBy();
+    public static enum DelayType {
+        @SerializedName("time")
+        TIME,
+        @SerializedName("scroll")
+        SCROLL
+    }
 
-        delayBy.type = json.optString("type");
-        delayBy.value = json.optInt("value");
+    public boolean isDelayedByTime() {
+        return type == DelayType.TIME && value > 0;
+    }
 
-        return delayBy;
+    public boolean isDelayedByScroll() {
+        return type == DelayType.SCROLL && value > 0;
     }
 }

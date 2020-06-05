@@ -19,18 +19,18 @@ repositories {
 dependencies {
     // ... other project dependencies
 
-    compile 'io.piano.android:api:1.3.1'
+    compile 'io.piano.android:api:2.0.0-beta01'
 
-    compile 'io.piano.android:composer:1.3.1'
+    compile 'io.piano.android:composer:2.0.0-beta01'
 
-    compile 'io.piano.android:composer-show-template:1.3.1'
+    compile 'io.piano.android:composer-show-template:2.0.0-beta01'
 
-    compile 'io.piano.android:oauth:1.3.1'
+    compile 'io.piano.android:id:2.0.0-beta01'
 }
 ```
 
 ### Usage
-#### [API](https://api.tinypass.com/api-docs/dist/index.html)
+#### [API](https://docs.piano.io/api/)
 Initialize `PianoClient` in your Application's `onCreate` method:
 ```
 @Override

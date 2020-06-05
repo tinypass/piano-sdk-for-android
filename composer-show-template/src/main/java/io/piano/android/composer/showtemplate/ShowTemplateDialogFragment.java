@@ -3,19 +3,19 @@ package io.piano.android.composer.showtemplate;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 import io.piano.android.composer.Composer;
 
 public class ShowTemplateDialogFragment extends AppCompatDialogFragment {
 
     private String url;
-    private String endpointUrl;
     private String trackingId;
 
     private WebView webView;
@@ -36,7 +36,6 @@ public class ShowTemplateDialogFragment extends AppCompatDialogFragment {
 
         Bundle args = getArguments();
         url = args.getString("url");
-        endpointUrl = args.getString("endpointUrl");
         trackingId = args.getString("trackingId");
     }
 
@@ -47,7 +46,7 @@ public class ShowTemplateDialogFragment extends AppCompatDialogFragment {
 
         View view = LayoutInflater.from(builder.getContext()).inflate(R.layout.fragment_show_template, null);
         webView = (WebView) view;
-        InitWebViewHelper.initWebView(this, webView, javascriptInterface, endpointUrl, trackingId);
+        InitWebViewHelper.initWebView(this, webView, javascriptInterface, trackingId);
         builder.setView(view);
 
         return builder.create();
@@ -66,6 +65,11 @@ public class ShowTemplateDialogFragment extends AppCompatDialogFragment {
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
 
-        Composer.trackExternalEvent(endpointUrl, trackingId);
+        Composer.getInstance().trackExternalEvent(trackingId);
+
+        if (javascriptInterface instanceof ClosableJs) {
+            ClosableJs closableJs = (ClosableJs) javascriptInterface;
+            closableJs.closeOverridden(null);
+        }
     }
 }
