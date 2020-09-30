@@ -2,8 +2,14 @@ package io.piano.android.composer
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.nhaarman.mockitokotlin2.*
-import java.util.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doNothing
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -136,9 +142,11 @@ class PrefsStorageTest {
 
     @Test
     fun getVisitTimeout() {
-        whenever(prefs.getLong(PrefsStorage.KEY_VISIT_TIMEOUT, Constants.VISIT_TIMEOUT_FALLBACK)).thenReturn(DUMMY_LONG)
+        whenever(prefs.getLong(PrefsStorage.KEY_VISIT_TIMEOUT, PrefsStorage.VISIT_TIMEOUT_FALLBACK)).thenReturn(
+            DUMMY_LONG
+        )
         assertEquals(DUMMY_LONG, prefsStorage.visitTimeout)
-        verify(prefs).getLong(PrefsStorage.KEY_VISIT_TIMEOUT, Constants.VISIT_TIMEOUT_FALLBACK)
+        verify(prefs).getLong(PrefsStorage.KEY_VISIT_TIMEOUT, PrefsStorage.VISIT_TIMEOUT_FALLBACK)
     }
 
     @Test

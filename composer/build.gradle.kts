@@ -1,6 +1,9 @@
 plugins {
     id(Plugins.androidLibrary)
     id(Plugins.kotlinAndroid)
+    kotlin("kapt")
+    id(Plugins.dokka)
+    id(Plugins.ktlint)
 }
 
 group = rootProject.group
@@ -19,12 +22,27 @@ android {
         sourceCompatibility = Config.compileSourceVersion
         targetCompatibility = Config.compileTargetVersion
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xjvm-default=enable")
+    }
+}
+
+kotlin {
+    explicitApi()
+}
+
+ktlint {
+    android.set(true)
 }
 
 dependencies {
     implementation(Libs.okhttpLogging)
     implementation(Libs.retrofit)
     implementation(Libs.retrofitConverter)
+    implementation(Libs.moshi)
+    kapt(Libs.moshiCodegen)
     implementation(Libs.annotations)
 
     testImplementation(Libs.kotlinJunit)
@@ -34,8 +52,10 @@ dependencies {
     testImplementation(Libs.okhttpMockServer)
 }
 
-if ("SNAPSHOT" !in version.toString()) {
-    apply {
-        from("https://raw.github.com/tinypass/gradle-mvn-push/master/gradle-mvn-push.gradle")
-    }
+val javadocJar by tasks.creating(Jar::class) {
+    dependsOn(tasks.dokkaJavadoc)
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaJavadoc.get().outputDirectory.get())
 }
+
+project.applyBintrayUpload(javadocJar)

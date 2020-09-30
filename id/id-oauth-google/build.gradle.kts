@@ -1,5 +1,8 @@
 plugins {
     id(Plugins.androidLibrary)
+    id(Plugins.kotlinAndroid)
+    id(Plugins.dokka)
+    id(Plugins.ktlint)
 }
 
 group = rootProject.group
@@ -26,8 +29,18 @@ dependencies {
     implementation(project(":id:id"))
 }
 
-if ("SNAPSHOT" !in version.toString()) {
-    apply {
-        from("https://raw.github.com/tinypass/gradle-mvn-push/master/gradle-mvn-push.gradle")
-    }
+kotlin {
+    explicitApi()
 }
+
+ktlint {
+    android.set(true)
+}
+
+val javadocJar by tasks.creating(Jar::class) {
+    dependsOn(tasks.dokkaJavadoc)
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaJavadoc.get().outputDirectory.get())
+}
+
+project.applyBintrayUpload(javadocJar)

@@ -22,10 +22,15 @@ class ExperienceIdsProviderTest {
 
     @Test
     fun getPageViewId() {
-        doReturn(DUMMY_STRING).`when`(experienceIdsProvider).generateRandomAlphaNumString(ExperienceIdsProvider.RANDOM_STRING_SIZE)
-        doReturn(DUMMY_STRING2).`when`(experienceIdsProvider).generateRandomAlphaNumString(ExperienceIdsProvider.HASH_SIZE)
+        doReturn(DUMMY_STRING).`when`(experienceIdsProvider)
+            .generateRandomAlphaNumString(ExperienceIdsProvider.RANDOM_STRING_SIZE)
+        doReturn(DUMMY_STRING2).`when`(experienceIdsProvider)
+            .generateRandomAlphaNumString(ExperienceIdsProvider.HASH_SIZE)
         val date = Date()
-        assertEquals("${experienceIdsProvider.dateFormat.format(date)}-$DUMMY_STRING-$DUMMY_STRING2", experienceIdsProvider.getPageViewId(date))
+        assertEquals(
+            "${ExperienceIdsProvider.dateFormat.format(date)}-$DUMMY_STRING-$DUMMY_STRING2",
+            experienceIdsProvider.getPageViewId(date)
+        )
         verify(experienceIdsProvider).generateRandomAlphaNumString(ExperienceIdsProvider.RANDOM_STRING_SIZE)
         verify(experienceIdsProvider).generateRandomAlphaNumString(ExperienceIdsProvider.HASH_SIZE)
     }
@@ -38,7 +43,7 @@ class ExperienceIdsProviderTest {
         whenever(prefsStorage.visitId).doReturn(DUMMY_STRING)
         doReturn(date.time).`when`(experienceIdsProvider).getServerMidnightTimestamp(any())
         assertEquals(DUMMY_STRING, experienceIdsProvider.getVisitId(date))
-        assertFalse { experienceIdsProvider.isVisitIdRegenerated }
+        assertFalse { experienceIdsProvider.isVisitIdGenerated }
         verify(prefsStorage).visitTimestamp
         verify(prefsStorage).visitTimeout
         verify(experienceIdsProvider).getServerMidnightTimestamp(date)
@@ -88,7 +93,6 @@ class ExperienceIdsProviderTest {
         verify(prefsStorage).visitTimeout
         verify(experienceIdsProvider).getServerMidnightTimestamp(date)
         verify(prefsStorage).visitId
-        verify(prefsStorage, never()).setVisitDate(any<Date>())
     }
 
     @Test
@@ -97,7 +101,7 @@ class ExperienceIdsProviderTest {
         val date = Date()
         with(experienceIdsProvider.generateVisitId(date)) {
             assertEquals(ExperienceIdsProvider.VISIT_ID_PREFIX + DUMMY_STRING, this)
-            assertTrue { experienceIdsProvider.isVisitIdRegenerated }
+            assertTrue { experienceIdsProvider.isVisitIdGenerated }
             verify(prefsStorage).visitId = this
             verify(prefsStorage).setVisitDate(date)
         }
@@ -105,7 +109,7 @@ class ExperienceIdsProviderTest {
 
     @Test
     fun getServerMidnightTimestamp() {
-        val timeZone = TimeZone.getDefault();
+        val timeZone = TimeZone.getDefault()
         whenever(prefsStorage.serverTimezoneOffset).doReturn(timeZone.rawOffset)
         val date = Date()
         val milliSeconds = with(Calendar.getInstance(timeZone)) {

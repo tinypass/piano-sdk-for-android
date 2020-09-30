@@ -3,6 +3,8 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     id(Plugins.versions) version Versions.versionsPlugin
+    id(Plugins.dokka) version Versions.dokkaPlugin
+    id(Plugins.ktlint) version Versions.ktlintPlugin
 }
 
 buildscript {
@@ -45,7 +47,7 @@ fun isNonStable(version: String): Boolean {
 
 fun isNotSupportedSquareLib(group: String, version: String): Boolean =
     maxSupportedSquareLib.any { (key, value) ->
-        group == key && version.split(".")
+        group == key && version.split("-").first().split(".")
             .map { it.toInt() }
             .zip(value)
             .any { it.first > it.second }
@@ -54,8 +56,8 @@ fun isNotSupportedSquareLib(group: String, version: String): Boolean =
 tasks {
     named<DependencyUpdatesTask>("dependencyUpdates") {
         rejectVersionIf {
-            isNotSupportedSquareLib(candidate.group, candidate.version)
-                    || isNonStable(candidate.version) && !isNonStable(currentVersion)
+            isNotSupportedSquareLib(candidate.group, candidate.version) ||
+                isNonStable(candidate.version) && !isNonStable(currentVersion)
         }
 
         checkForGradleUpdate = true
@@ -64,17 +66,3 @@ tasks {
         reportfileName = "report"
     }
 }
-//
-//ext {
-//    compileSdkVersion = 29
-//
-//    androidxLegacyVersion = '1.0.0'
-//    androidxAppCompatVersion = '1.2.0-alpha03'
-//    materialVersion = '1.0.0'
-//
-//    supportLibraryVersion = '28.0.0'
-//    okHttpVersion = '3.12.6'
-//    okioVersion = '2.4.2'
-//    rxAndroidVersion = '1.2.1'
-//    rxJavaVersion = '1.3.8'
-//}

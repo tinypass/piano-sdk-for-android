@@ -4,7 +4,7 @@ import okhttp3.mockwebserver.MockWebServer
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
-open class BaseInterceptorTest  {
+open class BaseInterceptorTest {
     protected lateinit var mockWebServer: MockWebServer
 
     @BeforeTest

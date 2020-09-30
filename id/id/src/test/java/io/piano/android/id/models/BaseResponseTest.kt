@@ -1,43 +1,30 @@
 package io.piano.android.id.models
 
-import com.nhaarman.mockitokotlin2.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class BaseResponseTest {
-    private val baseResponse = spy(BaseResponse()).apply {
-        doReturn(MSG).`when`(this).joinValidationErrors(any())
-    }
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun makeResponse(
+        code: Int = 0,
+        message: String? = null,
+        validationErrors: Map<String, String>? = null
+    ) =
+        BaseResponse(code, message, validationErrors)
 
     @Test
     fun hasError() {
-        baseResponse.code = 1
-        assertTrue { baseResponse.hasError() }
-        baseResponse.code = 0
-        assertFalse { baseResponse.hasError() }
+        assertTrue { makeResponse(code = 1).hasError }
+        assertFalse { makeResponse(code = 0).hasError }
     }
 
     @Test
-    fun getErrorWithoutErrorMessage() {
-        baseResponse.validationErrors = mapOf("test" to MSG, "test2" to MSG)
-        assertEquals(MSG, baseResponse.error)
-        verify(baseResponse).joinValidationErrors(any())
-    }
-
-    @Test
-    fun getErrorWithErrorMessage() {
-        baseResponse.validationErrors = mapOf(BaseResponse.KEY_MESSAGE to MSG)
-        assertEquals(MSG, baseResponse.error)
-        verify(baseResponse, never()).joinValidationErrors(any())
-    }
-
-    @Test
-    fun getErrorNoValidationErrorsAndEmptyMessage() {
-        baseResponse.code = 1
-        assertEquals(BaseResponse.ERROR_TEMPLATE + baseResponse.code, baseResponse.error)
-        verify(baseResponse, never()).joinValidationErrors(any())
+    fun getError() {
+        assertEquals("$MSG; $MSG", makeResponse(validationErrors = mapOf("test" to MSG, "test2" to MSG)).error)
+        assertEquals(MSG, makeResponse(validationErrors = mapOf(BaseResponse.KEY_MESSAGE to MSG)).error)
+        assertEquals("${BaseResponse.ERROR_TEMPLATE}1", makeResponse(code = 1).error)
     }
 
     companion object {

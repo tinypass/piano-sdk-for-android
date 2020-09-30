@@ -3,26 +3,41 @@ package io.piano.android.id
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import com.google.gson.Gson
-import com.nhaarman.mockitokotlin2.*
-import io.piano.android.id.models.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doNothing
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.squareup.moshi.Moshi
+import io.piano.android.id.models.HostResponse
+import io.piano.android.id.models.PianoIdApi
+import io.piano.android.id.models.PianoIdToken
 import okhttp3.HttpUrl
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class PianoIdClientTest {
-    private val bundle: Bundle = mock()
     private val hostResponseCall: Call<HostResponse> = mock()
     private val signOutResponseCall: Call<ResponseBody> = mock()
     private val api: PianoIdApi = mock {
         on { getDeploymentHost(any()) } doReturn hostResponseCall
         on { signOut(any(), any(), any()) } doReturn signOutResponseCall
     }
-    private val gson: Gson = mock()
+    private val moshi = Moshi.Builder()
+        .build()
     private val url = HttpUrl.Builder().scheme("http").host("localhost").build()
     private val oauthIntent: Intent = mock {
         on { putExtras(any<Bundle>()) } doReturn mock
@@ -35,15 +50,12 @@ class PianoIdClientTest {
 
     @BeforeTest
     fun setUp() {
-        pianoIdClient = spy(PianoIdClient(api, gson, url, AID)) {
-            doReturn(bundle).`when`(mock).buildBundle(any())
-            doReturn(DUMMY).`when`(mock).join(any(), any())
-        }
+        pianoIdClient = spy(PianoIdClient(api, moshi, AID))
     }
 
     @Test
     fun withTokenCallback() {
-        val callback: PianoIdCallback<PianoIdToken> = mock()
+        val callback: PianoIdFuncCallback<PianoIdToken> = mock()
         assertEquals(pianoIdClient, pianoIdClient.with(callback))
         assertEquals(callback, pianoIdClient.tokenCallback)
     }
@@ -62,14 +74,13 @@ class PianoIdClientTest {
     @Test
     fun getAuthEndpointNotNull() {
         pianoIdClient.authEndpoint = url
-        val callback: PianoIdCallback<HttpUrl> = mock()
+        val callback: PianoIdFuncCallback<HttpUrl> = mock()
         pianoIdClient.getAuthEndpoint(callback)
-        verify(callback).onSuccess(pianoIdClient.authEndpoint)
-        verify(callback, never()).onFailure(any())
+        verify(callback).invoke(Result.success(url))
     }
 
-    private fun getAuthEndpoint(callbackTest: (PianoIdCallback<HttpUrl>, Callback<HostResponse>) -> Unit) {
-        val callback: PianoIdCallback<HttpUrl> = mock()
+    private fun getAuthEndpoint(callbackTest: (PianoIdFuncCallback<HttpUrl>, Callback<HostResponse>) -> Unit) {
+        val callback: PianoIdFuncCallback<HttpUrl> = mock()
         pianoIdClient.getAuthEndpoint(callback)
         verify(api).getDeploymentHost(AID)
         val callbackCaptor = argumentCaptor<Callback<HostResponse>>()
@@ -82,40 +93,44 @@ class PianoIdClientTest {
         getAuthEndpoint { pianoIdCallback, retrofitCallback ->
             val response = Response.success<HostResponse>(null)
             retrofitCallback.onResponse(hostResponseCall, response)
-            verify(pianoIdCallback, never()).onSuccess(any())
-            verify(pianoIdCallback).onFailure(any())
+            val valueCaptor = argumentCaptor<Result<HttpUrl>>()
+            verify(pianoIdCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isFailure }
         }
 
     @Test
     fun getAuthEndpointContainsErrors() =
         getAuthEndpoint { pianoIdCallback, retrofitCallback ->
             val data: HostResponse = mock {
-                on { hasError() } doReturn true
+                on { hasError } doReturn true
                 on { error } doReturn DUMMY
             }
             val response = Response.success<HostResponse>(data)
             retrofitCallback.onResponse(hostResponseCall, response)
-            verify(data).hasError()
+            verify(data).hasError
             verify(data).error
-            verify(pianoIdCallback, never()).onSuccess(any())
-            verify(pianoIdCallback).onFailure(any())
+            val valueCaptor = argumentCaptor<Result<HttpUrl>>()
+            verify(pianoIdCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isFailure }
         }
 
     @Test
     fun getAuthEndpointResponseSuccess() =
         getAuthEndpoint { pianoIdCallback, retrofitCallback ->
             val data: HostResponse = spy(
-                HostResponse().apply { host = url.toString() }
+                HostResponse(url.toString(), 0, null, null)
             ) {
-                on { hasError() } doReturn false
+                on { hasError } doReturn false
                 on { error } doReturn DUMMY
             }
             val response = Response.success<HostResponse>(data)
             retrofitCallback.onResponse(hostResponseCall, response)
-            verify(data).hasError()
+            verify(data).hasError
             verify(data, never()).error
-            verify(pianoIdCallback).onSuccess(url)
-            verify(pianoIdCallback, never()).onFailure(any())
+            val valueCaptor = argumentCaptor<Result<HttpUrl>>()
+            verify(pianoIdCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isSuccess }
+            assertEquals(url, valueCaptor.lastValue.getOrNull())
         }
 
     @Test
@@ -123,22 +138,23 @@ class PianoIdClientTest {
         getAuthEndpoint { pianoIdCallback, retrofitCallback ->
             val exc = RuntimeException()
             retrofitCallback.onFailure(hostResponseCall, exc)
-            verify(pianoIdCallback).onFailure(any())
-            verify(pianoIdCallback, never()).onSuccess(any())
+            val valueCaptor = argumentCaptor<Result<HttpUrl>>()
+            verify(pianoIdCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isFailure }
         }
 
-    private fun signOut(callbackTest: (PianoIdCallback<Any>, PianoIdCallback<HttpUrl>) -> Unit) {
+    private fun signOut(callbackTest: (PianoIdFuncCallback<Any>, PianoIdFuncCallback<HttpUrl>) -> Unit) {
         doNothing().`when`(pianoIdClient).getAuthEndpoint(any())
-        val callback: PianoIdCallback<Any> = mock()
+        val callback: PianoIdFuncCallback<Any> = mock()
         pianoIdClient.signOut(DUMMY, callback)
-        val callbackCaptor = argumentCaptor<PianoIdCallback<HttpUrl>>()
+        val callbackCaptor = argumentCaptor<PianoIdFuncCallback<HttpUrl>>()
         verify(pianoIdClient).getAuthEndpoint(callbackCaptor.capture())
         callbackTest(callback, callbackCaptor.lastValue)
     }
 
-    private fun signOutAuthEndpointSuccess(callbackTest: (PianoIdCallback<Any>, Callback<ResponseBody>) -> Unit) =
+    private fun signOutAuthEndpointSuccess(callbackTest: (PianoIdFuncCallback<Any>, Callback<ResponseBody>) -> Unit) =
         signOut { signOutCallback, authUrlCallback ->
-            authUrlCallback.onSuccess(url)
+            authUrlCallback(Result.success(url))
             verify(api).signOut(any(), any(), any())
             val callbackCaptor = argumentCaptor<Callback<ResponseBody>>()
             verify(signOutResponseCall).enqueue(callbackCaptor.capture())
@@ -150,8 +166,9 @@ class PianoIdClientTest {
         signOutAuthEndpointSuccess { signOutCallback, retrofitCallback ->
             val response = Response.success<ResponseBody>(null)
             retrofitCallback.onResponse(signOutResponseCall, response)
-            verify(signOutCallback, never()).onSuccess(any())
-            verify(signOutCallback).onFailure(any())
+            val valueCaptor = argumentCaptor<Result<Any>>()
+            verify(signOutCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isFailure }
         }
 
     @Test
@@ -159,8 +176,9 @@ class PianoIdClientTest {
         signOutAuthEndpointSuccess { signOutCallback, retrofitCallback ->
             val response = Response.success<ResponseBody>(ResponseBody.create(null, DUMMY))
             retrofitCallback.onResponse(signOutResponseCall, response)
-            verify(signOutCallback).onSuccess(any())
-            verify(signOutCallback, never()).onFailure(any())
+            val valueCaptor = argumentCaptor<Result<Any>>()
+            verify(signOutCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isSuccess }
         }
 
     @Test
@@ -168,26 +186,28 @@ class PianoIdClientTest {
         signOutAuthEndpointSuccess { signOutCallback, retrofitCallback ->
             val exc = RuntimeException()
             retrofitCallback.onFailure(signOutResponseCall, exc)
-            verify(signOutCallback).onFailure(any())
-            verify(signOutCallback, never()).onSuccess(any())
+            val valueCaptor = argumentCaptor<Result<Any>>()
+            verify(signOutCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isFailure }
         }
 
     @Test
     fun signOutAuthEndpointFailure() =
         signOut { signOutCallback, authUrlCallback ->
             val exc = PianoIdException()
-            authUrlCallback.onFailure(exc)
-            verify(signOutCallback).onFailure(exc)
-            verify(signOutCallback, never()).onSuccess(any())
+            authUrlCallback(Result.failure(exc))
+            val valueCaptor = argumentCaptor<Result<Any>>()
+            verify(signOutCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isFailure }
             verify(signOutResponseCall, never()).enqueue(any())
         }
 
-    private fun getSignInUrl(callbackTest: (PianoIdCallback<String>, PianoIdCallback<HttpUrl>) -> Unit) {
+    private fun getSignInUrl(callbackTest: (PianoIdFuncCallback<String>, PianoIdFuncCallback<HttpUrl>) -> Unit) {
         doNothing().`when`(pianoIdClient).getAuthEndpoint(any())
-        val callback: PianoIdCallback<String> = mock()
+        val callback: PianoIdFuncCallback<String> = mock()
         pianoIdClient.oauthProviders[DUMMY] = oAuthProvider
         pianoIdClient.getSignInUrl(true, DUMMY, callback)
-        val callbackCaptor = argumentCaptor<PianoIdCallback<HttpUrl>>()
+        val callbackCaptor = argumentCaptor<PianoIdFuncCallback<HttpUrl>>()
         verify(pianoIdClient).getAuthEndpoint(callbackCaptor.capture())
         callbackTest(callback, callbackCaptor.lastValue)
     }
@@ -195,11 +215,10 @@ class PianoIdClientTest {
     @Test
     fun getSignInUrlSuccess() =
         getSignInUrl { pianoIdCallback, authUrlCallback ->
-            authUrlCallback.onSuccess(url)
-            verify(pianoIdClient).join(any(), any())
-            val valueCaptor = argumentCaptor<String>()
-            verify(pianoIdCallback).onSuccess(valueCaptor.capture())
-            val result = HttpUrl.parse(valueCaptor.lastValue)
+            authUrlCallback(Result.success(url))
+            val valueCaptor = argumentCaptor<Result<String>>()
+            verify(pianoIdCallback).invoke(valueCaptor.capture())
+            val result = HttpUrl.parse(valueCaptor.lastValue.getOrNull() ?: "")
             assertNotNull(result)
             with(result) {
                 assertEquals(PianoIdClient.VALUE_RESPONSE_TYPE_TOKEN, queryParameter(PianoIdClient.PARAM_RESPONSE_TYPE))
@@ -226,9 +245,10 @@ class PianoIdClientTest {
     fun getSignInUrlFailure() =
         getSignInUrl { pianoIdCallback, authUrlCallback ->
             val exc = PianoIdException()
-            authUrlCallback.onFailure(exc)
-            verify(pianoIdCallback).onFailure(exc)
-            verify(pianoIdCallback, never()).onSuccess(any())
+            authUrlCallback(Result.failure(exc))
+            val valueCaptor = argumentCaptor<Result<String>>()
+            verify(pianoIdCallback).invoke(valueCaptor.capture())
+            assertTrue { valueCaptor.lastValue.isFailure }
         }
 
     @Test
@@ -241,7 +261,7 @@ class PianoIdClientTest {
 
     @Test
     fun getResultFromNullIntent() {
-        assertNull(pianoIdClient.getResultFromIntent(null))
+        assertNull(pianoIdClient.getResult(null))
     }
 
     @Test
@@ -251,7 +271,7 @@ class PianoIdClientTest {
             on { getIntExtra(any(), any()) } doReturn 0
             on { getParcelableExtra<PianoIdToken>(any()) } doReturn token
         }
-        assertEquals(token, pianoIdClient.getResultFromIntent(intent))
+        assertEquals(token, pianoIdClient.getResult(intent))
         verify(intent).getIntExtra(any(), any())
         verify(intent).getParcelableExtra<PianoIdToken>(any())
     }
@@ -263,9 +283,12 @@ class PianoIdClientTest {
         val intent: Intent = mock {
             on { getIntExtra(any(), any()) } doReturn code
         }
-        assertEquals(exc, assertFailsWith {
-            pianoIdClient.getResultFromIntent(intent)
-        })
+        assertEquals(
+            exc,
+            assertFailsWith {
+                pianoIdClient.getResult(intent)
+            }
+        )
     }
 
     @Test
@@ -273,8 +296,8 @@ class PianoIdClientTest {
         val uri: Uri = mock {
             on { authority } doReturn DUMMY
         }
-        assertNull(pianoIdClient.processUri(null))
-        assertNull(pianoIdClient.processUri(uri))
+        assertNull(pianoIdClient.parseToken(null))
+        assertNull(pianoIdClient.parseToken(uri))
         verify(uri).authority
     }
 
@@ -287,7 +310,7 @@ class PianoIdClientTest {
         val token: PianoIdToken = mock()
         val callback: PianoIdCallback<PianoIdToken> = mock()
         doReturn(token).`when`(pianoIdClient).buildToken(any(), any())
-        assertEquals(token, pianoIdClient.with(callback).processUri(uri))
+        assertEquals(token, pianoIdClient.with(callback).parseToken(uri))
         verify(uri).authority
         verify(uri, times(2)).getQueryParameter(any())
         verify(pianoIdClient).buildToken(any(), any())
@@ -303,69 +326,14 @@ class PianoIdClientTest {
         }
         val callback: PianoIdCallback<PianoIdToken> = mock()
         val exc = assertFailsWith<PianoIdException> {
-            pianoIdClient.with(callback).processUri(uri)
+            pianoIdClient.with(callback).parseToken(uri)
         }
         assertTrue { exc.cause is IllegalArgumentException }
         verify(uri).authority
-        verify(uri, times(2)).getQueryParameter(any())
+        verify(uri).getQueryParameter(any())
         verify(pianoIdClient, never()).buildToken(any(), any())
         verify(callback, never()).onSuccess(any())
         verify(callback).onFailure(exc)
-    }
-
-    @Test
-    fun buildTokenFromTokens() {
-        val data = TokenData().apply {
-            exp = 123
-        }
-        whenever(gson.fromJson(any<String>(), eq(TokenData::class.java))).thenReturn(data)
-        val token = "$DUMMY.$DUMMY2"
-        with(pianoIdClient.buildToken(token, DUMMY2)) {
-            assertEquals(token, accessToken)
-            assertEquals(data.exp * 1000, expiresIn.time)
-            assertEquals(DUMMY2, refreshToken)
-        }
-    }
-
-    @Test
-    fun buildTokenFromPayload() {
-        val token: PianoIdToken = mock()
-        doReturn(token).`when`(pianoIdClient).buildToken(any(), any())
-        val response = TokenResponse().apply {
-            accessToken = DUMMY
-            refreshToken = DUMMY2
-        }
-        whenever(gson.fromJson(DUMMY, TokenResponse::class.java)).thenReturn(response)
-        pianoIdClient.buildToken(DUMMY)
-        verify(gson).fromJson(DUMMY, TokenResponse::class.java)
-        verify(pianoIdClient).buildToken(DUMMY, DUMMY2)
-    }
-
-    @Test
-    fun buildSocialAuthIntent() {
-        val response = SocialTokenResponse().apply {
-            oauthProvider = NAME
-        }
-        pianoIdClient.oauthProviders[NAME.toLowerCase()] = oAuthProvider
-        whenever(gson.fromJson(DUMMY, SocialTokenResponse::class.java)).thenReturn(response)
-        assertEquals(oauthIntent, pianoIdClient.buildSocialAuthIntent(mock(), DUMMY))
-        verify(pianoIdClient).buildBundle(response)
-        verify(oAuthProvider).buildIntent(any(), eq(bundle))
-        verify(oauthIntent).putExtras(bundle)
-        assertFailsWith<PianoIdException> {
-            response.oauthProvider = DUMMY
-            pianoIdClient.buildSocialAuthIntent(mock(), DUMMY)
-        }
-    }
-
-    @Test
-    fun buildResultJsCommand() {
-        whenever(gson.toJson(any<SocialTokenData>())).thenReturn(DUMMY)
-        assertEquals(
-            PianoIdClient.SOCIAL_LOGIN_CALLBACK_TEMPLATE.format(Locale.US, DUMMY),
-            pianoIdClient.buildResultJsCommand(DUMMY, DUMMY2)
-        )
-        verify(gson).toJson(any<SocialTokenData>())
     }
 
     companion object {

@@ -1,18 +1,36 @@
 package io.piano.android.composer
 
-import com.google.gson.Gson
-import com.nhaarman.mockitokotlin2.*
-import io.piano.android.composer.model.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.verify
+import com.squareup.moshi.Moshi
+import io.piano.android.composer.model.ActiveMeter
+import io.piano.android.composer.model.CookieObject
+import io.piano.android.composer.model.CustomParameters
+import io.piano.android.composer.model.DelayBy
+import io.piano.android.composer.model.Event
+import io.piano.android.composer.model.EventExecutionContext
+import io.piano.android.composer.model.EventsContainer
+import io.piano.android.composer.model.ExperienceRequest
+import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.ShowTemplate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HttpHelperTest {
-    private val experienceIdsProvider: ExperienceIdsProvider = mock()
+    private val experienceIdsProvider: ExperienceIdsProvider = mock() {
+        on { getPageViewId(any()) } doReturn DUMMY_STRING
+        on { getVisitId(any()) } doReturn DUMMY_STRING2
+    }
     private val prefsStorage: PrefsStorage = mock()
-    private val gson: Gson = mock()
+    private val moshi: Moshi = Moshi.Builder()
+        .add(CustomParametersJsonAdapter.FACTORY)
+        .add(EventJsonAdapterFactory())
+        .build()
     private val customParameters: CustomParameters = mock() {
-        on { isEmpty } doReturn false
+        on { isEmpty() } doReturn false
     }
     private val experienceRequest: ExperienceRequest = mock() {
         on { customVariables } doReturn mapOf("1" to "2")
@@ -24,39 +42,35 @@ class HttpHelperTest {
         HttpHelper(
             experienceIdsProvider,
             prefsStorage,
-            gson,
+            moshi,
             DUMMY_STRING
         )
-    ).apply {
-        doReturn(JOINED_DUMMY).`when`(this).joinToString(any())
-    }
+    )
 
     @Test
     fun convertExperienceRequest() {
         with(httpHelper.convertExperienceRequest(experienceRequest, DUMMY_STRING, null)) {
-            assertEquals(10, size)
+            assertEquals(14, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
-            verify(httpHelper).filterNullValues(this)
         }
         verify(experienceIdsProvider).getPageViewId(any())
         verify(experienceIdsProvider).getVisitId(any())
-        verify(experienceIdsProvider).isVisitIdRegenerated
+        verify(experienceIdsProvider).isVisitIdGenerated
         verify(prefsStorage).xbuilderBrowserCookie
         verify(prefsStorage).tpBrowserCookie
         verify(prefsStorage).tpAccessCookie
-        verify(gson).toJson(any<Map<String, String>>())
-        verify(gson).toJson(customParameters)
     }
 
     @Test
     fun processExperienceResponse() {
-        val experienceResponse = ExperienceResponse().apply {
-            xbCookie = CookieObject().apply { value = DUMMY_STRING }
-            tbCookie = CookieObject().apply { value = DUMMY_STRING2 }
-            taCookie = CookieObject().apply { value = JOINED_DUMMY }
-            visitTimeoutMinutes = 1
-            timeZoneOffsetMillis = 30000
-        }
+        val experienceResponse = ExperienceResponse(
+            CookieObject(DUMMY_STRING2),
+            CookieObject(DUMMY_STRING),
+            CookieObject(JOINED_DUMMY),
+            30000,
+            1,
+            EventsContainer(emptyList())
+        )
         httpHelper.processExperienceResponse(experienceResponse)
         verify(prefsStorage).xbuilderBrowserCookie = DUMMY_STRING
         verify(prefsStorage).tpBrowserCookie = DUMMY_STRING2
@@ -76,13 +90,32 @@ class HttpHelperTest {
     @Test
     fun buildShowTemplateParameters() {
         val meters: List<ActiveMeter> = listOf(mock())
-        val showTemplateEvent = Event<ShowTemplate>(
+        val showTemplateEvent = Event(
             mock(),
-            EventExecutionContext().apply {
-                trackingId = DUMMY_STRING
-                activeMeters = meters
-            },
-            ShowTemplate().apply { templateId = DUMMY_STRING2 }
+            EventExecutionContext(
+                DUMMY_STRING2,
+                DUMMY_STRING2,
+                DUMMY_STRING,
+                null,
+                null,
+                null,
+                DUMMY_STRING2,
+                DUMMY_STRING2,
+                null,
+                meters
+            ),
+            ShowTemplate(
+                DUMMY_STRING2,
+                null,
+                ShowTemplate.DisplayMode.MODAL,
+                DUMMY_STRING,
+                DelayBy(
+                    DelayBy.DelayType.TIME,
+                    0
+                ),
+                false,
+                null
+            )
         )
         with(
             httpHelper.buildShowTemplateParameters(
@@ -93,23 +126,9 @@ class HttpHelperTest {
                 null
             )
         ) {
-            assertEquals(7, size)
+            assertEquals(9, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
-        verify(gson).toJson(meters)
-        verify(gson).toJson(any<Map<String, String>>())
-    }
-
-    @Test
-    fun filterNullValues() {
-        val map = mutableMapOf(
-            "1" to "1",
-            "2" to 2,
-            "3" to null,
-            "4" to Any()
-        )
-        httpHelper.filterNullValues(map)
-        assertEquals(3, map.size)
     }
 
     companion object {

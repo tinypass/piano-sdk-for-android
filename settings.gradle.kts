@@ -3,11 +3,11 @@ plugins {
 }
 
 include(
-    ":api",
     ":composer",
     ":composer-show-template",
     ":id:id",
     ":id:id-oauth-facebook",
     "id:id-oauth-google",
-    ":sample"
+    ":sample",
+    ":sample-ktx"
 )

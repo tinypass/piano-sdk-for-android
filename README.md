@@ -7,63 +7,22 @@ This document details the process of integrating the Piano SDK with your Android
 
 ### Download the Piano SDK
 #### Gradle
-The Piano SDK is available as an AAR via jCenter. To add the `api`, `composer`, `composer-show-template`, `oauth`, etc. dependencies, open your project’s `build.gradle` and update the `repositories` and `dependencies` blocks as follows:
-```
-repositories {
-    // ... other project repositories
-    jcenter()
-}
-
-// ...
-
-dependencies {
-    // ... other project dependencies
-
-    compile 'io.piano.android:api:2.0.0-beta01'
-
-    compile 'io.piano.android:composer:2.0.0-beta01'
-
-    compile 'io.piano.android:composer-show-template:2.0.0-beta01'
-
-    compile 'io.piano.android:id:2.0.0-beta01'
-}
-```
+The Piano SDK is available as an AAR via jCenter. To add the `composer`, `composer-show-template`, `id`, etc. dependencies, open your project’s `build.gradle`/`build.gradle.kts` and update `dependencies` block:
 
 ### Usage
 #### [API](https://docs.piano.io/api/)
-Initialize `PianoClient` in your Application's `onCreate` method:
-```
-@Override
-public void onCreate() {
-    super.onCreate();
+Take a look at [API readme](api/README.md)
 
-    pianoClient = new PianoClient(this, BuildConfig.PIANO_AID, BuildConfig.DEBUG);
-}
-```
+#### [Composer](https://piano.io/product/composer/)
+Take a look at [Composer readme](composer/README.md)
 
-You can configure `BuildConfig.PIANO_AID` in `build.gradle`:
-```
-defaultConfig {
-    applicationId "io.piano.android.sample"
-    // ... other project properties
-
-    buildConfigField "String", "PIANO_AID", "\"$aid\""
-}
-```
-
-`PianoClient` provides underlying methods to APIs. They can be accessed as follows:
-```
-PianoClient pianoClient = ((PianoSampleApplication) getApplication()).getPianoClient();
-List<Access> list = pianoClient.getUserAccessApi().list(pianoClient.getAid());
-```
-
-#### [Composer](https://piano.io/composer/)
-Take a look at [ComposerActivity](sample/src/main/java/io/piano/android/sample/feature/composer/ComposerActivity.java)
+#### [ID](https://piano.io/product/id/)
+Take a look at [Piano ID readme](id/README.md)
 
 ### Sample
 We created a sample app to showcase our SDK and highlight some of the features provided by each API.
 
-Don't forget to specify `io.piano.aid=$YOUR_AID` in `piano.properties` in `sample` before you start importing!
+Don't forget to specify `io.piano.aid=$YOUR_AID` in `piano.properties` in `sample`/`sample-ktx` before you start importing!
 
 ### License
 ```

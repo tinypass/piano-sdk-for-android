@@ -1,8 +1,27 @@
 package io.piano.android.composer
 
-import com.nhaarman.mockitokotlin2.*
-import io.piano.android.composer.listeners.*
-import io.piano.android.composer.model.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.doNothing
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.spy
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import io.piano.android.composer.listeners.EventTypeListener
+import io.piano.android.composer.listeners.ExceptionListener
+import io.piano.android.composer.listeners.ExperienceExecuteListener
+import io.piano.android.composer.listeners.ShowTemplateListener
+import io.piano.android.composer.listeners.UserSegmentListener
+import io.piano.android.composer.model.Data
+import io.piano.android.composer.model.Event
+import io.piano.android.composer.model.EventsContainer
+import io.piano.android.composer.model.ExperienceRequest
+import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.EventType
 import io.piano.android.composer.model.events.ExperienceExecute
 import io.piano.android.composer.model.events.ShowTemplate
@@ -13,8 +32,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-
 
 class ComposerTest {
     private val experienceCall: Call<Data<ExperienceResponse>> = mock()
@@ -36,9 +53,7 @@ class ComposerTest {
             DUMMY_STRING to DUMMY_STRING2
         )
     }
-    private val composer: Composer = spy(Composer(api, httpHelper, "AID", null)) {
-        doReturn(DUMMY_STRING).`when`(mock).buildErrorMessage(any())
-    }
+    private val composer: Composer = spy(Composer(api, httpHelper, "AID", null))
 
     private val experienceRequest: ExperienceRequest = mock()
     private val resultListeners = listOf(
@@ -78,17 +93,16 @@ class ComposerTest {
     fun getExperienceResponseContainsErrors() =
         getExperienceWithCallbackCheck {
             val response = Response.success(
-                Data<ExperienceResponse>().apply {
-                    data = mock()
-                    errors = listOf(
+                Data<ExperienceResponse>(
+                    mock(),
+                    listOf(
                         mock(),
                         mock()
                     )
-                }
+                )
             )
             it.onResponse(experienceCall, response)
             verifyExceptionListenerArgument(null)
-            verify(composer).buildErrorMessage(any())
             verify(composer, never()).processExperienceResponse(any(), any(), any(), any())
         }
 
@@ -97,10 +111,7 @@ class ComposerTest {
         getExperienceWithCallbackCheck {
             val experienceResponse: ExperienceResponse = mock()
             val response = Response.success(
-                Data<ExperienceResponse>().apply {
-                    data = experienceResponse
-                    errors = emptyList()
-                }
+                Data<ExperienceResponse>(experienceResponse, emptyList())
             )
             it.onResponse(experienceCall, response)
             verify(composer).processExperienceResponse(
@@ -109,7 +120,6 @@ class ComposerTest {
                 resultListeners,
                 exceptionListener
             )
-            verify(composer, never()).buildErrorMessage(any())
             verify(exceptionListener, never()).onException(any())
         }
 
@@ -122,22 +132,25 @@ class ComposerTest {
             verify(composer, never()).processExperienceResponse(any(), any(), any(), any())
         }
 
-
     @Test
     fun processExperienceResponse() {
-        doNothing().`when`(composer).fillShowTemplateUrl(any(), any())
         val eventTypes = listOf(
             mock<ShowTemplate>(),
             mock<ExperienceExecute>(),
             mock<UserSegment>()
         )
-        val response = ExperienceResponse().apply {
-            result = EventsContainer().apply {
-                events = eventTypes.map {
+        val response = ExperienceResponse(
+            null,
+            null,
+            null,
+            0,
+            0,
+            EventsContainer(
+                eventTypes.map {
                     Event(mock(), mock(), it)
                 }
-            }
-        }
+            )
+        )
         val iterations = eventTypes.size
 
         val exc = RuntimeException()
@@ -164,7 +177,6 @@ class ComposerTest {
             exceptionListener
         )
         verify(httpHelper).processExperienceResponse(response)
-        verify(composer).fillShowTemplateUrl(any(), any())
         verify(showTemplateListener, times(iterations)).canProcess(any())
         verify(showTemplateListener, times(iterations)).onExecuted(any())
         verify(experienceExecuteListener, times(iterations)).canProcess(any())
@@ -175,24 +187,15 @@ class ComposerTest {
     }
 
     @Test
-    fun processExperienceResponseException() {
-        composer.processExperienceResponse(
-            experienceRequest,
-            mock(),
-            resultListeners,
-            exceptionListener
-        )
-        verify(httpHelper).processExperienceResponse(any())
-        for (listener in resultListeners) {
-            verify(listener, never()).canProcess(any())
-            verify(listener as EventTypeListener<EventType>, never()).onExecuted(any())
-        }
-        verify(exceptionListener).onException(any())
-    }
-
-    @Test
     fun processExperienceResponseNoListeners() {
-        val experienceResponse: ExperienceResponse = mock()
+        val experienceResponse: ExperienceResponse = ExperienceResponse(
+            null,
+            null,
+            null,
+            0,
+            0,
+            EventsContainer(listOf(mock()))
+        )
         composer.processExperienceResponse(
             experienceRequest,
             experienceResponse,
@@ -205,9 +208,14 @@ class ComposerTest {
 
     @Test
     fun processExperienceResponseNoEvents() {
-        val response = ExperienceResponse().apply {
-            result = EventsContainer().apply { events = emptyList() }
-        }
+        val response = ExperienceResponse(
+            null,
+            null,
+            null,
+            0,
+            0,
+            EventsContainer(emptyList())
+        )
         composer.processExperienceResponse(
             experienceRequest,
             response,
@@ -217,6 +225,7 @@ class ComposerTest {
         verify(httpHelper).processExperienceResponse(response)
         for (listener in resultListeners) {
             verify(listener, never()).canProcess(any())
+            @Suppress("UNCHECKED_CAST")
             verify(listener as EventTypeListener<EventType>, never()).onExecuted(any())
         }
         verify(exceptionListener, never()).onException(any())
@@ -230,23 +239,6 @@ class ComposerTest {
         verify(httpHelper).buildEventTracking(DUMMY_STRING)
         verify(api).trackExternalEvent(any(), any())
         verify(call).enqueue(any())
-    }
-
-    @Test
-    fun fillShowTemplateUrl() {
-        val event = Event<ShowTemplate>(mock(), mock(), ShowTemplate())
-        composer.fillShowTemplateUrl(event, experienceRequest)
-        with(event.eventData.url) {
-            assertFalse { isNullOrEmpty() }
-            assertEquals(true, this?.contains("$DUMMY_STRING=$DUMMY_STRING2"))
-        }
-        verify(httpHelper).buildShowTemplateParameters(
-            any(),
-            any(),
-            any(),
-            anyOrNull(),
-            anyOrNull()
-        )
     }
 
     companion object {
