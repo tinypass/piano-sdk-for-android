@@ -26,7 +26,7 @@ android {
 dependencies {
     implementation(Libs.appcompat)
     implementation(Libs.googleAuth)
-    implementation(project(":id:id"))
+    api(project(":id:id"))
 }
 
 kotlin {

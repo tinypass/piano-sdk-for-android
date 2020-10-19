@@ -26,7 +26,7 @@ android {
 dependencies {
     implementation(Libs.appcompat)
     api(Libs.facebookLogin)
-    implementation(project(":id:id"))
+    api(project(":id:id"))
 }
 
 kotlin {

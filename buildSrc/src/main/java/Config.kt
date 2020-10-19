@@ -24,6 +24,7 @@ object Versions {
     const val annotationsLibrary = "1.1.0"
     const val fragmentLibrary = "1.2.5"
     const val materialLibrary = "1.2.1"
+    const val lifecycleLibrary = "2.2.0"
     const val prefsLibrary = "1.1.1"
 
     // Third party Libraries
@@ -63,6 +64,7 @@ object Libs {
     const val androidxActivity = "androidx.activity:activity:${Versions.androidxActivity}"
     const val fragments = "androidx.fragment:fragment:${Versions.fragmentLibrary}"
     const val material = "com.google.android.material:material:${Versions.materialLibrary}"
+    const val lifecycleCommon = "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycleLibrary}"
 
     const val facebookLogin = "com.facebook.android:facebook-login:${Versions.facebookLogin}"
     const val googleAuth = "com.google.android.gms:play-services-auth:${Versions.googlePlayServices}"

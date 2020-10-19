@@ -7,10 +7,10 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doNothing
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.spy
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.squareup.moshi.Moshi
 import io.piano.android.id.models.HostResponse
@@ -233,6 +233,8 @@ class PianoIdClientTest {
                         PianoIdClient.PARAM_CLIENT_ID,
                         PianoIdClient.PARAM_FORCE_REDIRECT,
                         PianoIdClient.PARAM_DISABLE_SIGN_UP,
+                        PianoIdClient.PARAM_REDIRECT_URI,
+                        PianoIdClient.PARAM_SDK_FLAG,
                         PianoIdClient.PARAM_SCREEN,
                         PianoIdClient.PARAM_OAUTH_PROVIDERS
                     ),
@@ -292,30 +294,17 @@ class PianoIdClientTest {
     }
 
     @Test
-    fun processUriNullOrNotSupported() {
-        val uri: Uri = mock {
-            on { authority } doReturn DUMMY
-        }
-        assertNull(pianoIdClient.parseToken(null))
-        assertNull(pianoIdClient.parseToken(uri))
-        verify(uri).authority
-    }
-
-    @Test
     fun processUri() {
         val uri: Uri = mock {
             on { authority } doReturn PianoIdClient.LINK_AUTHORITY
             on { getQueryParameter(any()) } doReturn DUMMY
         }
         val token: PianoIdToken = mock()
-        val callback: PianoIdCallback<PianoIdToken> = mock()
-        doReturn(token).`when`(pianoIdClient).buildToken(any(), any())
-        assertEquals(token, pianoIdClient.with(callback).parseToken(uri))
-        verify(uri).authority
-        verify(uri, times(2)).getQueryParameter(any())
-        verify(pianoIdClient).buildToken(any(), any())
-        verify(callback).onSuccess(token)
-        verify(callback, never()).onFailure(any())
+        val callback: PianoIdFuncCallback<PianoIdToken> = mock()
+        doReturn(token).`when`(pianoIdClient).buildToken(any())
+        pianoIdClient.parseToken(uri, callback)
+        verify(uri).getQueryParameter(any())
+        verify(pianoIdClient).getTokenByAuthCode(any(), eq(callback))
     }
 
     @Test
@@ -324,16 +313,13 @@ class PianoIdClientTest {
             on { authority } doReturn PianoIdClient.LINK_AUTHORITY
             on { getQueryParameter(any()) } doReturn null
         }
-        val callback: PianoIdCallback<PianoIdToken> = mock()
-        val exc = assertFailsWith<PianoIdException> {
-            pianoIdClient.with(callback).parseToken(uri)
-        }
-        assertTrue { exc.cause is IllegalArgumentException }
-        verify(uri).authority
+        val callback: PianoIdFuncCallback<PianoIdToken> = mock()
+        pianoIdClient.parseToken(uri, callback)
         verify(uri).getQueryParameter(any())
-        verify(pianoIdClient, never()).buildToken(any(), any())
-        verify(callback, never()).onSuccess(any())
-        verify(callback).onFailure(exc)
+        verify(pianoIdClient, never()).buildToken(any())
+        val valueCaptor = argumentCaptor<Result<PianoIdToken>>()
+        verify(callback).invoke(valueCaptor.capture())
+        assertTrue { valueCaptor.lastValue.exceptionOrNull()?.cause is IllegalArgumentException }
     }
 
     companion object {

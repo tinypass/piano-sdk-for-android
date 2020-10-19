@@ -42,6 +42,7 @@ public class PianoSampleApplication extends MultiDexApplication {
                     @Override
                     public void onSuccess(PianoIdToken token) {
                         prefsStorage.setPianoIdToken(token);
+                        Composer.getInstance().userToken(token.accessToken);
                     }
 
                     @Override

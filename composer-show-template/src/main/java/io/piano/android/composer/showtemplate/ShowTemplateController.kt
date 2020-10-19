@@ -8,6 +8,8 @@ import android.view.View
 import android.webkit.WebView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.events.ShowTemplate
 import timber.log.Timber
@@ -137,14 +139,20 @@ class ShowTemplateController private constructor(
 
         @JvmStatic
         private fun processDelay(activity: FragmentActivity, showTemplate: ShowTemplate, showFunction: () -> Unit) {
+            val handler = Handler(Looper.getMainLooper())
             val func: () -> Unit = {
                 if (!activity.isFinishing)
                     showFunction()
             }
             with(showTemplate.delayBy) {
-                if (isDelayedByTime)
-                    Handler(Looper.getMainLooper()).postDelayed(func, value * 1000L)
-                else showFunction()
+                if (isDelayedByTime) {
+                    activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
+                        override fun onPause(owner: LifecycleOwner) {
+                            handler.removeCallbacks(func)
+                        }
+                    })
+                    handler.postDelayed(func, value * 1000L)
+                } else func()
             }
         }
     }

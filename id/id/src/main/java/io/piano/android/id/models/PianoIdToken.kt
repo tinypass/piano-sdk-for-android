@@ -8,7 +8,7 @@ import java.util.Date
 @Parcelize
 class PianoIdToken(
     @JvmField val accessToken: String,
-    @JvmField val refreshToken: String,
+    @JvmField val refreshToken: String = "",
     @JvmField val expiresInTimestamp: Long = 0
 ) : Parcelable {
     @IgnoredOnParcel

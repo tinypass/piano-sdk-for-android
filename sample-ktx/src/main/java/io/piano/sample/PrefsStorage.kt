@@ -11,7 +11,7 @@ import timber.log.Timber
 
 class PrefsStorage(context: Context, moshi: Moshi) {
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-    private val pianoIdTokenJsonAdapter: JsonAdapter<PianoIdToken> = moshi.adapter(PianoIdToken::class.java)
+    private val pianoIdTokenJsonAdapter: JsonAdapter<PianoIdToken> = moshi.adapter(PianoIdToken::class.java).nullSafe()
 
     var pianoIdToken: PianoIdToken?
         get() = runCatching {

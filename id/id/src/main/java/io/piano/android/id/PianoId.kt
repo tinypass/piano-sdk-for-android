@@ -11,7 +11,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
-import kotlin.jvm.Throws
+import java.util.Locale
 
 class PianoId {
 
@@ -43,7 +43,7 @@ class PianoId {
                     )
                     .build()
                 val moshi = Moshi.Builder()
-                    .add(PianoIdTokeJsonAdapter.FACTORY)
+                    .add(PianoIdTokenJsonAdapter.FACTORY)
                     .build()
                 val retrofit = Retrofit.Builder()
                     .client(okHttpClient)
@@ -107,9 +107,19 @@ class PianoId {
         fun Intent?.getPianoIdTokenResult(): PianoIdToken? = getClient().getResult(this)
 
         @Suppress("unused") // Public API.
-        @Throws(PianoIdException::class, IllegalStateException::class)
         @JvmStatic
-        fun Uri?.parsePianoIdToken(): PianoIdToken? = getClient().parseToken(this)
+        fun Uri?.parsePianoIdToken(callback: PianoIdFuncCallback<PianoIdToken>) =
+            if (isPianoIdUri()) {
+                getClient().parseToken(this!!, callback)
+            } else callback(Result.failure(PianoIdException("It's not Piano ID uri")))
+
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        fun Uri?.isPianoIdUri(): Boolean =
+            this?.run {
+                scheme?.toLowerCase(Locale.ENGLISH)?.startsWith(PianoIdClient.LINK_SCHEME_PREFIX) == true &&
+                        PianoIdClient.LINK_AUTHORITY.equals(authority, ignoreCase = true)
+            } ?: false
 
         @JvmStatic
         internal fun getClient() = checkNotNull(client) {
@@ -169,6 +179,6 @@ class PianoId {
         internal const val KEY_TOKEN = "io.piano.android.id.PianoIdActivity.TOKEN"
         internal const val KEY_ERROR = "io.piano.android.id.PianoIdActivity.ERROR"
         private const val NOT_INITIALIZED_MSG = "Piano ID SDK is not initialized! Make sure that you " +
-            "initialize it via init()"
+                "initialize it via init()"
     }
 }

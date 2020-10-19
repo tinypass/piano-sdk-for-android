@@ -4,15 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
 import android.util.SparseArray
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import io.piano.android.id.PianoIdCallback.Companion.asResultCallback
 import io.piano.android.id.models.HostResponse
 import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdToken
-import io.piano.android.id.models.RefreshTokenRequest
 import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
 import io.piano.android.id.models.TokenData
@@ -109,19 +106,35 @@ class PianoIdClient internal constructor(
     }
 
     internal fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>) = getAuthEndpoint { r ->
-        r.getOrNull()?.let {
-            api.signOut(it.newBuilder().encodedPath(SIGN_OUT_PATH).build().toString(), aid, accessToken)
+        r.getOrNull()?.resolve(SIGN_OUT_PATH)?.let {
+            api.signOut(it.toString(), aid, accessToken)
                 .enqueue(callback.asRetrofitCallback())
-        } ?: callback(r)
+        } ?: callback(Result.failure(r.exceptionOrNull() ?: PianoIdException("Can't resolve sign out url")))
     }
+
+    internal fun getTokenByAuthCode(authCode: String, callback: PianoIdFuncCallback<PianoIdToken>) =
+        getAuthEndpoint { r ->
+            r.getOrNull()?.let {
+                api.exchangeAuthCode(
+                    it.newBuilder().encodedPath(EXCHANGE_AUTH_CODE_PATH).build().toString(),
+                    aid,
+                    authCode
+                ).enqueue(callback.asRetrofitCallback())
+            } ?: callback(Result.failure(r.exceptionOrNull()!!))
+        }
 
     internal fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) =
         getAuthEndpoint { r ->
             r.getOrNull()?.let {
                 api.refreshToken(
                     it.newBuilder().encodedPath(REFRESH_TOKEN_PATH).build().toString(),
-                    RefreshTokenRequest(aid, refreshToken)
-                ).enqueue(callback.asRetrofitCallback())
+                    mapOf(
+                        PARAM_CLIENT_ID to aid,
+                        PARAM_GRANT_TYPE to VALUE_GRANT_TYPE,
+                        PARAM_REFRESH_TOKEN to refreshToken
+                    )
+                )
+                    .enqueue(callback.asRetrofitCallback())
             } ?: callback(Result.failure(r.exceptionOrNull()!!))
         }
 
@@ -130,11 +143,13 @@ class PianoIdClient internal constructor(
             callback(
                 r.mapCatching { url ->
                     url.newBuilder()
-                        .addEncodedPathSegments(AUTH_PATH)
+                        .encodedPath(AUTH_PATH)
                         .addQueryParameter(PARAM_RESPONSE_TYPE, VALUE_RESPONSE_TYPE_TOKEN)
                         .addQueryParameter(PARAM_CLIENT_ID, aid)
                         .addQueryParameter(PARAM_FORCE_REDIRECT, VALUE_FORCE_REDIRECT)
                         .addQueryParameter(PARAM_DISABLE_SIGN_UP, disableSignUp.toString())
+                        .addQueryParameter(PARAM_REDIRECT_URI, "$LINK_SCHEME_PREFIX$aid://$LINK_AUTHORITY")
+                        .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
                         .apply {
                             if (!widget.isNullOrEmpty())
                                 addQueryParameter(PARAM_SCREEN, widget)
@@ -165,23 +180,17 @@ class PianoIdClient internal constructor(
             getParcelableExtra(PianoId.KEY_TOKEN)
         }
 
-    internal fun parseToken(uri: Uri?): PianoIdToken? =
-        uri?.takeIf { LINK_AUTHORITY.equals(it.authority, ignoreCase = true) }?.runCatching {
-            val accessToken = requireNotNull(getQueryParameter(PARAM_ACCESS_TOKEN)) {
-                "accessToken must be filled"
+    internal fun parseToken(uri: Uri, callback: PianoIdFuncCallback<PianoIdToken>) {
+        uri.runCatching {
+            requireNotNull(getQueryParameter(PARAM_AUTH_CODE)) {
+                "code must be filled"
             }
-            val refreshToken = requireNotNull(getQueryParameter(PARAM_REFRESH_TOKEN)) {
-                "refreshToken must be filled"
-            }
-            buildToken(accessToken, refreshToken)
-        }?.recoverCatching {
-            throw it.toPianoIdException()
-        }?.also {
-            tokenCallback?.invoke(it)
-        }?.getOrThrow()
-
-    internal fun buildToken(accessToken: String, refreshToken: String): PianoIdToken =
-        PianoIdToken(accessToken, refreshToken, accessToken.parseJwt(tokenAdapter)?.exp ?: 0)
+        }.onFailure {
+            callback(Result.failure(it.toPianoIdException()))
+        }.onSuccess {
+            getTokenByAuthCode(it, callback)
+        }
+    }
 
     internal fun buildToken(jsPayload: String): PianoIdToken =
         pianoIdTokenAdapter.fromJson(jsPayload) ?: throw PianoIdException("Invalid payload '$jsPayload'")
@@ -255,25 +264,31 @@ class PianoIdClient internal constructor(
     }
 
     companion object {
-        private const val AUTH_PATH = "id/api/v1/identity/vxauth/authorize"
+        private const val AUTH_PATH = "/id/api/v1/identity/vxauth/authorize"
         private const val SIGN_OUT_PATH = "/id/api/v1/identity/logout?response_type=code"
-        private const val REFRESH_TOKEN_PATH = "/id/api/v1/identity/oauth/token"
+        private const val EXCHANGE_AUTH_CODE_PATH = "/id/api/v1/identity/passwordless/authorization/code"
+        private const val REFRESH_TOKEN_PATH = "/id/api/v1/identity/vxauth/token"
 
-        internal const val SOCIAL_LOGIN_CALLBACK_TEMPLATE =
-            "(function(){window.PianoIDMobileSDK.socialLoginCallback('%s')})()"
+        internal const val LINK_SCHEME_PREFIX = "piano.id.oauth."
         internal const val LINK_AUTHORITY = "success"
-        internal const val PARAM_ACCESS_TOKEN = "access_token"
-        internal const val PARAM_REFRESH_TOKEN = "refresh_token"
+
+        internal const val PARAM_AUTH_CODE = "code"
 
         internal const val PARAM_RESPONSE_TYPE = "response_type"
         internal const val PARAM_CLIENT_ID = "client_id"
         internal const val PARAM_FORCE_REDIRECT = "force_redirect"
         internal const val PARAM_DISABLE_SIGN_UP = "disable_sign_up"
+        internal const val PARAM_REDIRECT_URI = "redirect_uri"
+        internal const val PARAM_SDK_FLAG = "is_sdk"
         internal const val PARAM_SCREEN = "screen"
         internal const val PARAM_OAUTH_PROVIDERS = "oauth_providers"
+        internal const val PARAM_GRANT_TYPE = "grant_type"
+        internal const val PARAM_REFRESH_TOKEN = "refresh_token"
 
         internal const val VALUE_RESPONSE_TYPE_TOKEN = "token"
         internal const val VALUE_FORCE_REDIRECT = "1"
+        internal const val VALUE_SDK_FLAG = "true"
+        internal const val VALUE_GRANT_TYPE = "refresh_token"
 
         private fun <T> Response<T>.bodyOrThrow(): T {
             if (!isSuccessful)
@@ -283,8 +298,5 @@ class PianoIdClient internal constructor(
 
         internal fun Throwable.toPianoIdException(): PianoIdException =
             if (this is PianoIdException) this else PianoIdException(this)
-
-        internal fun String.parseJwt(jwtAdapter: JsonAdapter<TokenData>): TokenData? =
-            jwtAdapter.fromJson(Base64.decode(split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString())
     }
 }

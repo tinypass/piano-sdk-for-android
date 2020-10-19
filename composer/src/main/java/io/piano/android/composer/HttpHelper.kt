@@ -60,10 +60,14 @@ internal class HttpHelper(
                 PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie.orEmpty(),
                 PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie.orEmpty(),
                 PARAM_USER_TOKEN to userToken.orEmpty(),
-                PARAM_URL to url.orEmpty(),
                 PARAM_REFERRER to referer.orEmpty(),
+                PARAM_CONTENT_AUTHOR to contentAuthor.orEmpty(),
+                PARAM_CONTENT_SECTION to contentSection.orEmpty(),
                 PARAM_CONTENT_CREATED to contentCreated.orEmpty(),
                 PARAM_CONTENT_NATIVE to (contentIsNative?.toString() ?: ""),
+                PARAM_CUSTOM_VARIABLES to customVariables.takeUnless { it.isEmpty() }
+                    ?.let { mapAdapter.toJson(it) }
+                    .orEmpty(),
                 PARAM_CUSTOM_PARAMS to customParameters?.takeUnless { it.isEmpty() }
                     ?.let { customParametersAdapter.toJson(it) }
                     .orEmpty()
@@ -96,11 +100,16 @@ internal class HttpHelper(
         with(showTemplateEvent) {
             experienceRequest.toMinimalSequence() + sequenceOf(
                 PARAM_AID to aid,
-                PARAM_USER_TOKEN to userToken.orEmpty(),
+                PARAM_SHOW_TEMPLATE_USER_TOKEN to userToken.orEmpty(),
                 PARAM_GA_CLIENT_ID to gaClientId.orEmpty(),
                 PARAM_OS to VALUE_ANDROID_OS,
                 PARAM_DISPLAY_MODE to ShowTemplate.DisplayMode.INLINE.mode,
                 PARAM_SHOW_TEMPLATE_TRACKING_ID to eventExecutionContext.trackingId,
+                PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),
+                PARAM_SHOW_TEMPLATE_CONTENT_SECTION to experienceRequest.contentSection.orEmpty(),
+                PARAM_SHOW_TEMPLATE_CUSTOM_VARIABLES to experienceRequest.customVariables.takeUnless { it.isEmpty() }
+                    ?.let { mapAdapter.toJson(it) }
+                    .orEmpty(),
                 PARAM_TEMPLATE_ID to eventData.templateId,
                 PARAM_TEMPLATE_VARIANT_ID to eventData.templateVariantId.orEmpty(),
                 PARAM_ACTIVE_METERS to eventExecutionContext.activeMeters.takeUnless { it.isNullOrEmpty() }
@@ -112,12 +121,7 @@ internal class HttpHelper(
         sequenceOf(
             PARAM_DEBUG to isDebug.toString(),
             PARAM_URL to url.orEmpty(),
-            PARAM_CONTENT_AUTHOR to contentAuthor.orEmpty(),
-            PARAM_CONTENT_SECTION to contentSection.orEmpty(),
             PARAM_ZONE to zone.orEmpty(),
-            PARAM_CUSTOM_VARIABLES to customVariables.takeUnless { it.isEmpty() }
-                ?.let { mapAdapter.toJson(it) }
-                .orEmpty(),
             PARAM_TAGS to tags.takeUnless { it.isEmpty() }
                 ?.joinToString(separator = ",")
                 .orEmpty()
@@ -171,6 +175,10 @@ internal class HttpHelper(
         internal const val PARAM_ACTIVE_METERS = "activeMeters"
         internal const val PARAM_DISPLAY_MODE = "displayMode"
         internal const val PARAM_SHOW_TEMPLATE_TRACKING_ID = "trackingId"
+        internal const val PARAM_SHOW_TEMPLATE_USER_TOKEN = "userToken"
+        internal const val PARAM_SHOW_TEMPLATE_CUSTOM_VARIABLES = "customVariables"
+        internal const val PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR = "contentAuthor"
+        internal const val PARAM_SHOW_TEMPLATE_CONTENT_SECTION = "contentSection"
         internal const val PARAM_GA_CLIENT_ID = "gaClientId"
         internal const val PARAM_OS = "os"
 

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.webkit.WebChromeClient
@@ -13,10 +14,10 @@ import android.webkit.WebViewClient
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
+import io.piano.android.id.PianoId.Companion.isPianoIdUri
 import io.piano.android.id.PianoIdClient.Companion.toPianoIdException
 import io.piano.android.id.databinding.ActivityPianoIdBinding
 import io.piano.android.id.models.PianoIdToken
-import timber.log.Timber
 
 class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     private val jsInterface = PianoIdJavascriptDelegate(this)
@@ -47,7 +48,6 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                 webViewClient = object : WebViewClient() {
                     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
                         super.onPageStarted(view, url, favicon)
-                        Timber.d(url)
                         progressBar.show()
                     }
 
@@ -57,8 +57,12 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                     }
 
                     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                        val isPianoIdRedirectUrl = Uri.parse(url).isPianoIdUri()
+                        if (isPianoIdRedirectUrl) {
+                            setFailureResultData(IllegalStateException("User already authorized, call signOut before login"))
+                        }
                         progressBar.show()
-                        return false
+                        return isPianoIdRedirectUrl
                     }
                 }
             }
@@ -82,12 +86,20 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         intent.process()
     }
 
+    override fun onBackPressed() {
+        with(binding.webview) {
+            if (canGoBack())
+                goBack()
+            else super.onBackPressed()
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == OAUTH_PROVIDER_REQUEST_CODE) {
-            data?.let {
-                runCatching {
-                    when (resultCode) {
-                        Activity.RESULT_OK -> {
+            runCatching {
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        data?.also {
                             val provider = requireNotNull(it.getStringExtra(PianoId.KEY_OAUTH_PROVIDER_NAME)) {
                                 "provider must be filled"
                             }
@@ -95,21 +107,22 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                                 "token must be filled"
                             }
                             evaluateJavascript(client.buildResultJsCommand(provider, token))
-                        }
-                        Activity.RESULT_CANCELED -> {
-                            setResult(Activity.RESULT_CANCELED)
-                            finish()
-                        }
-                        else -> {
-                            val exc = client.getStoredException(data.getIntExtra(PianoId.KEY_ERROR, 0))
-                                ?: IllegalStateException("Unknown error")
-                            setFailureResultData(exc)
-                        }
+                        } ?: setFailureResultData(IllegalStateException("Result intent is null"))
                     }
-                }.onFailure {
-                    setFailureResultData(it)
+                    Activity.RESULT_CANCELED -> {
+                        setResult(Activity.RESULT_CANCELED)
+                        finish()
+                    }
+                    else -> {
+                        val exc = data?.getIntExtra(PianoId.KEY_ERROR, 0)
+                            ?.let { client.getStoredException(it) }
+                            ?: IllegalStateException("Unknown error")
+                        setFailureResultData(exc)
+                    }
                 }
-            } ?: setFailureResultData(IllegalStateException("Result intent is null"))
+            }.onFailure {
+                setFailureResultData(it)
+            }
         } else super.onActivityResult(requestCode, resultCode, data)
     }
 

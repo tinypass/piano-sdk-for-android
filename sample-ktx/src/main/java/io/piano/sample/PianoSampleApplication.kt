@@ -24,6 +24,7 @@ class PianoSampleApplication : MultiDexApplication() {
             .with { r ->
                 r.onSuccess {
                     prefsStorage.pianoIdToken = it
+                    Composer.getInstance().userToken(it.accessToken)
                 }.onFailure {
                     Timber.e(it)
                 }

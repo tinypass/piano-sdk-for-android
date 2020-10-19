@@ -29,6 +29,7 @@ dependencies {
     implementation(Libs.okhttp)
     implementation(Libs.appcompat)
     implementation(Libs.fragments)
+    implementation(Libs.lifecycleCommon)
     implementation(Libs.annotations)
     implementation(Libs.timber)
 }

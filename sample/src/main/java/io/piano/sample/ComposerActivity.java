@@ -129,6 +129,7 @@ public class ComposerActivity extends AppCompatActivity {
     private void setAccessToken(PianoIdToken token) {
         prefsStorage.setPianoIdToken(token);
         String accessToken = token != null ? token.accessToken : null;
+        Composer.getInstance().userToken(accessToken);
 
         if (showTemplateController != null && accessToken != null) {
             showTemplateController.reloadWithToken(accessToken);

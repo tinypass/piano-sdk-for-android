@@ -9,10 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import io.piano.android.id.PianoId
 import io.piano.android.id.PianoId.Companion.getPianoIdTokenResult
+import io.piano.android.id.PianoId.Companion.isPianoIdUri
 import io.piano.android.id.PianoId.Companion.parsePianoIdToken
-import io.piano.android.id.PianoId.Companion.refreshToken
-import io.piano.android.id.PianoId.Companion.signIn
-import io.piano.android.id.PianoId.Companion.signOut
 import io.piano.android.id.models.PianoIdToken
 import io.piano.sample.databinding.ActivityMainBinding
 import timber.log.Timber
@@ -24,14 +22,18 @@ class MainActivity : AppCompatActivity() {
     private val isDeepLink: Boolean
         get() {
             val uri = intent.data ?: return false
-            runCatching {
-                uri.parsePianoIdToken()
-            }.onFailure {
-                Timber.e(it, "Auth unsuccessful")
-            }.getOrNull()?.let {
-                Timber.d("Auth successful")
-                setAccessToken(it)
-            } ?: Timber.d("App deep link")
+            if (uri.isPianoIdUri()) {
+                uri.parsePianoIdToken { r ->
+                    r.onFailure {
+                        Timber.e(it, "Auth unsuccessful")
+                    }.onSuccess {
+                        Timber.d("Auth successful")
+                        setAccessToken(it)
+                    }
+                }
+            } else {
+                Timber.d("App deep link")
+            }
             return true
         }
 
@@ -46,13 +48,13 @@ class MainActivity : AppCompatActivity() {
         }
         binding.apply {
             buttonPianoIdLogin.setOnClickListener {
-                val intent = signIn().getIntent(this@MainActivity)
+                val intent = PianoId.signIn().getIntent(this@MainActivity)
                 startActivityForResult(intent, PIANO_ID_REQUEST_CODE)
             }
             buttonPianoIdLogout.setOnClickListener { signOut() }
             buttonPianoIdRefreshToken.setOnClickListener {
                 prefsStorage.pianoIdToken?.run {
-                    refreshToken(refreshToken) { r ->
+                    PianoId.refreshToken(refreshToken) { r ->
                         r.onSuccess {
                             setAccessToken(it)
                         }.onFailure {
@@ -116,7 +118,7 @@ class MainActivity : AppCompatActivity() {
     private fun signOut() {
         val token = prefsStorage.pianoIdToken
         prefsStorage.pianoIdToken = null
-        signOut(token?.accessToken ?: "tmp") { r ->
+        PianoId.signOut(token?.accessToken ?: "tmp") { r ->
             r.onSuccess {
                 showMessage("Sign out success callback")
             }.onFailure {

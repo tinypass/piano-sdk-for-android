@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -154,15 +155,18 @@ public class MainActivity extends AppCompatActivity {
         Uri uri = getIntent().getData();
         if (uri == null)
             return false;
-        PianoIdToken token = null;
-        try {
-            token = PianoId.parsePianoIdToken(uri);
-        } catch (PianoIdException exc) {
-            Timber.e(exc, "Auth unsuccessful");
-        }
-        if (token != null) {
-            Timber.d("Auth successful");
-            setAccessToken(token);
+        if (PianoId.isPianoIdUri(uri)) {
+            PianoId.parsePianoIdToken(uri, PianoIdCallback.asResultCallback(new PianoIdCallback<PianoIdToken>() {
+                @Override
+                public void onSuccess(@NonNull PianoIdToken token) {
+                    Timber.d("Auth successful");
+                    setAccessToken(token);
+                }
+                @Override
+                public void onFailure(@NonNull PianoIdException exception) {
+                    Timber.e(exception, "Auth unsuccessful");
+                }
+            }));
         } else {
             Timber.d("App deep link");
         }

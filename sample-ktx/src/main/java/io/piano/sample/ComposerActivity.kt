@@ -136,6 +136,7 @@ class ComposerActivity : AppCompatActivity() {
     private fun setAccessToken(token: PianoIdToken?) {
         prefsStorage.pianoIdToken = token
         showTemplateController?.reloadWithToken(token?.accessToken ?: "")
+        Composer.getInstance().userToken(token?.accessToken)
 
         Snackbar.make(findViewById(R.id.app_bar), "accessToken = " + token?.accessToken, Snackbar.LENGTH_LONG).show()
     }

@@ -1,16 +1,16 @@
 package io.piano.android.id
 
+import android.util.Base64
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonAdapter.Factory
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.internal.Util
-import io.piano.android.id.PianoIdClient.Companion.parseJwt
 import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.TokenData
 
-class PianoIdTokeJsonAdapter(
+class PianoIdTokenJsonAdapter(
     moshi: Moshi
 ) : JsonAdapter<PianoIdToken>() {
     private val options: JsonReader.Options = JsonReader.Options.of(
@@ -18,7 +18,6 @@ class PianoIdTokeJsonAdapter(
         ACCESS_TOKEN_CAMEL,
         REFRESH_TOKEN,
         REFRESH_TOKEN_CAMEL,
-        EXPIRES_IN,
         EXPIRES_IN_CAMEL
     )
 
@@ -48,10 +47,10 @@ class PianoIdTokeJsonAdapter(
                             REFRESH_TOKEN,
                             reader
                         )
-                    4, 5 ->
+                    4 ->
                         expiresInTimestamp = longAdapter.fromJson(reader) ?: throw Util.unexpectedNull(
                             EXPIRES_IN_CAMEL,
-                            EXPIRES_IN,
+                            EXPIRES_IN_CAMEL,
                             reader
                         )
                     -1 -> {
@@ -65,7 +64,10 @@ class PianoIdTokeJsonAdapter(
             PianoIdToken(
                 accessToken ?: throw Util.missingProperty(ACCESS_TOKEN_CAMEL, ACCESS_TOKEN, reader),
                 refreshToken ?: throw Util.missingProperty(REFRESH_TOKEN_CAMEL, REFRESH_TOKEN, reader),
-                expiresInTimestamp ?: accessToken!!.parseJwt(jwtAdapter)?.exp ?: 0,
+                expiresInTimestamp
+                    ?: jwtAdapter.fromJson(
+                        Base64.decode(accessToken!!.split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString()
+                    )?.exp ?: 0,
             )
         }
     }
@@ -91,11 +93,10 @@ class PianoIdTokeJsonAdapter(
         private const val ACCESS_TOKEN_CAMEL = "accessToken"
         private const val REFRESH_TOKEN = "refresh_token"
         private const val REFRESH_TOKEN_CAMEL = "refreshToken"
-        private const val EXPIRES_IN = "expires_in"
         private const val EXPIRES_IN_CAMEL = "expiresIn"
 
         val FACTORY = Factory { type, _, moshi ->
-            takeIf { type == PianoIdToken::class.java }?.let { PianoIdTokeJsonAdapter(moshi) }
+            takeIf { type == PianoIdToken::class.java }?.let { PianoIdTokenJsonAdapter(moshi) }
         }
     }
 }
