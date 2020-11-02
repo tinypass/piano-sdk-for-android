@@ -26,7 +26,7 @@ import java.util.Locale
 class PianoIdClient internal constructor(
     private val api: PianoIdApi,
     private val moshi: Moshi,
-    private val aid: String
+    internal val aid: String
 ) {
     private val tokenAdapter by lazy {
         moshi.adapter(TokenData::class.java)

@@ -10,11 +10,15 @@ import java.util.concurrent.TimeUnit
 internal class PrefsStorage(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    fun getValueForKey(key: String): String? {
+    internal fun clear() {
+        prefs.edit().clear().apply()
+    }
+
+    internal fun getValueForKey(key: String): String? {
         return prefs.getString(key, null)
     }
 
-    fun setValueForKey(key: String, value: String?) {
+    internal fun setValueForKey(key: String, value: String?) {
         prefs.edit().putString(key, value).apply()
     }
 

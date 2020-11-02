@@ -118,7 +118,7 @@ class PianoId {
         fun Uri?.isPianoIdUri(): Boolean =
             this?.run {
                 scheme?.toLowerCase(Locale.ENGLISH)?.startsWith(PianoIdClient.LINK_SCHEME_PREFIX) == true &&
-                        PianoIdClient.LINK_AUTHORITY.equals(authority, ignoreCase = true)
+                    PianoIdClient.LINK_AUTHORITY.equals(authority, ignoreCase = true)
             } ?: false
 
         @JvmStatic
@@ -179,6 +179,6 @@ class PianoId {
         internal const val KEY_TOKEN = "io.piano.android.id.PianoIdActivity.TOKEN"
         internal const val KEY_ERROR = "io.piano.android.id.PianoIdActivity.ERROR"
         private const val NOT_INITIALIZED_MSG = "Piano ID SDK is not initialized! Make sure that you " +
-                "initialize it via init()"
+            "initialize it via init()"
     }
 }

@@ -146,11 +146,13 @@ class ShowTemplateController private constructor(
             }
             with(showTemplate.delayBy) {
                 if (isDelayedByTime) {
-                    activity.lifecycle.addObserver(object : DefaultLifecycleObserver {
-                        override fun onPause(owner: LifecycleOwner) {
-                            handler.removeCallbacks(func)
+                    activity.lifecycle.addObserver(
+                        object : DefaultLifecycleObserver {
+                            override fun onPause(owner: LifecycleOwner) {
+                                handler.removeCallbacks(func)
+                            }
                         }
-                    })
+                    )
                     handler.postDelayed(func, value * 1000L)
                 } else func()
             }

@@ -17,8 +17,7 @@ class PianoIdTokenJsonAdapter(
         ACCESS_TOKEN,
         ACCESS_TOKEN_CAMEL,
         REFRESH_TOKEN,
-        REFRESH_TOKEN_CAMEL,
-        EXPIRES_IN_CAMEL
+        REFRESH_TOKEN_CAMEL
     )
 
     private val stringAdapter: JsonAdapter<String> = moshi.adapter(String::class.java)
@@ -30,7 +29,6 @@ class PianoIdTokenJsonAdapter(
     override fun fromJson(reader: JsonReader): PianoIdToken {
         var accessToken: String? = null
         var refreshToken: String? = null
-        var expiresInTimestamp: Long? = null
         return with(reader) {
             beginObject()
             while (hasNext()) {
@@ -47,12 +45,6 @@ class PianoIdTokenJsonAdapter(
                             REFRESH_TOKEN,
                             reader
                         )
-                    4 ->
-                        expiresInTimestamp = longAdapter.fromJson(reader) ?: throw Util.unexpectedNull(
-                            EXPIRES_IN_CAMEL,
-                            EXPIRES_IN_CAMEL,
-                            reader
-                        )
                     -1 -> {
                         // Unknown name, skip it.
                         reader.skipName()
@@ -64,10 +56,9 @@ class PianoIdTokenJsonAdapter(
             PianoIdToken(
                 accessToken ?: throw Util.missingProperty(ACCESS_TOKEN_CAMEL, ACCESS_TOKEN, reader),
                 refreshToken ?: throw Util.missingProperty(REFRESH_TOKEN_CAMEL, REFRESH_TOKEN, reader),
-                expiresInTimestamp
-                    ?: jwtAdapter.fromJson(
-                        Base64.decode(accessToken!!.split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString()
-                    )?.exp ?: 0,
+                jwtAdapter.fromJson(
+                    Base64.decode(accessToken!!.split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString()
+                )?.exp ?: 0,
             )
         }
     }

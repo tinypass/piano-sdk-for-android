@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.piano.android.composer.Composer;
 import io.piano.android.id.PianoId;
 import io.piano.android.id.PianoIdCallback;
 import io.piano.android.id.PianoIdException;
@@ -74,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ComposerScrollDepthActivity.class))
         );
 
+        binding.buttonComposerClearStorage.setOnClickListener(v ->
+                Composer.getInstance().clearStoredData()
+        );
+
         binding.buttonClearAccessToken.setOnClickListener(v -> {
             signOut();
 
@@ -122,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void signOut() {
         PianoIdToken token = prefsStorage.getPianoIdToken();
-        prefsStorage.setPianoIdToken(null);
+        setAccessToken(null);
         PianoIdCallback<Object> callback = new PianoIdCallback<Object>() {
             @Override
             public void onSuccess(Object data) {
@@ -139,7 +144,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setAccessToken(PianoIdToken token) {
         prefsStorage.setPianoIdToken(token);
-        showMessage("accessToken = " + token.accessToken);
+        String accessToken = token != null ? token.accessToken : null;
+        Composer.getInstance().userToken(accessToken);
+        showMessage("accessToken = " + accessToken);
     }
 
     private void showError(Throwable throwable) {
@@ -162,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     Timber.d("Auth successful");
                     setAccessToken(token);
                 }
+
                 @Override
                 public void onFailure(@NonNull PianoIdException exception) {
                     Timber.e(exception, "Auth unsuccessful");

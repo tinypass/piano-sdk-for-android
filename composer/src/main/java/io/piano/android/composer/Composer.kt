@@ -19,6 +19,7 @@ import retrofit2.Response
 class Composer internal constructor(
     private val api: Api,
     private val httpHelper: HttpHelper,
+    private val prefsStorage: PrefsStorage,
     private val aid: String,
     private val customEndpoint: String? = null
 ) {
@@ -112,6 +113,12 @@ class Composer internal constructor(
                 }
             )
     }
+
+    /**
+     * Clears stored data, like cookies, visit data
+     */
+    @Suppress("unused") // Public API.
+    fun clearStoredData() = prefsStorage.clear()
 
     internal fun processExperienceResponse(
         request: ExperienceRequest,

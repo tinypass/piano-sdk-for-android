@@ -38,6 +38,7 @@ class ComposerTest {
     private val api: Api = mock() {
         on { getExperience(any(), any()) } doReturn experienceCall
     }
+    private val prefsStorage: PrefsStorage = mock()
     private val httpHelper: HttpHelper = mock() {
         on { convertExperienceRequest(any(), anyOrNull(), anyOrNull()) } doReturn mapOf()
         on { buildEventTracking(any()) } doReturn mapOf()
@@ -53,7 +54,7 @@ class ComposerTest {
             DUMMY_STRING to DUMMY_STRING2
         )
     }
-    private val composer: Composer = spy(Composer(api, httpHelper, "AID", null))
+    private val composer: Composer = spy(Composer(api, httpHelper, prefsStorage, "AID", null))
 
     private val experienceRequest: ExperienceRequest = mock()
     private val resultListeners = listOf(

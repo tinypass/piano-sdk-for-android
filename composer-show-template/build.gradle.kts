@@ -24,7 +24,6 @@ android {
 }
 
 dependencies {
-    implementation(kotlin(Libs.kotlinStdLib, Versions.kotlin))
     api(project(":composer"))
     implementation(Libs.okhttp)
     implementation(Libs.appcompat)

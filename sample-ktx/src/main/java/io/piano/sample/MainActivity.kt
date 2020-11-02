@@ -7,6 +7,7 @@ import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import io.piano.android.composer.Composer
 import io.piano.android.id.PianoId
 import io.piano.android.id.PianoId.Companion.getPianoIdTokenResult
 import io.piano.android.id.PianoId.Companion.isPianoIdUri
@@ -79,6 +80,9 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
+            buttonComposerClearStorage.setOnClickListener {
+                Composer.getInstance().clearStoredData()
+            }
             buttonClearAccessToken.setOnClickListener {
                 signOut()
                 val cookieManager = CookieManager.getInstance()
@@ -117,7 +121,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun signOut() {
         val token = prefsStorage.pianoIdToken
-        prefsStorage.pianoIdToken = null
+        setAccessToken(null)
         PianoId.signOut(token?.accessToken ?: "tmp") { r ->
             r.onSuccess {
                 showMessage("Sign out success callback")
@@ -129,6 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAccessToken(token: PianoIdToken?) {
         prefsStorage.pianoIdToken = token
+        Composer.getInstance().userToken(token?.accessToken)
         showMessage("accessToken = " + token?.accessToken)
     }
 

@@ -13,10 +13,10 @@ object Config {
 object Versions {
     const val kotlin = "1.4.0"
     //Plugins
-    const val versionsPlugin = "0.31.0"
+    const val versionsPlugin = "0.33.0"
     const val androidToolsPlugin = "4.0.1"
-    const val ktlintPlugin = "9.4.0"
-    const val dokkaPlugin = "1.4.0"
+    const val ktlintPlugin = "9.4.1"
+    const val dokkaPlugin = "1.4.10.2"
 
     // AndroidX libraries
     const val compatLibrary = "1.2.0"
@@ -32,11 +32,11 @@ object Versions {
     const val googlePlayServices = "18.1.0"
     const val retrofit = "2.6.4"
     const val okhttp = "3.12.12"
-    const val moshi = "1.10.0"
+    const val moshi = "1.11.0"
     const val timber = "4.7.1"
 
     // Test Libraries
-    const val junit = "4.13"
+    const val junit = "4.13.1"
     const val androidxTestCore = "1.3.0"
     const val androidxTestExtJunit = "1.1.2"
     const val mockitoKotlin = "2.2.0"
@@ -58,7 +58,6 @@ object Plugins {
 }
 
 object Libs {
-    const val kotlinStdLib = "stdlib-jdk8"
     const val annotations = "androidx.annotation:annotation:${Versions.annotationsLibrary}"
     const val appcompat = "androidx.appcompat:appcompat:${Versions.compatLibrary}"
     const val androidxActivity = "androidx.activity:activity:${Versions.androidxActivity}"

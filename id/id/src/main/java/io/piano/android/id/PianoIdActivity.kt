@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -59,7 +60,9 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                         val isPianoIdRedirectUrl = Uri.parse(url).isPianoIdUri()
                         if (isPianoIdRedirectUrl) {
-                            setFailureResultData(IllegalStateException("User already authorized, call signOut before login"))
+                            setFailureResultData(
+                                IllegalStateException("User already authorized, call signOut before login")
+                            )
                         }
                         progressBar.show()
                         return isPianoIdRedirectUrl
@@ -68,9 +71,11 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
             }
             client.getSignInUrl(disableSignUp, widget) { r ->
                 r.onSuccess {
+                    CookieManager.getInstance().setCookie(it, "${client.aid}__ut=")
                     progressBar.isIndeterminate = false
                     webview.apply {
                         addJavascriptInterface(jsInterface, "PianoIDMobileSDK")
+                        clearCache(true)
                         clearHistory()
                         loadUrl(it)
                     }
