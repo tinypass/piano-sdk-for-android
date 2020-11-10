@@ -250,3 +250,61 @@ class MyApplication : Application() {
     }
 }
 ```
+
+### Add Passwordless support
+Add for your "log in" activity in `AndroidManifest.xml`:
+```xml
+<activity android:name=".MyExistingLoginActivity">
+    <intent-filter
+            android:autoVerify="true"
+            tools:targetApi="m">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+                android:host="success"
+                android:scheme="piano.id.oauth.{YOUR_AID}" />
+    </intent-filter>
+</activity>
+```
+
+Add to your "log in" activity code into `onCreate`  
+for Kotlin:
+```kotlin
+val uri = intent.data
+if (uri.isPianoIdUri()) {
+    // It's Piano paswordless auth link
+    uri.parsePianoIdToken { r ->
+        r.onFailure {
+            // Auth unsuccessful, process it
+        }.onSuccess {
+            // Auth successful, save access token here
+        }
+    }
+} else {
+    // App deep link, process as usual
+}
+```
+
+for Java  
+```java
+Uri uri = getIntent().getData();
+if (PianoId.isPianoIdUri(uri)) {
+    // It's Piano paswordless auth link
+    PianoId.parsePianoIdToken(uri, PianoIdCallback.asResultCallback(new PianoIdCallback<PianoIdToken>() {
+        @Override
+        public void onSuccess(@NonNull PianoIdToken token) {
+            // Auth successful, save access token here
+        }
+
+        @Override
+        public void onFailure(@NonNull PianoIdException exception) {
+            // Auth unsuccessful, process it
+        }
+    }));
+} else {
+    // App deep link, process as usual
+}
+```
