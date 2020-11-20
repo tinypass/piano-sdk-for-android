@@ -55,6 +55,8 @@ class MyApplication : Application() {
 ```
 
 ### Sign in
+Use this code for open Sign in Activity
+
 Java
 ```java
 int PIANO_ID_REQUEST_CODE = 123456; // Use any your value
@@ -72,6 +74,10 @@ val authIntent = PianoId.signIn()
    .getIntent(activity);
 startActivityForResult(authIntent, PIANO_ID_REQUEST_CODE);
 ```
+Note:
+> The activity loads preconfigured template from dashboard. Links in the template are processed differently:  
+> - normal link - opens within app instead current page, user can return back via system button (page will be reloaded)  
+> - link with `target="_blank"` - opens externally in browser
 
 Check authorization result in your onActivityResult:
 

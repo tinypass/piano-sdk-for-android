@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
 import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -40,10 +41,26 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
             webview.apply {
                 savedInstanceState?.let { restoreState(it) }
                 settings.javaScriptEnabled = true
+                settings.setSupportMultipleWindows(true)
                 webChromeClient = object : WebChromeClient() {
                     override fun onProgressChanged(view: WebView, newProgress: Int) {
                         super.onProgressChanged(view, newProgress)
                         progressBar.progress = newProgress
+                    }
+
+                    override fun onCreateWindow(
+                        view: WebView,
+                        isDialog: Boolean,
+                        isUserGesture: Boolean,
+                        resultMsg: Message
+                    ): Boolean {
+                        if (!isUserGesture)
+                            return false
+                        with(resultMsg) {
+                            (obj as WebView.WebViewTransport).webView = WebView(view.context)
+                            sendToTarget()
+                        }
+                        return true
                     }
                 }
                 webViewClient = object : WebViewClient() {
