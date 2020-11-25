@@ -1,7 +1,7 @@
 plugins {
     id(Plugins.androidLibrary)
     id(Plugins.kotlinAndroid)
-    id(Plugins.kotlinAndroidExtensions)
+    id(Plugins.kotlinParcelize)
     kotlin("kapt")
     id(Plugins.dokka)
     id(Plugins.ktlint)
@@ -36,10 +36,6 @@ android {
         jvmTarget = "1.8"
         freeCompilerArgs = listOf("-Xjvm-default=enable")
     }
-}
-
-androidExtensions {
-    features = setOf("parcelize")
 }
 
 dependencies {

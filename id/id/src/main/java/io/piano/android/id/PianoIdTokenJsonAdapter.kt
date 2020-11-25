@@ -55,7 +55,7 @@ class PianoIdTokenJsonAdapter(
             endObject()
             PianoIdToken(
                 accessToken ?: throw Util.missingProperty(ACCESS_TOKEN_CAMEL, ACCESS_TOKEN, reader),
-                refreshToken ?: throw Util.missingProperty(REFRESH_TOKEN_CAMEL, REFRESH_TOKEN, reader),
+                refreshToken ?: "",
                 jwtAdapter.fromJson(
                     Base64.decode(accessToken!!.split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString()
                 )?.exp ?: 0,

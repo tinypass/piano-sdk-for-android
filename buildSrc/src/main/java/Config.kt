@@ -11,9 +11,9 @@ object Config {
 }
 
 object Versions {
-    const val kotlin = "1.4.0"
+    const val kotlin = "1.4.20"
     //Plugins
-    const val versionsPlugin = "0.33.0"
+    const val versionsPlugin = "0.36.0"
     const val androidToolsPlugin = "4.0.1"
     const val ktlintPlugin = "9.4.1"
     const val dokkaPlugin = "1.4.10.2"
@@ -29,7 +29,7 @@ object Versions {
 
     // Third party Libraries
     const val facebookLogin = "7.1.0"
-    const val googlePlayServices = "18.1.0"
+    const val googlePlayServices = "19.0.0"
     const val retrofit = "2.6.4"
     const val okhttp = "3.12.12"
     const val moshi = "1.11.0"
@@ -51,7 +51,7 @@ object Plugins {
     const val androidApp = "com.android.application"
     const val androidLibrary = "com.android.library"
     const val kotlinAndroid = "kotlin-android"
-    const val kotlinAndroidExtensions = "kotlin-android-extensions"
+    const val kotlinParcelize = "kotlin-parcelize"
     const val ktlint = "org.jlleitschuh.gradle.ktlint"
     const val bintray = "com.jfrog.bintray"
     const val dokka = "org.jetbrains.dokka"
