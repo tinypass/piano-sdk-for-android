@@ -10,7 +10,7 @@ class EventExecutionContext(
     @JvmField val splitTests: List<SplitTest>?,
     @JvmField val currentMeterName: String?,
     @JvmField val user: User?,
-    @JvmField val region: String,
+    @JvmField val region: String?,
     @JvmField val countryCode: String,
     @JvmField val accessList: List<Access>?,
     @JvmField val activeMeters: List<ActiveMeter>?
