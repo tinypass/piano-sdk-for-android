@@ -15,7 +15,7 @@ public class SimpleDependenciesProvider {
 
     private SimpleDependenciesProvider(Context context) {
         appContext = context.getApplicationContext();
-        moshi = new Moshi.Builder().build();
+        moshi = new Moshi.Builder().add(PianoIdTokenJsonAdapter.Companion.getFACTORY()).build();
         prefsStorage = new PrefsStorage(appContext, moshi);
     }
 
