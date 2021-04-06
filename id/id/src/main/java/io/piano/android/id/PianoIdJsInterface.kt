@@ -7,6 +7,9 @@ internal interface PianoIdJsInterface {
     fun socialLogin(payload: String?)
 
     @JavascriptInterface
+    fun registerSuccess(payload: String?)
+
+    @JavascriptInterface
     fun loginSuccess(payload: String?)
 
     @JavascriptInterface

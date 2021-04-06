@@ -6,9 +6,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
 import com.squareup.moshi.Moshi
-import io.piano.android.id.PianoIdCallback.Companion.asResultCallback
 import io.piano.android.id.models.HostResponse
 import io.piano.android.id.models.PianoIdApi
+import io.piano.android.id.models.PianoIdAuthFailureResult
+import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
@@ -43,18 +44,27 @@ class PianoIdClient internal constructor(
     internal var authEndpoint: HttpUrl? = null
     private val exceptions = SparseArray<PianoIdException>()
     internal val oauthProviders: MutableMap<String, PianoIdOAuthProvider> = mutableMapOf()
-    var tokenCallback: PianoIdFuncCallback<PianoIdToken>? = null
+
+    var authCallback: PianoIdAuthCallback? = null
         private set
+    var javascriptInterface: PianoIdJs? = null
 
     /**
-     * Sets callback for {@link PianoIdToken} changes
+     * Sets callback for {@link PianoIdAuthSuccessResult} data
      *
      * @param callback {@link PianoIdCallback} for listening changes
      * @return {@link PianoIdClient} instance
      */
     @Suppress("unused") // Public API.
-    fun with(callback: PianoIdCallback<PianoIdToken>?) = apply {
-        tokenCallback = callback?.asResultCallback()
+    fun with(callback: PianoIdCallback<PianoIdAuthSuccessResult>?) = apply {
+        authCallback = callback?.run {
+            {
+                when (it) {
+                    is PianoIdAuthSuccessResult -> onSuccess(it)
+                    is PianoIdAuthFailureResult -> onFailure(it.exception)
+                }
+            }
+        }
     }
 
     /**
@@ -64,7 +74,15 @@ class PianoIdClient internal constructor(
      * @return {@link PianoIdClient} instance
      */
     @Suppress("unused") // Public API.
-    fun with(callback: PianoIdFuncCallback<PianoIdToken>?) = apply { tokenCallback = callback }
+    fun with(callback: PianoIdAuthCallback?) = apply { authCallback = callback }
+
+    /**
+     * Sets javascript interface for processing custom events
+     *
+     * @param jsInterface {@link PianoIdJs} instance for processing events
+     * @return {@link PianoIdClient} instance
+     */
+    fun with(jsInterface: PianoIdJs?) = apply { javascriptInterface = jsInterface }
 
     /**
      * Adds OAuth provider
@@ -172,14 +190,6 @@ class PianoIdClient internal constructor(
 
     internal fun getStoredException(code: Int): PianoIdException? = exceptions.get(code)
 
-    internal fun getResult(intent: Intent?): PianoIdToken? =
-        intent?.run {
-            val code = getIntExtra(PianoId.KEY_ERROR, 0)
-            if (code != 0)
-                throw exceptions.get(code, PianoIdException("Unknown error")).also { exceptions.delete(code) }
-            getParcelableExtra(PianoId.KEY_TOKEN)
-        }
-
     internal fun parseToken(uri: Uri, callback: PianoIdFuncCallback<PianoIdToken>) {
         uri.runCatching {
             requireNotNull(getQueryParameter(PARAM_AUTH_CODE)) {
@@ -252,15 +262,6 @@ class PianoIdClient internal constructor(
          */
         @Suppress("unused") // Public API.
         fun widget(widget: String?) = apply { this.widget = widget }
-
-        /**
-         * Gets {@link Intent} for starting authorization process
-         *
-         * @param context {@link Context} for building {@link Intent}
-         * @return {@link Intent}, which should be passed to {@link android.app.Activity#startActivityForResult(Intent, int)}
-         */
-        @Suppress("unused") // Public API.
-        fun getIntent(context: Context): Intent = PianoIdActivity.buildIntent(context, disableSignUp, widget)
     }
 
     companion object {

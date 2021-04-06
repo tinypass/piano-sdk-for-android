@@ -4,7 +4,7 @@
 
 ### Dependencies
 
-The Piano ID Android SDK is available as an AAR via jCenter. To add dependencies, open your project’s build.gradle/build.gradle.kts and update the dependencies block as follows:
+The Piano ID Android SDK is available as an AAR via Maven Central. To add dependencies, open your project’s build.gradle/build.gradle.kts and update the dependencies block as follows:
 
 Groovy
 ```groovy
@@ -55,76 +55,69 @@ class MyApplication : Application() {
 ```
 
 ### Sign in
-Use this code for open Sign in Activity
+Register processing for auth result (see [here](https://developer.android.com/training/basics/intents/result) for more info)
 
 Java
 ```java
-int PIANO_ID_REQUEST_CODE = 123456; // Use any your value
-Intent authIntent = PianoId.signIn()
-    // ... configure "Sign In" ...
-   .getIntent(activity);
-startActivityForResult(authIntent, PIANO_ID_REQUEST_CODE);
+private final ActivityResultLauncher<PianoIdClient.SignInContext> authResult = registerForActivityResult(
+        new PianoIdAuthResultContract(),
+        r -> {
+            if (r == null) {
+                // user cancelled Authorization process
+            } else if (r.isSuccess()) {
+                PianoIdAuthSuccessResult data = (PianoIdAuthSuccessResult) r;
+                boolean isNewUserRegistered = data.isNewUser()
+                PianoIdToken token = data.getToken();
+                // process successful authorization 
+            } else {
+                PianoIdAuthFailureResult data = (PianoIdAuthFailureResult) r;
+                PianoIdException e = data.getException());
+                // Authorization failed, check e.cause for details
+            }
+        }
+);
 ```
 
 Kotlin
 ```kotlin
-val PIANO_ID_REQUEST_CODE = 123456; // Use any your value
-val authIntent = PianoId.signIn()
-    // ... configure "Sign In" ...
-   .getIntent(activity);
-startActivityForResult(authIntent, PIANO_ID_REQUEST_CODE);
+private val authResult = registerForActivityResult(PianoIdAuthResultContract()) { r ->
+    when (r) {
+        null -> { /* user cancelled Authorization process */ }
+        is PianoIdAuthSuccessResult -> {
+            val token = r.token
+            val isNewUserRegistered = r.isNewUser
+            // process successful authorization 
+        }
+        is PianoIdAuthFailureResult -> {
+            val e = r.exception
+            // Authorization failed, check e.cause for details
+        }
+    }
+}
 ```
-Note:
-> The activity loads preconfigured template from dashboard. Links in the template are processed differently:  
-> - normal link - opens within app instead current page, user can return back via system button (page will be reloaded)  
-> - link with `target="_blank"` - opens externally in browser
 
+Start auth process:
 Check authorization result in your onActivityResult:
 
 Java
 ```java
-protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    if (requestCode == PIANO_ID_REQUEST_CODE) {
-        if (resultCode == RESULT_CANCELED) {
-            // user cancelled Authorization process
-        } else {
-            try {
-                PianoIdToken token = PianoId.getPianoIdTokenResult(data);
-                // process token, Authorization successful
-            } catch (PianoIdException e) {
-                // Authorization failed, check e.cause for details
-            }
-        }
-    } else super.onActivityResult(requestCode, resultCode, data);
-}
+authResult.launch(
+    PianoId.signIn()
+    // ... configure "Sign In" ...
+);
 ```
 
 Kotlin
 ```kotlin
-override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    if (requestCode == PIANO_ID_REQUEST_CODE) {
-        when (resultCode) {
-            RESULT_OK ->
-                runCatching {
-                    val token = data.getPianoIdTokenResult()
-                    // process token, Authorization successful
-                }.onFailure {
-                    // Authorization failed, check exception cause for details
-                }
-            RESULT_CANCELED ->
-                {
-                    // user cancelled Authorization process
-                }
-            PianoId.RESULT_ERROR ->
-                runCatching {
-                    data.getPianoIdTokenResult() // will throw exception
-                }.onFailure {
-                    // Authorization failed, check exception cause for details
-                }
-        }
-    } else super.onActivityResult(requestCode, resultCode, data)
-}
+authResult.launch(
+    PianoId.signIn()
+    // ... configure "Sign In" ...
+)
 ```
+Note:
+> The activity loads preconfigured template from dashboard. Links in the template are processed differently:
+> - normal link - opens within app instead current page, user can return back via system button (page will be reloaded)
+> - link with `target="_blank"` - opens externally in browser
 
 ### Sign out
 

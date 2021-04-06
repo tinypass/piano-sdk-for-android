@@ -55,7 +55,7 @@ internal class HttpHelper(
                 PARAM_VISIT_ID to experienceIdsProvider.getVisitId(date),
                 PARAM_NEW_VISIT to experienceIdsProvider.isVisitIdGenerated.toString(),
                 PARAM_SUBMIT_TYPE to VALUE_MANUAL_SUBMIT_TYPE,
-                PARAM_SDK_VERSION to BuildConfig.VERSION_NAME,
+                PARAM_SDK_VERSION to BuildConfig.SDK_VERSION,
                 PARAM_XBUILDER_BROWSER_COOKIE to prefsStorage.xbuilderBrowserCookie.orEmpty(),
                 PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie.orEmpty(),
                 PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie.orEmpty(),

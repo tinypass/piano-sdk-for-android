@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.squareup.moshi.Moshi;
 
+import io.piano.android.id.PianoIdTokenJsonAdapter;
+
 public class SimpleDependenciesProvider {
     private static SimpleDependenciesProvider instance;
 
@@ -15,7 +17,7 @@ public class SimpleDependenciesProvider {
 
     private SimpleDependenciesProvider(Context context) {
         appContext = context.getApplicationContext();
-        moshi = new Moshi.Builder().add(PianoIdTokenJsonAdapter.Companion.getFACTORY()).build();
+        moshi = new Moshi.Builder().add(PianoIdTokenJsonAdapter.FACTORY).build();
         prefsStorage = new PrefsStorage(appContext, moshi);
     }
 

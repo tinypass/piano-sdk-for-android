@@ -11,18 +11,21 @@ import io.piano.android.composer.Composer;
 import io.piano.android.id.PianoId;
 import io.piano.android.id.PianoIdCallback;
 import io.piano.android.id.PianoIdException;
+import io.piano.android.id.PianoIdJs;
 import io.piano.android.id.facebook.FacebookOAuthProvider;
 import io.piano.android.id.google.GoogleOAuthProvider;
+import io.piano.android.id.models.PianoIdAuthSuccessResult;
 import io.piano.android.id.models.PianoIdToken;
 import timber.log.Timber;
 
 public class PianoSampleApplication extends MultiDexApplication {
 
-    public static final String PIANO_ENDPOINT = BuildConfig.PIANO_ENDPOINT.isEmpty()
-            ? BuildConfig.DEBUG
+    public static final String PIANO_ID_ENDPOINT = BuildConfig.PIANO_ENDPOINT.isEmpty()
             ? PianoId.ENDPOINT_SANDBOX
-            : PianoId.ENDPOINT_PRODUCTION
             : BuildConfig.PIANO_ENDPOINT;
+    public static final Composer.Endpoint COMPOSER_ENDPOINT = BuildConfig.PIANO_ENDPOINT.isEmpty()
+            ? Composer.Endpoint.SANDBOX
+            : new Composer.Endpoint(BuildConfig.PIANO_ENDPOINT, BuildConfig.PIANO_ENDPOINT);
 
     @Override
     public void onCreate() {
@@ -37,12 +40,14 @@ public class PianoSampleApplication extends MultiDexApplication {
 
         PrefsStorage prefsStorage = SimpleDependenciesProvider.getInstance(this).getPrefsStorage();
         PianoId
-                .init(PIANO_ENDPOINT, BuildConfig.PIANO_AID)
-                .with(new PianoIdCallback<PianoIdToken>() {
+                .init(PIANO_ID_ENDPOINT, BuildConfig.PIANO_AID)
+                .with(new PianoIdCallback<PianoIdAuthSuccessResult>() {
                     @Override
-                    public void onSuccess(PianoIdToken token) {
+                    public void onSuccess(PianoIdAuthSuccessResult data) {
+                        Timber.d("Is this a new user registered? %b", data.isNewUser());
+                        PianoIdToken token = data.getToken();
                         prefsStorage.setPianoIdToken(token);
-                        Composer.getInstance().userToken(token.accessToken);
+                        Composer.getInstance().userToken(token != null ? token.accessToken : null);
                     }
 
                     @Override
@@ -50,9 +55,12 @@ public class PianoSampleApplication extends MultiDexApplication {
                         Timber.e(exception);
                     }
                 })
+                .with(eventData -> {
+                    Timber.d("Custom event: %s", eventData);
+                })
                 .with(new GoogleOAuthProvider())
                 .with(new FacebookOAuthProvider());
-        Composer.init(this, BuildConfig.PIANO_AID, PIANO_ENDPOINT);
+        Composer.init(this, BuildConfig.PIANO_AID, COMPOSER_ENDPOINT);
         PianoIdToken token = prefsStorage.getPianoIdToken();
         Composer.getInstance().userToken(token != null ? token.accessToken : null);
     }

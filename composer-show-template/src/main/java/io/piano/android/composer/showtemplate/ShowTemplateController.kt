@@ -27,8 +27,10 @@ class ShowTemplateController private constructor(
     @Suppress("unused") // Public API.
     fun reloadWithToken(userToken: String) {
         val view = fragment?.webView ?: webView
-        view?.executeJavascriptCode("piano.reloadTemplateWithUserToken('$userToken')")
-            ?: Timber.w("We got null for webview")
+        view?.postDelayed(
+            { view.executeJavascriptCode("piano.reloadTemplateWithUserToken('$userToken')") },
+            300
+        ) ?: Timber.w("We got null for webview")
     }
 
     companion object {
@@ -50,16 +52,25 @@ class ShowTemplateController private constructor(
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
                 setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
             }
-            val jsInterface = when (javascriptInterface) {
-                null -> ComposerJs().also { cJs ->
-                    cJs.init(dialogFragment, this, trackingId)
-                }
-                is ComposerJs -> javascriptInterface.also { cJs ->
-                    cJs.init(dialogFragment, this, trackingId)
-                }
-                else -> javascriptInterface
+            val jsInterface = javascriptInterface ?: ComposerJs()
+            if (jsInterface is ComposerJs) {
+                jsInterface.init(dialogFragment, this, trackingId)
             }
             addJavascriptInterface(jsInterface, JAVASCRIPT_INTERFACE)
+        }
+
+        @JvmStatic
+        private val defaultWebViewProvider: (FragmentActivity, String) -> WebView? = { activity, webViewId ->
+            activity.resources
+                .getIdentifier(webViewId, "id", activity.packageName)
+                .takeUnless { it == 0 }
+                ?.let { id ->
+                    runCatching {
+                        activity.findViewById<WebView>(id)
+                    }.onFailure {
+                        Timber.e(it)
+                    }.getOrNull()
+                }
         }
 
         @JvmStatic
@@ -68,11 +79,17 @@ class ShowTemplateController private constructor(
         fun show(
             activity: FragmentActivity,
             showTemplateEvent: Event<ShowTemplate>,
-            javascriptInterface: Any? = null
+            javascriptInterface: Any? = null,
+            inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider
         ): ShowTemplateController? =
             when (showTemplateEvent.eventData.displayMode) {
                 ShowTemplate.DisplayMode.MODAL -> showModal(activity, showTemplateEvent, javascriptInterface)
-                ShowTemplate.DisplayMode.INLINE -> showInline(activity, showTemplateEvent, javascriptInterface)
+                ShowTemplate.DisplayMode.INLINE -> showInline(
+                    activity,
+                    showTemplateEvent,
+                    javascriptInterface,
+                    inlineWebViewProvider
+                )
                 else -> null.also {
                     Timber.w("Unknown display mode %s", showTemplateEvent.eventData.displayMode)
                 }
@@ -82,34 +99,32 @@ class ShowTemplateController private constructor(
         private fun showInline(
             activity: FragmentActivity,
             showTemplateEvent: Event<ShowTemplate>,
-            javascriptInterface: Any? = null
+            javascriptInterface: Any? = null,
+            webViewProvider: (FragmentActivity, String) -> WebView?
         ): ShowTemplateController? =
             with(showTemplateEvent) {
                 eventData.containerSelector
                     .takeUnless { it.isNullOrEmpty() }
-                    ?.let { cId ->
-                        activity.resources
-                            .getIdentifier(cId, "id", activity.packageName)
-                            .takeUnless { it == 0 }
-                            ?.let { id ->
-                                runCatching {
-                                    val webView: WebView = activity.findViewById(id)
-                                    webView.prepare(
-                                        javascriptInterface = javascriptInterface,
-                                        trackingId = eventExecutionContext.trackingId
-                                    )
-                                    ShowTemplateController(webView = webView).also {
-                                        processDelay(activity, eventData) {
-                                            eventData.url?.let {
-                                                webView.loadUrl(it)
-                                                webView.visibility = View.VISIBLE
-                                            }
-                                        }
-                                    }
-                                }.onFailure {
-                                    Timber.e(it)
-                                }.getOrNull()
+                    ?.let { id ->
+                        runCatching {
+                            val webView = requireNotNull(webViewProvider(activity, id)) {
+                                "Can't find WebView with id $id"
                             }
+                            webView.prepare(
+                                javascriptInterface = javascriptInterface,
+                                trackingId = eventExecutionContext.trackingId
+                            )
+                            ShowTemplateController(webView = webView).also {
+                                processDelay(activity, eventData) {
+                                    eventData.url?.let {
+                                        webView.loadUrl(it)
+                                        webView.visibility = View.VISIBLE
+                                    }
+                                }
+                            }
+                        }.onFailure {
+                            Timber.e(it)
+                        }.getOrNull()
                     }
             }
 

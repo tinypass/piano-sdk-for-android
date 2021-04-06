@@ -54,7 +54,7 @@ class ComposerTest {
             DUMMY_STRING to DUMMY_STRING2
         )
     }
-    private val composer: Composer = spy(Composer(api, httpHelper, prefsStorage, "AID", null))
+    private val composer: Composer = spy(Composer(api, httpHelper, prefsStorage, "AID", Composer.Endpoint.SANDBOX))
 
     private val experienceRequest: ExperienceRequest = mock()
     private val resultListeners = listOf(
@@ -136,7 +136,7 @@ class ComposerTest {
     @Test
     fun processExperienceResponse() {
         val eventTypes = listOf(
-            mock<ShowTemplate>(),
+            ShowTemplate("", "", mock(), null, mock(), true),
             mock<ExperienceExecute>(),
             mock<UserSegment>()
         )
@@ -195,7 +195,7 @@ class ComposerTest {
             null,
             0,
             0,
-            EventsContainer(listOf(mock()))
+            EventsContainer(listOf(Event(mock(), mock(), mock())))
         )
         composer.processExperienceResponse(
             experienceRequest,

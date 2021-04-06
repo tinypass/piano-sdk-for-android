@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 internal class DependenciesProvider private constructor(
     context: Context,
     aid: String,
-    endpoint: String?
+    endpoint: Composer.Endpoint
 ) {
     private val prefsStorage = PrefsStorage(context)
     private val userAgent = "Piano composer SDK (Android ${Build.VERSION.RELEASE} (Build ${Build.ID}); " +
@@ -39,7 +39,7 @@ internal class DependenciesProvider private constructor(
         .build()
 
     private val api: Api = Retrofit.Builder()
-        .baseUrl(Composer.BASE_URL_SANDBOX)
+        .baseUrl(endpoint.composerHost)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build().create()
@@ -61,7 +61,7 @@ internal class DependenciesProvider private constructor(
         private var instance: DependenciesProvider? = null
 
         @JvmStatic
-        internal fun init(context: Context, aid: String, endpoint: String?) {
+        internal fun init(context: Context, aid: String, endpoint: Composer.Endpoint) {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {

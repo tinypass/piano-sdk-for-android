@@ -86,6 +86,7 @@ class PianoIdTokenJsonAdapter(
         private const val REFRESH_TOKEN_CAMEL = "refreshToken"
         private const val EXPIRES_IN_CAMEL = "expiresIn"
 
+        @JvmField
         val FACTORY = Factory { type, _, moshi ->
             takeIf { type == PianoIdToken::class.java }?.let { PianoIdTokenJsonAdapter(moshi) }
         }

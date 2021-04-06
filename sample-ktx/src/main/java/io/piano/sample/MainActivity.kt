@@ -9,9 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import io.piano.android.composer.Composer
 import io.piano.android.id.PianoId
-import io.piano.android.id.PianoId.Companion.getPianoIdTokenResult
 import io.piano.android.id.PianoId.Companion.isPianoIdUri
 import io.piano.android.id.PianoId.Companion.parsePianoIdToken
+import io.piano.android.id.PianoIdAuthResultContract
+import io.piano.android.id.models.PianoIdAuthFailureResult
+import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
 import io.piano.sample.databinding.ActivityMainBinding
 import timber.log.Timber
@@ -38,6 +40,17 @@ class MainActivity : AppCompatActivity() {
             return true
         }
 
+    private val authResult = registerForActivityResult(PianoIdAuthResultContract()) { r ->
+        when (r) {
+            null -> showMessage("OAuth cancelled")
+            is PianoIdAuthSuccessResult -> {
+                Timber.d("Is this a new user registered? %b", r.isNewUser)
+                setAccessToken(r.token)
+            }
+            is PianoIdAuthFailureResult -> showError(r.exception)
+        }
+    }
+
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.apply {
             buttonPianoIdLogin.setOnClickListener {
-                val intent = PianoId.signIn().getIntent(this@MainActivity)
-                startActivityForResult(intent, PIANO_ID_REQUEST_CODE)
+                authResult.launch(PianoId.signIn())
             }
             buttonPianoIdLogout.setOnClickListener { signOut() }
             buttonPianoIdRefreshToken.setOnClickListener {
@@ -94,27 +106,6 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     cookieManager.removeAllCookies(null)
                 }
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PIANO_ID_REQUEST_CODE) {
-            when (resultCode) {
-                RESULT_OK ->
-                    runCatching {
-                        setAccessToken(data.getPianoIdTokenResult())
-                    }.onFailure {
-                        showError(it)
-                    }
-                RESULT_CANCELED -> showMessage("OAuth cancelled")
-                PianoId.RESULT_ERROR ->
-                    runCatching {
-                        setAccessToken(data.getPianoIdTokenResult())
-                    }.onFailure {
-                        showError(it)
-                    }
             }
         }
     }

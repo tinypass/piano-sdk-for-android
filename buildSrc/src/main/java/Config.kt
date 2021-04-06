@@ -11,37 +11,38 @@ object Config {
 }
 
 object Versions {
-    const val kotlin = "1.4.21-2"
+    const val kotlin = "1.4.32"
     //Plugins
-    const val versionsPlugin = "0.36.0"
-    const val androidToolsPlugin = "4.0.1"
-    const val ktlintPlugin = "9.4.1"
-    const val dokkaPlugin = "1.4.20"
+    const val versionsPlugin = "0.38.0"
+    const val androidToolsPlugin = "4.1.3"
+    const val ktlintPlugin = "10.0.0"
+    const val dokkaPlugin = "1.4.30"
+    const val publishPlugin = "0.14.2"
 
     // AndroidX libraries
     const val compatLibrary = "1.2.0"
-    const val androidxActivity = "1.1.0"
-    const val annotationsLibrary = "1.1.0"
-    const val fragmentLibrary = "1.2.5"
-    const val materialLibrary = "1.2.1"
-    const val lifecycleLibrary = "2.2.0"
+    const val androidxActivity = "1.2.2"
+    const val annotationsLibrary = "1.2.0"
+    const val fragmentLibrary = "1.3.2"
+    const val materialLibrary = "1.3.0"
+    const val lifecycleLibrary = "2.3.1"
     const val prefsLibrary = "1.1.1"
 
     // Third party Libraries
-    const val facebookLogin = "7.1.0"
+    const val facebookLogin = "9.1.0"
     const val googlePlayServices = "19.0.0"
     const val retrofit = "2.6.4"
-    const val okhttp = "3.12.12"
-    const val moshi = "1.11.0"
+    const val okhttp = "3.12.13"
+    const val moshi = "1.12.0"
     const val timber = "4.7.1"
 
     // Test Libraries
-    const val junit = "4.13.1"
+    const val junit = "4.13.2"
     const val androidxTestCore = "1.3.0"
     const val androidxTestExtJunit = "1.1.2"
     const val mockitoKotlin = "2.2.0"
     const val mockitoCore = "3.0.0"
-    const val robolectric = "4.4"
+    const val robolectric = "4.5.1"
 }
 
 object Plugins {
@@ -53,8 +54,8 @@ object Plugins {
     const val kotlinAndroid = "kotlin-android"
     const val kotlinParcelize = "kotlin-parcelize"
     const val ktlint = "org.jlleitschuh.gradle.ktlint"
-    const val bintray = "com.jfrog.bintray"
     const val dokka = "org.jetbrains.dokka"
+    const val publish = "com.vanniktech.maven.publish"
 }
 
 object Libs {

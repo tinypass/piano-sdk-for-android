@@ -1,10 +1,10 @@
 package io.piano.sample;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,15 +28,33 @@ import io.piano.android.composer.model.events.EventType;
 import io.piano.android.composer.showtemplate.ComposerJs;
 import io.piano.android.composer.showtemplate.ShowTemplateController;
 import io.piano.android.id.PianoId;
+import io.piano.android.id.PianoIdAuthResultContract;
+import io.piano.android.id.PianoIdClient;
 import io.piano.android.id.PianoIdException;
+import io.piano.android.id.models.PianoIdAuthFailureResult;
+import io.piano.android.id.models.PianoIdAuthSuccessResult;
 import io.piano.android.id.models.PianoIdToken;
 import timber.log.Timber;
 
 public class ComposerActivity extends AppCompatActivity {
-    private static final int PIANO_ID_REQUEST_CODE = 1;
 
     private ShowTemplateController showTemplateController;
     private PrefsStorage prefsStorage;
+
+    private ActivityResultLauncher<PianoIdClient.SignInContext> authResult = registerForActivityResult(
+            new PianoIdAuthResultContract(),
+            r -> {
+                if (r == null) {
+                    Snackbar.make(findViewById(R.id.app_bar), "OAuth cancelled", Snackbar.LENGTH_SHORT).show();
+                } else if (r.isSuccess()) {
+                    setAccessToken(((PianoIdAuthSuccessResult) r).getToken());
+                } else {
+                    PianoIdException e = ((PianoIdAuthFailureResult) r).getException();
+                    Timber.e(e);
+                    Snackbar.make(findViewById(R.id.app_bar), e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,31 +157,6 @@ public class ComposerActivity extends AppCompatActivity {
     }
 
     private void signIn(String userProvider) {
-        startActivityForResult(PianoId.signIn().getIntent(this), PIANO_ID_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PIANO_ID_REQUEST_CODE) {
-            switch (resultCode) {
-                case RESULT_OK:
-                    try {
-                        setAccessToken(PianoId.getPianoIdTokenResult(data));
-                    } catch (PianoIdException e) {
-                        Timber.e(e);
-                        Snackbar.make(findViewById(R.id.app_bar), e.getMessage(), Snackbar.LENGTH_SHORT).show();
-                    }
-                    break;
-                case RESULT_CANCELED:
-                    Snackbar.make(findViewById(R.id.app_bar), "OAuth cancelled", Snackbar.LENGTH_SHORT).show();
-                    break;
-                case PianoId.RESULT_ERROR:
-                    Snackbar.make(findViewById(R.id.app_bar), "Result error", Snackbar.LENGTH_SHORT).show();
-                    break;
-            }
-
-        }
+        authResult.launch(PianoId.signIn());
     }
 }
