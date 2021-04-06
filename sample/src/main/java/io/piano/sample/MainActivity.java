@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,18 +17,34 @@ import org.jetbrains.annotations.NotNull;
 
 import io.piano.android.composer.Composer;
 import io.piano.android.id.PianoId;
+import io.piano.android.id.PianoIdAuthResultContract;
 import io.piano.android.id.PianoIdCallback;
+import io.piano.android.id.PianoIdClient;
 import io.piano.android.id.PianoIdException;
+import io.piano.android.id.models.PianoIdAuthFailureResult;
+import io.piano.android.id.models.PianoIdAuthSuccessResult;
 import io.piano.android.id.models.PianoIdToken;
 import io.piano.sample.databinding.ActivityMainBinding;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int PIANO_ID_REQUEST_CODE = 1;
-
     private ActivityMainBinding binding;
     private PrefsStorage prefsStorage;
+
+    private final ActivityResultLauncher<PianoIdClient.SignInContext> authResult = registerForActivityResult(
+            new PianoIdAuthResultContract(),
+            r -> {
+                if (r == null) {
+                    showMessage("OAuth cancelled");
+                } else if (r.isSuccess()) {
+                    PianoIdAuthSuccessResult data = (PianoIdAuthSuccessResult) r;
+                    Timber.d("Is this a new user registered? %b", data.isNewUser());
+                    setAccessToken(data.getToken());
+                } else {
+                    showError(((PianoIdAuthFailureResult) r).getException());
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         binding.buttonPianoIdLogin.setOnClickListener(v -> {
-            Intent intent = PianoId.signIn().getIntent(MainActivity.this);
-            startActivityForResult(intent, PIANO_ID_REQUEST_CODE);
+            authResult.launch(PianoId.signIn());
         });
 
         binding.buttonPianoIdLogout.setOnClickListener(v -> signOut());
@@ -94,35 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 cookieManager.removeAllCookies(null);
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PIANO_ID_REQUEST_CODE) {
-            switch (resultCode) {
-                case RESULT_OK:
-                    try {
-                        PianoIdToken token = PianoId.getPianoIdTokenResult(data);
-                        setAccessToken(token);
-                    } catch (PianoIdException e) {
-                        showError(e);
-                    }
-                    break;
-                case RESULT_CANCELED:
-                    showMessage("OAuth cancelled");
-                    break;
-                case PianoId.RESULT_ERROR:
-                    try {
-                        PianoId.getPianoIdTokenResult(data);
-                    } catch (PianoIdException e) {
-                        showError(e);
-                    }
-                    break;
-            }
-
-        }
     }
 
     private void signOut() {

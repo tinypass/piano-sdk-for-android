@@ -1,7 +1,9 @@
 package io.piano.android.id
 
 import io.piano.android.id.PianoIdClient.Companion.toPianoIdException
+import io.piano.android.id.models.PianoIdAuthResult
 
+typealias PianoIdAuthCallback = (PianoIdAuthResult) -> Unit
 typealias PianoIdFuncCallback<T> = (Result<T>) -> Unit
 
 /**

@@ -24,9 +24,7 @@ import retrofit2.Response
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class PianoIdClientTest {
@@ -54,10 +52,10 @@ class PianoIdClientTest {
     }
 
     @Test
-    fun withTokenCallback() {
-        val callback: PianoIdFuncCallback<PianoIdToken> = mock()
+    fun withAuthCallback() {
+        val callback: PianoIdAuthCallback = mock()
         assertEquals(pianoIdClient, pianoIdClient.with(callback))
-        assertEquals(callback, pianoIdClient.tokenCallback)
+        assertEquals(callback, pianoIdClient.authCallback)
     }
 
     @Test
@@ -262,38 +260,6 @@ class PianoIdClientTest {
     }
 
     @Test
-    fun getResultFromNullIntent() {
-        assertNull(pianoIdClient.getResult(null))
-    }
-
-    @Test
-    fun getResultFromIntent() {
-        val token: PianoIdToken = mock()
-        val intent: Intent = mock {
-            on { getIntExtra(any(), any()) } doReturn 0
-            on { getParcelableExtra<PianoIdToken>(any()) } doReturn token
-        }
-        assertEquals(token, pianoIdClient.getResult(intent))
-        verify(intent).getIntExtra(any(), any())
-        verify(intent).getParcelableExtra<PianoIdToken>(any())
-    }
-
-    @Test
-    fun getResultFromIntentException() {
-        val exc = PianoIdException()
-        val code = pianoIdClient.saveException(exc)
-        val intent: Intent = mock {
-            on { getIntExtra(any(), any()) } doReturn code
-        }
-        assertEquals(
-            exc,
-            assertFailsWith {
-                pianoIdClient.getResult(intent)
-            }
-        )
-    }
-
-    @Test
     fun processUri() {
         val uri: Uri = mock {
             on { authority } doReturn PianoIdClient.LINK_AUTHORITY
@@ -325,7 +291,6 @@ class PianoIdClientTest {
     companion object {
         const val AID = "aid"
         const val DUMMY = "dummy"
-        const val DUMMY2 = "dummy2"
         const val NAME = "Name"
     }
 }

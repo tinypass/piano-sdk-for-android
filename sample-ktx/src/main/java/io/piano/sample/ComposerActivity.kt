@@ -1,6 +1,5 @@
 package io.piano.sample
 
-import android.content.Intent
 import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.widget.Toast
@@ -24,13 +23,30 @@ import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.showtemplate.ComposerJs
 import io.piano.android.composer.showtemplate.ShowTemplateController
 import io.piano.android.id.PianoId
-import io.piano.android.id.PianoId.Companion.getPianoIdTokenResult
+import io.piano.android.id.PianoIdAuthResultContract
+import io.piano.android.id.models.PianoIdAuthFailureResult
+import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
-import timber.log.Timber
 
 class ComposerActivity : AppCompatActivity() {
     private var showTemplateController: ShowTemplateController? = null
     private lateinit var prefsStorage: PrefsStorage
+
+    private val authResult = registerForActivityResult(PianoIdAuthResultContract()) { r ->
+        when (r) {
+            null -> Snackbar.make(
+                findViewById(R.id.app_bar),
+                "OAuth cancelled",
+                Snackbar.LENGTH_SHORT
+            ).show()
+            is PianoIdAuthSuccessResult -> setAccessToken(r.token)
+            is PianoIdAuthFailureResult -> Snackbar.make(
+                findViewById(R.id.app_bar),
+                r.exception.message ?: "Unknown error",
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +99,8 @@ class ComposerActivity : AppCompatActivity() {
                         views = $views,
                         viewsLeft = $viewsLeft,
                         maxViews = $maxViews,
-                        totalViews = $totalViews
+                        totalViews = $totalViews,
+                        incremented = $incremented
                     """.trimIndent()
                 }
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
@@ -142,28 +159,7 @@ class ComposerActivity : AppCompatActivity() {
     }
 
     private fun signIn(userProvider: String) {
-        startActivityForResult(PianoId.signIn().getIntent(this), PIANO_ID_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == PIANO_ID_REQUEST_CODE) {
-            when (resultCode) {
-                RESULT_OK ->
-                    runCatching {
-                        setAccessToken(data.getPianoIdTokenResult())
-                    }.onFailure {
-                        Timber.e(it)
-                        Snackbar.make(findViewById(R.id.app_bar), it.message ?: "Unknown error", Snackbar.LENGTH_SHORT)
-                            .show()
-                    }
-                RESULT_CANCELED ->
-                    Snackbar.make(findViewById(R.id.app_bar), "OAuth cancelled", Snackbar.LENGTH_SHORT)
-                        .show()
-                PianoId.RESULT_ERROR ->
-                    Snackbar.make(findViewById(R.id.app_bar), "Result error", Snackbar.LENGTH_SHORT)
-                        .show()
-            }
-        } else super.onActivityResult(requestCode, resultCode, data)
+        authResult.launch(PianoId.signIn())
     }
 
     companion object {

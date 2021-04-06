@@ -1,6 +1,5 @@
 package io.piano.android.id
 
-import android.content.Intent
 import android.net.Uri
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
@@ -93,19 +92,6 @@ class PianoId {
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
         }
 
-        /**
-         * Extracts {@link PianoIdToken} from result {@link Intent}.
-         * Use it in {@link android.app.Activity#onActivityResult(int, int, Intent)}
-         *
-         * @param intent Intent, which you get
-         * @return {@link PianoIdToken} instance, if intent contains it
-         * @throws PianoIdException if intent contains authorization error
-         */
-        @Suppress("unused") // Public API.
-        @Throws(PianoIdException::class, IllegalStateException::class)
-        @JvmStatic
-        fun Intent?.getPianoIdTokenResult(): PianoIdToken? = getClient().getResult(this)
-
         @Suppress("unused") // Public API.
         @JvmStatic
         fun Uri?.parsePianoIdToken(callback: PianoIdFuncCallback<PianoIdToken>) =
@@ -177,6 +163,7 @@ class PianoId {
         internal const val KEY_OAUTH_PROVIDER_NAME = "io.piano.android.id.OAUTH_PROVIDER_NAME"
         internal const val KEY_OAUTH_PROVIDER_TOKEN = "io.piano.android.id.OAUTH_PROVIDER_TOKEN"
         internal const val KEY_TOKEN = "io.piano.android.id.PianoIdActivity.TOKEN"
+        internal const val KEY_IS_NEW_USER = "io.piano.android.id.PianoIdActivity.IS_NEW_USER"
         internal const val KEY_ERROR = "io.piano.android.id.PianoIdActivity.ERROR"
         private const val NOT_INITIALIZED_MSG = "Piano ID SDK is not initialized! Make sure that you " +
             "initialize it via init()"

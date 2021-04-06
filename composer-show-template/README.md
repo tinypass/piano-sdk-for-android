@@ -5,7 +5,7 @@ This is helper for simplifying "Show Template" event processing
 
 ### Dependencies
 
-The Piano Composer Show Template is available as an AAR via jCenter. To add dependencies, open your project’s build.gradle/build.gradle.kts and update the dependencies block as follows:
+The Piano Composer Show Template is available as an AAR via Maven Central. To add dependencies, open your project’s build.gradle/build.gradle.kts and update the dependencies block as follows:
 
 Groovy
 ```groovy
@@ -27,10 +27,14 @@ Add code into your show template listener
 
 Java
 ```java
+// Use one of these
 ShowTemplateController.show(activity, showTemplateEvent, customJavascriptInterface);
+ShowTemplateController.show(activity, showTemplateEvent, customJavascriptInterface, inlineWebViewProvider);
 ```
 
 Kotlin
 ```kotlin
+// Use one of these
 ShowTemplateController.show(activity, showTemplateEvent, customJavascriptInterface)
+ShowTemplateController.show(activity, showTemplateEvent, customJavascriptInterface, inlineWebViewProvider)
 ```

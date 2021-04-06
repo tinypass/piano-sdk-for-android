@@ -3,21 +3,35 @@ package io.piano.android.id
 import android.webkit.JavascriptInterface
 import java.lang.ref.WeakReference
 
-internal class PianoIdJavascriptDelegate(delegate: PianoIdJsInterface) : PianoIdJsInterface {
-    private val reference: WeakReference<PianoIdJsInterface> = WeakReference(delegate)
+internal class PianoIdJavascriptDelegate(
+    internalDelegate: PianoIdJsInterface,
+    publicDelegate: PianoIdJs?
+) : PianoIdJsInterface, PianoIdJs {
+    private val internalJsReference: WeakReference<PianoIdJsInterface> = WeakReference(internalDelegate)
+    private val publicJsReference: WeakReference<PianoIdJs?> = WeakReference(publicDelegate)
 
     @JavascriptInterface
     override fun socialLogin(payload: String?) {
-        reference.get()?.socialLogin(payload)
+        internalJsReference.get()?.socialLogin(payload)
+    }
+
+    @JavascriptInterface
+    override fun registerSuccess(payload: String?) {
+        internalJsReference.get()?.registerSuccess(payload)
     }
 
     @JavascriptInterface
     override fun loginSuccess(payload: String?) {
-        reference.get()?.loginSuccess(payload)
+        internalJsReference.get()?.loginSuccess(payload)
     }
 
     @JavascriptInterface
     override fun cancel() {
-        reference.get()?.cancel()
+        internalJsReference.get()?.cancel()
+    }
+
+    @JavascriptInterface
+    override fun customEvent(eventData: String) {
+        publicJsReference.get()?.customEvent(eventData)
     }
 }

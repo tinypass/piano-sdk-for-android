@@ -1,11 +1,17 @@
 package io.piano.sample
 
+import android.os.Build
+import android.webkit.WebView
 import androidx.multidex.MultiDexApplication
 import com.google.android.gms.security.ProviderInstaller
 import io.piano.android.composer.Composer
+import io.piano.android.composer.Composer.Endpoint
 import io.piano.android.id.PianoId
+import io.piano.android.id.PianoIdJs
 import io.piano.android.id.facebook.FacebookOAuthProvider
 import io.piano.android.id.google.GoogleOAuthProvider
+import io.piano.android.id.models.PianoIdAuthFailureResult
+import io.piano.android.id.models.PianoIdAuthSuccessResult
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -19,24 +25,39 @@ class PianoSampleApplication : MultiDexApplication() {
             Timber.e(it)
         }
 
+        // Add code for debugging. Don't use in real release application 
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true)
+        }
         val prefsStorage = SimpleDependenciesProvider.getInstance(this).prefsStorage
-        PianoId.init(PIANO_ENDPOINT, BuildConfig.PIANO_AID)
+        PianoId.init(PIANO_ID_ENDPOINT, BuildConfig.PIANO_AID)
             .with { r ->
-                r.onSuccess {
-                    prefsStorage.pianoIdToken = it
-                    Composer.getInstance().userToken(it.accessToken)
-                }.onFailure {
-                    Timber.e(it)
+                when (r) {
+                    is PianoIdAuthSuccessResult -> {
+                        Timber.d("Is this a new user registered? %b", r.isNewUser)
+                        prefsStorage.pianoIdToken = r.token
+                        Composer.getInstance().userToken(r.token?.accessToken)
+                    }
+                    is PianoIdAuthFailureResult -> Timber.e(r.exception)
                 }
             }
+            .with(object : PianoIdJs {
+                override fun customEvent(eventData: String) {
+                    Timber.d("Custom event: %s", eventData)
+                }
+            })
             .with(GoogleOAuthProvider())
             .with(FacebookOAuthProvider())
-        Composer.init(this, BuildConfig.PIANO_AID, PIANO_ENDPOINT)
+        Composer.init(this, BuildConfig.PIANO_AID, COMPOSER_ENDPOINT)
         Composer.getInstance().userToken(prefsStorage.pianoIdToken?.accessToken)
     }
 
     companion object {
-        val PIANO_ENDPOINT = BuildConfig.PIANO_ENDPOINT.takeUnless { it.isEmpty() }
-            ?: if (BuildConfig.DEBUG) PianoId.ENDPOINT_SANDBOX else PianoId.ENDPOINT_PRODUCTION
+        val PIANO_ID_ENDPOINT = BuildConfig.PIANO_ENDPOINT.takeUnless { it.isEmpty() } ?: PianoId.ENDPOINT_SANDBOX
+        val COMPOSER_ENDPOINT = BuildConfig.PIANO_ENDPOINT.takeUnless {
+            it.isEmpty()
+        }?.let {
+            Endpoint(it, it)
+        } ?: Endpoint.SANDBOX
     }
 }

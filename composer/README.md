@@ -4,7 +4,7 @@
 
 ### Dependencies
 
-The Piano Composer Android SDK is available as an AAR via jCenter. To add dependencies, open your project’s build.gradle/build.gradle.kts and update the dependencies block as follows:
+The Piano Composer Android SDK is available as an AAR via Maven Central. To add dependencies, open your project’s build.gradle/build.gradle.kts and update the dependencies block as follows:
 
 Groovy
 ```groovy
@@ -26,17 +26,17 @@ dependencies {
 Java
 ```java
 // Use one of these
-Composer.init(context, BuildConfig.PIANO_AID);
-Composer.init(context, BuildConfig.PIANO_AID, true);
-Composer.init(context, BuildConfig.PIANO_AID, customEndpoint);
+Composer.init(context, BuildConfig.PIANO_AID, Composer.Endpoint.PRODUCTION);
+Composer.init(context, BuildConfig.PIANO_AID, Composer.Endpoint.SANDBOX);
+Composer.init(context, BuildConfig.PIANO_AID, new Composer.Endpoint(composerHost, apiHost));
 ```
 
 Kotlin
 ```kotlin
 // Use one of these
-Composer.init(context, BuildConfig.PIANO_AID)
-Composer.init(context, BuildConfig.PIANO_AID, true)
-Composer.init(context, BuildConfig.PIANO_AID, customEndpoint)
+Composer.init(context, BuildConfig.PIANO_AID, Endpoint.PRODUCTION)
+Composer.init(context, BuildConfig.PIANO_AID, Endpoint.SANDBOX)
+Composer.init(context, BuildConfig.PIANO_AID, Endpoint(composerHost, apiHost))
 ```
 
 ### Set user access token

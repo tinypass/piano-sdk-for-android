@@ -126,7 +126,7 @@ class HttpHelperTest {
                 null
             )
         ) {
-            assertEquals(9, size)
+            assertEquals(10, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
     }

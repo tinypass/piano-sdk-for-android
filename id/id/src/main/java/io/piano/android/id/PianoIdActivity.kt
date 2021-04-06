@@ -19,17 +19,31 @@ import androidx.appcompat.app.AppCompatActivity
 import io.piano.android.id.PianoId.Companion.isPianoIdUri
 import io.piano.android.id.PianoIdClient.Companion.toPianoIdException
 import io.piano.android.id.databinding.ActivityPianoIdBinding
+import io.piano.android.id.models.OAuthFailureResult
+import io.piano.android.id.models.OAuthSuccessResult
+import io.piano.android.id.models.PianoIdAuthResult
 import io.piano.android.id.models.PianoIdToken
 
 class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
-    private val jsInterface = PianoIdJavascriptDelegate(this)
-    private var widget: String? = null
-    private var disableSignUp: Boolean = false
-
     @VisibleForTesting
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     private lateinit var binding: ActivityPianoIdBinding
     private val client: PianoIdClient = PianoId.getClient()
+
+    private val jsInterface = PianoIdJavascriptDelegate(this, client.javascriptInterface)
+    private var widget: String? = null
+    private var disableSignUp: Boolean = false
+
+    private val oauthResult = registerForActivityResult(OAuthResultContract()) {
+        when (it) {
+            null -> {
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
+            is OAuthSuccessResult -> evaluateJavascript(it.jsCommand)
+            is OAuthFailureResult -> setFailureResultData(it.exception)
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,38 +130,6 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == OAUTH_PROVIDER_REQUEST_CODE) {
-            runCatching {
-                when (resultCode) {
-                    Activity.RESULT_OK -> {
-                        data?.also {
-                            val provider = requireNotNull(it.getStringExtra(PianoId.KEY_OAUTH_PROVIDER_NAME)) {
-                                "provider must be filled"
-                            }
-                            val token = requireNotNull(it.getStringExtra(PianoId.KEY_OAUTH_PROVIDER_TOKEN)) {
-                                "token must be filled"
-                            }
-                            evaluateJavascript(client.buildResultJsCommand(provider, token))
-                        } ?: setFailureResultData(IllegalStateException("Result intent is null"))
-                    }
-                    Activity.RESULT_CANCELED -> {
-                        setResult(Activity.RESULT_CANCELED)
-                        finish()
-                    }
-                    else -> {
-                        val exc = data?.getIntExtra(PianoId.KEY_ERROR, 0)
-                            ?.let { client.getStoredException(it) }
-                            ?: IllegalStateException("Unknown error")
-                        setFailureResultData(exc)
-                    }
-                }
-            }.onFailure {
-                setFailureResultData(it)
-            }
-        } else super.onActivityResult(requestCode, resultCode, data)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         binding.webview.saveState(outState)
@@ -160,38 +142,42 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
 
     override fun socialLogin(payload: String?) {
         runCatching {
-            startActivityForResult(
-                client.buildSocialAuthIntent(this, requireNotNull(payload)),
-                OAUTH_PROVIDER_REQUEST_CODE
-            )
+            oauthResult.launch(requireNotNull(payload))
         }.onFailure {
             setFailureResultData(it)
         }
     }
 
-    override fun loginSuccess(payload: String?) {
-        runCatching {
-            setSuccessResultData(client.buildToken(requireNotNull(payload)))
-        }.onFailure {
-            setFailureResultData(it)
-        }
-    }
+    override fun registerSuccess(payload: String?) = parsePayload(payload, true)
+
+    override fun loginSuccess(payload: String?) = parsePayload(payload, false)
 
     override fun cancel() {
         setResult(Activity.RESULT_CANCELED)
         finish()
     }
 
-    private fun setSuccessResultData(token: PianoIdToken) {
-        setResult(Activity.RESULT_OK, Intent().putExtra(PianoId.KEY_TOKEN, token))
-        client.tokenCallback?.invoke(Result.success(token))
+    private fun parsePayload(payload: String?, isNewUser: Boolean) {
+        runCatching {
+            setSuccessResultData(client.buildToken(requireNotNull(payload)), isNewUser)
+        }.onFailure {
+            setFailureResultData(it)
+        }
+    }
+
+    private fun setSuccessResultData(token: PianoIdToken, isNewUser: Boolean) {
+        setResult(
+            Activity.RESULT_OK,
+            Intent().putExtra(PianoId.KEY_TOKEN, token).putExtra(PianoId.KEY_IS_NEW_USER, isNewUser)
+        )
+        client.authCallback?.invoke(PianoIdAuthResult.success(token, isNewUser))
         finish()
     }
 
     private fun setFailureResultData(throwable: Throwable) {
         val exc = throwable.toPianoIdException()
         setResult(PianoId.RESULT_ERROR, Intent().putExtra(PianoId.KEY_ERROR, client.saveException(exc)))
-        client.tokenCallback?.invoke(Result.failure(exc))
+        client.authCallback?.invoke(PianoIdAuthResult.failure(exc))
         finish()
     }
 
@@ -212,7 +198,6 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         internal const val KEY_WIDGET = "io.piano.android.id.PianoIdActivity.WIDGET"
         internal const val KEY_DISABLE_SIGN_UP = "io.piano.android.id.PianoIdActivity.DISABLE_SIGN_UP"
         internal const val JS_INTERFACE_NAME = "PianoIDMobileSDK"
-        internal const val OAUTH_PROVIDER_REQUEST_CODE = 1
 
         @JvmStatic
         internal fun buildIntent(context: Context, disableSignUp: Boolean, widget: String?): Intent =

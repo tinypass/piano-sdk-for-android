@@ -18,7 +18,13 @@ class ShowTemplateDialogFragment : AppCompatDialogFragment() {
         arguments?.getString(KEY_URL) ?: "about:blank"
     }
     internal lateinit var webView: WebView
-    internal lateinit var jsInterface: Any
+    internal var jsInterface: Any? = null
+    private var shouldLoadUrl = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        shouldLoadUrl = savedInstanceState == null
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = requireContext()
@@ -29,10 +35,10 @@ class ShowTemplateDialogFragment : AppCompatDialogFragment() {
             .create()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        if (savedInstanceState == null) {
+    override fun onStart() {
+        super.onStart()
+        if (shouldLoadUrl) {
+            shouldLoadUrl = false
             webView.loadUrl(url)
         }
     }

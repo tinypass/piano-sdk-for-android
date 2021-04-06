@@ -10,6 +10,8 @@ import com.facebook.login.LoginResult
 import io.piano.android.id.PianoOAuthActivity
 
 class FacebookSignInActivity : PianoOAuthActivity() {
+    private val fbCallbackManager = CallbackManager.Factory.create()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         runCatching {
@@ -27,35 +29,32 @@ class FacebookSignInActivity : PianoOAuthActivity() {
         when (resultCode) {
             RESULT_OK ->
                 runCatching {
-                    CallbackManager.Factory.create()
-                        .also { manager ->
-                            with(LoginManager.getInstance()) {
-                                registerCallback(
-                                    manager,
-                                    object : FacebookCallback<LoginResult> {
-                                        override fun onSuccess(loginResult: LoginResult) {
-                                            if (!loginResult.recentlyGrantedPermissions.contains("email")) {
-                                                onCancel()
-                                                return
-                                            }
-                                            unregisterCallback(manager)
-                                            setSuccessResult(FacebookOAuthProvider.NAME, loginResult.accessToken.token)
-                                        }
-
-                                        override fun onCancel() {
-                                            unregisterCallback(manager)
-                                            setResult(RESULT_CANCELED)
-                                        }
-
-                                        override fun onError(e: FacebookException) {
-                                            unregisterCallback(manager)
-                                            setFailureResult(e)
-                                        }
+                    with(LoginManager.getInstance()) {
+                        registerCallback(
+                            fbCallbackManager,
+                            object : FacebookCallback<LoginResult> {
+                                override fun onSuccess(loginResult: LoginResult) {
+                                    if (!loginResult.recentlyGrantedPermissions.contains("email")) {
+                                        onCancel()
+                                        return
                                     }
-                                )
+                                    unregisterCallback(fbCallbackManager)
+                                    setSuccessResult(FacebookOAuthProvider.NAME, loginResult.accessToken.token)
+                                }
+
+                                override fun onCancel() {
+                                    unregisterCallback(fbCallbackManager)
+                                    setResult(RESULT_CANCELED)
+                                }
+
+                                override fun onError(e: FacebookException) {
+                                    unregisterCallback(fbCallbackManager)
+                                    setFailureResult(e)
+                                }
                             }
-                        }
-                        .onActivityResult(requestCode, resultCode, data)
+                        )
+                    }
+                    fbCallbackManager.onActivityResult(requestCode, resultCode, data)
                 }.onFailure {
                     setFailureResult(it)
                 }

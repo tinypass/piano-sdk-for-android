@@ -5,6 +5,7 @@ plugins {
     kotlin("kapt")
     id(Plugins.dokka)
     id(Plugins.ktlint)
+    id(Plugins.publish)
 }
 
 group = rootProject.group
@@ -16,7 +17,6 @@ android {
     defaultConfig {
         minSdkVersion(Config.androidMinSdk)
         targetSdkVersion(Config.androidTargetSdk)
-        versionName = version.toString()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -66,11 +66,3 @@ kotlin {
 ktlint {
     android.set(true)
 }
-
-val javadocJar by tasks.creating(Jar::class) {
-    dependsOn(tasks.dokkaJavadoc)
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaJavadoc.get().outputDirectory.get())
-}
-
-project.applyBintrayUpload(javadocJar)

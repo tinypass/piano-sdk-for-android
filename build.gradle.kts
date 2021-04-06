@@ -5,12 +5,13 @@ plugins {
     id(Plugins.versions) version Versions.versionsPlugin
     id(Plugins.dokka) version Versions.dokkaPlugin
     id(Plugins.ktlint) version Versions.ktlintPlugin
+    id(Plugins.publish) version Versions.publishPlugin
 }
 
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -22,7 +23,15 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        jcenter() {
+            content {
+                // https://github.com/Kotlin/dokka/issues/41
+                includeModule("org.jetbrains.kotlinx", "kotlinx-html-jvm")
+                // https://youtrack.jetbrains.com/issue/IDEA-261387 + https://issuetracker.google.com/issues/109894262 (wait for AGP 4.2.0)
+                includeModule("org.jetbrains.trove4j", "trove4j")
+            }
+        }
     }
 }
 

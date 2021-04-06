@@ -14,10 +14,12 @@ data class ExperienceExecute(
 
 @JsonClass(generateAdapter = true)
 data class Meter(
+    @JvmField val meterName: String,
     @JvmField val views: Int,
     @JvmField val viewsLeft: Int,
     @JvmField val maxViews: Int,
     @JvmField val totalViews: Int,
+    @JvmField val incremented: Boolean,
     @JvmField val state: MeterState = MeterState.ACTIVE
 ) : EventType() {
     enum class MeterState {
