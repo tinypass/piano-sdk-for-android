@@ -11,12 +11,12 @@ object Config {
 }
 
 object Versions {
-    const val kotlin = "1.4.20"
+    const val kotlin = "1.4.21-2"
     //Plugins
     const val versionsPlugin = "0.36.0"
     const val androidToolsPlugin = "4.0.1"
     const val ktlintPlugin = "9.4.1"
-    const val dokkaPlugin = "1.4.10.2"
+    const val dokkaPlugin = "1.4.20"
 
     // AndroidX libraries
     const val compatLibrary = "1.2.0"

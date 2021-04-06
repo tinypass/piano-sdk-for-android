@@ -104,6 +104,7 @@ internal class HttpHelper(
                 PARAM_GA_CLIENT_ID to gaClientId.orEmpty(),
                 PARAM_OS to VALUE_ANDROID_OS,
                 PARAM_DISPLAY_MODE to ShowTemplate.DisplayMode.INLINE.mode,
+                PARAM_SHOW_CLOSE_BUTTON to eventData.showCloseButton.toString(),
                 PARAM_SHOW_TEMPLATE_TRACKING_ID to eventExecutionContext.trackingId,
                 PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),
                 PARAM_SHOW_TEMPLATE_CONTENT_SECTION to experienceRequest.contentSection.orEmpty(),
@@ -181,6 +182,7 @@ internal class HttpHelper(
         internal const val PARAM_SHOW_TEMPLATE_CONTENT_SECTION = "contentSection"
         internal const val PARAM_GA_CLIENT_ID = "gaClientId"
         internal const val PARAM_OS = "os"
+        internal const val PARAM_SHOW_CLOSE_BUTTON = "showCloseButton"
 
         internal const val VALUE_ANDROID_OS = "android"
     }
