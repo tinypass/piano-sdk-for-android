@@ -34,16 +34,14 @@ Endpoint.SANDBOX // Sandbox endpoint
 Java
 ```java
 // Use one of these
-Composer.init(context, BuildConfig.PIANO_AID, Composer.Endpoint.PRODUCTION);
-Composer.init(context, BuildConfig.PIANO_AID, Composer.Endpoint.SANDBOX);
+Composer.init(context, BuildConfig.PIANO_AID, Composer.Endpoint.PRODUCTION); // use here one of endpoints listed above
 Composer.init(context, BuildConfig.PIANO_AID, new Composer.Endpoint(composerHost, apiHost));
 ```
 
 Kotlin
 ```kotlin
 // Use one of these
-Composer.init(context, BuildConfig.PIANO_AID, Endpoint.PRODUCTION)
-Composer.init(context, BuildConfig.PIANO_AID, Endpoint.SANDBOX)
+Composer.init(context, BuildConfig.PIANO_AID, Endpoint.PRODUCTION) // use here one of endpoints listed above
 Composer.init(context, BuildConfig.PIANO_AID, Endpoint(composerHost, apiHost))
 ```
 
