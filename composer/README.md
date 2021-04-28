@@ -21,6 +21,12 @@ dependencies {
 }
 ```
 
+### Endpoints
+Endpoint.PRODUCTION // Production endpoint
+Endpoint.PRODUCTION_AUSTRALIA // Production endpoint for Australia region
+Endpoint.PRODUCTION_ASIA_PACIFIC // Production endpoint for Asia/Pacific region
+Endpoint.SANDBOX // Sandbox endpoint
+
 ### Initialization
 
 Java
@@ -52,6 +58,9 @@ Composer.getInstance().userToken(accessToken)
 ```
 
 ### Request user experience
+
+Note:
+> We have helper for Show Template event [here](../composer-show-template/README.md)
 
 Java
 ```java

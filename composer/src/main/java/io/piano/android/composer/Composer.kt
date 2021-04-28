@@ -188,10 +188,10 @@ class Composer internal constructor(
             private const val SANDBOX_URL = "https://sandbox.tinypass.com"
             private const val COMPOSER_DEFAULT_URL = "https://experience.tinypass.com"
             private const val API_DEFAULT_URL = "https://buy.tinypass.com"
-            private const val COMPOSER_AU_URL = "https://buy-au.piano.io"
-            private const val API_AU_URL = "https://experience-au.piano.io"
-            private const val COMPOSER_AP_URL = "https://buy-ap.piano.io"
-            private const val API_AP_URL = "https://experience-ap.piano.io"
+            private const val COMPOSER_AU_URL = "https://experience-au.piano.io"
+            private const val API_AU_URL = "https://buy-au.piano.io"
+            private const val COMPOSER_AP_URL = "https://experience-ap.piano.io"
+            private const val API_AP_URL = "https://buy-ap.piano.io"
 
             /**
              * Sandbox endpoint
