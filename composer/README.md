@@ -22,10 +22,12 @@ dependencies {
 ```
 
 ### Endpoints
+```kotlin
 Endpoint.PRODUCTION // Production endpoint
 Endpoint.PRODUCTION_AUSTRALIA // Production endpoint for Australia region
 Endpoint.PRODUCTION_ASIA_PACIFIC // Production endpoint for Asia/Pacific region
 Endpoint.SANDBOX // Sandbox endpoint
+```
 
 ### Initialization
 
