@@ -16,7 +16,6 @@ interface PianoIdCallback<T> {
      *
      * @param data result data
      */
-    @JvmDefault
     fun onSuccess(data: T) {
     }
 
@@ -24,7 +23,6 @@ interface PianoIdCallback<T> {
      * Called when operation has completed with error.
      * @param exception thrown exception
      */
-    @JvmDefault
     fun onFailure(exception: PianoIdException) {
     }
 

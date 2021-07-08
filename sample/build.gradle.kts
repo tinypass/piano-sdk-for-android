@@ -1,26 +1,24 @@
+import io.piano.android.dependencies.Libs
 import java.io.FileReader
 import java.util.Properties
 
 plugins {
-    id(Plugins.androidApp)
+    id("com.android.application")
+    id("common-android-config")
 }
 
 val pianoProperties = Properties().apply {
     load(FileReader(file("piano.properties")))
 }
 
-val aid: String = pianoProperties["io.piano.aid"]?.toString() ?: throw IllegalArgumentException("You missed 'io.piano.aid' in piano.properties")
+val aid: String = pianoProperties["io.piano.aid"]?.toString()
+    ?: throw IllegalArgumentException("You missed 'io.piano.aid' in piano.properties")
 val endpoint: String = pianoProperties["io.piano.endpoint"]?.toString() ?: ""
 val fbAppId: String = pianoProperties["facebookAppId"]?.toString() ?: "1111111111111111"
 
 android {
-    compileSdkVersion(Config.androidCompileSdk)
-    buildToolsVersion = Config.androidBuildTools
-
     defaultConfig {
         applicationId = "io.piano.sample"
-        minSdkVersion(Config.androidMinSdk)
-        targetSdkVersion(Config.androidTargetSdk)
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "PIANO_AID", """"$aid"""")
@@ -34,23 +32,26 @@ android {
         )
     }
     signingConfigs {
-        getByName("debug") {
+        named("debug") {
             storeFile = file("$rootDir/debug.keystore")
         }
     }
     buildTypes {
-        getByName("release") {
+        named("debug") {
             isMinifyEnabled = false
+        }
+        named("release") {
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-    }
-    compileOptions {
-        sourceCompatibility = Config.compileSourceVersion
-        targetCompatibility = Config.compileTargetVersion
     }
     buildFeatures {
         viewBinding = true
     }
+}
+
+ktlint {
+    android.set(true)
 }
 
 dependencies {
@@ -59,7 +60,7 @@ dependencies {
     implementation(Libs.googleAuth)
     implementation(Libs.timber)
     implementation(Libs.moshi)
-    implementation(Libs.prefs)
+    implementation(Libs.prefsKtx)
 
     implementation(project(":composer"))
     implementation(project(":composer-show-template"))

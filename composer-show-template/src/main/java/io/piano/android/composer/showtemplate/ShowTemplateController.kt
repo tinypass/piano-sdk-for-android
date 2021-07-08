@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.webkit.WebView
+import androidx.annotation.UiThread
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -15,6 +16,7 @@ import io.piano.android.composer.model.events.ShowTemplate
 import timber.log.Timber
 
 class ShowTemplateController private constructor(
+    private val jsInterface: ComposerJs,
     private val webView: WebView? = null,
     private val fragment: ShowTemplateDialogFragment? = null
 ) {
@@ -24,6 +26,16 @@ class ShowTemplateController private constructor(
         }
     }
 
+    /**
+     * Closes template via JS interface `close` function. It's an alias to `javascriptInterface.close(eventData)`
+     */
+    @Suppress("unused") // Public API.
+    @UiThread
+    fun close(eventData: String) = jsInterface.close(eventData)
+
+    /**
+     * Sends reload command to template. Should be called when user token has changed
+     */
     @Suppress("unused") // Public API.
     fun reloadWithToken(userToken: String) {
         val view = fragment?.webView ?: webView
@@ -45,7 +57,7 @@ class ShowTemplateController private constructor(
         @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface", "AddJavascriptInterface")
         internal fun WebView.prepare(
             dialogFragment: DialogFragment? = null,
-            javascriptInterface: Any?,
+            javascriptInterface: ComposerJs?,
             trackingId: String
         ) {
             settings.javaScriptEnabled = true
@@ -53,9 +65,7 @@ class ShowTemplateController private constructor(
                 setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
             }
             val jsInterface = javascriptInterface ?: ComposerJs()
-            if (jsInterface is ComposerJs) {
-                jsInterface.init(dialogFragment, this, trackingId)
-            }
+            jsInterface.init(dialogFragment, this, trackingId)
             addJavascriptInterface(jsInterface, JAVASCRIPT_INTERFACE)
         }
 
@@ -79,27 +89,29 @@ class ShowTemplateController private constructor(
         fun show(
             activity: FragmentActivity,
             showTemplateEvent: Event<ShowTemplate>,
-            javascriptInterface: Any? = null,
+            javascriptInterface: ComposerJs? = null,
             inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider
-        ): ShowTemplateController? =
-            when (showTemplateEvent.eventData.displayMode) {
-                ShowTemplate.DisplayMode.MODAL -> showModal(activity, showTemplateEvent, javascriptInterface)
+        ): ShowTemplateController? {
+            val jsInterface = javascriptInterface ?: ComposerJs()
+            return when (showTemplateEvent.eventData.displayMode) {
+                ShowTemplate.DisplayMode.MODAL -> showModal(activity, showTemplateEvent, jsInterface)
                 ShowTemplate.DisplayMode.INLINE -> showInline(
                     activity,
                     showTemplateEvent,
-                    javascriptInterface,
+                    jsInterface,
                     inlineWebViewProvider
                 )
                 else -> null.also {
                     Timber.w("Unknown display mode %s", showTemplateEvent.eventData.displayMode)
                 }
             }
+        }
 
         @JvmStatic
         private fun showInline(
             activity: FragmentActivity,
             showTemplateEvent: Event<ShowTemplate>,
-            javascriptInterface: Any? = null,
+            javascriptInterface: ComposerJs,
             webViewProvider: (FragmentActivity, String) -> WebView?
         ): ShowTemplateController? =
             with(showTemplateEvent) {
@@ -114,7 +126,7 @@ class ShowTemplateController private constructor(
                                 javascriptInterface = javascriptInterface,
                                 trackingId = eventExecutionContext.trackingId
                             )
-                            ShowTemplateController(webView = webView).also {
+                            ShowTemplateController(javascriptInterface, webView = webView).also {
                                 processDelay(activity, eventData) {
                                     eventData.url?.let {
                                         webView.loadUrl(it)
@@ -132,7 +144,7 @@ class ShowTemplateController private constructor(
         private fun showModal(
             activity: FragmentActivity,
             showTemplateEvent: Event<ShowTemplate>,
-            javascriptInterface: Any? = null
+            javascriptInterface: ComposerJs
         ): ShowTemplateController =
             with(showTemplateEvent) {
                 val dialogFragment =
@@ -141,11 +153,9 @@ class ShowTemplateController private constructor(
                         eventExecutionContext.trackingId
                     ).apply {
                         isCancelable = eventData.showCloseButton
-                        javascriptInterface?.let {
-                            jsInterface = it
-                        }
+                        jsInterface = javascriptInterface
                     }
-                ShowTemplateController(fragment = dialogFragment).also {
+                ShowTemplateController(javascriptInterface, fragment = dialogFragment).also {
                     processDelay(activity, eventData) {
                         dialogFragment.show(activity.supportFragmentManager, FRAGMENT_TAG)
                     }

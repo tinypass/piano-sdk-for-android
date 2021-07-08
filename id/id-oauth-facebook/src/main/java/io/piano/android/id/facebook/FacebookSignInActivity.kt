@@ -25,6 +25,7 @@ class FacebookSignInActivity : PianoOAuthActivity() {
         }
     }
 
+    // https://github.com/facebook/facebook-android-sdk/issues/875
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (resultCode) {
             RESULT_OK ->

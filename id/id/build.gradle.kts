@@ -1,40 +1,18 @@
+import io.piano.android.dependencies.Libs
+
 plugins {
-    id(Plugins.androidLibrary)
-    id(Plugins.kotlinAndroid)
-    id(Plugins.kotlinParcelize)
+    id("com.android.library")
+    id("common-android-config")
+    id("kotlin-parcelize")
     kotlin("kapt")
-    id(Plugins.dokka)
-    id(Plugins.ktlint)
-    id(Plugins.publish)
 }
 
-group = rootProject.group
-version = rootProject.version
-
 android {
-    buildToolsVersion = Config.androidBuildTools
-    compileSdkVersion(Config.androidCompileSdk)
-    defaultConfig {
-        minSdkVersion(Config.androidMinSdk)
-        targetSdkVersion(Config.androidTargetSdk)
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
-
-    compileOptions {
-        sourceCompatibility = Config.compileSourceVersion
-        targetCompatibility = Config.compileTargetVersion
-    }
     buildFeatures {
         viewBinding = true
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xjvm-default=enable")
     }
 }
 
@@ -57,12 +35,4 @@ dependencies {
     testImplementation(Libs.androidxTestCore)
     testImplementation(Libs.androidxTestExtJunit)
     testImplementation(Libs.robolectric)
-}
-
-kotlin {
-    explicitApi()
-}
-
-ktlint {
-    android.set(true)
 }

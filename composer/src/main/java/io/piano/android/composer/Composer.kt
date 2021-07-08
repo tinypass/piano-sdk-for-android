@@ -236,35 +236,6 @@ class Composer internal constructor(
         fun init(context: Context, aid: String, endpoint: Endpoint = Endpoint.PRODUCTION) =
             DependenciesProvider.init(context, aid, endpoint)
 
-        /**
-         * Initialize Composer
-         * @deprecated Use #init(Context, String, Endpoint)
-         * @param context Activity or Application context
-         * @param aid Your AID
-         * @param endpoint Custom API endpoint, null for use "production"
-         */
-        @JvmStatic
-        @Deprecated(
-            "Use init with new Endpoint type",
-            ReplaceWith("Composer.init(context, aid, Endpoint(endpoint, endpoint))")
-        )
-        @Suppress("unused") // Public API.
-        fun init(context: Context, aid: String, endpoint: String? = null) =
-            init(context, aid, endpoint?.let { Endpoint(it, it) } ?: Endpoint.PRODUCTION)
-
-        /**
-         * Initialize Composer
-         * @deprecated Use #init(Context, String, Endpoint)
-         * @param context Activity or Application context
-         * @param aid Your AID
-         * @param sandbox Use sandbox environment if true, production otherwise
-         */
-        @JvmStatic
-        @Deprecated("Use init with new Endpoint type", ReplaceWith("Composer.init(context, aid, Endpoint.SANDBOX"))
-        @Suppress("unused") // Public API.
-        fun init(context: Context, aid: String, sandbox: Boolean) =
-            init(context, aid, if (sandbox) Endpoint.SANDBOX else Endpoint.PRODUCTION)
-
         @JvmStatic
         @Suppress("unused") // Public API.
         fun getInstance(): Composer = DependenciesProvider.getInstance().composer

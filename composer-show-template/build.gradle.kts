@@ -1,26 +1,8 @@
+import io.piano.android.dependencies.Libs
+
 plugins {
-    id(Plugins.androidLibrary)
-    id(Plugins.kotlinAndroid)
-    id(Plugins.dokka)
-    id(Plugins.ktlint)
-    id(Plugins.publish)
-}
-
-group = rootProject.group
-version = rootProject.version
-
-android {
-    buildToolsVersion = Config.androidBuildTools
-    compileSdkVersion(Config.androidCompileSdk)
-    defaultConfig {
-        minSdkVersion(Config.androidMinSdk)
-        targetSdkVersion(Config.androidTargetSdk)
-    }
-
-    compileOptions {
-        sourceCompatibility = Config.compileSourceVersion
-        targetCompatibility = Config.compileTargetVersion
-    }
+    id("com.android.library")
+    id("common-android-config")
 }
 
 dependencies {
@@ -31,12 +13,4 @@ dependencies {
     implementation(Libs.lifecycleCommon)
     implementation(Libs.annotations)
     implementation(Libs.timber)
-}
-
-kotlin {
-    explicitApi()
-}
-
-ktlint {
-    android.set(true)
 }

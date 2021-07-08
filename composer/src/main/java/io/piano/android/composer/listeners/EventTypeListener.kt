@@ -28,38 +28,31 @@ interface EventTypeListener<T : EventType> {
      * @param event event
      * @return True, if this listener can process this type of events, otherwise False. Default answer is False
      */
-    @JvmDefault
     fun canProcess(event: Event<EventType>): Boolean {
         return false
     }
 }
 
 fun interface ExperienceExecuteListener : EventTypeListener<ExperienceExecute> {
-    @JvmDefault
     override fun canProcess(event: Event<EventType>): Boolean = event.eventData is ExperienceExecute
 }
 
 fun interface MeterListener : EventTypeListener<Meter> {
-    @JvmDefault
     override fun canProcess(event: Event<EventType>): Boolean = event.eventData is Meter
 }
 
 fun interface NonSiteListener : EventTypeListener<NonSite> {
-    @JvmDefault
     override fun canProcess(event: Event<EventType>): Boolean = event.eventData is NonSite
 }
 
 fun interface UserSegmentListener : EventTypeListener<UserSegment> {
-    @JvmDefault
     override fun canProcess(event: Event<EventType>): Boolean = event.eventData is UserSegment
 }
 
 fun interface ShowTemplateListener : EventTypeListener<ShowTemplate> {
-    @JvmDefault
     override fun canProcess(event: Event<EventType>): Boolean = event.eventData is ShowTemplate
 }
 
 fun interface ShowLoginListener : EventTypeListener<ShowLogin> {
-    @JvmDefault
     override fun canProcess(event: Event<EventType>): Boolean = event.eventData is ShowLogin
 }

@@ -35,7 +35,7 @@ class PianoId {
                 val okHttpClient = OkHttpClient.Builder()
                     .addInterceptor(
                         HttpLoggingInterceptor().setLevel(
-                            if (BuildConfig.DEBUG)
+                            if (BuildConfig.DEBUG || isLogHttpSet())
                                 HttpLoggingInterceptor.Level.BODY
                             else HttpLoggingInterceptor.Level.NONE
                         )

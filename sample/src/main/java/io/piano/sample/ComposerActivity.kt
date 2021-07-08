@@ -118,6 +118,7 @@ class ComposerActivity : AppCompatActivity() {
                         @JavascriptInterface
                         override fun customEvent(eventData: String) {
                             Snackbar.make(findViewById(R.id.app_bar), eventData, Snackbar.LENGTH_LONG).show()
+                            showTemplateController?.close("test")
                         }
 
                         @JavascriptInterface
@@ -160,9 +161,5 @@ class ComposerActivity : AppCompatActivity() {
 
     private fun signIn(userProvider: String) {
         authResult.launch(PianoId.signIn())
-    }
-
-    companion object {
-        private const val PIANO_ID_REQUEST_CODE = 1
     }
 }

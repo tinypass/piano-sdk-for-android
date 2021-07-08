@@ -18,7 +18,7 @@ class ShowTemplateDialogFragment : AppCompatDialogFragment() {
         arguments?.getString(KEY_URL) ?: "about:blank"
     }
     internal lateinit var webView: WebView
-    internal var jsInterface: Any? = null
+    internal var jsInterface: ComposerJs? = null
     private var shouldLoadUrl = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

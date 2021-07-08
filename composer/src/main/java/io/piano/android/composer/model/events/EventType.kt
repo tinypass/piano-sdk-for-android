@@ -22,9 +22,10 @@ data class Meter(
     @JvmField val incremented: Boolean,
     @JvmField val state: MeterState = MeterState.ACTIVE
 ) : EventType() {
+    @JsonClass(generateAdapter = false)
     enum class MeterState {
-        ACTIVE,
-        EXPIRED
+        @Json(name = "active") ACTIVE,
+        @Json(name = "expired") EXPIRED
     }
 }
 
@@ -45,6 +46,7 @@ data class ShowTemplate(
     @JvmField val showCloseButton: Boolean,
     @JvmField val url: String? = null
 ) : EventType() {
+    @JsonClass(generateAdapter = false)
     enum class DisplayMode(val mode: String) {
         @Json(name = "modal")
         MODAL("modal"),
