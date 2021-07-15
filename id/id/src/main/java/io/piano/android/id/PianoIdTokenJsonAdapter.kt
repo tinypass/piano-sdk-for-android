@@ -53,12 +53,14 @@ class PianoIdTokenJsonAdapter(
                 }
             }
             endObject()
+            val jwt = jwtAdapter.fromJson(
+                Base64.decode(accessToken!!.split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString()
+            )
             PianoIdToken(
                 accessToken ?: throw Util.missingProperty(ACCESS_TOKEN_CAMEL, ACCESS_TOKEN, reader),
                 refreshToken ?: "",
-                jwtAdapter.fromJson(
-                    Base64.decode(accessToken!!.split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString()
-                )?.exp ?: 0,
+                jwt?.exp ?: 0,
+                jwt?.emailConfirmationRequired ?: false
             )
         }
     }

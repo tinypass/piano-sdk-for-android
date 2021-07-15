@@ -68,6 +68,9 @@ private final ActivityResultLauncher<PianoIdClient.SignInContext> authResult = r
                 PianoIdAuthSuccessResult data = (PianoIdAuthSuccessResult) r;
                 boolean isNewUserRegistered = data.isNewUser()
                 PianoIdToken token = data.getToken();
+                if (token.emailConfirmationRequired) {
+                    // process enabled Double opt-in
+                }
                 // process successful authorization 
             } else {
                 PianoIdAuthFailureResult data = (PianoIdAuthFailureResult) r;
@@ -86,6 +89,9 @@ private val authResult = registerForActivityResult(PianoIdAuthResultContract()) 
         is PianoIdAuthSuccessResult -> {
             val token = r.token
             val isNewUserRegistered = r.isNewUser
+            if (token.emailConfirmationRequired) {
+                // process enabled Double opt-in
+            }
             // process successful authorization 
         }
         is PianoIdAuthFailureResult -> {

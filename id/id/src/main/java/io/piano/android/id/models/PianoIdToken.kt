@@ -9,7 +9,8 @@ import java.util.Date
 class PianoIdToken(
     @JvmField val accessToken: String,
     @JvmField val refreshToken: String = "",
-    @JvmField val expiresInTimestamp: Long = 0
+    @JvmField val expiresInTimestamp: Long = 0,
+    @JvmField val emailConfirmationRequired: Boolean = false
 ) : Parcelable {
     @IgnoredOnParcel
     @JvmField

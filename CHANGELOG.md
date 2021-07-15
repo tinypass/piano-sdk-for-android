@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.2.1
+* Added email confirmation (double opt-in) flag in `PianoIdToken`
+
 ## v2.2.0
 * Updated dependencies:
     - androidx.activity:activity [1.2.2 -> 1.2.3]
