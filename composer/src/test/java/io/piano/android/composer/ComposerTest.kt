@@ -40,7 +40,7 @@ class ComposerTest {
     }
     private val prefsStorage: PrefsStorage = mock()
     private val httpHelper: HttpHelper = mock() {
-        on { convertExperienceRequest(any(), anyOrNull(), anyOrNull()) } doReturn mapOf()
+        on { convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull()) } doReturn mapOf()
         on { buildEventTracking(any()) } doReturn mapOf()
         on {
             buildShowTemplateParameters(
@@ -74,7 +74,7 @@ class ComposerTest {
     private fun getExperienceWithCallbackCheck(callbackTest: (Callback<Data<ExperienceResponse>>) -> Unit) {
         doNothing().`when`(composer).processExperienceResponse(any(), any(), any(), any())
         composer.getExperience(experienceRequest, resultListeners, exceptionListener)
-        verify(httpHelper).convertExperienceRequest(any(), anyOrNull(), anyOrNull())
+        verify(httpHelper).convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull())
         verify(api).getExperience(any(), any())
         val callbackCaptor = argumentCaptor<Callback<Data<ExperienceResponse>>>()
         verify(experienceCall).enqueue(callbackCaptor.capture())
@@ -112,7 +112,7 @@ class ComposerTest {
         getExperienceWithCallbackCheck {
             val experienceResponse: ExperienceResponse = mock()
             val response = Response.success(
-                Data<ExperienceResponse>(experienceResponse, emptyList())
+                Data(experienceResponse, emptyList())
             )
             it.onResponse(experienceCall, response)
             verify(composer).processExperienceResponse(
@@ -146,6 +146,8 @@ class ComposerTest {
             null,
             0,
             0,
+            null,
+            null,
             EventsContainer(
                 eventTypes.map {
                     Event(mock(), mock(), it)
@@ -177,7 +179,7 @@ class ComposerTest {
             listeners,
             exceptionListener
         )
-        verify(httpHelper).processExperienceResponse(response)
+        verify(httpHelper).afterExecute(experienceRequest, response)
         verify(showTemplateListener, times(iterations)).canProcess(any())
         verify(showTemplateListener, times(iterations)).onExecuted(any())
         verify(experienceExecuteListener, times(iterations)).canProcess(any())
@@ -195,6 +197,8 @@ class ComposerTest {
             null,
             0,
             0,
+            null,
+            null,
             EventsContainer(listOf(Event(mock(), mock(), mock())))
         )
         composer.processExperienceResponse(
@@ -203,7 +207,7 @@ class ComposerTest {
             listOf(),
             exceptionListener
         )
-        verify(httpHelper).processExperienceResponse(experienceResponse)
+        verify(httpHelper).afterExecute(experienceRequest, experienceResponse)
         verify(exceptionListener, never()).onException(any())
     }
 
@@ -215,6 +219,8 @@ class ComposerTest {
             null,
             0,
             0,
+            null,
+            null,
             EventsContainer(emptyList())
         )
         composer.processExperienceResponse(
@@ -223,7 +229,7 @@ class ComposerTest {
             resultListeners,
             exceptionListener
         )
-        verify(httpHelper).processExperienceResponse(response)
+        verify(httpHelper).afterExecute(experienceRequest, response)
         for (listener in resultListeners) {
             verify(listener, never()).canProcess(any())
             @Suppress("UNCHECKED_CAST")

@@ -1,30 +1,19 @@
 package io.piano.android.composer
 
 import androidx.annotation.RestrictTo
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 import java.util.TimeZone
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 internal class ExperienceIdsProvider(
-    private val prefsStorage: PrefsStorage
+    private val prefsStorage: PrefsStorage,
+    private val pageViewIdProvider: PageViewIdProvider
 ) {
     internal var isVisitIdGenerated = false
         private set
 
-    internal fun generateRandomAlphaNumString(length: Int): String =
-        buildString(length) {
-            for (i in 0 until length)
-                append(ALLOWED_RANDOM_CHARS.random())
-        }
-
-    internal fun getPageViewId(date: Date): String = listOf(
-        dateFormat.format(date),
-        generateRandomAlphaNumString(RANDOM_STRING_SIZE),
-        generateRandomAlphaNumString(HASH_SIZE)
-    ).joinToString(separator = "-")
+    internal fun getPageViewId(date: Date): String = pageViewIdProvider.getPageViewId(date)
 
     internal fun getVisitId(date: Date): String {
         val visitIdTimestamp = prefsStorage.visitTimestamp
@@ -66,11 +55,6 @@ internal class ExperienceIdsProvider(
     }
 
     companion object {
-        internal const val ALLOWED_RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-        private const val PAGE_VIEW_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         internal const val VISIT_ID_PREFIX = "v-"
-        internal const val RANDOM_STRING_SIZE = 16
-        internal const val HASH_SIZE = 32
-        internal val dateFormat = SimpleDateFormat(PAGE_VIEW_DATE_FORMAT, Locale.US)
     }
 }

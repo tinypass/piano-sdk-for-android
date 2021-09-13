@@ -1,5 +1,22 @@
 # Piano SDK for Android
 
+## v2.3.0
+* Add Piano C1X integration
+* Add Android 12 support
+* Updated dependencies:
+    - Kotlin [1.4.32 -> 1.5.30]
+    - androidx.activity:activity [1.2.3 -> 1.3.1]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.3.1
+    - androidx.appcompat:appcompat [1.3.0 -> 1.3.1]
+      https://developer.android.com/jetpack/androidx/releases/appcompat#1.3.1
+    - androidx.fragment:fragment [1.3.5 -> 1.3.6]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.3.6
+    - com.android.tools.build:gradle [4.2.2 -> 7.0.2]
+      http://tools.android.com/
+    - com.facebook.android:facebook-login [11.1.0 -> 11.2.0]
+      https://github.com/facebook/facebook-android-sdk
+    - com.google.android.gms:play-services-auth [19.0.0 -> 19.2.0]
+
 ## v2.2.1
 * Added email confirmation (double opt-in) flag in `PianoIdToken`
 

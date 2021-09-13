@@ -10,5 +10,7 @@ class ExperienceResponse(
     @JvmField @Json(name = "tac") val taCookie: CookieObject?,
     @JvmField @Json(name = "timezone_offset") val timeZoneOffsetMillis: Int,
     @JvmField @Json(name = "visit_timeout") val visitTimeoutMinutes: Long?,
+    @JvmField @Json(name = "uid") val userId: String?,
+    @JvmField val cxenseCustomerPrefix: String?,
     @JvmField val result: EventsContainer
 )

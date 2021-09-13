@@ -19,7 +19,7 @@ internal class HttpHelper(
     private val prefsStorage: PrefsStorage,
     moshi: Moshi,
     private val userAgent: String
-) {
+) : ExperienceInterceptor {
     private val mapAdapter: JsonAdapter<Map<String, String?>> = moshi.adapter(
         Types.newParameterizedType(
             Map::class.java,
@@ -40,6 +40,7 @@ internal class HttpHelper(
     internal fun convertExperienceRequest(
         request: ExperienceRequest,
         aid: String,
+        browserIdProvider: () -> String?,
         userToken: String?
     ): Map<String, String> =
         with(request) {
@@ -60,6 +61,7 @@ internal class HttpHelper(
                 PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie.orEmpty(),
                 PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie.orEmpty(),
                 PARAM_USER_TOKEN to userToken.orEmpty(),
+                PARAM_NEW_BID to browserIdProvider().orEmpty(),
                 PARAM_REFERRER to referer.orEmpty(),
                 PARAM_CONTENT_AUTHOR to contentAuthor.orEmpty(),
                 PARAM_CONTENT_SECTION to contentSection.orEmpty(),
@@ -74,7 +76,7 @@ internal class HttpHelper(
             ).filterNotEmptyValues()
         }.toMap()
 
-    internal fun processExperienceResponse(response: ExperienceResponse) =
+    override fun afterExecute(request: ExperienceRequest, response: ExperienceResponse) =
         with(response) {
             xbCookie?.let { prefsStorage.xbuilderBrowserCookie = it.value }
             tbCookie?.let { prefsStorage.tpBrowserCookie = it.value }
@@ -135,6 +137,7 @@ internal class HttpHelper(
     companion object {
         // Experience request constants
         internal const val PARAM_AID = "aid"
+        internal const val PARAM_NEW_BID = "new_bid"
         internal const val PARAM_DEBUG = "debug"
         internal const val PARAM_USER_AGENT = "user_agent"
         internal const val PARAM_PROTOCOL_VERSION = "protocol_version"

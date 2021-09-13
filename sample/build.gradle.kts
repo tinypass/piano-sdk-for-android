@@ -14,6 +14,7 @@ val pianoProperties = Properties().apply {
 val aid: String = pianoProperties["io.piano.aid"]?.toString()
     ?: throw IllegalArgumentException("You missed 'io.piano.aid' in piano.properties")
 val endpoint: String = pianoProperties["io.piano.endpoint"]?.toString() ?: ""
+val siteId: String = pianoProperties["cxenseSiteid"]?.toString() ?: "1111111111111111111"
 val fbAppId: String = pianoProperties["facebookAppId"]?.toString() ?: "1111111111111111"
 
 android {
@@ -22,6 +23,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "PIANO_AID", """"$aid"""")
+        buildConfigField("String", "CX_SITE_ID", """"$siteId"""")
         buildConfigField("String", "PIANO_ENDPOINT", """"$endpoint"""")
         multiDexEnabled = true
 
@@ -54,6 +56,10 @@ ktlint {
     android.set(true)
 }
 
+repositories {
+    maven("https://jitpack.io")
+}
+
 dependencies {
     implementation(Libs.appcompat)
     implementation(Libs.material)
@@ -63,6 +69,7 @@ dependencies {
     implementation(Libs.prefsKtx)
 
     implementation(project(":composer"))
+    implementation(project(":composer-c1x"))
     implementation(project(":composer-show-template"))
     implementation(project(":id:id"))
     implementation(project(":id:id-oauth-google"))

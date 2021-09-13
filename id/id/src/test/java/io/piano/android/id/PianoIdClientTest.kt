@@ -21,6 +21,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Locale
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -61,7 +62,7 @@ class PianoIdClientTest {
     @Test
     fun withOAuthProvider() {
         assertEquals(pianoIdClient, pianoIdClient.with(oAuthProvider))
-        assertEquals(oAuthProvider, pianoIdClient.oauthProviders[NAME.toLowerCase()])
+        assertEquals(oAuthProvider, pianoIdClient.oauthProviders[NAME.lowercase(Locale.getDefault())])
     }
 
     @Test

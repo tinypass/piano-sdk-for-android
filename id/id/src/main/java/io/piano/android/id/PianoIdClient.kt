@@ -92,7 +92,7 @@ class PianoIdClient internal constructor(
      */
     @Suppress("unused") // Public API.
     fun with(provider: PianoIdOAuthProvider) = apply {
-        oauthProviders[provider.name.toLowerCase(Locale.US)] = provider
+        oauthProviders[provider.name.lowercase(Locale.US)] = provider
     }
 
     @Suppress("unused") // Public API.
@@ -208,13 +208,13 @@ class PianoIdClient internal constructor(
     internal fun buildSocialAuthIntent(context: Context, jsPayload: String): Intent =
         socialTokenResponseAdapter.fromJson(jsPayload)?.let { r ->
             val bundle = r.toBundle()
-            oauthProviders[r.oauthProvider.toLowerCase(Locale.US)]?.buildIntent(context, bundle)?.putExtras(bundle)
+            oauthProviders[r.oauthProvider.lowercase(Locale.US)]?.buildIntent(context, bundle)?.putExtras(bundle)
                 ?: throw PianoIdException("OAuth provider '${r.oauthProvider}' is not registered")
         } ?: throw PianoIdException("Invalid payload '$jsPayload'")
 
     internal fun buildResultJsCommand(provider: String, token: String): String {
         val socialTokenData = socialTokenDataAdapter.toJson(
-            SocialTokenData(provider.toUpperCase(Locale.US), token, aid)
+            SocialTokenData(provider.uppercase(Locale.US), token, aid)
         )
         return "(function(){window.PianoIDMobileSDK.socialLoginCallback('$socialTokenData')})()"
     }

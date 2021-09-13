@@ -1,11 +1,11 @@
 package io.piano.sample
 
-import android.os.Build
 import android.webkit.WebView
 import androidx.multidex.MultiDexApplication
 import com.google.android.gms.security.ProviderInstaller
 import io.piano.android.composer.Composer
 import io.piano.android.composer.Composer.Endpoint
+import io.piano.android.composer.c1x.PianoC1X
 import io.piano.android.id.PianoId
 import io.piano.android.id.PianoIdJs
 import io.piano.android.id.facebook.FacebookOAuthProvider
@@ -26,7 +26,7 @@ class PianoSampleApplication : MultiDexApplication() {
         }
 
         // Add code for debugging. Don't use in real release application 
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (BuildConfig.DEBUG) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
         val prefsStorage = SimpleDependenciesProvider.getInstance(this).prefsStorage
@@ -48,6 +48,9 @@ class PianoSampleApplication : MultiDexApplication() {
             })
             .with(GoogleOAuthProvider())
             .with(FacebookOAuthProvider())
+        // Use this one if you want Piano C1X integration
+        // PianoC1X.init(this, BuildConfig.CX_SITE_ID, BuildConfig.PIANO_AID, COMPOSER_ENDPOINT)
+        // Use this one for Composer only
         Composer.init(this, BuildConfig.PIANO_AID, COMPOSER_ENDPOINT)
         Composer.getInstance().userToken(prefsStorage.pianoIdToken?.accessToken)
     }

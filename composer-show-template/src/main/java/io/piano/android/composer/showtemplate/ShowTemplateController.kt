@@ -61,9 +61,6 @@ class ShowTemplateController private constructor(
             trackingId: String
         ) {
             settings.javaScriptEnabled = true
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
-            }
             val jsInterface = javascriptInterface ?: ComposerJs()
             jsInterface.init(dialogFragment, this, trackingId)
             addJavascriptInterface(jsInterface, JAVASCRIPT_INTERFACE)
@@ -163,24 +160,23 @@ class ShowTemplateController private constructor(
             }
 
         @JvmStatic
-        private fun processDelay(activity: FragmentActivity, showTemplate: ShowTemplate, showFunction: () -> Unit) {
-            val handler = Handler(Looper.getMainLooper())
-            val func: () -> Unit = {
-                if (!activity.isFinishing)
-                    showFunction()
-            }
-            with(showTemplate.delayBy) {
+        private fun processDelay(activity: FragmentActivity, showTemplate: ShowTemplate, showFunction: () -> Unit) =
+            showTemplate.delayBy.apply {
+                val func: () -> Unit = {
+                    if (!activity.isFinishing)
+                        showFunction()
+                }
                 if (isDelayedByTime) {
+                    val handler = Handler(Looper.getMainLooper())
                     activity.lifecycle.addObserver(
                         object : DefaultLifecycleObserver {
                             override fun onPause(owner: LifecycleOwner) {
-                                handler.removeCallbacks(func)
+                                handler.removeCallbacksAndMessages(null)
                             }
                         }
                     )
                     handler.postDelayed(func, value * 1000L)
                 } else func()
             }
-        }
     }
 }

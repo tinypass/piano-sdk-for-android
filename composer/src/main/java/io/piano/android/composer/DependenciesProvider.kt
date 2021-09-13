@@ -46,7 +46,7 @@ internal class DependenciesProvider private constructor(
 
     internal val composer: Composer = Composer(
         api,
-        HttpHelper(ExperienceIdsProvider(prefsStorage), prefsStorage, moshi, userAgent),
+        HttpHelper(ExperienceIdsProvider(prefsStorage, PageViewIdProvider), prefsStorage, moshi, userAgent),
         prefsStorage,
         aid,
         endpoint

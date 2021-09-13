@@ -103,7 +103,7 @@ class PianoId {
         @JvmStatic
         fun Uri?.isPianoIdUri(): Boolean =
             this?.run {
-                scheme?.toLowerCase(Locale.ENGLISH)?.startsWith(PianoIdClient.LINK_SCHEME_PREFIX) == true &&
+                scheme?.lowercase(Locale.ENGLISH)?.startsWith(PianoIdClient.LINK_SCHEME_PREFIX) == true &&
                     PianoIdClient.LINK_AUTHORITY.equals(authority, ignoreCase = true)
             } ?: false
 

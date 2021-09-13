@@ -49,7 +49,7 @@ class HttpHelperTest {
 
     @Test
     fun convertExperienceRequest() {
-        with(httpHelper.convertExperienceRequest(experienceRequest, DUMMY_STRING, null)) {
+        with(httpHelper.convertExperienceRequest(experienceRequest, DUMMY_STRING, { null }, null)) {
             assertEquals(14, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
@@ -62,16 +62,18 @@ class HttpHelperTest {
     }
 
     @Test
-    fun processExperienceResponse() {
+    fun afterExecute() {
         val experienceResponse = ExperienceResponse(
             CookieObject(DUMMY_STRING2),
             CookieObject(DUMMY_STRING),
             CookieObject(JOINED_DUMMY),
             30000,
             1,
+            null,
+            null,
             EventsContainer(emptyList())
         )
-        httpHelper.processExperienceResponse(experienceResponse)
+        httpHelper.afterExecute(mock(), experienceResponse)
         verify(prefsStorage).xbuilderBrowserCookie = DUMMY_STRING
         verify(prefsStorage).tpBrowserCookie = DUMMY_STRING2
         verify(prefsStorage).tpAccessCookie = JOINED_DUMMY

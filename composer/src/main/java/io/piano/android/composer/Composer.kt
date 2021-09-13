@@ -32,8 +32,20 @@ class Composer internal constructor(
     private val templateUrl by lazy {
         endpoint.apiHost.newBuilder().addPathSegments(URL_TEMPLATE).build()
     }
+    private var browserIdProvider: () -> String? = { null }
     private var userToken: String? = null
     private var gaClientId: String? = null
+    private val experienceInterceptors = mutableListOf<ExperienceInterceptor>(httpHelper)
+
+    init {
+        require(aid.isNotEmpty()) {
+            "AID can't be empty"
+        }
+    }
+
+    fun addExperienceInterceptor(interceptor: ExperienceInterceptor) = experienceInterceptors.add(interceptor)
+
+    fun browserIdProvider(browserIdProvider: () -> String?) = apply { this.browserIdProvider = browserIdProvider }
 
     /**
      * Sets user token, which will be sent at each experience request
@@ -64,8 +76,12 @@ class Composer internal constructor(
         request: ExperienceRequest,
         eventTypeListeners: Collection<EventTypeListener<out EventType>>,
         exceptionListener: ExceptionListener
-    ) = api.getExperience(experienceUrl, httpHelper.convertExperienceRequest(request, aid, userToken))
-        .enqueue(
+    ) {
+        experienceInterceptors.forEach { it.beforeExecute(request) }
+        api.getExperience(
+            experienceUrl,
+            httpHelper.convertExperienceRequest(request, aid, browserIdProvider, userToken)
+        ).enqueue(
             object : Callback<Data<ExperienceResponse>> {
                 override fun onResponse(
                     call: Call<Data<ExperienceResponse>>,
@@ -73,24 +89,16 @@ class Composer internal constructor(
                 ) {
                     runCatching {
                         with(response.bodyOrThrow()) {
-                            if (errors.isEmpty()) {
-                                // Don't process any custom logic if there's no listeners
-                                if (eventTypeListeners.isNotEmpty())
-                                    processExperienceResponse(
-                                        request,
-                                        data,
-                                        eventTypeListeners,
-                                        exceptionListener
-                                    )
-                            } else {
-                                exceptionListener.onException(
-                                    ComposerException(
-                                        errors.joinToString(
-                                            separator = "\n"
-                                        ) { it.message }
-                                    )
-                                )
+                            if (errors.isNotEmpty()) {
+                                throw ComposerException(errors.joinToString(separator = "\n") { it.message })
                             }
+
+                            processExperienceResponse(
+                                request,
+                                data,
+                                eventTypeListeners,
+                                exceptionListener
+                            )
                         }
                     }.onFailure {
                         exceptionListener.onException(it.toComposerException())
@@ -101,6 +109,7 @@ class Composer internal constructor(
                     exceptionListener.onException(t.toComposerException())
             }
         )
+    }
 
     /**
      * Tracks external event by id
@@ -130,7 +139,12 @@ class Composer internal constructor(
         eventTypeListeners: Collection<EventTypeListener<out EventType>>,
         exceptionListener: ExceptionListener
     ) {
-        httpHelper.processExperienceResponse(response)
+        experienceInterceptors.forEach { it.afterExecute(request, response) }
+
+        // Don't process any custom logic if there's no listeners
+        if (eventTypeListeners.isEmpty())
+            return
+
         response.result.events.forEach {
             val event = it.preprocess(request)
             eventTypeListeners.forEach { listener ->
@@ -185,20 +199,23 @@ class Composer internal constructor(
         internal val apiHost: HttpUrl = HttpUrl.get(apiHost)
 
         companion object {
-            private const val SANDBOX_URL = "https://sandbox.tinypass.com"
-            private const val COMPOSER_DEFAULT_URL = "https://experience.tinypass.com"
-            private const val API_DEFAULT_URL = "https://buy.tinypass.com"
-            private const val COMPOSER_AU_URL = "https://experience-au.piano.io"
+            private const val COMPOSER_SANDBOX_URL = "https://c2.sandbox.piano.io"
+            private const val API_SANDBOX_URL = "https://sandbox.piano.io"
+            private const val COMPOSER_DEFAULT_URL = "https://c2.piano.io"
+            private const val API_DEFAULT_URL = "https://buy.piano.io"
+            private const val COMPOSER_AU_URL = "https://c2-au.piano.io"
             private const val API_AU_URL = "https://buy-au.piano.io"
-            private const val COMPOSER_AP_URL = "https://experience-ap.piano.io"
+            private const val COMPOSER_AP_URL = "https://c2-ap.piano.io"
             private const val API_AP_URL = "https://buy-ap.piano.io"
+            private const val COMPOSER_EU_URL = "https://c2-eu.piano.io"
+            private const val API_EU_URL = "https://buy-eu.piano.io"
 
             /**
              * Sandbox endpoint
              */
             @JvmField
             @Suppress("unused") // Public API.
-            val SANDBOX = Endpoint(SANDBOX_URL, SANDBOX_URL)
+            val SANDBOX = Endpoint(COMPOSER_SANDBOX_URL, API_SANDBOX_URL)
 
             /**
              * Default production endpoint
@@ -220,6 +237,13 @@ class Composer internal constructor(
             @JvmField
             @Suppress("unused") // Public API.
             val PRODUCTION_ASIA_PACIFIC = Endpoint(COMPOSER_AP_URL, API_AP_URL)
+
+            /**
+             * Europe production endpoint
+             */
+            @JvmField
+            @Suppress("unused") // Public API.
+            val PRODUCTION_EUROPE = Endpoint(COMPOSER_EU_URL, API_EU_URL)
         }
     }
 

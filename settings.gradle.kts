@@ -14,6 +14,7 @@ includeBuild("plugins")
 
 include(
     ":composer",
+    ":composer-c1x",
     ":composer-show-template",
     ":id:id",
     ":id:id-oauth-facebook",

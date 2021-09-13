@@ -1,32 +1,33 @@
 package io.piano.android.dependencies
 
 private object Versions {
-    const val kotlin = "1.4.32"
+    const val kotlin = "1.5.30"
 
     // AndroidX libraries
-    const val compatLibrary = "1.3.0"
-    const val androidxActivity = "1.2.3"
+    const val compatLibrary = "1.3.1"
+    const val androidxActivity = "1.3.1"
     const val annotationsLibrary = "1.2.0"
-    const val fragmentLibrary = "1.3.5"
+    const val fragmentLibrary = "1.3.6"
     const val materialLibrary = "1.4.0"
     const val lifecycleLibrary = "2.3.1"
     const val prefsLibrary = "1.1.1"
 
     // Third party Libraries
-    const val facebookLogin = "11.1.0"
-    const val googlePlayServices = "19.0.0"
+    const val facebookLogin = "11.2.0"
+    const val googlePlayServices = "19.2.0"
     const val retrofit = "2.6.4"
     const val okhttp = "3.12.13"
     const val moshi = "1.12.0"
-    const val timber = "4.7.1"
+    const val timber = "5.0.1"
+    const val cxense = "2.2.0"
 
     // Test Libraries
     const val junit = "4.13.2"
-    const val androidxTestCore = "1.3.0"
-    const val androidxTestExtJunit = "1.1.2"
+    const val androidxTestCore = "1.4.0"
+    const val androidxTestExtJunit = "1.1.3"
     const val mockitoKotlin = "2.2.0"
-    const val mockitoCore = "3.11.2"
-    const val robolectric = "4.5.1"
+    const val mockitoCore = "3.12.1"
+    const val robolectric = "4.6.1"
 }
 
 object Libs {
@@ -47,6 +48,7 @@ object Libs {
     const val moshi = "com.squareup.moshi:moshi:${Versions.moshi}"
     const val moshiCodegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
     const val prefsKtx = "androidx.preference:preference-ktx:${Versions.prefsLibrary}"
+    const val cxense = "com.cxpublic:cxense-android:${Versions.cxense}"
 
 
     const val kotlinJunit = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.kotlin}"

@@ -37,7 +37,7 @@ class GoogleSignInActivity : PianoOAuthActivity() {
                 val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .requestProfile()
-                    .requestIdToken(intent.getStringExtra(PianoId.KEY_CLIENT_ID))
+                    .requestIdToken(requireNotNull(intent.getStringExtra(PianoId.KEY_CLIENT_ID)))
                     .build()
                 val signInIntent = GoogleSignIn.getClient(this, options).apply {
                     signOut()

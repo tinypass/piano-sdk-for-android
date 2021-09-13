@@ -17,23 +17,11 @@ import kotlin.test.assertTrue
 
 class ExperienceIdsProviderTest {
     private val prefsStorage: PrefsStorage = mock()
-
-    private val experienceIdsProvider = spy(ExperienceIdsProvider(prefsStorage))
-
-    @Test
-    fun getPageViewId() {
-        doReturn(DUMMY_STRING).`when`(experienceIdsProvider)
-            .generateRandomAlphaNumString(ExperienceIdsProvider.RANDOM_STRING_SIZE)
-        doReturn(DUMMY_STRING2).`when`(experienceIdsProvider)
-            .generateRandomAlphaNumString(ExperienceIdsProvider.HASH_SIZE)
-        val date = Date()
-        assertEquals(
-            "${ExperienceIdsProvider.dateFormat.format(date)}-$DUMMY_STRING-$DUMMY_STRING2",
-            experienceIdsProvider.getPageViewId(date)
-        )
-        verify(experienceIdsProvider).generateRandomAlphaNumString(ExperienceIdsProvider.RANDOM_STRING_SIZE)
-        verify(experienceIdsProvider).generateRandomAlphaNumString(ExperienceIdsProvider.HASH_SIZE)
+    private val pageViewIdProvider: PageViewIdProvider = mock() {
+        on { getPageViewId(any()) } doReturn DUMMY_STRING
     }
+
+    private val experienceIdsProvider = spy(ExperienceIdsProvider(prefsStorage, pageViewIdProvider))
 
     @Test
     fun getVisitId() {
@@ -97,7 +85,6 @@ class ExperienceIdsProviderTest {
 
     @Test
     fun generateVisitId() {
-        doReturn(DUMMY_STRING).`when`(experienceIdsProvider).getPageViewId(any())
         val date = Date()
         with(experienceIdsProvider.generateVisitId(date)) {
             assertEquals(ExperienceIdsProvider.VISIT_ID_PREFIX + DUMMY_STRING, this)
@@ -120,15 +107,6 @@ class ExperienceIdsProviderTest {
             timeInMillis
         }
         assertEquals(milliSeconds, experienceIdsProvider.getServerMidnightTimestamp(date))
-    }
-
-    @Test
-    fun generateRandomAlphaNumString() {
-        val size = 5
-        val randomStrings = List(size) {
-            experienceIdsProvider.generateRandomAlphaNumString(ExperienceIdsProvider.HASH_SIZE)
-        }
-        assertEquals(size, randomStrings.toSet().size)
     }
 
     companion object {
