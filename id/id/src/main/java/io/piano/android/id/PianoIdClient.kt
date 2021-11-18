@@ -13,7 +13,6 @@ import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
-import io.piano.android.id.models.TokenData
 import okhttp3.HttpUrl
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,9 +28,6 @@ class PianoIdClient internal constructor(
     private val moshi: Moshi,
     internal val aid: String
 ) {
-    private val tokenAdapter by lazy {
-        moshi.adapter(TokenData::class.java)
-    }
     private val pianoIdTokenAdapter by lazy {
         moshi.adapter(PianoIdToken::class.java)
     }

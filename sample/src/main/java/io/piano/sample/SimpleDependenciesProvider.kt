@@ -2,11 +2,11 @@ package io.piano.sample
 
 import android.content.Context
 import com.squareup.moshi.Moshi
-import io.piano.android.id.PianoIdTokenJsonAdapter
+import io.piano.android.id.PianoIdJsonAdapterFactory
 
 class SimpleDependenciesProvider private constructor(context: Context) {
     val appContext: Context = context.applicationContext
-    val moshi: Moshi = Moshi.Builder().add(PianoIdTokenJsonAdapter.FACTORY).build()
+    val moshi: Moshi = Moshi.Builder().add(PianoIdJsonAdapterFactory()).build()
     val prefsStorage: PrefsStorage = PrefsStorage(appContext, moshi)
 
     companion object {

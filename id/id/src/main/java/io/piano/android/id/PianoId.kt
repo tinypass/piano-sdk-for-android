@@ -42,7 +42,7 @@ class PianoId {
                     )
                     .build()
                 val moshi = Moshi.Builder()
-                    .add(PianoIdTokenJsonAdapter.FACTORY)
+                    .add(PianoIdJsonAdapterFactory())
                     .build()
                 val retrofit = Retrofit.Builder()
                     .client(okHttpClient)
@@ -129,6 +129,12 @@ class PianoId {
          */
         @Suppress("unused") // Public API.
         const val ENDPOINT_PRODUCTION_ASIA_PACIFIC = "https://buy-ap.piano.io"
+
+        /**
+         * Europe production endpoint
+         */
+        @Suppress("unused") // Public API.
+        const val ENDPOINT_PRODUCTION_EUROPE = "https://buy-eu.piano.io"
 
         /**
          * Sandbox endpoint

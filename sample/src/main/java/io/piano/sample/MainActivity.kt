@@ -125,8 +125,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAccessToken(token: PianoIdToken?) {
         prefsStorage.pianoIdToken = token
-        Composer.getInstance().userToken(token?.accessToken)
-        showMessage("accessToken = " + token?.accessToken)
+        if (token == null)
+            return
+        val userFields = token.info.map { (key, value) -> "$key = $value" }.joinToString(prefix = "[", postfix = "]")
+        Timber.d("Token has these fields: %s", userFields)
+        Composer.getInstance().userToken(token.accessToken)
+        showMessage("accessToken = " + token.accessToken)
     }
 
     private fun showError(throwable: Throwable) {

@@ -24,6 +24,7 @@ dependencies {
 ### Endpoints
 ```
 PianoId.ENDPOINT_PRODUCTION - Production endpoint
+PianoId.ENDPOINT_PRODUCTION_EUROPE - Europe production endpoint
 PianoId.ENDPOINT_PRODUCTION_AUSTRALIA - Australia production endpoint
 PianoId.ENDPOINT_PRODUCTION_ASIA_PACIFIC - Asia/Pacific production endpoint
 PianoId.ENDPOINT_SANDBOX - Sandbox endpoint
@@ -197,7 +198,7 @@ dependencies {
 
 #### Google
 
-[Configure your project for Google](https://developers.google.com/identity/sign-in/android/start-integrating#configure_a_project)
+[Configure your project for Google](https://docs.piano.io/how-to-set-up-google-social-login)
 
 Java
 ```java
@@ -228,7 +229,7 @@ class MyApplication : Application() {
 
 #### Facebook
 
-[Configure your project for Facebook](https://developers.facebook.com/docs/facebook-login/android/)
+[Configure your project for Facebook](https://docs.piano.io/how-to-setup-facebook-social-login/)
 
 ```java
 // ... other imports

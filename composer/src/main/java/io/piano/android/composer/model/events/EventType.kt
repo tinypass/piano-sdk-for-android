@@ -32,6 +32,11 @@ data class Meter(
 object NonSite : EventType()
 
 @JsonClass(generateAdapter = true)
+data class SetResponseVariable(
+    @JvmField val responseVariables: Map<String, Any>
+) : EventType()
+
+@JsonClass(generateAdapter = true)
 data class ShowLogin(
     @JvmField val userProvider: String
 ) : EventType()

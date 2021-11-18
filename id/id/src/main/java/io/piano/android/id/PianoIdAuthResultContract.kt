@@ -7,10 +7,10 @@ import androidx.activity.result.contract.ActivityResultContract
 import io.piano.android.id.models.PianoIdAuthResult
 
 class PianoIdAuthResultContract : ActivityResultContract<PianoIdClient.SignInContext, PianoIdAuthResult?>() {
-    private val client: PianoIdClient = PianoId.getClient()
+    private val client: PianoIdClient by lazy { PianoId.getClient() }
 
-    override fun createIntent(context: Context, input: PianoIdClient.SignInContext?): Intent =
-        requireNotNull(input).run {
+    override fun createIntent(context: Context, input: PianoIdClient.SignInContext): Intent =
+        with(input) {
             PianoIdActivity.buildIntent(context, disableSignUp, widget)
         }
 

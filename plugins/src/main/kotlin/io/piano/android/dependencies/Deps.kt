@@ -1,19 +1,19 @@
 package io.piano.android.dependencies
 
 private object Versions {
-    const val kotlin = "1.5.30"
+    const val kotlin = "1.5.31"
 
     // AndroidX libraries
     const val compatLibrary = "1.3.1"
-    const val androidxActivity = "1.3.1"
-    const val annotationsLibrary = "1.2.0"
+    const val androidxActivity = "1.4.0"
+    const val annotationsLibrary = "1.3.0"
     const val fragmentLibrary = "1.3.6"
     const val materialLibrary = "1.4.0"
-    const val lifecycleLibrary = "2.3.1"
+    const val lifecycleLibrary = "2.4.0"
     const val prefsLibrary = "1.1.1"
 
     // Third party Libraries
-    const val facebookLogin = "11.2.0"
+    const val facebookLogin = "12.1.0"
     const val googlePlayServices = "19.2.0"
     const val retrofit = "2.6.4"
     const val okhttp = "3.12.13"

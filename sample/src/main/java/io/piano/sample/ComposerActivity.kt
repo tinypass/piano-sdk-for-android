@@ -12,6 +12,7 @@ import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.ExperienceExecuteListener
 import io.piano.android.composer.listeners.MeterListener
 import io.piano.android.composer.listeners.NonSiteListener
+import io.piano.android.composer.listeners.SetResponseVariableListener
 import io.piano.android.composer.listeners.ShowLoginListener
 import io.piano.android.composer.listeners.ShowTemplateListener
 import io.piano.android.composer.listeners.UserSegmentListener
@@ -129,6 +130,15 @@ class ComposerActivity : AppCompatActivity() {
                         }
                     }
                 )
+            },
+            SetResponseVariableListener { (_, _, eventData) ->
+                Toast.makeText(
+                    this,
+                    "[${Thread.currentThread().name}] ${eventData.responseVariables.entries.joinToString {
+                        "${it.key}=${it.value}"
+                    }}",
+                    Toast.LENGTH_LONG
+                ).show()
             },
             NonSiteListener { (_, eventExecutionContext) ->
                 val message = eventExecutionContext.activeMeters?.firstOrNull()?.run {

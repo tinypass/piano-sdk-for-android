@@ -1,5 +1,22 @@
 # Piano SDK for Android
 
+## v2.4.0
+* Add support for Composer SetResponseVariable event
+* Add parsing `accessToken` JWT into map for `PianoIdToken`
+* Remove deprecated code for Facebook Login (see https://github.com/facebook/facebook-android-sdk/issues/875)
+* Updated dependencies:
+    - Kotlin [1.5.30 -> 1.5.31]
+    - androidx.activity:activity [1.3.1 -> 1.4.0]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.4.0
+    - androidx.annotation:annotation [1.2.0 -> 1.3.0]
+      https://developer.android.com/jetpack/androidx/releases/annotation#1.3.0
+    - com.android.tools.build:gradle [7.0.2 -> 7.0.3]
+      http://tools.android.com/
+    - androidx.lifecycle:lifecycle-common-java8 [2.3.1 -> 2.4.0]
+      https://developer.android.com/jetpack/androidx/releases/lifecycle#2.4.0
+    - com.facebook.android:facebook-login [11.2.0 -> 12.1.0]
+      https://github.com/facebook/facebook-android-sdk
+
 ## v2.3.0
 * Add Piano C1X integration
 * Add Android 12 support

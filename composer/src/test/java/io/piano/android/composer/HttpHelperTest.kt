@@ -49,7 +49,8 @@ class HttpHelperTest {
 
     @Test
     fun convertExperienceRequest() {
-        with(httpHelper.convertExperienceRequest(experienceRequest, DUMMY_STRING, { null }, null)) {
+        val requestMap = httpHelper.convertExperienceRequest(experienceRequest, DUMMY_STRING, { null }, null)
+        requestMap.apply {
             assertEquals(14, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }

@@ -5,7 +5,6 @@ import androidx.multidex.MultiDexApplication
 import com.google.android.gms.security.ProviderInstaller
 import io.piano.android.composer.Composer
 import io.piano.android.composer.Composer.Endpoint
-import io.piano.android.composer.c1x.PianoC1X
 import io.piano.android.id.PianoId
 import io.piano.android.id.PianoIdJs
 import io.piano.android.id.facebook.FacebookOAuthProvider

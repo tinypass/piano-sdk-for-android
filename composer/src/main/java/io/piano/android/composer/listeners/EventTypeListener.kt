@@ -5,6 +5,7 @@ import io.piano.android.composer.model.events.EventType
 import io.piano.android.composer.model.events.ExperienceExecute
 import io.piano.android.composer.model.events.Meter
 import io.piano.android.composer.model.events.NonSite
+import io.piano.android.composer.model.events.SetResponseVariable
 import io.piano.android.composer.model.events.ShowLogin
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.model.events.UserSegment
@@ -55,4 +56,8 @@ fun interface ShowTemplateListener : EventTypeListener<ShowTemplate> {
 
 fun interface ShowLoginListener : EventTypeListener<ShowLogin> {
     override fun canProcess(event: Event<EventType>): Boolean = event.eventData is ShowLogin
+}
+
+fun interface SetResponseVariableListener : EventTypeListener<SetResponseVariable> {
+    override fun canProcess(event: Event<EventType>): Boolean = event.eventData is SetResponseVariable
 }

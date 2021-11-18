@@ -14,6 +14,7 @@ import io.piano.android.composer.model.events.EventType
 import io.piano.android.composer.model.events.ExperienceExecute
 import io.piano.android.composer.model.events.Meter
 import io.piano.android.composer.model.events.NonSite
+import io.piano.android.composer.model.events.SetResponseVariable
 import io.piano.android.composer.model.events.ShowLogin
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.model.events.UserSegment
@@ -21,7 +22,7 @@ import java.lang.reflect.Type
 
 class EventJsonAdapterFactory : JsonAdapter.Factory {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? =
-        takeIf { Types.getRawType(type).isAssignableFrom(Event::class.java) }?.run {
+        takeIf { Event::class.java.isAssignableFrom(Types.getRawType(type)) }?.run {
             EventJsonAdapter(
                 moshi.adapter(EventModuleParams::class.java),
                 moshi.adapter(EventExecutionContext::class.java),
@@ -30,6 +31,7 @@ class EventJsonAdapterFactory : JsonAdapter.Factory {
                     DelegateAdapter(moshi.adapter(Meter::class.java)) { copy(state = Meter.MeterState.ACTIVE) },
                     DelegateAdapter(moshi.adapter(Meter::class.java)) { copy(state = Meter.MeterState.EXPIRED) },
                     StubAdapter { NonSite },
+                    moshi.adapter(SetResponseVariable::class.java),
                     moshi.adapter(ShowLogin::class.java),
                     moshi.adapter(ShowTemplate::class.java),
                     StubAdapter { UserSegment(true) },
@@ -70,6 +72,7 @@ class EventJsonAdapterFactory : JsonAdapter.Factory {
             EVENT_TYPE_METER_ACTIVE,
             EVENT_TYPE_METER_EXPIRED,
             EVENT_TYPE_NON_SITE,
+            EVENT_TYPE_SET_RESPONSE_VARIABLE,
             EVENT_TYPE_SHOW_LOGIN,
             EVENT_TYPE_SHOW_TEMPLATE,
             EVENT_TYPE_USER_SEGMENT_TRUE,
@@ -170,5 +173,6 @@ class EventJsonAdapterFactory : JsonAdapter.Factory {
         private const val EVENT_TYPE_EXPERIENCE_EXECUTE = "experienceExecute"
         private const val EVENT_TYPE_NON_SITE = "nonSite"
         private const val EVENT_TYPE_SHOW_TEMPLATE = "showTemplate"
+        private const val EVENT_TYPE_SET_RESPONSE_VARIABLE = "setResponseVariable"
     }
 }
