@@ -20,6 +20,9 @@ jobs:
             java-version: '11'
     -   name: Grant execute permission for gradlew
         run: chmod +x gradlew
+    -   name: Create piano.properties
+        env:
+          AID: ${{ secrets.SAMPLE_AID }}
     -   name: Upload artifacts
         run: ./gradlew publish --no-daemon --no-parallel
     -   name: Close repository
