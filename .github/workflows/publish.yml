@@ -23,6 +23,7 @@ jobs:
     -   name: Create piano.properties
         env:
           AID: ${{ secrets.SAMPLE_AID }}
+        run: echo "io.piano.aid=$AID" > sample/piano.properties
     -   name: Upload artifacts
         run: ./gradlew publish --no-daemon --no-parallel
     -   name: Close repository
