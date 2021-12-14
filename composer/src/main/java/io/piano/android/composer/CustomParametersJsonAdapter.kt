@@ -1,24 +1,13 @@
 package io.piano.android.composer
 
 import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.JsonAdapter.Factory
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import io.piano.android.composer.model.CustomParameters
 
 class CustomParametersJsonAdapter(
-    moshi: Moshi
+    private val mapAdapter: JsonAdapter<Map<String, List<String>>>
 ) : JsonAdapter<CustomParameters>() {
-    private val mapAdapter: JsonAdapter<Map<String, List<String>>> = moshi.adapter(
-        Types.newParameterizedType(
-            Map::class.java,
-            String::class.java,
-            Types.newParameterizedType(List::class.java, String::class.java)
-        )
-    )
-
     override fun fromJson(reader: JsonReader): CustomParameters {
         TODO("Not yet implemented")
     }
@@ -39,10 +28,4 @@ class CustomParametersJsonAdapter(
             writer.name(name)
             mapAdapter.toJson(writer, it)
         }
-
-    companion object {
-        val FACTORY = Factory { type, _, moshi ->
-            takeIf { type == CustomParameters::class.java }?.let { CustomParametersJsonAdapter(moshi) }
-        }
-    }
 }

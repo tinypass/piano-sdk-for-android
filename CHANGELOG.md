@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.4.1-SNAPSHOT
+* Parse numbers in SetResponseVariable as Long instead of Double
+
 ## v2.4.0
 * Add support for Composer SetResponseVariable event
 * Add parsing `accessToken` JWT into map for `PianoIdToken`

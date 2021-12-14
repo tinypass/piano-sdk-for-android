@@ -26,7 +26,7 @@ class HttpHelperTest {
     }
     private val prefsStorage: PrefsStorage = mock()
     private val moshi: Moshi = Moshi.Builder()
-        .add(CustomParametersJsonAdapter.FACTORY)
+        .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
         .build()
     private val customParameters: CustomParameters = mock() {

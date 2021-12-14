@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 class ExecuteMobileResponseTest {
     private val moshi = Moshi.Builder()
-        .add(CustomParametersJsonAdapter.FACTORY)
+        .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
         .build()
 
