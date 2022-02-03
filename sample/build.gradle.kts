@@ -51,16 +51,12 @@ android {
         viewBinding = true
     }
     lint {
-        isAbortOnError = false
+        abortOnError = false
     }
 }
 
 ktlint {
     android.set(true)
-}
-
-repositories {
-    maven("https://jitpack.io")
 }
 
 dependencies {

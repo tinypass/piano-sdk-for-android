@@ -11,10 +11,6 @@ android {
     }
 }
 
-repositories {
-    maven("https://jitpack.io")
-}
-
 dependencies {
     api(project(":composer"))
     api(Libs.cxense)
