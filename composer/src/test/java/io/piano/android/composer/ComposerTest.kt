@@ -38,7 +38,9 @@ class ComposerTest {
     private val api: Api = mock() {
         on { getExperience(any(), any()) } doReturn experienceCall
     }
-    private val prefsStorage: PrefsStorage = mock()
+    private val prefsStorage: PrefsStorage = mock() {
+        on { tpAccessCookie } doReturn DUMMY_STRING
+    }
     private val httpHelper: HttpHelper = mock() {
         on { convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull()) } doReturn mapOf()
         on { buildEventTracking(any()) } doReturn mapOf()
@@ -79,6 +81,11 @@ class ComposerTest {
         val callbackCaptor = argumentCaptor<Callback<Data<ExperienceResponse>>>()
         verify(experienceCall).enqueue(callbackCaptor.capture())
         callbackTest(callbackCaptor.lastValue)
+    }
+
+    @Test
+    fun accessToken() {
+        assertEquals(DUMMY_STRING, composer.accessToken)
     }
 
     @Test

@@ -39,20 +39,20 @@ internal class PrefsStorage(context: Context) {
         setVisitDate(value?.time ?: 0)
     }
 
-    var tpBrowserCookie: String?
-        get() = getValueForKey(KEY_TP_BROWSER_COOKIE)
+    var tpBrowserCookie: String
+        get() = getValueForKey(KEY_TP_BROWSER_COOKIE).orEmpty()
         set(value) {
             setValueForKey(KEY_TP_BROWSER_COOKIE, value)
         }
 
-    var xbuilderBrowserCookie: String?
-        get() = getValueForKey(KEY_XBUILDER_BROWSER_COOKIE)
+    var xbuilderBrowserCookie: String
+        get() = getValueForKey(KEY_XBUILDER_BROWSER_COOKIE).orEmpty()
         set(value) {
             setValueForKey(KEY_XBUILDER_BROWSER_COOKIE, value)
         }
 
-    var tpAccessCookie: String?
-        get() = getValueForKey(KEY_TP_ACCESS_COOKIE)
+    var tpAccessCookie: String
+        get() = getValueForKey(KEY_TP_ACCESS_COOKIE).orEmpty()
         set(value) {
             setValueForKey(KEY_TP_ACCESS_COOKIE, value)
         }

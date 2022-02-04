@@ -28,6 +28,7 @@ import io.piano.android.id.PianoIdAuthResultContract
 import io.piano.android.id.models.PianoIdAuthFailureResult
 import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
+import timber.log.Timber
 
 class ComposerActivity : AppCompatActivity() {
     private var showTemplateController: ShowTemplateController? = null
@@ -74,6 +75,7 @@ class ComposerActivity : AppCompatActivity() {
 
         val listeners: Collection<EventTypeListener<out EventType>> = listOf(
             ExperienceExecuteListener { (_, _, eventData) ->
+                Timber.d("Composer's user access token for Edge CDN ${Composer.getInstance().accessToken}")
                 Toast.makeText(
                     this,
                     "[${Thread.currentThread().name}] User = ${eventData.user}",

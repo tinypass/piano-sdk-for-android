@@ -43,6 +43,13 @@ class Composer internal constructor(
         }
     }
 
+    /**
+     * Gets Composer's user access token for Edge CDN
+     * @return Access token for Edge CDN
+     */
+    val accessToken: String
+        get() = prefsStorage.tpAccessCookie
+
     fun addExperienceInterceptor(interceptor: ExperienceInterceptor) = experienceInterceptors.add(interceptor)
 
     fun browserIdProvider(browserIdProvider: () -> String?) = apply { this.browserIdProvider = browserIdProvider }

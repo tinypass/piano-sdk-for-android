@@ -57,9 +57,9 @@ internal class HttpHelper(
                 PARAM_NEW_VISIT to experienceIdsProvider.isVisitIdGenerated.toString(),
                 PARAM_SUBMIT_TYPE to VALUE_MANUAL_SUBMIT_TYPE,
                 PARAM_SDK_VERSION to BuildConfig.SDK_VERSION,
-                PARAM_XBUILDER_BROWSER_COOKIE to prefsStorage.xbuilderBrowserCookie.orEmpty(),
-                PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie.orEmpty(),
-                PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie.orEmpty(),
+                PARAM_XBUILDER_BROWSER_COOKIE to prefsStorage.xbuilderBrowserCookie,
+                PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie,
+                PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie,
                 PARAM_USER_TOKEN to userToken.orEmpty(),
                 PARAM_NEW_BID to browserIdProvider().orEmpty(),
                 PARAM_REFERRER to referer.orEmpty(),
@@ -78,9 +78,9 @@ internal class HttpHelper(
 
     override fun afterExecute(request: ExperienceRequest, response: ExperienceResponse) =
         with(response) {
-            xbCookie?.let { prefsStorage.xbuilderBrowserCookie = it.value }
-            tbCookie?.let { prefsStorage.tpBrowserCookie = it.value }
-            taCookie?.let { prefsStorage.tpAccessCookie = it.value }
+            prefsStorage.xbuilderBrowserCookie = xbCookie?.value.orEmpty()
+            prefsStorage.tpBrowserCookie = tbCookie?.value.orEmpty()
+            prefsStorage.tpAccessCookie = taCookie?.value.orEmpty()
             visitTimeoutMinutes?.let { prefsStorage.visitTimeout = TimeUnit.MILLISECONDS.convert(it, TimeUnit.MINUTES) }
             prefsStorage.serverTimezoneOffset = timeZoneOffsetMillis
         }

@@ -24,7 +24,11 @@ class HttpHelperTest {
         on { getPageViewId(any()) } doReturn DUMMY_STRING
         on { getVisitId(any()) } doReturn DUMMY_STRING2
     }
-    private val prefsStorage: PrefsStorage = mock()
+    private val prefsStorage: PrefsStorage = mock() {
+        on { tpAccessCookie } doReturn ComposerTest.DUMMY_STRING
+        on { tpBrowserCookie } doReturn ComposerTest.DUMMY_STRING
+        on { xbuilderBrowserCookie } doReturn ComposerTest.DUMMY_STRING
+    }
     private val moshi: Moshi = Moshi.Builder()
         .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
@@ -51,7 +55,7 @@ class HttpHelperTest {
     fun convertExperienceRequest() {
         val requestMap = httpHelper.convertExperienceRequest(experienceRequest, DUMMY_STRING, { null }, null)
         requestMap.apply {
-            assertEquals(14, size)
+            assertEquals(17, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
         verify(experienceIdsProvider).getPageViewId(any())
