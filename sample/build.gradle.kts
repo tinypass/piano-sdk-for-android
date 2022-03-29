@@ -60,6 +60,7 @@ ktlint {
 }
 
 dependencies {
+    implementation(Libs.multidex)
     implementation(Libs.appcompat)
     implementation(Libs.material)
     implementation(Libs.googleAuth)

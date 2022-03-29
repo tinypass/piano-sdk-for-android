@@ -27,6 +27,7 @@ include(
     ":composer-show-template",
     ":id:id",
     ":id:id-oauth-facebook",
-    "id:id-oauth-google",
+    ":id:id-oauth-google",
+    ":show-helper",
     ":sample"
 )

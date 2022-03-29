@@ -10,6 +10,7 @@ import io.piano.android.composer.model.ActiveMeter
 import io.piano.android.composer.model.CookieObject
 import io.piano.android.composer.model.CustomParameters
 import io.piano.android.composer.model.DelayBy
+import io.piano.android.composer.model.DisplayMode
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.EventExecutionContext
 import io.piano.android.composer.model.EventsContainer
@@ -114,7 +115,7 @@ class HttpHelperTest {
             ShowTemplate(
                 DUMMY_STRING2,
                 null,
-                ShowTemplate.DisplayMode.MODAL,
+                DisplayMode.MODAL,
                 DUMMY_STRING,
                 DelayBy(
                     DelayBy.DelayType.TIME,

@@ -7,6 +7,7 @@ import io.piano.android.composer.model.events.Meter
 import io.piano.android.composer.model.events.NonSite
 import io.piano.android.composer.model.events.SetResponseVariable
 import io.piano.android.composer.model.events.ShowLogin
+import io.piano.android.composer.model.events.ShowRecommendations
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.model.events.UserSegment
 
@@ -60,4 +61,9 @@ fun interface ShowLoginListener : EventTypeListener<ShowLogin> {
 
 fun interface SetResponseVariableListener : EventTypeListener<SetResponseVariable> {
     override fun canProcess(event: Event<EventType>): Boolean = event.eventData is SetResponseVariable
+}
+
+fun interface ShowRecommendationsListener : EventTypeListener<ShowRecommendations> {
+    override fun canProcess(event: Event<EventType>): Boolean =
+        event.eventData is ShowRecommendations && event.eventData.type == "CXENSE"
 }

@@ -6,6 +6,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.piano.android.composer.model.ActiveMeter
 import io.piano.android.composer.model.CustomParameters
+import io.piano.android.composer.model.DisplayMode
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
@@ -105,7 +106,7 @@ internal class HttpHelper(
                 PARAM_SHOW_TEMPLATE_USER_TOKEN to userToken.orEmpty(),
                 PARAM_GA_CLIENT_ID to gaClientId.orEmpty(),
                 PARAM_OS to VALUE_ANDROID_OS,
-                PARAM_DISPLAY_MODE to ShowTemplate.DisplayMode.INLINE.mode,
+                PARAM_DISPLAY_MODE to DisplayMode.INLINE.mode,
                 PARAM_SHOW_CLOSE_BUTTON to eventData.showCloseButton.toString(),
                 PARAM_SHOW_TEMPLATE_TRACKING_ID to eventExecutionContext.trackingId,
                 PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),

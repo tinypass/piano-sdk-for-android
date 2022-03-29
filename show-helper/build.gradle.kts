@@ -7,7 +7,8 @@ plugins {
 
 dependencies {
     api(project(":composer"))
-    api(project(":show-helper"))
-    implementation(Libs.lifecycleCommon)
+    api(Libs.appcompat)
+    api(Libs.fragments)
+    implementation(Libs.annotations)
     implementation(Libs.timber)
 }

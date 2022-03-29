@@ -8,18 +8,21 @@ import androidx.appcompat.widget.Toolbar
 import com.google.android.material.snackbar.Snackbar
 import io.piano.android.composer.Composer
 import io.piano.android.composer.ComposerException
+import io.piano.android.composer.c1x.ShowRecommendationsController
 import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.ExperienceExecuteListener
 import io.piano.android.composer.listeners.MeterListener
 import io.piano.android.composer.listeners.NonSiteListener
 import io.piano.android.composer.listeners.SetResponseVariableListener
 import io.piano.android.composer.listeners.ShowLoginListener
+import io.piano.android.composer.listeners.ShowRecommendationsListener
 import io.piano.android.composer.listeners.ShowTemplateListener
 import io.piano.android.composer.listeners.UserSegmentListener
 import io.piano.android.composer.model.CustomParameters
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.events.EventType
+import io.piano.android.composer.model.events.ShowRecommendations
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.showtemplate.ComposerJs
 import io.piano.android.composer.showtemplate.ShowTemplateController
@@ -116,8 +119,7 @@ class ComposerActivity : AppCompatActivity() {
                     "[${Thread.currentThread().name}] ${event.eventData}",
                     Toast.LENGTH_LONG
                 ).show()
-                showTemplateController = ShowTemplateController.show(
-                    this,
+                showTemplateController = ShowTemplateController(
                     event,
                     object : ComposerJs() {
                         @JavascriptInterface
@@ -132,13 +134,29 @@ class ComposerActivity : AppCompatActivity() {
                         }
                     }
                 )
+                showTemplateController?.show(this)
+            },
+            ShowRecommendationsListener { event: Event<ShowRecommendations> ->
+                event.eventData.apply {
+                    Toast.makeText(
+                        this@ComposerActivity,
+                        """
+                        [${Thread.currentThread().name}] Data:
+                        widgetId = $widgetId,
+                        siteId = $siteId
+                        """.trimIndent(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                ShowRecommendationsController(event).show(this)
             },
             SetResponseVariableListener { (_, _, eventData) ->
+                val message = eventData.responseVariables.entries.joinToString {
+                    "${it.key}=${it.value}"
+                }
                 Toast.makeText(
                     this,
-                    "[${Thread.currentThread().name}] ${eventData.responseVariables.entries.joinToString {
-                        "${it.key}=${it.value}"
-                    }}",
+                    "[${Thread.currentThread().name}] $message",
                     Toast.LENGTH_LONG
                 ).show()
             },

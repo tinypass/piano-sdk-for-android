@@ -25,6 +25,7 @@ class ComposerScrollDepthActivity : AppCompatActivity() {
         val showTemplateListener = ShowTemplateListener { event: Event<ShowTemplate> ->
             event.eventData.delayBy.let {
                 if (it.isDelayedByScroll) {
+                    val showTemplateController = ShowTemplateController(event)
                     nestedScrollView.setOnScrollChangeListener(
                         object : NestedScrollView.OnScrollChangeListener {
                             private var isShown = false
@@ -37,7 +38,7 @@ class ComposerScrollDepthActivity : AppCompatActivity() {
                             ) {
                                 if (!isShown) {
                                     if (v.scrollY >= it.value) {
-                                        ShowTemplateController.show(this@ComposerScrollDepthActivity, event)
+                                        showTemplateController.show(this@ComposerScrollDepthActivity)
                                         isShown = true
                                     }
                                 }

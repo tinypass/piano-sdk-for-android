@@ -1,7 +1,22 @@
 # Piano SDK for Android
 
-## v2.4.1-SNAPSHOT
+## v2.5.0-
+* Add support for ShowRecommendations event
 * Parse numbers in SetResponseVariable as Long instead of Double
+* Add providing user access token for Edge CDN
+* Fix bug with CustomParameters
+* Updated dependencies:
+    - androidx.appcompat:appcompat [1.3.1 -> 1.4.1]
+      https://developer.android.com/jetpack/androidx/releases/appcompat#1.4.1
+    - androidx.fragment:fragment [1.3.6 -> 1.4.1]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.4.1
+    - com.facebook.android:facebook-login [12.1.0 -> 13.1.0]
+      https://github.com/facebook/facebook-android-sdk
+    - com.squareup.moshi:moshi [1.12.0 -> 1.13.0]
+      https://github.com/square/moshi/
+    - androidx.lifecycle:lifecycle-common-java8 [2.4.0 -> 2.4.1]
+      https://developer.android.com/jetpack/androidx/releases/lifecycle#2.4.1
+    - com.google.android.gms:play-services-auth [19.2.0 -> 20.1.0]
 
 ## v2.4.0
 * Add support for Composer SetResponseVariable event
