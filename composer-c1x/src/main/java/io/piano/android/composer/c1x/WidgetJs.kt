@@ -2,6 +2,7 @@ package io.piano.android.composer.c1x
 
 import android.view.View
 import android.webkit.JavascriptInterface
+import android.webkit.WebView
 import androidx.annotation.UiThread
 import com.cxense.cxensesdk.CxenseSdk
 import io.piano.android.composer.PageViewIdProvider
@@ -16,6 +17,10 @@ class WidgetJs(
     @get:JavascriptInterface
     val renderTemplateUrl: String = "auto"
 ) : BaseJsInterface() {
+
+    internal fun init(dialogFragment: ShowRecommendationsDialogFragment?, webView: WebView?) {
+        super.init(dialogFragment, webView)
+    }
 
     @get:JavascriptInterface
     val randomId: String

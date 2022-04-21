@@ -1,11 +1,13 @@
 # Piano SDK for Android
 
-## v2.5.0-
+## v2.5.0
+* Add support for ShowForm event
 * Add support for ShowRecommendations event
 * Parse numbers in SetResponseVariable as Long instead of Double
 * Add providing user access token for Edge CDN
 * Fix bug with CustomParameters
 * Updated dependencies:
+    - Kotlin [1.5.31 -> 1.6.21]
     - androidx.appcompat:appcompat [1.3.1 -> 1.4.1]
       https://developer.android.com/jetpack/androidx/releases/appcompat#1.4.1
     - androidx.fragment:fragment [1.3.6 -> 1.4.1]

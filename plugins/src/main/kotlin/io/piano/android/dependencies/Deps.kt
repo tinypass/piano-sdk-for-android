@@ -1,7 +1,7 @@
 package io.piano.android.dependencies
 
 private object Versions {
-    const val kotlin = "1.6.10"
+    const val kotlin = "1.6.21"
 
     // AndroidX libraries
     const val compatLibrary = "1.4.1"

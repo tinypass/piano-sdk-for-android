@@ -44,6 +44,15 @@ data class SetResponseVariable(
 ) : EventType()
 
 @JsonClass(generateAdapter = true)
+data class ShowForm(
+    val formName: String?,
+    val hideCompletedFields: Boolean,
+    override val containerSelector: String,
+    override val displayMode: DisplayMode,
+    override val showCloseButton: Boolean,
+) : EventType(), BaseShowType
+
+@JsonClass(generateAdapter = true)
 data class ShowLogin(
     val userProvider: String
 ) : EventType()

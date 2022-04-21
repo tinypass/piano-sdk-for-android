@@ -51,20 +51,19 @@ class ShowTemplateController constructor(
      */
     @Suppress("unused") // Public API.
     @UiThread
-    override fun close(eventData: String?) = jsInterface.close(eventData)
+    override fun close(data: String?) = jsInterface.close(data)
 
     /**
      * Sends reload command to template. Should be called when user token has changed
      */
     @Suppress("unused") // Public API.
-    fun reloadWithToken(userToken: String) =
-        jsInterface.executeJavascriptCode("piano.reloadTemplateWithUserToken('$userToken')")
+    fun reloadWithToken(userToken: String) = jsInterface.updateToken(userToken)
 
     companion object {
         private const val FRAGMENT_TAG = "ShowTemplateDialogFragment"
         private const val JAVASCRIPT_INTERFACE = "PianoAndroid"
 
-        @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface", "AddJavascriptInterface")
+        @SuppressLint("SetJavaScriptEnabled")
         internal fun WebView.prepare(
             dialogFragment: ShowTemplateDialogFragment? = null,
             javascriptInterface: ComposerJs?,

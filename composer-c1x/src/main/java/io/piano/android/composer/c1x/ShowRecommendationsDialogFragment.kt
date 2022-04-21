@@ -1,6 +1,5 @@
 package io.piano.android.composer.c1x
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.webkit.WebView
 import io.piano.android.composer.c1x.ShowRecommendationsController.Companion.prepare
@@ -24,9 +23,11 @@ class ShowRecommendationsDialogFragment : BaseShowDialogFragment {
         requireNotNull(arguments?.getString(KEY_SITE_ID))
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun WebView.configure(jsInterface: BaseJsInterface?) {
-        prepare(jsInterface as? WidgetJs ?: WidgetJs(widgetId, siteId))
+        prepare(
+            jsInterface as? WidgetJs ?: WidgetJs(widgetId, siteId),
+            this@ShowRecommendationsDialogFragment
+        )
     }
 
     companion object {

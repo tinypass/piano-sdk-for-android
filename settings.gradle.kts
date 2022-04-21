@@ -29,5 +29,6 @@ include(
     ":id:id-oauth-facebook",
     ":id:id-oauth-google",
     ":show-helper",
+    ":show-custom-form",
     ":sample"
 )

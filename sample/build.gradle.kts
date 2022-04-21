@@ -74,4 +74,5 @@ dependencies {
     implementation(project(":id:id"))
     implementation(project(":id:id-oauth-google"))
     implementation(project(":id:id-oauth-facebook"))
+    implementation(project(":show-custom-form"))
 }

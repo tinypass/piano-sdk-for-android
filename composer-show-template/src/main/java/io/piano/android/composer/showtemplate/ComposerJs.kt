@@ -6,8 +6,6 @@ import android.webkit.WebView
 import androidx.annotation.UiThread
 import io.piano.android.composer.Composer
 import io.piano.android.showhelper.BaseJsInterface
-import io.piano.android.showhelper.BaseShowController.Companion.executeJavascriptCode
-import timber.log.Timber
 
 open class ComposerJs : BaseJsInterface() {
     private var trackId: String = ""
@@ -55,11 +53,7 @@ open class ComposerJs : BaseJsInterface() {
             }
     }
 
-    internal fun executeJavascriptCode(code: String) {
-        val view = (fragment as? ShowTemplateDialogFragment)?.getWebView() ?: webView
-        view?.postDelayed(
-            { view.executeJavascriptCode(code) },
-            300
-        ) ?: Timber.w("We got null for webview")
+    internal fun updateToken(userToken: String) {
+        executeJavascript("piano.reloadTemplateWithUserToken('$userToken')", 300)
     }
 }

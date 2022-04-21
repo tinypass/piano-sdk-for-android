@@ -15,6 +15,7 @@ import io.piano.android.composer.model.events.ExperienceExecute
 import io.piano.android.composer.model.events.Meter
 import io.piano.android.composer.model.events.NonSite
 import io.piano.android.composer.model.events.SetResponseVariable
+import io.piano.android.composer.model.events.ShowForm
 import io.piano.android.composer.model.events.ShowLogin
 import io.piano.android.composer.model.events.ShowRecommendations
 import io.piano.android.composer.model.events.ShowTemplate
@@ -33,6 +34,7 @@ class EventJsonAdapterFactory : JsonAdapter.Factory {
                     DelegateAdapter(moshi.adapter(Meter::class.java)) { copy(state = Meter.MeterState.EXPIRED) },
                     StubAdapter { NonSite },
                     moshi.adapter(SetResponseVariable::class.java),
+                    moshi.adapter(ShowForm::class.java),
                     moshi.adapter(ShowLogin::class.java),
                     moshi.adapter(ShowRecommendations::class.java),
                     moshi.adapter(ShowTemplate::class.java),
@@ -75,6 +77,7 @@ class EventJsonAdapterFactory : JsonAdapter.Factory {
             EVENT_TYPE_METER_EXPIRED,
             EVENT_TYPE_NON_SITE,
             EVENT_TYPE_SET_RESPONSE_VARIABLE,
+            EVENT_TYPE_SHOW_FORM,
             EVENT_TYPE_SHOW_LOGIN,
             EVENT_TYPE_SHOW_RECOMMENDATIONS,
             EVENT_TYPE_SHOW_TEMPLATE,
@@ -178,5 +181,6 @@ class EventJsonAdapterFactory : JsonAdapter.Factory {
         private const val EVENT_TYPE_SHOW_TEMPLATE = "showTemplate"
         private const val EVENT_TYPE_SET_RESPONSE_VARIABLE = "setResponseVariable"
         private const val EVENT_TYPE_SHOW_RECOMMENDATIONS = "showRecommendations"
+        private const val EVENT_TYPE_SHOW_FORM = "showForm"
     }
 }

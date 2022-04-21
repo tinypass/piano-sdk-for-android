@@ -27,8 +27,12 @@ class ShowRecommendationsController(event: Event<ShowRecommendations>) :
         internal const val URL = "https://cdn.cxense.com/recommendations.html"
 
         @SuppressLint("SetJavaScriptEnabled")
-        internal fun WebView.prepare(jsInterface: WidgetJs) {
+        internal fun WebView.prepare(
+            jsInterface: WidgetJs,
+            dialogFragment: ShowRecommendationsDialogFragment? = null
+        ) {
             settings.javaScriptEnabled = true
+            jsInterface.init(dialogFragment, this)
             addJavascriptInterface(jsInterface, JAVASCRIPT_INTERFACE)
         }
     }

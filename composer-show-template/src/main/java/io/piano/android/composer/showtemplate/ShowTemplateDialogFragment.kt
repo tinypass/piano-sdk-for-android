@@ -21,8 +21,6 @@ class ShowTemplateDialogFragment : BaseShowDialogFragment {
         arguments?.getString(KEY_TRACKING_ID) ?: ""
     }
 
-    internal fun getWebView(): WebView? = webView
-
     override fun WebView.configure(jsInterface: BaseJsInterface?) =
         prepare(this@ShowTemplateDialogFragment, jsInterface as? ComposerJs, trackingId)
 

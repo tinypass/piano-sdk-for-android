@@ -18,6 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
+import timber.log.Timber
 import java.util.Locale
 
 /**
@@ -37,13 +38,17 @@ class PianoIdClient internal constructor(
     private val socialTokenDataAdapter by lazy {
         moshi.adapter(SocialTokenData::class.java)
     }
-    internal var authEndpoint: HttpUrl? = null
+    internal var hostUrl: HttpUrl? = null
     private val exceptions = SparseArray<PianoIdException>()
     internal val oauthProviders: MutableMap<String, PianoIdOAuthProvider> = mutableMapOf()
 
     var authCallback: PianoIdAuthCallback? = null
         private set
     var javascriptInterface: PianoIdJs? = null
+
+    init {
+        getHostUrl { Timber.d("Getting host success = ${it.isSuccess}") }
+    }
 
     /**
      * Sets callback for {@link PianoIdAuthSuccessResult} data
@@ -94,15 +99,15 @@ class PianoIdClient internal constructor(
     @Suppress("unused") // Public API.
     fun signIn(): SignInContext = SignInContext(this)
 
-    internal fun getAuthEndpoint(callback: PianoIdFuncCallback<HttpUrl>) {
-        authEndpoint?.let { callback(Result.success(it)) } ?: run {
+    internal fun getHostUrl(callback: PianoIdFuncCallback<HttpUrl>) {
+        hostUrl?.let { callback(Result.success(it)) } ?: run {
             api.getDeploymentHost(aid).enqueue(
                 object : Callback<HostResponse> {
                     override fun onResponse(call: Call<HostResponse>, response: Response<HostResponse>) {
                         runCatching {
                             with(response.bodyOrThrow()) {
                                 if (!hasError) {
-                                    authEndpoint = HttpUrl.get(host).also {
+                                    hostUrl = HttpUrl.get(host).also {
                                         callback(Result.success(it))
                                     }
                                 } else callback(Result.failure(PianoIdException(error)))
@@ -119,7 +124,7 @@ class PianoIdClient internal constructor(
         }
     }
 
-    internal fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>) = getAuthEndpoint { r ->
+    internal fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>) = getHostUrl { r ->
         r.getOrNull()?.resolve(SIGN_OUT_PATH)?.let {
             api.signOut(it.toString(), aid, accessToken)
                 .enqueue(callback.asRetrofitCallback())
@@ -127,7 +132,7 @@ class PianoIdClient internal constructor(
     }
 
     internal fun getTokenByAuthCode(authCode: String, callback: PianoIdFuncCallback<PianoIdToken>) =
-        getAuthEndpoint { r ->
+        getHostUrl { r ->
             r.getOrNull()?.let {
                 api.exchangeAuthCode(
                     it.newBuilder().encodedPath(EXCHANGE_AUTH_CODE_PATH).build().toString(),
@@ -138,7 +143,7 @@ class PianoIdClient internal constructor(
         }
 
     internal fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) =
-        getAuthEndpoint { r ->
+        getHostUrl { r ->
             r.getOrNull()?.let {
                 api.refreshToken(
                     it.newBuilder().encodedPath(REFRESH_TOKEN_PATH).build().toString(),
@@ -153,7 +158,7 @@ class PianoIdClient internal constructor(
         }
 
     internal fun getSignInUrl(disableSignUp: Boolean, widget: String?, callback: PianoIdFuncCallback<String>) =
-        getAuthEndpoint { r ->
+        getHostUrl { r ->
             callback(
                 r.mapCatching { url ->
                     url.newBuilder()
@@ -178,6 +183,19 @@ class PianoIdClient internal constructor(
                 }
             )
         }
+
+    internal fun getFormUrl(formName: String?, hideCompletedFields: Boolean, trackingId: String) =
+        hostUrl?.let { url ->
+            url.newBuilder()
+                .encodedPath(FORM_PATH)
+                .addQueryParameter(PARAM_CLIENT_ID, aid)
+                .addQueryParameter(PARAM_FORM_NAME, formName ?: "")
+                .addQueryParameter(PARAM_HIDE_COMPLETE, hideCompletedFields.toString())
+                .addQueryParameter(PARAM_TRACKING_ID, trackingId)
+                .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
+                .build()
+                .toString()
+        } ?: "about:blank"
 
     internal fun saveException(exc: PianoIdException): Int =
         exc.hashCode().also {
@@ -265,6 +283,7 @@ class PianoIdClient internal constructor(
         private const val SIGN_OUT_PATH = "/id/api/v1/identity/logout?response_type=code"
         private const val EXCHANGE_AUTH_CODE_PATH = "/id/api/v1/identity/passwordless/authorization/code"
         private const val REFRESH_TOKEN_PATH = "/id/api/v1/identity/vxauth/token"
+        private const val FORM_PATH = "/id/form"
 
         internal const val LINK_SCHEME_PREFIX = "piano.id.oauth."
         internal const val LINK_AUTHORITY = "success"
@@ -281,6 +300,9 @@ class PianoIdClient internal constructor(
         internal const val PARAM_OAUTH_PROVIDERS = "oauth_providers"
         internal const val PARAM_GRANT_TYPE = "grant_type"
         internal const val PARAM_REFRESH_TOKEN = "refresh_token"
+        internal const val PARAM_FORM_NAME = "form_name"
+        internal const val PARAM_HIDE_COMPLETE = "hideIfComplete"
+        internal const val PARAM_TRACKING_ID = "trackingId"
 
         internal const val VALUE_RESPONSE_TYPE_TOKEN = "token"
         internal const val VALUE_FORCE_REDIRECT = "1"

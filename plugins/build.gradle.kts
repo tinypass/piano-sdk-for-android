@@ -15,10 +15,10 @@ repositories {
 
 dependencies {
     implementation("com.github.ben-manes:gradle-versions-plugin:0.41.0")
-    implementation("com.android.tools.build:gradle:7.1.2")
-    implementation(kotlin("gradle-plugin", "1.6.10"))
+    implementation("com.android.tools.build:gradle:7.1.3")
+    implementation(kotlin("gradle-plugin", "1.6.21"))
     implementation("org.jlleitschuh.gradle:ktlint-gradle:10.2.0")
-    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.6.10")
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.6.20")
     implementation("com.vanniktech:gradle-maven-publish-plugin:0.18.0")
 }
 

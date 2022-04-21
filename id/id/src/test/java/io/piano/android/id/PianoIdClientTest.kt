@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doNothing
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -72,18 +73,18 @@ class PianoIdClientTest {
 
     @Test
     fun getAuthEndpointNotNull() {
-        pianoIdClient.authEndpoint = url
+        pianoIdClient.hostUrl = url
         val callback: PianoIdFuncCallback<HttpUrl> = mock()
-        pianoIdClient.getAuthEndpoint(callback)
+        pianoIdClient.getHostUrl(callback)
         verify(callback).invoke(Result.success(url))
     }
 
     private fun getAuthEndpoint(callbackTest: (PianoIdFuncCallback<HttpUrl>, Callback<HostResponse>) -> Unit) {
         val callback: PianoIdFuncCallback<HttpUrl> = mock()
-        pianoIdClient.getAuthEndpoint(callback)
-        verify(api).getDeploymentHost(AID)
+        pianoIdClient.getHostUrl(callback)
+        verify(api, atLeastOnce()).getDeploymentHost(AID)
         val callbackCaptor = argumentCaptor<Callback<HostResponse>>()
-        verify(hostResponseCall).enqueue(callbackCaptor.capture())
+        verify(hostResponseCall, atLeastOnce()).enqueue(callbackCaptor.capture())
         callbackTest(callback, callbackCaptor.lastValue)
     }
 
@@ -143,11 +144,11 @@ class PianoIdClientTest {
         }
 
     private fun signOut(callbackTest: (PianoIdFuncCallback<Any>, PianoIdFuncCallback<HttpUrl>) -> Unit) {
-        doNothing().`when`(pianoIdClient).getAuthEndpoint(any())
+        doNothing().`when`(pianoIdClient).getHostUrl(any())
         val callback: PianoIdFuncCallback<Any> = mock()
         pianoIdClient.signOut(DUMMY, callback)
         val callbackCaptor = argumentCaptor<PianoIdFuncCallback<HttpUrl>>()
-        verify(pianoIdClient).getAuthEndpoint(callbackCaptor.capture())
+        verify(pianoIdClient).getHostUrl(callbackCaptor.capture())
         callbackTest(callback, callbackCaptor.lastValue)
     }
 
@@ -202,12 +203,12 @@ class PianoIdClientTest {
         }
 
     private fun getSignInUrl(callbackTest: (PianoIdFuncCallback<String>, PianoIdFuncCallback<HttpUrl>) -> Unit) {
-        doNothing().`when`(pianoIdClient).getAuthEndpoint(any())
+        doNothing().`when`(pianoIdClient).getHostUrl(any())
         val callback: PianoIdFuncCallback<String> = mock()
         pianoIdClient.oauthProviders[DUMMY] = oAuthProvider
         pianoIdClient.getSignInUrl(true, DUMMY, callback)
         val callbackCaptor = argumentCaptor<PianoIdFuncCallback<HttpUrl>>()
-        verify(pianoIdClient).getAuthEndpoint(callbackCaptor.capture())
+        verify(pianoIdClient).getHostUrl(callbackCaptor.capture())
         callbackTest(callback, callbackCaptor.lastValue)
     }
 

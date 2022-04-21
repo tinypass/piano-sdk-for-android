@@ -18,8 +18,8 @@ internal class DependenciesProvider private constructor(
     endpoint: Composer.Endpoint
 ) {
     private val prefsStorage = PrefsStorage(context)
-    private val userAgent = "Piano composer SDK (Android ${Build.VERSION.RELEASE} (Build ${Build.ID}); " +
-        "${context.applicationContext.deviceType()} ${Build.MANUFACTURER}/${Build.MODEL})"
+    private val userAgent = "Piano composer SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE} " +
+        "(Build ${Build.ID}); ${context.applicationContext.deviceType()} ${Build.MANUFACTURER}/${Build.MODEL})"
 
     private val okHttpClient = OkHttpClient.Builder()
         .readTimeout(30, TimeUnit.SECONDS)

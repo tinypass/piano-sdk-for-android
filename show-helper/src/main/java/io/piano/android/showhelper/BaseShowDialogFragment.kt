@@ -17,7 +17,7 @@ abstract class BaseShowDialogFragment() : AppCompatDialogFragment() {
     private val url: String by lazy {
         arguments?.getString(KEY_URL) ?: "about:blank"
     }
-    protected var webView: WebView? = null
+    internal var webView: WebView? = null
     internal var javascriptInterface: BaseJsInterface? = null
     private var shouldLoadUrl = false
 
