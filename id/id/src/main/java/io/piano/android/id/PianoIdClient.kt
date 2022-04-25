@@ -13,6 +13,7 @@ import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
+import io.piano.android.id.models.PianoUserProfile
 import okhttp3.HttpUrl
 import retrofit2.Call
 import retrofit2.Callback
@@ -184,6 +185,19 @@ class PianoIdClient internal constructor(
             )
         }
 
+    internal fun getUserInfo(accessToken: String, formName: String?, callback: PianoIdFuncCallback<PianoUserProfile>) {
+        getHostUrl { r ->
+            r.getOrNull()?.let {
+                api.getUserInfo(
+                    it.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
+                    aid,
+                    accessToken,
+                    formName
+                ).enqueue(callback.asRetrofitCallback())
+            } ?: callback(Result.failure(r.exceptionOrNull()!!))
+        }
+    }
+
     internal fun getFormUrl(formName: String?, hideCompletedFields: Boolean, trackingId: String) =
         hostUrl?.let { url ->
             url.newBuilder()
@@ -283,6 +297,7 @@ class PianoIdClient internal constructor(
         private const val SIGN_OUT_PATH = "/id/api/v1/identity/logout?response_type=code"
         private const val EXCHANGE_AUTH_CODE_PATH = "/id/api/v1/identity/passwordless/authorization/code"
         private const val REFRESH_TOKEN_PATH = "/id/api/v1/identity/vxauth/token"
+        private const val USERINFO_PATH = "/id/api/v1/identity/userinfo"
         private const val FORM_PATH = "/id/form"
 
         internal const val LINK_SCHEME_PREFIX = "piano.id.oauth."

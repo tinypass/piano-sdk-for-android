@@ -1,6 +1,7 @@
 # Piano SDK for Android
 
 ## v2.5.0
+* Add getUserInfo API in ID (similar to `tp.pianoId.loadExtendedUser`)
 * Add support for ShowForm event
 * Add support for ShowRecommendations event
 * Parse numbers in SetResponseVariable as Long instead of Double

@@ -6,13 +6,16 @@ import com.squareup.moshi.Moshi
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.events.ShowForm
 import io.piano.android.id.FormUrlBuilder
+import io.piano.android.id.PianoId
 import io.piano.android.showhelper.BaseShowController
+import timber.log.Timber
 
 class ShowFormController(event: Event<ShowForm>, initialToken: String = "", private val loginCallback: () -> Unit) :
     BaseShowController<ShowForm, ShowFormJs>(
         event.eventData,
         ShowFormJs(event.eventExecutionContext.trackingId, loginCallback)
     ) {
+    private var checkProfileAtTokenChange: Boolean = false
     private val trackingId = event.eventExecutionContext.trackingId
     override val url: String by lazy {
         with(eventData) {
@@ -26,12 +29,38 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
         updateToken(initialToken)
     }
 
+    private fun checkFormNotFilled(accessToken: String, callback: (Boolean) -> Unit) {
+        if (accessToken.isEmpty())
+            callback(true)
+        else {
+            PianoId.getUserInfo(accessToken, eventData.formName) { r ->
+                val shouldHideForm = r.onFailure {
+                    Timber.w(it)
+                }.getOrNull()?.allCustomFieldsFilled ?: false
+                callback(!shouldHideForm)
+            }
+        }
+    }
+
+    override fun checkPrerequisites(callback: (Boolean) -> Unit) {
+        checkFormNotFilled(jsInterface.token) { formCanBeShown ->
+            checkProfileAtTokenChange = formCanBeShown
+            callback(formCanBeShown)
+        }
+    }
+
     override fun close(data: String?) = jsInterface.close()
 
     override fun WebView.configure() = prepare(jsInterface, loginCallback = loginCallback)
 
     fun updateToken(userToken: String) {
         jsInterface.token = userToken
+        if (checkProfileAtTokenChange) {
+            checkFormNotFilled(userToken) { formNotFilled ->
+                if (!formNotFilled)
+                    close()
+            }
+        }
     }
 
     companion object {

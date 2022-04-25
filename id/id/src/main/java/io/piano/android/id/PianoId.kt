@@ -5,6 +5,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.squareup.moshi.Moshi
 import io.piano.android.id.models.PianoIdToken
+import io.piano.android.id.models.PianoUserProfile
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -43,6 +44,7 @@ class PianoId {
                     .build()
                 val moshi = Moshi.Builder()
                     .add(PianoIdJsonAdapterFactory())
+                    .add(UnixTimeDateAdapter)
                     .build()
                 val retrofit = Retrofit.Builder()
                     .client(okHttpClient)
@@ -89,6 +91,17 @@ class PianoId {
         @JvmStatic
         fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
             client?.refreshToken(refreshToken, callback)
+                ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
+        }
+
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        fun getUserInfo(
+            accessToken: String,
+            formName: String? = null,
+            callback: PianoIdFuncCallback<PianoUserProfile>
+        ) {
+            client?.getUserInfo(accessToken, formName, callback)
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
         }
 

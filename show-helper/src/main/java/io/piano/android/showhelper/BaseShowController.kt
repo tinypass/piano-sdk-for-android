@@ -21,6 +21,8 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
     protected abstract fun WebView.configure()
     protected open fun processDelay(activity: FragmentActivity, showFunction: () -> Unit) = showFunction()
 
+    protected open fun checkPrerequisites(callback: (Boolean) -> Unit) = callback(true)
+
     @JvmOverloads
     @Suppress("unused") // Public API.
     @UiThread
@@ -28,16 +30,22 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
         activity: FragmentActivity,
         inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider
     ) {
-        when (eventData.displayMode) {
-            DisplayMode.MODAL -> showModal(activity)
-            DisplayMode.INLINE -> showInline(activity, inlineWebViewProvider)
-            else -> Timber.w("Unknown display mode %s", eventData.displayMode)
+        checkPrerequisites { canShow ->
+            if (canShow) {
+                when (eventData.displayMode) {
+                    DisplayMode.MODAL -> showModal(activity)
+                    DisplayMode.INLINE -> showInline(activity, inlineWebViewProvider)
+                    else -> Timber.w("Unknown display mode %s", eventData.displayMode)
+                }
+            } else {
+                Timber.w("Showing forbidden due to prerequisites ")
+            }
         }
     }
 
     @Suppress("unused") // Public API.
     @UiThread
-    abstract fun close(data: String?)
+    abstract fun close(data: String? = null)
 
     private fun showInline(
         activity: FragmentActivity,

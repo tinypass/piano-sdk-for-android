@@ -129,6 +129,12 @@ class MainActivity : AppCompatActivity() {
             return
         val userFields = token.info.map { (key, value) -> "$key = $value" }.joinToString(prefix = "[", postfix = "]")
         Timber.d("Token has these fields: %s", userFields)
+        PianoId.getUserInfo(token.accessToken) { r ->
+            val customFields = r.getOrNull()
+                ?.customFields
+                ?.joinToString(prefix = "[", postfix = "]") { "${it.fieldName} = ${it.value}" }
+            Timber.d("User custom fields = $customFields")
+        }
         Composer.getInstance().userToken(token.accessToken)
         showMessage("accessToken = " + token.accessToken)
     }
