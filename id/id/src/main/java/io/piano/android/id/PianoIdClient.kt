@@ -301,7 +301,7 @@ class PianoIdClient internal constructor(
         internal const val PARAM_GRANT_TYPE = "grant_type"
         internal const val PARAM_REFRESH_TOKEN = "refresh_token"
         internal const val PARAM_FORM_NAME = "form_name"
-        internal const val PARAM_HIDE_COMPLETE = "hideIfComplete"
+        internal const val PARAM_HIDE_COMPLETE = "hide_if_complete"
         internal const val PARAM_TRACKING_ID = "trackingId"
 
         internal const val VALUE_RESPONSE_TYPE_TOKEN = "token"
