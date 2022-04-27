@@ -12,6 +12,7 @@ import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.ShowTemplate
 import java.util.Calendar
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -93,6 +94,21 @@ internal class HttpHelper(
             PARAM_EVENT_GROUP_ID to VALUE_CLOSE_GROUP_ID
         )
 
+    internal fun buildCustomFormTracking(
+        aid: String,
+        customFormName: String,
+        trackingId: String,
+        userToken: String?
+    ): Map<String, String> {
+        return sequenceOf(
+            PARAM_AID to aid,
+            PARAM_USER_TOKEN to userToken.orEmpty(),
+            PARAM_PAGEVIEW_ID to experienceIdsProvider.getPageViewId(Date()),
+            PARAM_EVENT_TRACKING_ID to trackingId,
+            PARAM_CUSTOM_FORM_NAME to customFormName
+        ).filterNotEmptyValues().toMap()
+    }
+
     internal fun buildShowTemplateParameters(
         showTemplateEvent: Event<ShowTemplate>,
         experienceRequest: ExperienceRequest,
@@ -173,6 +189,9 @@ internal class HttpHelper(
 
         internal const val VALUE_EXTERNAL_EVENT_TYPE = "EXTERNAL_EVENT"
         internal const val VALUE_CLOSE_GROUP_ID = "close"
+
+        // Custom form tracking constants
+        internal const val PARAM_CUSTOM_FORM_NAME = "custom_form_name"
 
         // Show template url constants
         internal const val PARAM_TEMPLATE_ID = "templateId"

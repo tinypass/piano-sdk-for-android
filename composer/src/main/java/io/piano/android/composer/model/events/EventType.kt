@@ -45,7 +45,7 @@ data class SetResponseVariable(
 
 @JsonClass(generateAdapter = true)
 data class ShowForm(
-    val formName: String?,
+    val formName: String,
     val hideCompletedFields: Boolean,
     override val containerSelector: String,
     override val displayMode: DisplayMode,

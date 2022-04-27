@@ -35,9 +35,10 @@ import kotlin.test.assertEquals
 
 class ComposerTest {
     private val experienceCall: Call<Data<ExperienceResponse>> = mock()
-    private val api: Api = mock() {
-        on { getExperience(any(), any()) } doReturn experienceCall
+    private val composerApi: ComposerApi = mock() {
+        on { getExperience(any()) } doReturn experienceCall
     }
+    private val generalApi: GeneralApi = mock()
     private val prefsStorage: PrefsStorage = mock() {
         on { tpAccessCookie } doReturn DUMMY_STRING
     }
@@ -56,7 +57,16 @@ class ComposerTest {
             DUMMY_STRING to DUMMY_STRING2
         )
     }
-    private val composer: Composer = spy(Composer(api, httpHelper, prefsStorage, "AID", Composer.Endpoint.SANDBOX))
+    private val composer: Composer = spy(
+        Composer(
+            composerApi,
+            generalApi,
+            httpHelper,
+            prefsStorage,
+            "AID",
+            Composer.Endpoint.SANDBOX
+        )
+    )
 
     private val experienceRequest: ExperienceRequest = mock()
     private val resultListeners = listOf(
@@ -77,7 +87,7 @@ class ComposerTest {
         doNothing().`when`(composer).processExperienceResponse(any(), any(), any(), any())
         composer.getExperience(experienceRequest, resultListeners, exceptionListener)
         verify(httpHelper).convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull())
-        verify(api).getExperience(any(), any())
+        verify(composerApi).getExperience(any())
         val callbackCaptor = argumentCaptor<Callback<Data<ExperienceResponse>>>()
         verify(experienceCall).enqueue(callbackCaptor.capture())
         callbackTest(callbackCaptor.lastValue)
@@ -248,10 +258,10 @@ class ComposerTest {
     @Test
     fun trackExternalEvent() {
         val call: Call<ResponseBody> = mock()
-        whenever(api.trackExternalEvent(any(), any())).doReturn(call)
+        whenever(generalApi.trackExternalEvent(any())).doReturn(call)
         composer.trackExternalEvent(DUMMY_STRING)
         verify(httpHelper).buildEventTracking(DUMMY_STRING)
-        verify(api).trackExternalEvent(any(), any())
+        verify(generalApi).trackExternalEvent(any())
         verify(call).enqueue(any())
     }
 

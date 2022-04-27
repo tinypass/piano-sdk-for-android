@@ -10,6 +10,7 @@ import timber.log.Timber
 import kotlin.properties.Delegates
 
 class ShowFormJs(
+    private val formName: String,
     private val trackingId: String,
     internal var loginCallback: () -> Unit = {}
 ) : BaseJsInterface() {
@@ -35,9 +36,14 @@ class ShowFormJs(
     fun postMessage(data: String) {
         ShowFormController.eventAdapter.fromJson(data)?.apply {
             when (event) {
-                "formSend", "formSkip" -> close()
+                "formSend" -> {
+                    Composer.getInstance().trackCustomFormSubmission(formName, trackingId)
+                    close()
+                }
+                "formSkip" -> close()
                 "stateReady" -> {
                     isReady = true
+                    Composer.getInstance().trackCustomFormImpression(formName, trackingId)
                     updateToken()
                 }
                 "tokenRejected" -> loginCallback.invoke()

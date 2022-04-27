@@ -13,7 +13,7 @@ import timber.log.Timber
 class ShowFormController(event: Event<ShowForm>, initialToken: String = "", private val loginCallback: () -> Unit) :
     BaseShowController<ShowForm, ShowFormJs>(
         event.eventData,
-        ShowFormJs(event.eventExecutionContext.trackingId, loginCallback)
+        ShowFormJs(event.eventData.formName, event.eventExecutionContext.trackingId, loginCallback)
     ) {
     private var checkProfileAtTokenChange: Boolean = false
     private val trackingId = event.eventExecutionContext.trackingId
@@ -23,7 +23,7 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
         }
     }
     override val fragmentTag = FRAGMENT_TAG
-    override val fragmentProvider = { ShowFormDialogFragment(url, trackingId) }
+    override val fragmentProvider = { ShowFormDialogFragment(url, eventData.formName, trackingId) }
 
     init {
         updateToken(initialToken)

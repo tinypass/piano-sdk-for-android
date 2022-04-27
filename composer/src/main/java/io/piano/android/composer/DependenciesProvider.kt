@@ -38,14 +38,25 @@ internal class DependenciesProvider private constructor(
         .add(EventJsonAdapterFactory())
         .build()
 
-    private val api: Api = Retrofit.Builder()
+    private val moshiConverterFactory = MoshiConverterFactory.create(moshi)
+
+    private val composerApi: ComposerApi = Retrofit.Builder()
         .baseUrl(endpoint.composerHost)
         .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .build().create()
+        .addConverterFactory(moshiConverterFactory)
+        .build()
+        .create()
+
+    private val generalApi: GeneralApi = Retrofit.Builder()
+        .baseUrl(endpoint.apiHost)
+        .client(okHttpClient)
+        .addConverterFactory(moshiConverterFactory)
+        .build()
+        .create()
 
     internal val composer: Composer = Composer(
-        api,
+        composerApi,
+        generalApi,
         HttpHelper(ExperienceIdsProvider(prefsStorage, PageViewIdProvider), prefsStorage, moshi, userAgent),
         prefsStorage,
         aid,
