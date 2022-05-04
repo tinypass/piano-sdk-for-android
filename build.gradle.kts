@@ -3,10 +3,3 @@ plugins {
     id("dependencies-updater")
     id("ktlint-config")
 }
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}

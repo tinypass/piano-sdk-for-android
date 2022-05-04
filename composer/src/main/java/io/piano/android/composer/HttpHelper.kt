@@ -6,11 +6,13 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.piano.android.composer.model.ActiveMeter
 import io.piano.android.composer.model.CustomParameters
+import io.piano.android.composer.model.DisplayMode
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.ShowTemplate
 import java.util.Calendar
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -57,9 +59,9 @@ internal class HttpHelper(
                 PARAM_NEW_VISIT to experienceIdsProvider.isVisitIdGenerated.toString(),
                 PARAM_SUBMIT_TYPE to VALUE_MANUAL_SUBMIT_TYPE,
                 PARAM_SDK_VERSION to BuildConfig.SDK_VERSION,
-                PARAM_XBUILDER_BROWSER_COOKIE to prefsStorage.xbuilderBrowserCookie.orEmpty(),
-                PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie.orEmpty(),
-                PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie.orEmpty(),
+                PARAM_XBUILDER_BROWSER_COOKIE to prefsStorage.xbuilderBrowserCookie,
+                PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie,
+                PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie,
                 PARAM_USER_TOKEN to userToken.orEmpty(),
                 PARAM_NEW_BID to browserIdProvider().orEmpty(),
                 PARAM_REFERRER to referer.orEmpty(),
@@ -78,9 +80,9 @@ internal class HttpHelper(
 
     override fun afterExecute(request: ExperienceRequest, response: ExperienceResponse) =
         with(response) {
-            xbCookie?.let { prefsStorage.xbuilderBrowserCookie = it.value }
-            tbCookie?.let { prefsStorage.tpBrowserCookie = it.value }
-            taCookie?.let { prefsStorage.tpAccessCookie = it.value }
+            prefsStorage.xbuilderBrowserCookie = xbCookie?.value.orEmpty()
+            prefsStorage.tpBrowserCookie = tbCookie?.value.orEmpty()
+            prefsStorage.tpAccessCookie = taCookie?.value.orEmpty()
             visitTimeoutMinutes?.let { prefsStorage.visitTimeout = TimeUnit.MILLISECONDS.convert(it, TimeUnit.MINUTES) }
             prefsStorage.serverTimezoneOffset = timeZoneOffsetMillis
         }
@@ -91,6 +93,21 @@ internal class HttpHelper(
             PARAM_EVENT_TYPE to VALUE_EXTERNAL_EVENT_TYPE,
             PARAM_EVENT_GROUP_ID to VALUE_CLOSE_GROUP_ID
         )
+
+    internal fun buildCustomFormTracking(
+        aid: String,
+        customFormName: String,
+        trackingId: String,
+        userToken: String?
+    ): Map<String, String> {
+        return sequenceOf(
+            PARAM_AID to aid,
+            PARAM_USER_TOKEN to userToken.orEmpty(),
+            PARAM_PAGEVIEW_ID to experienceIdsProvider.getPageViewId(Date()),
+            PARAM_EVENT_TRACKING_ID to trackingId,
+            PARAM_CUSTOM_FORM_NAME to customFormName
+        ).filterNotEmptyValues().toMap()
+    }
 
     internal fun buildShowTemplateParameters(
         showTemplateEvent: Event<ShowTemplate>,
@@ -105,7 +122,7 @@ internal class HttpHelper(
                 PARAM_SHOW_TEMPLATE_USER_TOKEN to userToken.orEmpty(),
                 PARAM_GA_CLIENT_ID to gaClientId.orEmpty(),
                 PARAM_OS to VALUE_ANDROID_OS,
-                PARAM_DISPLAY_MODE to ShowTemplate.DisplayMode.INLINE.mode,
+                PARAM_DISPLAY_MODE to DisplayMode.INLINE.mode,
                 PARAM_SHOW_CLOSE_BUTTON to eventData.showCloseButton.toString(),
                 PARAM_SHOW_TEMPLATE_TRACKING_ID to eventExecutionContext.trackingId,
                 PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),
@@ -172,6 +189,9 @@ internal class HttpHelper(
 
         internal const val VALUE_EXTERNAL_EVENT_TYPE = "EXTERNAL_EVENT"
         internal const val VALUE_CLOSE_GROUP_ID = "close"
+
+        // Custom form tracking constants
+        internal const val PARAM_CUSTOM_FORM_NAME = "custom_form_name"
 
         // Show template url constants
         internal const val PARAM_TEMPLATE_ID = "templateId"

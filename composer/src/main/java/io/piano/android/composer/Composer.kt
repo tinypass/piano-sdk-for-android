@@ -17,18 +17,13 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class Composer internal constructor(
-    private val api: Api,
+    private val composerApi: ComposerApi,
+    private val generalApi: GeneralApi,
     private val httpHelper: HttpHelper,
     private val prefsStorage: PrefsStorage,
     private val aid: String,
     private val endpoint: Endpoint
 ) {
-    private val experienceUrl by lazy {
-        endpoint.composerHost.newBuilder().addPathSegments(URL_EXPERIENCE_EXECUTE).build().toString()
-    }
-    private val trackExternalEventUrl by lazy {
-        endpoint.apiHost.newBuilder().addPathSegments(URL_TRACK_EXTERNAL_EVENT).build().toString()
-    }
     private val templateUrl by lazy {
         endpoint.apiHost.newBuilder().addPathSegments(URL_TEMPLATE).build()
     }
@@ -42,6 +37,13 @@ class Composer internal constructor(
             "AID can't be empty"
         }
     }
+
+    /**
+     * Gets Composer's user access token for Edge CDN
+     * @return Access token for Edge CDN
+     */
+    val accessToken: String
+        get() = prefsStorage.tpAccessCookie
 
     fun addExperienceInterceptor(interceptor: ExperienceInterceptor) = experienceInterceptors.add(interceptor)
 
@@ -78,8 +80,7 @@ class Composer internal constructor(
         exceptionListener: ExceptionListener
     ) {
         experienceInterceptors.forEach { it.beforeExecute(request) }
-        api.getExperience(
-            experienceUrl,
+        composerApi.getExperience(
             httpHelper.convertExperienceRequest(request, aid, browserIdProvider, userToken)
         ).enqueue(
             object : Callback<Data<ExperienceResponse>> {
@@ -117,15 +118,29 @@ class Composer internal constructor(
      * @param trackingId Tracking id
      */
     @Suppress("unused") // Public API.
-    fun trackExternalEvent(trackingId: String) =
-        api.trackExternalEvent(trackExternalEventUrl, httpHelper.buildEventTracking(trackingId))
-            .enqueue(
-                object : Callback<ResponseBody> {
-                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
+    fun trackExternalEvent(trackingId: String) {
+        generalApi.trackExternalEvent(httpHelper.buildEventTracking(trackingId)).enqueue(emptyCallback)
+    }
 
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
-                }
-            )
+    /**
+     * Tracks custom form impression by name
+     *
+     * @param customFormName Custom form name
+     */
+    @Suppress("unused") // Public API.
+    fun trackCustomFormImpression(customFormName: String, trackingId: String) =
+        generalApi.customFormImpression(httpHelper.buildCustomFormTracking(aid, customFormName, trackingId, userToken))
+            .enqueue(emptyCallback)
+
+    /**
+     * Tracks custom form submission by name
+     *
+     * @param customFormName Custom form name
+     */
+    @Suppress("unused") // Public API.
+    fun trackCustomFormSubmission(customFormName: String, trackingId: String) =
+        generalApi.customFormSubmission(httpHelper.buildCustomFormTracking(aid, customFormName, trackingId, userToken))
+            .enqueue(emptyCallback)
 
     /**
      * Clears stored data, like cookies, visit data
@@ -273,8 +288,10 @@ class Composer internal constructor(
         @Suppress("unused") // Public API.
         const val USER_PROVIDER_JANRAIN = "janrain"
 
-        private const val URL_EXPERIENCE_EXECUTE = "xbuilder/experience/executeMobile"
-        private const val URL_TRACK_EXTERNAL_EVENT = "api/v3/conversion/logAutoMicroConversion"
         private const val URL_TEMPLATE = "checkout/template/show"
+        private val emptyCallback = object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {}
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {}
+        }
     }
 }

@@ -88,6 +88,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                         progressBar.hide()
                     }
 
+                    @Deprecated("Deprecated in Java")
                     override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                         val isPianoIdRedirectUrl = Uri.parse(url).isPianoIdUri()
                         if (isPianoIdRedirectUrl) {
@@ -105,7 +106,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                     CookieManager.getInstance().setCookie(it, "${client.aid}__ut=")
                     progressBar.isIndeterminate = false
                     webview.apply {
-                        addJavascriptInterface(jsInterface, "PianoIDMobileSDK")
+                        addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
                         clearCache(true)
                         clearHistory()
                         loadUrl(it)

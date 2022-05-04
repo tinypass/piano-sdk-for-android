@@ -18,8 +18,8 @@ internal class DependenciesProvider private constructor(
     endpoint: Composer.Endpoint
 ) {
     private val prefsStorage = PrefsStorage(context)
-    private val userAgent = "Piano composer SDK (Android ${Build.VERSION.RELEASE} (Build ${Build.ID}); " +
-        "${context.applicationContext.deviceType()} ${Build.MANUFACTURER}/${Build.MODEL})"
+    private val userAgent = "Piano composer SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE} " +
+        "(Build ${Build.ID}); ${context.applicationContext.deviceType()} ${Build.MANUFACTURER}/${Build.MODEL})"
 
     private val okHttpClient = OkHttpClient.Builder()
         .readTimeout(30, TimeUnit.SECONDS)
@@ -34,18 +34,29 @@ internal class DependenciesProvider private constructor(
         )
         .build()
     private val moshi = Moshi.Builder()
-        .add(CustomParametersJsonAdapter.FACTORY)
+        .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
         .build()
 
-    private val api: Api = Retrofit.Builder()
+    private val moshiConverterFactory = MoshiConverterFactory.create(moshi)
+
+    private val composerApi: ComposerApi = Retrofit.Builder()
         .baseUrl(endpoint.composerHost)
         .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .build().create()
+        .addConverterFactory(moshiConverterFactory)
+        .build()
+        .create()
+
+    private val generalApi: GeneralApi = Retrofit.Builder()
+        .baseUrl(endpoint.apiHost)
+        .client(okHttpClient)
+        .addConverterFactory(moshiConverterFactory)
+        .build()
+        .create()
 
     internal val composer: Composer = Composer(
-        api,
+        composerApi,
+        generalApi,
         HttpHelper(ExperienceIdsProvider(prefsStorage, PageViewIdProvider), prefsStorage, moshi, userAgent),
         prefsStorage,
         aid,

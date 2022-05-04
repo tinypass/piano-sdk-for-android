@@ -51,7 +51,7 @@ android {
         viewBinding = true
     }
     lint {
-        isAbortOnError = false
+        abortOnError = false
     }
 }
 
@@ -59,11 +59,8 @@ ktlint {
     android.set(true)
 }
 
-repositories {
-    maven("https://jitpack.io")
-}
-
 dependencies {
+    implementation(Libs.multidex)
     implementation(Libs.appcompat)
     implementation(Libs.material)
     implementation(Libs.googleAuth)
@@ -77,4 +74,5 @@ dependencies {
     implementation(project(":id:id"))
     implementation(project(":id:id-oauth-google"))
     implementation(project(":id:id-oauth-facebook"))
+    implementation(project(":show-custom-form"))
 }

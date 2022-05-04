@@ -11,13 +11,11 @@ android {
     }
 }
 
-repositories {
-    maven("https://jitpack.io")
-}
-
 dependencies {
     api(project(":composer"))
+    api(project(":show-helper"))
     api(Libs.cxense)
+    implementation(Libs.timber)
 
     testImplementation(Libs.kotlinJunit)
     testImplementation(Libs.mockitoKotlin)

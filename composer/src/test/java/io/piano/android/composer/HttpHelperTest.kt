@@ -10,6 +10,7 @@ import io.piano.android.composer.model.ActiveMeter
 import io.piano.android.composer.model.CookieObject
 import io.piano.android.composer.model.CustomParameters
 import io.piano.android.composer.model.DelayBy
+import io.piano.android.composer.model.DisplayMode
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.EventExecutionContext
 import io.piano.android.composer.model.EventsContainer
@@ -24,9 +25,13 @@ class HttpHelperTest {
         on { getPageViewId(any()) } doReturn DUMMY_STRING
         on { getVisitId(any()) } doReturn DUMMY_STRING2
     }
-    private val prefsStorage: PrefsStorage = mock()
+    private val prefsStorage: PrefsStorage = mock() {
+        on { tpAccessCookie } doReturn ComposerTest.DUMMY_STRING
+        on { tpBrowserCookie } doReturn ComposerTest.DUMMY_STRING
+        on { xbuilderBrowserCookie } doReturn ComposerTest.DUMMY_STRING
+    }
     private val moshi: Moshi = Moshi.Builder()
-        .add(CustomParametersJsonAdapter.FACTORY)
+        .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
         .build()
     private val customParameters: CustomParameters = mock() {
@@ -51,7 +56,7 @@ class HttpHelperTest {
     fun convertExperienceRequest() {
         val requestMap = httpHelper.convertExperienceRequest(experienceRequest, DUMMY_STRING, { null }, null)
         requestMap.apply {
-            assertEquals(14, size)
+            assertEquals(17, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
         verify(experienceIdsProvider).getPageViewId(any())
@@ -110,7 +115,7 @@ class HttpHelperTest {
             ShowTemplate(
                 DUMMY_STRING2,
                 null,
-                ShowTemplate.DisplayMode.MODAL,
+                DisplayMode.MODAL,
                 DUMMY_STRING,
                 DelayBy(
                     DelayBy.DelayType.TIME,

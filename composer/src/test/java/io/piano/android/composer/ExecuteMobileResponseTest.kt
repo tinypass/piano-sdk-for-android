@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 class ExecuteMobileResponseTest {
     private val moshi = Moshi.Builder()
-        .add(CustomParametersJsonAdapter.FACTORY)
+        .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
         .build()
 
@@ -26,7 +26,7 @@ class ExecuteMobileResponseTest {
         assertNotNull(response)
         with(response) {
             assertTrue { errors.isEmpty() }
-            assertTrue { data.result.events.size == 8 }
+            assertTrue { data.result.events.size == 9 }
         }
     }
 
@@ -100,11 +100,18 @@ class ExecuteMobileResponseTest {
             {"executionId":"N/A","experienceId":"N/A","experienceVersion":null,"trackingId":"N/A","splitTests":[],
             "currentMeterName":"DefaultMeter","activeMeters":[],"allMeters":[{"meterName":"DefaultMeter","views":1,
             "viewsLeft":null,"maxViews":null,"totalViews":1}],"user":{"uid":"anon","firstName":"N/A","lastName":"N/A",
-            "email":"N/A"},"region":"NA","countryCode":"NA","accessList":[],"userSegments":{}},"eventConditions":[]}],
-            "swgEnabled":false},"xbc":{"cookie_value":"N/A","cookie_domain":null},"bid":"N/A","timezone_offset":
-            -14400000,"tac":{"cookie_value":"","cookie_domain":null},"tbc":{"cookie_value":"N/A","cookie_domain":null}},
-            "routes":{},"errors":[]}
-            """.trimIndent()
-                .trim('\n')
+            "email":"N/A"},"region":"NA","countryCode":"NA","accessList":[],"userSegments":{}},"eventConditions":[]},
+            {"eventType":"showRecommendations","eventParams":{"widgetId":"bb20a9e9183f2d20a2128bb40dcff74f4382ed9d",
+            "placeholder":null,"containerSelector":"","displayMode":"modal","showCloseButton":true,"siteId":
+            "1136341247897494322","type":"CXENSE"},"eventModuleParams":{"moduleId":"showRecommendationsZ4X8P92C5YE48",
+            "moduleName":"Showrecommendations"},"eventExecutionContext":{"executionId":"18787j80ag-00002vosbc9k1uglo",
+            "experienceId":"EXXE9I9CCKE0","experienceVersion":2,"trackingId":"{kpdx}AAAAAAAAAAAAAAAA","splitTests":[],
+            "currentMeterName":null,"activeMeters":[],"allMeters":[],"user":{"uid":"anon","firstName":"N/A",
+            "lastName":"N/A","email":"N/A","premium":"false"},"region":"NA","countryCode":"NA","accessList":[],
+            "userSegments":{"STANDARD":{"segments":[],"expiresAt":0},"COMPOSER1X":{"segments":[],"expiresAt":0}},
+            "creditStates":[]},"eventConditions":[]}],"swgEnabled":false},"xbc":{"cookie_value":"N/A","cookie_domain":
+            null},"bid":"N/A","timezone_offset":-14400000,"tac":{"cookie_value":"","cookie_domain":null},"tbc":{
+            "cookie_value":"N/A","cookie_domain":null}},"routes":{},"errors":[]}
+            """.trimIndent().trim('\n')
     }
 }
