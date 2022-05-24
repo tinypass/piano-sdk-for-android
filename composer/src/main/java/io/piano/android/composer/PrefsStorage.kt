@@ -72,6 +72,12 @@ internal class PrefsStorage(context: Context) {
             prefs.edit().putLong(KEY_VISIT_TIMEOUT, milliseconds).apply()
         }
 
+    var requestPolicyTime: Long
+        get() = prefs.getLong(KEY_REQUEST_POLICY_TIME, 0)
+        set(milliseconds) {
+            prefs.edit().putLong(KEY_REQUEST_POLICY_TIME, milliseconds).apply()
+        }
+
     companion object {
         internal const val PREFS_NAME = "io.piano.android.composer"
         internal const val KEY_VISIT_ID = "visitId"
@@ -81,6 +87,7 @@ internal class PrefsStorage(context: Context) {
         internal const val KEY_TP_ACCESS_COOKIE = "tac"
         internal const val KEY_TIMEZONE_OFFSET = "timeZoneOffsetMillis"
         internal const val KEY_VISIT_TIMEOUT = "visitTimeoutMinutes"
+        internal const val KEY_REQUEST_POLICY_TIME = "requestPolicyTimeout"
         internal val VISIT_TIMEOUT_FALLBACK = TimeUnit.MILLISECONDS.convert(30, TimeUnit.MINUTES)
     }
 }

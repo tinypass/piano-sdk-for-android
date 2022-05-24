@@ -24,7 +24,7 @@ class PianoSampleApplication : MultiDexApplication() {
             Timber.e(it)
         }
 
-        // Add code for debugging. Don't use in real release application 
+        // Add code for debugging. Don't use in real release application
         if (BuildConfig.DEBUG) {
             WebView.setWebContentsDebuggingEnabled(true)
         }

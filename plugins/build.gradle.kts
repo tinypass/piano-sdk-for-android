@@ -14,12 +14,12 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.ben-manes:gradle-versions-plugin:0.41.0")
-    implementation("com.android.tools.build:gradle:7.1.3")
+    implementation("com.github.ben-manes:gradle-versions-plugin:0.42.0")
+    implementation("com.android.tools.build:gradle:7.2.0")
     implementation(kotlin("gradle-plugin", "1.6.21"))
-    implementation("org.jlleitschuh.gradle:ktlint-gradle:10.2.0")
-    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.6.20")
-    implementation("com.vanniktech:gradle-maven-publish-plugin:0.18.0")
+    implementation("org.jlleitschuh.gradle:ktlint-gradle:10.3.0")
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.6.21")
+    implementation("com.vanniktech:gradle-maven-publish-plugin:0.19.0")
 }
 
 gradlePlugin {

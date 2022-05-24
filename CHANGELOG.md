@@ -1,5 +1,11 @@
 # Piano SDK for Android
 
+## v2.5.1-SNAPSHOT
+* Add support for Composer request control policy
+* Updated dependencies:
+    - com.facebook.android:facebook-login [13.1.0 -> 13.2.0]
+      https://github.com/facebook/facebook-android-sdk
+    - com.google.android.gms:play-services-auth [20.1.0 -> 20.2.0]
 ## v2.5.0
 * Add getUserInfo API in ID (similar to `tp.pianoId.loadExtendedUser`)
 * Add support for ShowForm event
