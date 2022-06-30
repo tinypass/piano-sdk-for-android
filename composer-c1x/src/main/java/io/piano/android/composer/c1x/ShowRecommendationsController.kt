@@ -11,10 +11,11 @@ class ShowRecommendationsController(event: Event<ShowRecommendations>) :
         event.eventData,
         with(event.eventData) { WidgetJs(widgetId, siteId) }
     ) {
+    private val trackingId = event.eventExecutionContext.trackingId
     override val url = URL
     override val fragmentTag = FRAGMENT_TAG
     override val fragmentProvider = {
-        with(eventData) { ShowRecommendationsDialogFragment(widgetId, siteId) }
+        with(eventData) { ShowRecommendationsDialogFragment(widgetId, siteId, trackingId) }
     }
 
     override fun close(data: String?) = jsInterface.close()

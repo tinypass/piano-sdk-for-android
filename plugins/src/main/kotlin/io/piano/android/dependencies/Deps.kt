@@ -4,17 +4,17 @@ private object Versions {
     const val kotlin = "1.6.21"
 
     // AndroidX libraries
-    const val compatLibrary = "1.4.1"
-    const val androidxActivity = "1.4.0"
-    const val annotationsLibrary = "1.3.0"
-    const val fragmentLibrary = "1.4.1"
-    const val materialLibrary = "1.6.0"
-    const val lifecycleLibrary = "2.4.1"
+    const val compatLibrary = "1.4.2"
+    const val androidxActivity = "1.5.0"
+    const val annotationsLibrary = "1.4.0"
+    const val fragmentLibrary = "1.5.0"
+    const val materialLibrary = "1.6.1"
+    const val lifecycleLibrary = "2.5.0"
     const val prefsLibrary = "1.2.0"
     const val multidex = "2.0.1"
 
     // Third party Libraries
-    const val facebookLogin = "13.2.0"
+    const val facebookLogin = "14.0.0"
     const val googlePlayServices = "20.2.0"
     const val retrofit = "2.6.4"
     const val okhttp = "3.12.13"
@@ -28,7 +28,7 @@ private object Versions {
     const val androidxTestExtJunit = "1.1.3"
     const val mockitoKotlin = "2.2.0"
     const val mockitoCore = "3.12.1"
-    const val robolectric = "4.7.3"
+    const val robolectric = "4.8.1"
 }
 
 const val ktLintVersion = "0.45.2"

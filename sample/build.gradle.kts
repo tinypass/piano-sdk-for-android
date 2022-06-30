@@ -27,7 +27,7 @@ android {
         buildConfigField("String", "PIANO_ENDPOINT", """"$endpoint"""")
         multiDexEnabled = true
 
-        manifestPlaceholders += mapOf<String, Any>(
+        manifestPlaceholders += mapOf(
             "PIANO_AID" to aid.toLowerCase(),
             "FB_APP_ID" to "fb$fbAppId",
             "FB_APP_SCHEME" to "fb$fbAppId"
