@@ -67,6 +67,7 @@ dependencies {
     implementation(Libs.timber)
     implementation(Libs.moshi)
     implementation(Libs.prefsKtx)
+    implementation(Libs.lifecycleKtx)
 
     implementation(project(":composer"))
     implementation(project(":composer-c1x"))

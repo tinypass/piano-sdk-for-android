@@ -52,6 +52,7 @@ object Libs {
     const val moshi = "com.squareup.moshi:moshi:${Versions.moshi}"
     const val moshiCodegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
     const val prefsKtx = "androidx.preference:preference-ktx:${Versions.prefsLibrary}"
+    const val lifecycleKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycleLibrary}"
     const val cxense = "com.cxpublic:cxense-android:${Versions.cxense}"
 
 
