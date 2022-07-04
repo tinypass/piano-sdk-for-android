@@ -11,11 +11,12 @@ val pianoProperties = Properties().apply {
     load(FileReader(file("piano.properties")))
 }
 
-val aid: String = pianoProperties["io.piano.aid"]?.toString()
+val aid: String = pianoProperties.getProperty("io.piano.aid")
     ?: throw IllegalArgumentException("You missed 'io.piano.aid' in piano.properties")
-val endpoint: String = pianoProperties["io.piano.endpoint"]?.toString() ?: ""
-val siteId: String = pianoProperties["cxenseSiteid"]?.toString() ?: "1111111111111111111"
-val fbAppId: String = pianoProperties["facebookAppId"]?.toString() ?: "1111111111111111"
+val endpoint: String = pianoProperties.getProperty("io.piano.endpoint", "")
+val siteId: String = pianoProperties.getProperty("cxenseSiteid", "1111111111111111111")
+val fbAppId: String = pianoProperties.getProperty("facebookAppId", "1111111111111111")
+val fbAppToken: String = pianoProperties.getProperty("facebookClientToken", "00000000000000000000000000000000")
 
 android {
     defaultConfig {
@@ -30,7 +31,8 @@ android {
         manifestPlaceholders += mapOf(
             "PIANO_AID" to aid.toLowerCase(),
             "FB_APP_ID" to "fb$fbAppId",
-            "FB_APP_SCHEME" to "fb$fbAppId"
+            "FB_APP_SCHEME" to "fb$fbAppId",
+            "FB_APP_TOKEN" to fbAppToken
         )
     }
     signingConfigs {
