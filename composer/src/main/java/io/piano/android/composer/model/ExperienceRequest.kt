@@ -21,7 +21,7 @@ import java.util.Locale
  */
 class ExperienceRequest private constructor(
     val isDebug: Boolean,
-    val customVariables: Map<String, String?>,
+    val customVariables: Map<String, List<String>?>,
     val url: String?,
     val referer: String?,
     val tags: List<String>,
@@ -35,7 +35,7 @@ class ExperienceRequest private constructor(
 
     data class Builder @JvmOverloads constructor(
         var debug: Boolean = false,
-        var customVariables: MutableMap<String, String?> = mutableMapOf(),
+        var customVariables: MutableMap<String, List<String>?> = mutableMapOf(),
         var url: String? = null,
         var referer: String? = null,
         var tags: MutableList<String> = mutableListOf(),
@@ -55,7 +55,7 @@ class ExperienceRequest private constructor(
         fun debug(debug: Boolean) = apply { this.debug = debug }
 
         /**
-         * Adds custom variable to request
+         * Adds value for custom variable
          * @param key Custom variable key
          * @param value Custom variable value
          * @return Builder instance
@@ -64,7 +64,25 @@ class ExperienceRequest private constructor(
         fun customVariable(
             key: String,
             value: String?
-        ) = apply { customVariables[key] = value }
+        ) = apply {
+            customVariables[key] = value?.let { v ->
+                (customVariables[key]?.toMutableList() ?: mutableListOf()).apply { add(v) }
+            }
+        }
+
+        /**
+         * Adds custom variable to request
+         * @param key Custom variable key
+         * @param value Custom variable value
+         * @return Builder instance
+         */
+        // Public API.
+        fun customVariable(
+            key: String,
+            value: List<String>?
+        ) = apply {
+            customVariables[key] = value
+        }
 
         /**
          * Adds map of custom variables for request
@@ -72,7 +90,7 @@ class ExperienceRequest private constructor(
          * @return Builder instance
          */
         // Public API.
-        fun customVariables(customVariables: Map<String, String?>) =
+        fun customVariables(customVariables: Map<String, List<String>?>) =
             apply { this.customVariables.putAll(customVariables) }
 
         /**

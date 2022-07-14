@@ -38,7 +38,7 @@ class HttpHelperTest {
         on { isEmpty() } doReturn false
     }
     private val experienceRequest: ExperienceRequest = mock() {
-        on { customVariables } doReturn mapOf("1" to "2")
+        on { customVariables } doReturn mapOf("1" to listOf("2"))
         on { tags } doReturn listOf(DUMMY_STRING, DUMMY_STRING)
         on { customParameters } doReturn customParameters
     }

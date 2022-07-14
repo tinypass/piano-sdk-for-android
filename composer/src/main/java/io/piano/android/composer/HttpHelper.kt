@@ -22,11 +22,14 @@ internal class HttpHelper(
     moshi: Moshi,
     private val userAgent: String
 ) : ExperienceInterceptor {
-    private val mapAdapter: JsonAdapter<Map<String, String?>> = moshi.adapter(
+    private val mapAdapter: JsonAdapter<Map<String, List<String>?>> = moshi.adapter(
         Types.newParameterizedType(
             Map::class.java,
             String::class.java,
-            String::class.java
+            Types.newParameterizedType(
+                List::class.java,
+                String::class.java
+            )
         )
     )
 
