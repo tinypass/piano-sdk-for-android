@@ -1,4 +1,5 @@
 # Piano Composer Show Template for Android
+![Maven Central](https://img.shields.io/maven-central/v/io.piano.android/composer-show-template)
 
 ## Getting started
 This is helper for simplifying "Show Template" event processing

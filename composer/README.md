@@ -1,4 +1,5 @@
 # Piano Composer Android SDK
+![Maven Central](https://img.shields.io/maven-central/v/io.piano.android/composer)
 
 ## Getting started
 

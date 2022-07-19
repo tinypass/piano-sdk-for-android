@@ -1,4 +1,5 @@
 # Piano Composer C1X integration for Android
+![Maven Central](https://img.shields.io/maven-central/v/io.piano.android/composer-c1x)
 
 ## Getting started
 This is C1X integration artifact for Composer

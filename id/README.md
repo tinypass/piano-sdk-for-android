@@ -1,4 +1,5 @@
 # Piano ID Android SDK
+![Maven Central](https://img.shields.io/maven-central/v/io.piano.android/id)
 
 ## Getting started
 
