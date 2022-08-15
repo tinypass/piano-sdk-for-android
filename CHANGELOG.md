@@ -3,17 +3,17 @@
 ## v2.5.1-SNAPSHOT
 * Add support for Composer request control policy
 * Updated dependencies:
-    - androidx.activity:activity [1.4.0 -> 1.5.0]
-      https://developer.android.com/jetpack/androidx/releases/activity#1.5.0
+    - androidx.activity:activity [1.4.0 -> 1.5.1]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.5.1
     - androidx.annotation:annotation [1.3.0 -> 1.4.0]
       https://developer.android.com/jetpack/androidx/releases/annotation#1.4.0
     - androidx.appcompat:appcompat [1.4.1 -> 1.4.2]
       https://developer.android.com/jetpack/androidx/releases/appcompat#1.4.2
-    - androidx.fragment:fragment [1.4.1 -> 1.5.0]
-      https://developer.android.com/jetpack/androidx/releases/fragment#1.5.0
-    - androidx.lifecycle:lifecycle-common-java8 [2.4.1 -> 2.5.0]
-      https://developer.android.com/jetpack/androidx/releases/lifecycle#2.5.0
-    - com.facebook.android:facebook-login [13.2.0 -> 14.0.0]
+    - androidx.fragment:fragment [1.4.1 -> 1.5.2]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.5.2
+    - androidx.lifecycle:lifecycle-common-java8 [2.4.1 -> 2.5.1]
+      https://developer.android.com/jetpack/androidx/releases/lifecycle#2.5.1
+    - com.facebook.android:facebook-login [13.2.0 -> 14.1.0]
       https://github.com/facebook/facebook-android-sdk
     - com.google.android.gms:play-services-auth [20.1.0 -> 20.2.0]
 ## v2.5.0

@@ -1,5 +1,3 @@
-import io.piano.android.dependencies.Libs
-
 plugins {
     id("com.android.library")
     id("common-android-config")
@@ -7,8 +5,8 @@ plugins {
 
 dependencies {
     api(project(":composer"))
-    api(Libs.appcompat)
-    api(Libs.fragments)
-    implementation(Libs.annotations)
-    implementation(Libs.timber)
+    api(libs.appcompat)
+    api(libs.fragments)
+    implementation(libs.annotations)
+    implementation(libs.timber)
 }

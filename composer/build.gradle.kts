@@ -1,5 +1,3 @@
-import io.piano.android.dependencies.Libs
-
 plugins {
     id("com.android.library")
     id("common-android-config")
@@ -13,17 +11,17 @@ android {
 }
 
 dependencies {
-    implementation(Libs.okhttpLogging)
-    implementation(Libs.retrofit)
-    implementation(Libs.retrofitConverter)
-    implementation(Libs.moshi)
-    kapt(Libs.moshiCodegen)
-    implementation(Libs.annotations)
-    implementation(Libs.timber)
+    implementation(libs.okhttpLogging)
+    implementation(libs.retrofit)
+    implementation(libs.retrofitConverter)
+    implementation(libs.moshi)
+    kapt(libs.moshiCodegen)
+    implementation(libs.annotations)
+    implementation(libs.timber)
 
-    testImplementation(Libs.kotlinJunit)
-    testImplementation(Libs.mockitoKotlin)
-    testImplementation(Libs.mockitoCore)
-    testImplementation(Libs.junit)
-    testImplementation(Libs.okhttpMockServer)
+    testImplementation(libs.kotlinJunit)
+    testImplementation(libs.mockitoKotlin)
+    testImplementation(libs.mockitoCore)
+    testImplementation(libs.junit)
+    testImplementation(libs.okhttpMockServer)
 }

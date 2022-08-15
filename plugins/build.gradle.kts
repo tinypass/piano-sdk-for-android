@@ -14,20 +14,16 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.ben-manes:gradle-versions-plugin:0.42.0")
-    implementation("com.android.tools.build:gradle:7.2.1")
-    implementation(kotlin("gradle-plugin", "1.6.21"))
-    implementation("org.jlleitschuh.gradle:ktlint-gradle:10.3.0")
-    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.6.21")
-    implementation("com.vanniktech:gradle-maven-publish-plugin:0.19.0")
+    implementation(libs.versionUpdater)
+    implementation(libs.android)
+    implementation(libs.kotlin)
+    implementation(libs.ktlint)
+    implementation(libs.dokka)
+    implementation(libs.mavenRelease)
 }
 
 gradlePlugin {
     plugins {
-        register("dependencies") {
-            id = "dependencies"
-            implementationClass = "io.piano.android.dependencies.DependenciesPlugin"
-        }
         register("dependencies-updater") {
             id = "dependencies-updater"
             implementationClass = "io.piano.android.dependencies.DependenciesUpdaterPlugin"

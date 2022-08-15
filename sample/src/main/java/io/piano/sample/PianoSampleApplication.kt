@@ -55,11 +55,21 @@ class PianoSampleApplication : MultiDexApplication() {
     }
 
     companion object {
-        val PIANO_ID_ENDPOINT = BuildConfig.PIANO_ENDPOINT.takeUnless { it.isEmpty() } ?: PianoId.ENDPOINT_SANDBOX
-        val COMPOSER_ENDPOINT = BuildConfig.PIANO_ENDPOINT.takeUnless {
-            it.isEmpty()
-        }?.let {
-            Endpoint(it, it)
-        } ?: Endpoint.SANDBOX
+        val PIANO_ID_ENDPOINT = when {
+            BuildConfig.PIANO_ENDPOINT.isNotEmpty() -> BuildConfig.PIANO_ENDPOINT
+            BuildConfig.PIANO_QA_PREFIX.isNotEmpty() -> "https://${BuildConfig.PIANO_QA_PREFIX}.qa.piano.io/"
+            else -> PianoId.ENDPOINT_SANDBOX
+        }
+        val COMPOSER_ENDPOINT = when {
+            BuildConfig.PIANO_ENDPOINT.isNotEmpty() -> Endpoint(
+                BuildConfig.PIANO_ENDPOINT,
+                BuildConfig.PIANO_ENDPOINT
+            )
+            BuildConfig.PIANO_QA_PREFIX.isNotEmpty() -> Endpoint(
+                "https://c2-${BuildConfig.PIANO_QA_PREFIX}.qa.piano.io/",
+                "https://${BuildConfig.PIANO_QA_PREFIX}.qa.piano.io/"
+            )
+            else -> Endpoint.SANDBOX
+        }
     }
 }

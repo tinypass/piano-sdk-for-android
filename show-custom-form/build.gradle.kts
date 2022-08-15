@@ -1,5 +1,3 @@
-import io.piano.android.dependencies.Libs
-
 plugins {
     id("com.android.library")
     id("common-android-config")
@@ -10,8 +8,8 @@ dependencies {
     api(project(":composer"))
     api(project(":id:id"))
     api(project(":show-helper"))
-    implementation(Libs.lifecycleCommon)
-    implementation(Libs.timber)
-    implementation(Libs.moshi)
-    kapt(Libs.moshiCodegen)
+    implementation(libs.lifecycleCommon)
+    implementation(libs.timber)
+    implementation(libs.moshi)
+    kapt(libs.moshiCodegen)
 }
