@@ -1,9 +1,9 @@
 package io.piano.android.composer.c1x
 
 import android.content.Context
-import com.cxense.cxensesdk.CxenseSdk
 import io.piano.android.composer.Composer
 import io.piano.android.composer.PageViewIdProvider
+import io.piano.android.cxense.CxenseSdk
 import java.util.Date
 import java.util.concurrent.TimeUnit
 

@@ -4,8 +4,8 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.annotation.UiThread
-import com.cxense.cxensesdk.CxenseSdk
 import io.piano.android.composer.PageViewIdProvider
+import io.piano.android.cxense.CxenseSdk
 import io.piano.android.showhelper.BaseJsInterface
 import java.util.Date
 

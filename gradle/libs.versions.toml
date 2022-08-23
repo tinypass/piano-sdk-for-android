@@ -23,7 +23,7 @@ retrofit = "2.6.4"
 okhttp = "3.12.13"
 moshi = "1.13.0"
 timber = "5.0.1"
-cxense = "2.2.0"
+cxense = "2.3.0"
 
 # Test Libraries
 junit = "4.13.2"
@@ -52,7 +52,7 @@ moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 prefsKtx = { module = "androidx.preference:preference-ktx", version.ref = "prefsLibrary" }
 lifecycleKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleLibrary" }
-cxense = { module = "com.cxpublic:cxense-android", version.ref = "cxense" }
+cxense = { module = "io.piano.android:cxense", version.ref = "cxense" }
 
 kotlinJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 mockitoKotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }

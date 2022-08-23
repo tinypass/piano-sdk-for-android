@@ -1,13 +1,13 @@
 package io.piano.android.composer.c1x
 
-import com.cxense.cxensesdk.CxenseSdk
-import com.cxense.cxensesdk.model.CustomParameter
-import com.cxense.cxensesdk.model.ExternalUserId
-import com.cxense.cxensesdk.model.PageViewEvent
 import io.piano.android.composer.ExperienceInterceptor
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.ExperienceExecute
+import io.piano.android.cxense.CxenseSdk
+import io.piano.android.cxense.model.CustomParameter
+import io.piano.android.cxense.model.ExternalUserId
+import io.piano.android.cxense.model.PageViewEvent
 import timber.log.Timber
 
 class C1xInterceptor(
