@@ -16,6 +16,7 @@ import io.piano.android.composer.model.EventExecutionContext
 import io.piano.android.composer.model.EventsContainer
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
+import io.piano.android.composer.model.UserSegmentsContainer
 import io.piano.android.composer.model.events.ShowTemplate
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -109,6 +110,7 @@ class HttpHelperTest {
                 null,
                 DUMMY_STRING2,
                 DUMMY_STRING2,
+                UserSegmentsContainer(null, null),
                 null,
                 meters
             ),

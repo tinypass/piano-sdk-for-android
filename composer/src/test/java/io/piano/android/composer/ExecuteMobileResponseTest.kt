@@ -12,6 +12,7 @@ class ExecuteMobileResponseTest {
     private val moshi = Moshi.Builder()
         .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
+        .add(UnixTimeDateAdapter)
         .build()
 
     @Test
