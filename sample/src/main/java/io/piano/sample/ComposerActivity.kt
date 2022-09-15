@@ -84,7 +84,10 @@ class ComposerActivity : AppCompatActivity() {
             ExperienceExecuteListener { (_, eventExecutionContext, eventData) ->
                 Timber.d("Composer's user access token for Edge CDN ${Composer.getInstance().accessToken}")
                 eventExecutionContext.userSegments.standard?.let {
-                    Timber.d("Standard user segments are ${it.segments.joinToString(prefix = "[", postfix = "]")}, expires at ${it.expiresAt}")
+                    Timber.d(
+                        "Standard user segments are ${it.segments.joinToString(prefix = "[", postfix = "]")}," +
+                            " expires at ${it.expiresAt}"
+                    )
                 }
                 Toast.makeText(
                     this,
