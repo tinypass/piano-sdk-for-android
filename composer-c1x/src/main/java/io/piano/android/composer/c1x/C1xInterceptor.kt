@@ -17,8 +17,8 @@ class C1xInterceptor(
     override fun beforeExecute(
         request: ExperienceRequest
     ) {
-        check(!request.url.isNullOrEmpty()) {
-            "URL is required for C1X"
+        check(!request.url.isNullOrEmpty() || !request.contentId.isNullOrEmpty()) {
+            "URL or Content Id is required for C1X"
         }
     }
 
@@ -40,8 +40,9 @@ class C1xInterceptor(
                     ExternalUserId(cxenseCustomerPrefix!!, it)
                 }
                 val event = PageViewEvent.Builder(
-                    siteId,
-                    request.url,
+                    siteId = siteId,
+                    location = request.url,
+                    contentId = request.contentId,
                     referrer = request.referer,
                     customParameters = mutableListOf(CustomParameter(PARAM_USERSTATE, userState)),
                 ).apply {

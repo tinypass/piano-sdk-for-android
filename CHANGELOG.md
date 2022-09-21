@@ -2,6 +2,7 @@
 
 ## v2.5.1-SNAPSHOT
 * Add support for Composer request control policy
+* Add support for setting contentId to C1X
 * Updated dependencies:
     - androidx.activity:activity [1.4.0 -> 1.5.0]
       https://developer.android.com/jetpack/androidx/releases/activity#1.5.0
