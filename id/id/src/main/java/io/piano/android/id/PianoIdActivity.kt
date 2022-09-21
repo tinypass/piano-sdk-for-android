@@ -13,6 +13,7 @@ import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
@@ -45,12 +46,19 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         }
     }
 
+    private val webviewBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            binding.webview.goBack()
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPianoIdBinding.inflate(layoutInflater)
         setContentView(binding.root)
         intent.process()
+        onBackPressedDispatcher.addCallback(webviewBackPressedCallback)
         with(binding) {
             webview.apply {
                 savedInstanceState?.let { restoreState(it) }
@@ -80,6 +88,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                 webViewClient = object : WebViewClient() {
                     override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
                         super.onPageStarted(view, url, favicon)
+                        webviewBackPressedCallback.isEnabled = view.canGoBack()
                         progressBar.show()
                     }
 
@@ -121,14 +130,6 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         intent.process()
-    }
-
-    override fun onBackPressed() {
-        with(binding.webview) {
-            if (canGoBack())
-                goBack()
-            else super.onBackPressed()
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

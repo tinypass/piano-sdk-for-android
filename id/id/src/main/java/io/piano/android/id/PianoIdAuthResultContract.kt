@@ -23,6 +23,7 @@ class PianoIdAuthResultContract : ActivityResultContract<PianoIdClient.SignInCon
                     with(intent) {
                         val code = getIntExtra(PianoId.KEY_ERROR, 0)
                         if (code == 0) {
+                            @Suppress("DEPRECATION") // deprecated since Android 13
                             PianoIdAuthResult.success(
                                 getParcelableExtra(PianoId.KEY_TOKEN),
                                 getBooleanExtra(PianoId.KEY_IS_NEW_USER, false)
