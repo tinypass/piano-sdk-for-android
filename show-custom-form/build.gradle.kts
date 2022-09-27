@@ -13,3 +13,6 @@ dependencies {
     implementation(libs.moshi)
     kapt(libs.moshiCodegen)
 }
+android {
+    namespace = "io.piano.android.showform"
+}

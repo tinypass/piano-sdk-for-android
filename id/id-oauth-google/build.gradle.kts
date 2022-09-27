@@ -8,3 +8,6 @@ dependencies {
     implementation(libs.googleAuth)
     api(project(":id:id"))
 }
+android {
+    namespace = "io.piano.android.id.google"
+}

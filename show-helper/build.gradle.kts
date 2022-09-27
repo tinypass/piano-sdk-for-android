@@ -10,3 +10,6 @@ dependencies {
     implementation(libs.annotations)
     implementation(libs.timber)
 }
+android {
+    namespace = "io.piano.android.showhelper"
+}

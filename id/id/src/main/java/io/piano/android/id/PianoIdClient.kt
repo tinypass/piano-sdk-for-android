@@ -11,9 +11,9 @@ import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdAuthFailureResult
 import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
+import io.piano.android.id.models.PianoUserProfile
 import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
-import io.piano.android.id.models.PianoUserProfile
 import okhttp3.HttpUrl
 import retrofit2.Call
 import retrofit2.Callback
@@ -158,32 +158,38 @@ class PianoIdClient internal constructor(
             } ?: callback(Result.failure(r.exceptionOrNull()!!))
         }
 
-    internal fun getSignInUrl(disableSignUp: Boolean, widget: String?, callback: PianoIdFuncCallback<String>) =
-        getHostUrl { r ->
-            callback(
-                r.mapCatching { url ->
-                    url.newBuilder()
-                        .encodedPath(AUTH_PATH)
-                        .addQueryParameter(PARAM_RESPONSE_TYPE, VALUE_RESPONSE_TYPE_TOKEN)
-                        .addQueryParameter(PARAM_CLIENT_ID, aid)
-                        .addQueryParameter(PARAM_FORCE_REDIRECT, VALUE_FORCE_REDIRECT)
-                        .addQueryParameter(PARAM_DISABLE_SIGN_UP, disableSignUp.toString())
-                        .addQueryParameter(PARAM_REDIRECT_URI, "$LINK_SCHEME_PREFIX$aid://$LINK_AUTHORITY")
-                        .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
-                        .apply {
-                            if (!widget.isNullOrEmpty())
-                                addQueryParameter(PARAM_SCREEN, widget)
-                            if (oauthProviders.isNotEmpty())
-                                addQueryParameter(
-                                    PARAM_OAUTH_PROVIDERS,
-                                    oauthProviders.keys.joinToString(separator = ",")
-                                )
-                        }
-                        .build()
-                        .toString()
-                }
-            )
-        }
+    internal fun getSignInUrl(
+        disableSignUp: Boolean,
+        widget: String?,
+        stage: String?,
+        callback: PianoIdFuncCallback<String>
+    ) = getHostUrl { r ->
+        callback(
+            r.mapCatching { url ->
+                url.newBuilder()
+                    .encodedPath(AUTH_PATH)
+                    .addQueryParameter(PARAM_RESPONSE_TYPE, VALUE_RESPONSE_TYPE_TOKEN)
+                    .addQueryParameter(PARAM_CLIENT_ID, aid)
+                    .addQueryParameter(PARAM_FORCE_REDIRECT, VALUE_FORCE_REDIRECT)
+                    .addQueryParameter(PARAM_DISABLE_SIGN_UP, disableSignUp.toString())
+                    .addQueryParameter(PARAM_REDIRECT_URI, "$LINK_SCHEME_PREFIX$aid://$LINK_AUTHORITY")
+                    .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
+                    .apply {
+                        if (!widget.isNullOrEmpty())
+                            addQueryParameter(PARAM_SCREEN, widget)
+                        if (!stage.isNullOrEmpty())
+                            addQueryParameter(PARAM_STAGE, stage)
+                        if (oauthProviders.isNotEmpty())
+                            addQueryParameter(
+                                PARAM_OAUTH_PROVIDERS,
+                                oauthProviders.keys.joinToString(separator = ",")
+                            )
+                    }
+                    .build()
+                    .toString()
+            }
+        )
+    }
 
     internal fun getUserInfo(accessToken: String, formName: String?, callback: PianoIdFuncCallback<PianoUserProfile>) {
         getHostUrl { r ->
@@ -272,6 +278,7 @@ class PianoIdClient internal constructor(
     ) {
         internal var disableSignUp: Boolean = false
         internal var widget: String? = null
+        internal var stage: String? = null
 
         /**
          * Turns off the registration screen
@@ -290,6 +297,15 @@ class PianoIdClient internal constructor(
          */
         @Suppress("unused") // Public API.
         fun widget(widget: String?) = apply { this.widget = widget }
+
+        /**
+         * Sets the stage directive element value, which can be used for show or hide parts of template
+         *
+         * @param stage Value for passing to template
+         * @return {@link SignInContext} instance
+         */
+        @Suppress("unused") // Public API.
+        fun stage(stage: String?) = apply { this.stage = stage }
     }
 
     companion object {
@@ -318,6 +334,7 @@ class PianoIdClient internal constructor(
         internal const val PARAM_FORM_NAME = "form_name"
         internal const val PARAM_HIDE_COMPLETE = "hide_if_complete"
         internal const val PARAM_TRACKING_ID = "trackingId"
+        internal const val PARAM_STAGE = "stage"
 
         internal const val VALUE_RESPONSE_TYPE_TOKEN = "token"
         internal const val VALUE_FORCE_REDIRECT = "1"

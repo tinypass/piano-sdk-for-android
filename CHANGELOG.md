@@ -4,14 +4,14 @@
 * Add support for Composer request control policy
 * Add support for setting contentId to C1X
 * Updated dependencies:
-    - androidx.activity:activity [1.4.0 -> 1.5.1]
-      https://developer.android.com/jetpack/androidx/releases/activity#1.5.1
-    - androidx.annotation:annotation [1.3.0 -> 1.4.0]
-      https://developer.android.com/jetpack/androidx/releases/annotation#1.4.0
-    - androidx.appcompat:appcompat [1.4.1 -> 1.4.2]
-      https://developer.android.com/jetpack/androidx/releases/appcompat#1.4.2
-    - androidx.fragment:fragment [1.4.1 -> 1.5.2]
-      https://developer.android.com/jetpack/androidx/releases/fragment#1.5.2
+    - androidx.activity:activity [1.4.0 -> 1.6.0]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.6.0
+    - androidx.annotation:annotation [1.3.0 -> 1.5.0]
+      https://developer.android.com/jetpack/androidx/releases/annotation#1.5.0
+    - androidx.appcompat:appcompat [1.4.1 -> 1.5.1]
+      https://developer.android.com/jetpack/androidx/releases/appcompat#1.5.1
+    - androidx.fragment:fragment [1.4.1 -> 1.5.3]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.5.3
     - androidx.lifecycle:lifecycle-common-java8 [2.4.1 -> 2.5.1]
       https://developer.android.com/jetpack/androidx/releases/lifecycle#2.5.1
     - com.facebook.android:facebook-login [13.2.0 -> 14.1.1]

@@ -8,3 +8,6 @@ dependencies {
     api(libs.facebookLogin)
     api(project(":id:id"))
 }
+android {
+    namespace = "io.piano.android.id.facebook"
+}

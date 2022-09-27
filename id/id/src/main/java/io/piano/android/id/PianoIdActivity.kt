@@ -34,6 +34,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     private val jsInterface = PianoIdJavascriptDelegate(this, client.javascriptInterface)
     private var widget: String? = null
     private var disableSignUp: Boolean = false
+    private var stage: String? = null
 
     private val oauthResult = registerForActivityResult(OAuthResultContract()) {
         when (it) {
@@ -110,7 +111,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                     }
                 }
             }
-            client.getSignInUrl(disableSignUp, widget) { r ->
+            client.getSignInUrl(disableSignUp, widget, stage) { r ->
                 r.onSuccess {
                     CookieManager.getInstance().setCookie(it, "${client.aid}__ut=")
                     progressBar.isIndeterminate = false
@@ -194,18 +195,21 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     internal fun Intent.process() {
         widget = getStringExtra(KEY_WIDGET)
         disableSignUp = getBooleanExtra(KEY_DISABLE_SIGN_UP, false)
+        stage = getStringExtra(KEY_STAGE)
     }
 
     companion object {
         internal const val KEY_WIDGET = "io.piano.android.id.PianoIdActivity.WIDGET"
         internal const val KEY_DISABLE_SIGN_UP = "io.piano.android.id.PianoIdActivity.DISABLE_SIGN_UP"
+        internal const val KEY_STAGE = "io.piano.android.id.PianoIdActivity.STAGE"
         internal const val JS_INTERFACE_NAME = "PianoIDMobileSDK"
 
         @JvmStatic
-        internal fun buildIntent(context: Context, disableSignUp: Boolean, widget: String?): Intent =
+        internal fun buildIntent(context: Context, disableSignUp: Boolean, widget: String?, stage: String?): Intent =
             Intent(context, PianoIdActivity::class.java)
                 .putExtra(KEY_DISABLE_SIGN_UP, disableSignUp)
                 .putExtra(KEY_WIDGET, widget)
+                .putExtra(KEY_STAGE, stage)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
 }

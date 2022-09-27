@@ -56,6 +56,7 @@ android {
     lint {
         abortOnError = false
     }
+    namespace = "io.piano.sample"
 }
 
 dependencies {

@@ -11,7 +11,7 @@ class PianoIdAuthResultContract : ActivityResultContract<PianoIdClient.SignInCon
 
     override fun createIntent(context: Context, input: PianoIdClient.SignInContext): Intent =
         with(input) {
-            PianoIdActivity.buildIntent(context, disableSignUp, widget)
+            PianoIdActivity.buildIntent(context, disableSignUp, widget, stage)
         }
 
     override fun parseResult(resultCode: Int, intent: Intent?): PianoIdAuthResult? =

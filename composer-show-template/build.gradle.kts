@@ -9,3 +9,6 @@ dependencies {
     implementation(libs.lifecycleCommon)
     implementation(libs.timber)
 }
+android {
+    namespace = "io.piano.android.composer.showtemplate"
+}

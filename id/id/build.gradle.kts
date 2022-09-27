@@ -12,6 +12,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    namespace = "io.piano.android.id"
 }
 
 dependencies {
