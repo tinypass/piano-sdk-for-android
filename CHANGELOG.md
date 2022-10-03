@@ -3,18 +3,17 @@
 ## v2.5.1-SNAPSHOT
 * Add support for Composer request control policy
 * Add support for setting contentId to C1X
+* Add support for stage parameter to ID
 * Updated dependencies:
-    - androidx.activity:activity [1.4.0 -> 1.6.0]
-      https://developer.android.com/jetpack/androidx/releases/activity#1.6.0
-    - androidx.annotation:annotation [1.3.0 -> 1.5.0]
-      https://developer.android.com/jetpack/androidx/releases/annotation#1.5.0
-    - androidx.appcompat:appcompat [1.4.1 -> 1.5.1]
-      https://developer.android.com/jetpack/androidx/releases/appcompat#1.5.1
+    - androidx.activity:activity [1.4.0 -> 1.5.1]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.5.1
+    - androidx.annotation:annotation [1.3.0 -> 1.4.0]
+      https://developer.android.com/jetpack/androidx/releases/annotation#1.4.0
     - androidx.fragment:fragment [1.4.1 -> 1.5.3]
       https://developer.android.com/jetpack/androidx/releases/fragment#1.5.3
     - androidx.lifecycle:lifecycle-common-java8 [2.4.1 -> 2.5.1]
       https://developer.android.com/jetpack/androidx/releases/lifecycle#2.5.1
-    - com.facebook.android:facebook-login [13.2.0 -> 14.1.1]
+    - com.facebook.android:facebook-login [13.2.0 -> 15.0.1]
       https://github.com/facebook/facebook-android-sdk
     - com.google.android.gms:play-services-auth [20.1.0 -> 20.3.0]
 ## v2.5.0

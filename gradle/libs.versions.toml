@@ -7,9 +7,9 @@ ktlint = "10.3.0"
 mavenRelease = "0.19.0"
 
 # AndroidX libraries
-compatLibrary = "1.5.1"
-androidxActivity = "1.6.0"
-annotationsLibrary = "1.5.0"
+compatLibrary = "1.4.1"
+androidxActivity = "1.5.1"
+annotationsLibrary = "1.4.0"
 fragmentLibrary = "1.5.3"
 materialLibrary = "1.6.1"
 lifecycleLibrary = "2.5.1"
@@ -17,7 +17,7 @@ prefsLibrary = "1.2.0"
 multidex = "2.0.1"
 
 # Third party Libraries
-facebookLogin = "14.1.1"
+facebookLogin = "15.0.1"
 googlePlayServices = "20.3.0"
 retrofit = "2.6.4"
 okhttp = "3.12.13"
