@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        package="io.piano.sample">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <application
             android:name=".PianoSampleApplication"
@@ -42,6 +41,9 @@
         <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
                 android:value="${FB_APP_ID}" />
+        <meta-data
+                android:name="com.facebook.sdk.ClientToken"
+                android:value="${FB_APP_TOKEN}" />
 
         <activity
                 android:name="com.facebook.FacebookActivity"

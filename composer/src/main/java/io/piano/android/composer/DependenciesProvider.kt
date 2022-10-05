@@ -25,6 +25,7 @@ internal class DependenciesProvider private constructor(
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
         .addInterceptor(UserAgentInterceptor(userAgent))
+        .addInterceptor(RequestPolicyInterceptor(prefsStorage))
         .addInterceptor(
             HttpLoggingInterceptor().setLevel(
                 if (BuildConfig.DEBUG || isLogHttpSet())
@@ -36,6 +37,7 @@ internal class DependenciesProvider private constructor(
     private val moshi = Moshi.Builder()
         .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
+        .add(UnixTimeDateAdapter)
         .build()
 
     private val moshiConverterFactory = MoshiConverterFactory.create(moshi)

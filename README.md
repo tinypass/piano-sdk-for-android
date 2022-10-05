@@ -1,4 +1,5 @@
 # Piano SDK for Android
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/tinypass/piano-sdk-for-android)
 
 Welcome to Piano SDK for Android.
 
@@ -22,7 +23,7 @@ Take a look at [Piano ID readme](id/README.md)
 ### Sample
 We created a sample app to showcase our SDK and highlight some of the features provided by each API.
 
-Don't forget to specify `io.piano.aid=$YOUR_AID` in `piano.properties` in `sample`/`sample-ktx` before you start importing!
+Don't forget to specify `io.piano.aid=$YOUR_AID` in `piano.properties` in `sample` before you start importing!
 
 ### License
 ```

@@ -1,5 +1,3 @@
-import io.piano.android.dependencies.Libs
-
 plugins {
     id("com.android.library")
     id("common-android-config")
@@ -14,25 +12,26 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    namespace = "io.piano.android.id"
 }
 
 dependencies {
-    implementation(Libs.appcompat)
-    api(Libs.androidxActivity)
-    implementation(Libs.okhttp)
-    implementation(Libs.okhttpLogging)
-    implementation(Libs.retrofit)
-    implementation(Libs.retrofitConverter)
-    implementation(Libs.moshi)
-    kapt(Libs.moshiCodegen)
-    implementation(Libs.annotations)
-    implementation(Libs.timber)
+    implementation(libs.appcompat)
+    api(libs.androidxActivity)
+    implementation(libs.okhttp)
+    implementation(libs.okhttpLogging)
+    implementation(libs.retrofit)
+    implementation(libs.retrofitConverter)
+    implementation(libs.moshi)
+    kapt(libs.moshiCodegen)
+    implementation(libs.annotations)
+    implementation(libs.timber)
 
-    testImplementation(Libs.kotlinJunit)
-    testImplementation(Libs.mockitoKotlin)
-    testImplementation(Libs.mockitoCore)
-    testImplementation(Libs.junit)
-    testImplementation(Libs.androidxTestCore)
-    testImplementation(Libs.androidxTestExtJunit)
-    testImplementation(Libs.robolectric)
+    testImplementation(libs.kotlinJunit)
+    testImplementation(libs.mockitoKotlin)
+    testImplementation(libs.mockitoCore)
+    testImplementation(libs.junit)
+    testImplementation(libs.androidxTestCore)
+    testImplementation(libs.androidxTestExtJunit)
+    testImplementation(libs.robolectric)
 }

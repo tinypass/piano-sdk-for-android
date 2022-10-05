@@ -12,7 +12,12 @@ import java.util.Locale
  * @property url Url value
  * @property referer Referer value
  * @property tags Tags value
+ * @property keywords Keywords value
  * @property zone Zone value
+ * @property title Title value
+ * @property description Description value
+ * @property contentId Content id
+ * @property contentType Content type
  * @property contentCreated Content created value
  * @property contentAuthor Content author value
  * @property contentSection Content section value
@@ -21,11 +26,16 @@ import java.util.Locale
  */
 class ExperienceRequest private constructor(
     val isDebug: Boolean,
-    val customVariables: Map<String, String?>,
+    val customVariables: Map<String, List<String>?>,
     val url: String?,
     val referer: String?,
     val tags: List<String>,
+    val keywords: List<String>,
     val zone: String?,
+    val title: String?,
+    val description: String?,
+    val contentId: String?,
+    val contentType: String?,
     val contentCreated: String?,
     val contentAuthor: String?,
     val contentSection: String?,
@@ -35,11 +45,16 @@ class ExperienceRequest private constructor(
 
     data class Builder @JvmOverloads constructor(
         var debug: Boolean = false,
-        var customVariables: MutableMap<String, String?> = mutableMapOf(),
+        var customVariables: MutableMap<String, List<String>?> = mutableMapOf(),
         var url: String? = null,
         var referer: String? = null,
         var tags: MutableList<String> = mutableListOf(),
+        var keywords: MutableList<String> = mutableListOf(),
         var zone: String? = null,
+        var title: String? = null,
+        var description: String? = null,
+        var contentId: String? = null,
+        var contentType: String? = null,
         var contentCreated: String? = null,
         var contentAuthor: String? = null,
         var contentSection: String? = null,
@@ -55,7 +70,7 @@ class ExperienceRequest private constructor(
         fun debug(debug: Boolean) = apply { this.debug = debug }
 
         /**
-         * Adds custom variable to request
+         * Adds value for custom variable
          * @param key Custom variable key
          * @param value Custom variable value
          * @return Builder instance
@@ -64,7 +79,25 @@ class ExperienceRequest private constructor(
         fun customVariable(
             key: String,
             value: String?
-        ) = apply { customVariables[key] = value }
+        ) = apply {
+            customVariables[key] = value?.let { v ->
+                (customVariables[key]?.toMutableList() ?: mutableListOf()).apply { add(v) }
+            }
+        }
+
+        /**
+         * Adds custom variable to request
+         * @param key Custom variable key
+         * @param value Custom variable value
+         * @return Builder instance
+         */
+        // Public API.
+        fun customVariable(
+            key: String,
+            value: List<String>?
+        ) = apply {
+            customVariables[key] = value
+        }
 
         /**
          * Adds map of custom variables for request
@@ -72,7 +105,7 @@ class ExperienceRequest private constructor(
          * @return Builder instance
          */
         // Public API.
-        fun customVariables(customVariables: Map<String, String?>) =
+        fun customVariables(customVariables: Map<String, List<String>?>) =
             apply { this.customVariables.putAll(customVariables) }
 
         /**
@@ -115,12 +148,60 @@ class ExperienceRequest private constructor(
         fun tags(tags: Collection<String>) = apply { this.tags.addAll(tags) }
 
         /**
+         * Adds "keyword" parameter to request
+         * @param keyword Keyword value
+         * @return Builder instance
+         */
+        // Public API.
+        fun keyword(keyword: String) = apply { keywords.add(keyword) }
+
+        /**
+         * Adds multiple "keyword" parameters to request
+         * @param keywords Collection of keyword values
+         * @return Builder instance
+         */
+        // Public API.
+        fun keywords(keywords: Collection<String>) = apply { this.keywords.addAll(keywords) }
+
+        /**
          * Sets "zone" parameter for request
          * @param zone Zone value
          * @return Builder instance
          */
         // Public API.
         fun zone(zone: String?) = apply { this.zone = zone }
+
+        /**
+         * Sets "title" parameter for request
+         * @param title Title value
+         * @return Builder instance
+         */
+        // Public API.
+        fun title(title: String?) = apply { this.title = title }
+
+        /**
+         * Sets "description" parameter for request
+         * @param description Description value
+         * @return Builder instance
+         */
+        // Public API.
+        fun description(description: String?) = apply { this.description = description }
+
+        /**
+         * Sets "content id" parameter for request
+         * @param contentId Content Id
+         * @return Builder instance
+         */
+        // Public API.
+        fun contentId(contentId: String?) = apply { this.contentId = contentId }
+
+        /**
+         * Sets "content type" parameter for request
+         * @param contentType Content Type
+         * @return Builder instance
+         */
+        // Public API.
+        fun contentType(contentType: String?) = apply { this.contentType = contentType }
 
         /**
          * Sets "content created" parameter for request
@@ -182,7 +263,12 @@ class ExperienceRequest private constructor(
                 url,
                 referer,
                 Collections.unmodifiableList(tags),
+                Collections.unmodifiableList(keywords),
                 zone,
+                title,
+                description,
+                contentId,
+                contentType,
                 contentCreated,
                 contentAuthor,
                 contentSection,

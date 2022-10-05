@@ -3,7 +3,6 @@ package io.piano.android.configuration
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.vanniktech.maven.publish.MavenPublishPlugin
-import io.piano.android.dependencies.DependenciesPlugin
 import io.piano.android.ktlint.KtlintConfigPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -17,7 +16,6 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPluginWrapper
 
 class CommonAndroidConfigurationPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.run {
-        apply<DependenciesPlugin>()
         configureKotlin()
         configureAndroid()
     }

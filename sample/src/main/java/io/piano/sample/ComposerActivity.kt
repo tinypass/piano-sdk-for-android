@@ -81,8 +81,14 @@ class ComposerActivity : AppCompatActivity() {
             .build()
 
         val listeners: Collection<EventTypeListener<out EventType>> = listOf(
-            ExperienceExecuteListener { (_, _, eventData) ->
+            ExperienceExecuteListener { (_, eventExecutionContext, eventData) ->
                 Timber.d("Composer's user access token for Edge CDN ${Composer.getInstance().accessToken}")
+                eventExecutionContext.userSegments.standard?.let {
+                    Timber.d(
+                        "Standard user segments are ${it.segments.joinToString(prefix = "[", postfix = "]")}," +
+                            " expires at ${it.expiresAt}"
+                    )
+                }
                 Toast.makeText(
                     this,
                     "[${Thread.currentThread().name}] User = ${eventData.user}",

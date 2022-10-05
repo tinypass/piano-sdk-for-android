@@ -1,4 +1,3 @@
-import io.piano.android.dependencies.Libs
 import java.io.FileReader
 import java.util.Properties
 
@@ -11,11 +10,13 @@ val pianoProperties = Properties().apply {
     load(FileReader(file("piano.properties")))
 }
 
-val aid: String = pianoProperties["io.piano.aid"]?.toString()
+val aid: String = pianoProperties.getProperty("io.piano.aid")
     ?: throw IllegalArgumentException("You missed 'io.piano.aid' in piano.properties")
-val endpoint: String = pianoProperties["io.piano.endpoint"]?.toString() ?: ""
-val siteId: String = pianoProperties["cxenseSiteid"]?.toString() ?: "1111111111111111111"
-val fbAppId: String = pianoProperties["facebookAppId"]?.toString() ?: "1111111111111111"
+val endpoint: String = pianoProperties.getProperty("io.piano.endpoint", "")
+val qaPrefix: String = pianoProperties.getProperty("io.piano.qaPrefix", "")
+val siteId: String = pianoProperties.getProperty("cxenseSiteid", "1111111111111111111")
+val fbAppId: String = pianoProperties.getProperty("facebookAppId", "1111111111111111")
+val fbAppToken: String = pianoProperties.getProperty("facebookClientToken", "00000000000000000000000000000000")
 
 android {
     defaultConfig {
@@ -25,12 +26,14 @@ android {
         buildConfigField("String", "PIANO_AID", """"$aid"""")
         buildConfigField("String", "CX_SITE_ID", """"$siteId"""")
         buildConfigField("String", "PIANO_ENDPOINT", """"$endpoint"""")
+        buildConfigField("String", "PIANO_QA_PREFIX", """"$qaPrefix"""")
         multiDexEnabled = true
 
-        manifestPlaceholders += mapOf<String, Any>(
+        manifestPlaceholders += mapOf(
             "PIANO_AID" to aid.toLowerCase(),
             "FB_APP_ID" to "fb$fbAppId",
-            "FB_APP_SCHEME" to "fb$fbAppId"
+            "FB_APP_SCHEME" to "fb$fbAppId",
+            "FB_APP_TOKEN" to fbAppToken
         )
     }
     signingConfigs {
@@ -53,20 +56,18 @@ android {
     lint {
         abortOnError = false
     }
-}
-
-ktlint {
-    android.set(true)
+    namespace = "io.piano.sample"
 }
 
 dependencies {
-    implementation(Libs.multidex)
-    implementation(Libs.appcompat)
-    implementation(Libs.material)
-    implementation(Libs.googleAuth)
-    implementation(Libs.timber)
-    implementation(Libs.moshi)
-    implementation(Libs.prefsKtx)
+    implementation(libs.multidex)
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    implementation(libs.googleAuth)
+    implementation(libs.timber)
+    implementation(libs.moshi)
+    implementation(libs.prefsKtx)
+    implementation(libs.lifecycleKtx)
 
     implementation(project(":composer"))
     implementation(project(":composer-c1x"))

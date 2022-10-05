@@ -1,18 +1,21 @@
 package io.piano.android.composer.c1x
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.webkit.WebView
+import io.piano.android.composer.Composer
 import io.piano.android.composer.c1x.ShowRecommendationsController.Companion.prepare
 import io.piano.android.showhelper.BaseJsInterface
 import io.piano.android.showhelper.BaseShowDialogFragment
 
 class ShowRecommendationsDialogFragment : BaseShowDialogFragment {
     constructor() : super()
-    constructor(widgetId: String, siteId: String) : super(ShowRecommendationsController.URL) {
+    constructor(widgetId: String, siteId: String, trackingId: String) : super(ShowRecommendationsController.URL) {
         val args = arguments ?: Bundle()
         arguments = args.apply {
             putString(KEY_WIDGET_ID, widgetId)
             putString(KEY_SITE_ID, siteId)
+            putString(KEY_TRACKING_ID, trackingId)
         }
     }
 
@@ -22,6 +25,9 @@ class ShowRecommendationsDialogFragment : BaseShowDialogFragment {
     private val siteId: String by lazy {
         requireNotNull(arguments?.getString(KEY_SITE_ID))
     }
+    private val trackingId: String by lazy {
+        arguments?.getString(KEY_TRACKING_ID) ?: ""
+    }
 
     override fun WebView.configure(jsInterface: BaseJsInterface?) {
         prepare(
@@ -30,8 +36,14 @@ class ShowRecommendationsDialogFragment : BaseShowDialogFragment {
         )
     }
 
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        Composer.getInstance().trackExternalEvent(trackingId)
+    }
+
     companion object {
         private const val KEY_WIDGET_ID = "widgetId"
         private const val KEY_SITE_ID = "siteId"
+        private const val KEY_TRACKING_ID = "trackingId"
     }
 }

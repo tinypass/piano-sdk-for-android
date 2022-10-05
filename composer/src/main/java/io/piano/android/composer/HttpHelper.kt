@@ -22,11 +22,14 @@ internal class HttpHelper(
     moshi: Moshi,
     private val userAgent: String
 ) : ExperienceInterceptor {
-    private val mapAdapter: JsonAdapter<Map<String, String?>> = moshi.adapter(
+    private val mapAdapter: JsonAdapter<Map<String, List<String>?>> = moshi.adapter(
         Types.newParameterizedType(
             Map::class.java,
             String::class.java,
-            String::class.java
+            Types.newParameterizedType(
+                List::class.java,
+                String::class.java
+            )
         )
     )
 
@@ -65,10 +68,17 @@ internal class HttpHelper(
                 PARAM_USER_TOKEN to userToken.orEmpty(),
                 PARAM_NEW_BID to browserIdProvider().orEmpty(),
                 PARAM_REFERRER to referer.orEmpty(),
+                PARAM_TITLE to title.orEmpty(),
+                PARAM_DESCRIPTION to description.orEmpty(),
+                PARAM_CONTENT_ID to contentId.orEmpty(),
+                PARAM_CONTENT_TYPE to contentType.orEmpty(),
                 PARAM_CONTENT_AUTHOR to contentAuthor.orEmpty(),
                 PARAM_CONTENT_SECTION to contentSection.orEmpty(),
                 PARAM_CONTENT_CREATED to contentCreated.orEmpty(),
                 PARAM_CONTENT_NATIVE to (contentIsNative?.toString() ?: ""),
+                PARAM_KEYWORDS to keywords.takeUnless { it.isEmpty() }
+                    ?.joinToString(separator = ",")
+                    .orEmpty(),
                 PARAM_CUSTOM_VARIABLES to customVariables.takeUnless { it.isEmpty() }
                     ?.let { mapAdapter.toJson(it) }
                     .orEmpty(),
@@ -172,7 +182,12 @@ internal class HttpHelper(
         internal const val PARAM_URL = "url"
         internal const val PARAM_REFERRER = "referer"
         internal const val PARAM_TAGS = "tags"
+        internal const val PARAM_KEYWORDS = "keywords"
         internal const val PARAM_ZONE = "zone"
+        internal const val PARAM_TITLE = "title"
+        internal const val PARAM_DESCRIPTION = "description"
+        internal const val PARAM_CONTENT_ID = "contentId"
+        internal const val PARAM_CONTENT_TYPE = "contentType"
         internal const val PARAM_CONTENT_CREATED = "content_created"
         internal const val PARAM_CONTENT_AUTHOR = "content_author"
         internal const val PARAM_CONTENT_SECTION = "content_section"

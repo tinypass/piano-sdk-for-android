@@ -210,7 +210,7 @@ class PianoIdClientTest {
         doNothing().`when`(pianoIdClient).getHostUrl(any())
         val callback: PianoIdFuncCallback<String> = mock()
         pianoIdClient.oauthProviders[DUMMY] = oAuthProvider
-        pianoIdClient.getSignInUrl(true, DUMMY, callback)
+        pianoIdClient.getSignInUrl(true, DUMMY, DUMMY, callback)
         val callbackCaptor = argumentCaptor<PianoIdFuncCallback<HttpUrl>>()
         verify(pianoIdClient).getHostUrl(callbackCaptor.capture())
         callbackTest(callback, callbackCaptor.lastValue)
@@ -230,6 +230,7 @@ class PianoIdClientTest {
                 assertEquals(PianoIdClient.VALUE_FORCE_REDIRECT, queryParameter(PianoIdClient.PARAM_FORCE_REDIRECT))
                 assertEquals(true.toString(), queryParameter(PianoIdClient.PARAM_DISABLE_SIGN_UP))
                 assertEquals(DUMMY, queryParameter(PianoIdClient.PARAM_SCREEN))
+                assertEquals(DUMMY, queryParameter(PianoIdClient.PARAM_STAGE))
                 assertEquals(DUMMY, queryParameter(PianoIdClient.PARAM_OAUTH_PROVIDERS))
                 assertEquals(
                     setOf(
@@ -240,6 +241,7 @@ class PianoIdClientTest {
                         PianoIdClient.PARAM_REDIRECT_URI,
                         PianoIdClient.PARAM_SDK_FLAG,
                         PianoIdClient.PARAM_SCREEN,
+                        PianoIdClient.PARAM_STAGE,
                         PianoIdClient.PARAM_OAUTH_PROVIDERS
                     ),
                     queryParameterNames()

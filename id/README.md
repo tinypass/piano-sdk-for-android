@@ -1,18 +1,11 @@
 # Piano ID Android SDK
+![Maven Central](https://img.shields.io/maven-central/v/io.piano.android/id)
 
 ## Getting started
 
 ### Dependencies
 
 The Piano ID Android SDK is available as an AAR via Maven Central. To add dependencies, open your project’s build.gradle/build.gradle.kts and update the dependencies block as follows:
-
-Groovy
-```groovy
-dependencies {
-    // ... other project dependencies
-    implementation 'io.piano.android:id:$VERSION'
-}
-```
 
 Kotlin DSL
 ```kotlin
@@ -32,19 +25,6 @@ PianoId.ENDPOINT_SANDBOX - Sandbox endpoint
 
 ### Initialization
 
-Java
-```java
-public class MyApplication extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        PianoId.init(PianoId.ENDPOINT_PRODUCTION, BuildConfig.PIANO_AID);
-    }
-}
-```
-
 Kotlin
 ```kotlin
 class MyApplication : Application() {
@@ -57,30 +37,6 @@ class MyApplication : Application() {
 
 ### Sign in
 Register processing for auth result (see [here](https://developer.android.com/training/basics/intents/result) for more info)
-
-Java
-```java
-private final ActivityResultLauncher<PianoIdClient.SignInContext> authResult = registerForActivityResult(
-        new PianoIdAuthResultContract(),
-        r -> {
-            if (r == null) {
-                // user cancelled Authorization process
-            } else if (r.isSuccess()) {
-                PianoIdAuthSuccessResult data = (PianoIdAuthSuccessResult) r;
-                boolean isNewUserRegistered = data.isNewUser()
-                PianoIdToken token = data.getToken();
-                if (token.emailConfirmationRequired) {
-                    // process enabled Double opt-in
-                }
-                // process successful authorization 
-            } else {
-                PianoIdAuthFailureResult data = (PianoIdAuthFailureResult) r;
-                PianoIdException e = data.getException());
-                // Authorization failed, check e.cause for details
-            }
-        }
-);
-```
 
 Kotlin
 ```kotlin
@@ -106,14 +62,6 @@ private val authResult = registerForActivityResult(PianoIdAuthResultContract()) 
 Start auth process:
 Check authorization result in your onActivityResult:
 
-Java
-```java
-authResult.launch(
-    PianoId.signIn()
-    // ... configure "Sign In" ...
-);
-```
-
 Kotlin
 ```kotlin
 authResult.launch(
@@ -128,13 +76,6 @@ Note:
 
 ### Sign out
 
-Java
-```java
-PianoId.signout(accessToken)
-    // or
-PianoId.signout(accessToken, callback)
-```
-
 Kotlin
 ```kotlin
 PianoId.signout(accessToken)
@@ -145,11 +86,6 @@ PianoId.signout(accessToken) {
 ```
 
 ### Refresh token
-
-Java
-```java
-PianoId.refreshToken(refreshToken, callback)
-```
 
 Kotlin
 ```kotlin
@@ -163,14 +99,6 @@ PianoId.refreshToken(refreshToken) {
 ### Dependencies
 
 **Google:**
-Groovy
-```groovy
-dependencies {
-    // ... other project dependencies
-    implementation 'io.piano.android:id-oauth-google:$VERSION'
-}
-```
-
 Kotlin DSL
 ```kotlin
 dependencies {
@@ -179,14 +107,6 @@ dependencies {
 ```
 
 **Facebook:**
-Groovy
-```groovy
-dependencies {
-    // ... other project dependencies
-    implementation 'io.piano.android:id-oauth-facebook:$VERSION'
-}
-```
-
 Kotlin DSL
 ```kotlin
 dependencies {
@@ -199,23 +119,6 @@ dependencies {
 #### Google
 
 [Configure your project for Google](https://docs.piano.io/how-to-set-up-google-social-login)
-
-Java
-```java
-// ... other imports
-import io.piano.android.id.GoogleOAuthProvider;
-
-public class MyApplication extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        PianoId.init(...)
-            .with(new GoogleOAuthProvider());
-    }
-}
-```
 
 Kotlin
 ```kotlin
@@ -230,22 +133,6 @@ class MyApplication : Application() {
 #### Facebook
 
 [Configure your project for Facebook](https://docs.piano.io/how-to-setup-facebook-social-login/)
-
-```java
-// ... other imports
-import io.piano.android.id.FacebookOAuthProvider;
-
-public class MyApplication extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        PianoId.init(...)
-            .with(new FacebookOAuthProvider());
-    }
-}
-```
 
 Kotlin
 ```kotlin
@@ -289,27 +176,6 @@ if (uri.isPianoIdUri()) {
             // Auth successful, save access token here
         }
     }
-} else {
-    // App deep link, process as usual
-}
-```
-
-for Java  
-```java
-Uri uri = getIntent().getData();
-if (PianoId.isPianoIdUri(uri)) {
-    // It's Piano paswordless auth link
-    PianoId.parsePianoIdToken(uri, PianoIdCallback.asResultCallback(new PianoIdCallback<PianoIdToken>() {
-        @Override
-        public void onSuccess(@NonNull PianoIdToken token) {
-            // Auth successful, save access token here
-        }
-
-        @Override
-        public void onFailure(@NonNull PianoIdException exception) {
-            // Auth unsuccessful, process it
-        }
-    }));
 } else {
     // App deep link, process as usual
 }
