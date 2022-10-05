@@ -1,7 +1,9 @@
 # Piano SDK for Android
 
-## v2.5.1-SNAPSHOT
+## v2.6.0
 * Add support for Composer request control policy
+* Add userSegments to EventExecutionContext
+* Migrate to open-sourced CxSdk for C1X
 * Add support for setting contentId to C1X
 * Add support for stage parameter to ID
 * Updated dependencies:
