@@ -11,9 +11,11 @@ import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdAuthFailureResult
 import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
+import io.piano.android.id.models.PianoUserInfo
 import io.piano.android.id.models.PianoUserProfile
 import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
+import io.piano.android.id.models.toProfileUpdateRequest
 import okhttp3.HttpUrl
 import retrofit2.Call
 import retrofit2.Callback
@@ -199,6 +201,23 @@ class PianoIdClient internal constructor(
                     aid,
                     accessToken,
                     formName
+                ).enqueue(callback.asRetrofitCallback())
+            } ?: callback(Result.failure(r.exceptionOrNull()!!))
+        }
+    }
+
+    internal fun putUserInfo(
+        accessToken: String,
+        newUserInfo: PianoUserInfo,
+        callback: PianoIdFuncCallback<PianoUserProfile>
+    ) {
+        getHostUrl { r ->
+            r.getOrNull()?.let {
+                api.putUserInfo(
+                    it.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
+                    aid,
+                    accessToken,
+                    newUserInfo.toProfileUpdateRequest()
                 ).enqueue(callback.asRetrofitCallback())
             } ?: callback(Result.failure(r.exceptionOrNull()!!))
         }

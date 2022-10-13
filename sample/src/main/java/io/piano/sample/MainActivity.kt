@@ -15,6 +15,7 @@ import io.piano.android.id.PianoIdAuthResultContract
 import io.piano.android.id.models.PianoIdAuthFailureResult
 import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
+import io.piano.android.id.models.PianoUserInfo
 import io.piano.sample.databinding.ActivityMainBinding
 import timber.log.Timber
 
@@ -134,6 +135,17 @@ class MainActivity : AppCompatActivity() {
                 ?.customFields
                 ?.joinToString(prefix = "[", postfix = "]") { "${it.fieldName} = ${it.value}" }
             Timber.d("User custom fields = $customFields")
+            val newUserInfo = PianoUserInfo("new_form")
+                .customField("test0", listOf("value"))
+                .customField("test1", "test")
+                .customField("test2", true)
+                .customField("test3", 5)
+            PianoId.putUserInfo(token.accessToken, newUserInfo) { r2 ->
+                val newCustomFields = r2.getOrNull()
+                    ?.customFields
+                    ?.joinToString(prefix = "[", postfix = "]") { "${it.fieldName} = ${it.value}" }
+                Timber.d("Updated user custom fields = $newCustomFields")
+            }
         }
         Composer.getInstance().userToken(token.accessToken)
         showMessage("accessToken = " + token.accessToken)
@@ -146,9 +158,5 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMessage(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
-    }
-
-    companion object {
-        private const val PIANO_ID_REQUEST_CODE = 1
     }
 }

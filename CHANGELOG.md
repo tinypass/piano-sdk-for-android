@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.6.1-SNAPSHOT
+* Add support for updating user profile custom fields to ID
+
 ## v2.6.0
 * Add support for Composer request control policy
 * Add userSegments to EventExecutionContext
@@ -18,6 +21,7 @@
     - com.facebook.android:facebook-login [13.2.0 -> 15.0.1]
       https://github.com/facebook/facebook-android-sdk
     - com.google.android.gms:play-services-auth [20.1.0 -> 20.3.0]
+
 ## v2.5.0
 * Add getUserInfo API in ID (similar to `tp.pianoId.loadExtendedUser`)
 * Add support for ShowForm event
