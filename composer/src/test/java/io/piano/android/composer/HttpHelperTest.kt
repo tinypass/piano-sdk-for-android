@@ -18,6 +18,7 @@ import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.UserSegmentsContainer
 import io.piano.android.composer.model.events.ShowTemplate
+import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -93,6 +94,16 @@ class HttpHelperTest {
         with(httpHelper.buildEventTracking(DUMMY_STRING)) {
             assertEquals(3, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_EVENT_TRACKING_ID])
+        }
+    }
+
+    @Test
+    fun buildCustomFormTracking() {
+        with(httpHelper.buildCustomFormTracking(DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING, DUMMY_STRING2)) {
+            assertEquals(5, size)
+            assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_EVENT_TRACKING_ID])
+            assertEquals(DUMMY_STRING2, this[HttpHelper.PARAM_USER_TOKEN])
+            verify(experienceIdsProvider).getPageViewId(any<Date>())
         }
     }
 

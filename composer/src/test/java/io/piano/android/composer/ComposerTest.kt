@@ -32,6 +32,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class ComposerTest {
     private val experienceCall: Call<Data<ExperienceResponse>> = mock()
@@ -63,7 +64,7 @@ class ComposerTest {
             generalApi,
             httpHelper,
             prefsStorage,
-            "AID",
+            DUMMY_AID,
             Composer.Endpoint.SANDBOX
         )
     )
@@ -91,6 +92,20 @@ class ComposerTest {
         val callbackCaptor = argumentCaptor<Callback<Data<ExperienceResponse>>>()
         verify(experienceCall).enqueue(callbackCaptor.capture())
         callbackTest(callbackCaptor.lastValue)
+    }
+
+    @Test
+    fun emptyAidInit() {
+        assertFailsWith<IllegalArgumentException> {
+            Composer(
+                composerApi,
+                generalApi,
+                httpHelper,
+                prefsStorage,
+                "",
+                Composer.Endpoint.SANDBOX
+            )
+        }
     }
 
     @Test
@@ -208,7 +223,7 @@ class ComposerTest {
 
     @Test
     fun processExperienceResponseNoListeners() {
-        val experienceResponse: ExperienceResponse = ExperienceResponse(
+        val experienceResponse = ExperienceResponse(
             null,
             null,
             null,
@@ -265,7 +280,28 @@ class ComposerTest {
         verify(call).enqueue(any())
     }
 
+    @Test
+    fun trackCustomFormImpression() {
+        val call: Call<ResponseBody> = mock()
+        whenever(generalApi.customFormImpression(any())).doReturn(call)
+        composer.trackCustomFormImpression(DUMMY_STRING, DUMMY_STRING2)
+        verify(httpHelper).buildCustomFormTracking(DUMMY_AID, DUMMY_STRING, DUMMY_STRING2, null)
+        verify(generalApi).customFormImpression(any())
+        verify(call).enqueue(any())
+    }
+
+    @Test
+    fun trackCustomFormSubmission() {
+        val call: Call<ResponseBody> = mock()
+        whenever(generalApi.customFormSubmission(any())).doReturn(call)
+        composer.trackCustomFormSubmission(DUMMY_STRING, DUMMY_STRING2)
+        verify(httpHelper).buildCustomFormTracking(DUMMY_AID, DUMMY_STRING, DUMMY_STRING2, null)
+        verify(generalApi).customFormSubmission(any())
+        verify(call).enqueue(any())
+    }
+
     companion object {
+        private const val DUMMY_AID = "AID"
         const val DUMMY_STRING = "DUMMY"
         const val DUMMY_STRING2 = "DUMMY2"
     }
