@@ -45,7 +45,7 @@ class ComposerTest {
     }
     private val httpHelper: HttpHelper = mock() {
         on { convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull()) } doReturn mapOf()
-        on { buildEventTracking(any()) } doReturn mapOf()
+        on { buildEventTracking(any(), any(), any(), any()) } doReturn mapOf()
         on {
             buildShowTemplateParameters(
                 any(),
@@ -271,13 +271,31 @@ class ComposerTest {
     }
 
     @Test
-    fun trackExternalEvent() {
+    fun trackExternalEvents() {
         val call: Call<ResponseBody> = mock()
         whenever(generalApi.trackExternalEvent(any())).doReturn(call)
-        composer.trackExternalEvent(DUMMY_STRING)
-        verify(httpHelper).buildEventTracking(DUMMY_STRING)
-        verify(generalApi).trackExternalEvent(any())
-        verify(call).enqueue(any())
+        composer.trackCloseEvent(DUMMY_STRING)
+        verify(httpHelper).buildEventTracking(
+            DUMMY_STRING,
+            Composer.EVENT_TYPE_EXTERNAL_EVENT,
+            Composer.EVENT_GROUP_CLOSE
+        )
+        composer.trackRecommendationsDisplay(DUMMY_STRING)
+        verify(httpHelper).buildEventTracking(
+            DUMMY_STRING,
+            Composer.EVENT_TYPE_EXTERNAL_EVENT,
+            Composer.EVENT_GROUP_INIT,
+            Composer.CX_CUSTOM_PARAMS
+        )
+        composer.trackRecommendationsClick(DUMMY_STRING)
+        verify(httpHelper).buildEventTracking(
+            DUMMY_STRING,
+            Composer.EVENT_TYPE_EXTERNAL_LINK,
+            Composer.EVENT_GROUP_CLICK,
+            Composer.CX_CUSTOM_PARAMS
+        )
+        verify(generalApi, times(3)).trackExternalEvent(any())
+        verify(call, times(3)).enqueue(any())
     }
 
     @Test

@@ -2,6 +2,7 @@
 
 ## v2.6.1-SNAPSHOT
 * Add support for updating user profile custom fields to ID
+* Add other Composer external events
 
 ## v2.6.0
 * Add support for Composer request control policy

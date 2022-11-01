@@ -22,7 +22,15 @@ internal class HttpHelper(
     moshi: Moshi,
     private val userAgent: String
 ) : ExperienceInterceptor {
-    private val mapAdapter: JsonAdapter<Map<String, List<String>?>> = moshi.adapter(
+    private val mapAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(
+        Types.newParameterizedType(
+            Map::class.java,
+            String::class.java,
+            String::class.java
+        )
+    )
+
+    private val customVariablesAdapter: JsonAdapter<Map<String, List<String>?>> = moshi.adapter(
         Types.newParameterizedType(
             Map::class.java,
             String::class.java,
@@ -80,7 +88,7 @@ internal class HttpHelper(
                     ?.joinToString(separator = ",")
                     .orEmpty(),
                 PARAM_CUSTOM_VARIABLES to customVariables.takeUnless { it.isEmpty() }
-                    ?.let { mapAdapter.toJson(it) }
+                    ?.let { customVariablesAdapter.toJson(it) }
                     .orEmpty(),
                 PARAM_CUSTOM_PARAMS to customParameters?.takeUnless { it.isEmpty() }
                     ?.let { customParametersAdapter.toJson(it) }
@@ -97,11 +105,18 @@ internal class HttpHelper(
             prefsStorage.serverTimezoneOffset = timeZoneOffsetMillis
         }
 
-    internal fun buildEventTracking(trackingId: String): Map<String, String> =
+    internal fun buildEventTracking(
+        trackingId: String,
+        eventType: String,
+        eventGroup: String,
+        customParameters: Map<String, String> = emptyMap()
+    ): Map<String, String> =
         mapOf(
             PARAM_EVENT_TRACKING_ID to trackingId,
-            PARAM_EVENT_TYPE to VALUE_EXTERNAL_EVENT_TYPE,
-            PARAM_EVENT_GROUP_ID to VALUE_CLOSE_GROUP_ID
+            PARAM_EVENT_TYPE to eventType,
+            PARAM_EVENT_GROUP_ID to eventGroup,
+            PARAM_EVENT_CUSTOM_PARAMS to customParameters.takeUnless { it.isEmpty() }
+                ?.let { mapAdapter.toJson(it) }.orEmpty()
         )
 
     internal fun buildCustomFormTracking(
@@ -138,7 +153,7 @@ internal class HttpHelper(
                 PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),
                 PARAM_SHOW_TEMPLATE_CONTENT_SECTION to experienceRequest.contentSection.orEmpty(),
                 PARAM_SHOW_TEMPLATE_CUSTOM_VARIABLES to experienceRequest.customVariables.takeUnless { it.isEmpty() }
-                    ?.let { mapAdapter.toJson(it) }
+                    ?.let { customVariablesAdapter.toJson(it) }
                     .orEmpty(),
                 PARAM_TEMPLATE_ID to eventData.templateId,
                 PARAM_TEMPLATE_VARIANT_ID to eventData.templateVariantId.orEmpty(),
@@ -201,9 +216,7 @@ internal class HttpHelper(
         internal const val PARAM_EVENT_TRACKING_ID = "tracking_id"
         internal const val PARAM_EVENT_TYPE = "event_type"
         internal const val PARAM_EVENT_GROUP_ID = "event_group_id"
-
-        internal const val VALUE_EXTERNAL_EVENT_TYPE = "EXTERNAL_EVENT"
-        internal const val VALUE_CLOSE_GROUP_ID = "close"
+        internal const val PARAM_EVENT_CUSTOM_PARAMS = "custom_params"
 
         // Custom form tracking constants
         internal const val PARAM_CUSTOM_FORM_NAME = "custom_form_name"

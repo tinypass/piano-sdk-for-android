@@ -1,7 +1,7 @@
 [versions]
 # Plugins
 kotlin = "1.6.21"
-android = "7.3.0"
+android = "7.3.1"
 versionUpdater = "0.42.0"
 ktlint = "10.3.0"
 mavenRelease = "0.21.0"

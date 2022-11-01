@@ -118,8 +118,55 @@ class Composer internal constructor(
      * @param trackingId Tracking id
      */
     @Suppress("unused") // Public API.
-    fun trackExternalEvent(trackingId: String) {
-        generalApi.trackExternalEvent(httpHelper.buildEventTracking(trackingId)).enqueue(emptyCallback)
+    @Deprecated("Renamed due to introducing other external events", ReplaceWith("trackCloseEvent(trackingId)"))
+    fun trackExternalEvent(trackingId: String) = trackCloseEvent(trackingId)
+
+    /**
+     * Tracks close event by id
+     *
+     * @param trackingId Tracking id
+     */
+    @Suppress("unused") // Public API.
+    fun trackCloseEvent(trackingId: String) {
+        generalApi.trackExternalEvent(
+            httpHelper.buildEventTracking(
+                trackingId,
+                EVENT_TYPE_EXTERNAL_EVENT,
+                EVENT_GROUP_CLOSE
+            )
+        ).enqueue(emptyCallback)
+    }
+
+    /**
+     * Tracks displaying recommendations by id
+     *
+     * @param trackingId Tracking id
+     */
+    fun trackRecommendationsDisplay(trackingId: String) {
+        generalApi.trackExternalEvent(
+            httpHelper.buildEventTracking(
+                trackingId,
+                EVENT_TYPE_EXTERNAL_EVENT,
+                EVENT_GROUP_INIT,
+                CX_CUSTOM_PARAMS
+            )
+        ).enqueue(emptyCallback)
+    }
+
+    /**
+     * Tracks click on recommendation event by id
+     *
+     * @param trackingId Tracking id
+     */
+    fun trackRecommendationsClick(trackingId: String) {
+        generalApi.trackExternalEvent(
+            httpHelper.buildEventTracking(
+                trackingId,
+                EVENT_TYPE_EXTERNAL_LINK,
+                EVENT_GROUP_CLICK,
+                CX_CUSTOM_PARAMS
+            )
+        ).enqueue(emptyCallback)
     }
 
     /**
@@ -287,6 +334,13 @@ class Composer internal constructor(
 
         @Suppress("unused") // Public API.
         const val USER_PROVIDER_JANRAIN = "janrain"
+
+        internal const val EVENT_TYPE_EXTERNAL_EVENT = "EXTERNAL_EVENT"
+        internal const val EVENT_TYPE_EXTERNAL_LINK = "EXTERNAL_LINK"
+        internal const val EVENT_GROUP_CLOSE = "close"
+        internal const val EVENT_GROUP_INIT = "init"
+        internal const val EVENT_GROUP_CLICK = "click"
+        internal val CX_CUSTOM_PARAMS = mapOf("source" to "CX")
 
         private const val URL_TEMPLATE = "checkout/template/show"
         private val emptyCallback = object : Callback<ResponseBody> {

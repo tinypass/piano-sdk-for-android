@@ -91,9 +91,12 @@ class HttpHelperTest {
 
     @Test
     fun buildEventTracking() {
-        with(httpHelper.buildEventTracking(DUMMY_STRING)) {
-            assertEquals(3, size)
+        with(httpHelper.buildEventTracking(DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING)) {
+            assertEquals(4, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_EVENT_TRACKING_ID])
+            assertEquals(DUMMY_STRING2, this[HttpHelper.PARAM_EVENT_TYPE])
+            assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_EVENT_GROUP_ID])
+            assertEquals("", this[HttpHelper.PARAM_EVENT_CUSTOM_PARAMS])
         }
     }
 
