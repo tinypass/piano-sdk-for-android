@@ -32,6 +32,7 @@ class ShowRecommendationsController(event: Event<ShowRecommendations>) :
             jsInterface: WidgetJs,
             dialogFragment: ShowRecommendationsDialogFragment? = null
         ) {
+            settings.domStorageEnabled = true
             settings.javaScriptEnabled = true
             jsInterface.init(dialogFragment, this)
             addJavascriptInterface(jsInterface, JAVASCRIPT_INTERFACE)

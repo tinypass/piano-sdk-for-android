@@ -5,6 +5,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.squareup.moshi.Moshi
 import io.piano.android.id.models.PianoIdToken
+import io.piano.android.id.models.PianoUserInfo
 import io.piano.android.id.models.PianoUserProfile
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -102,6 +103,17 @@ class PianoId {
             callback: PianoIdFuncCallback<PianoUserProfile>
         ) {
             client?.getUserInfo(accessToken, formName, callback)
+                ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
+        }
+
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        fun putUserInfo(
+            accessToken: String,
+            newUserInfo: PianoUserInfo,
+            callback: PianoIdFuncCallback<PianoUserProfile>
+        ) {
+            client?.putUserInfo(accessToken, newUserInfo, callback)
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
         }
 

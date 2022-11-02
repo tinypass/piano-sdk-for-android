@@ -18,7 +18,7 @@ open class ComposerJs : BaseJsInterface() {
     @JavascriptInterface
     @UiThread
     open fun close(eventData: String?) {
-        Composer.getInstance().trackExternalEvent(trackId)
+        Composer.getInstance().trackCloseEvent(trackId)
         closeOverridden(eventData)
     }
 

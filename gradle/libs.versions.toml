@@ -1,10 +1,10 @@
 [versions]
 # Plugins
 kotlin = "1.6.21"
-android = "7.3.0"
+android = "7.3.1"
 versionUpdater = "0.42.0"
-ktlint = "10.3.0"
-mavenRelease = "0.19.0"
+ktlint = "11.0.0"
+mavenRelease = "0.22.0"
 
 # AndroidX libraries
 compatLibrary = "1.4.1"
@@ -23,7 +23,7 @@ retrofit = "2.6.4"
 okhttp = "3.12.13"
 moshi = "1.13.0"
 timber = "5.0.1"
-cxense = "2.3.0"
+cxense = "2.3.1"
 
 # Test Libraries
 junit = "4.13.2"

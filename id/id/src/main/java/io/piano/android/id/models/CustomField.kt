@@ -9,9 +9,9 @@ class CustomField(
     @Json(name = "field_name")
     val fieldName: String,
     val value: String,
-    val created: Date,
+    val created: Date? = null,
     @Json(name = "email_creator")
-    val emailCreator: String?,
+    val emailCreator: String? = null,
     @Json(name = "sort_order")
-    val sortOrder: Long
+    val sortOrder: Long? = null
 )
