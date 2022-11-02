@@ -1,9 +1,11 @@
 # Piano SDK for Android
 
-## v2.6.1-SNAPSHOT
+## v2.6.1
 * Add support for updating user profile custom fields to ID
 * Fix using local storage for ShowRecommendationsController
 * Add other Composer external events
+* Updated dependencies:
+    - io.piano.android:cxense [2.3.0 -> 2.3.1]
 
 ## v2.6.0
 * Add support for Composer request control policy
