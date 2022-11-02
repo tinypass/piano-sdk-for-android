@@ -26,7 +26,7 @@ class ShowTemplateDialogFragment : BaseShowDialogFragment {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        Composer.getInstance().trackExternalEvent(trackingId)
+        Composer.getInstance().trackCloseEvent(trackingId)
         (jsInterface as? ComposerJs)?.closeOverridden()
     }
 

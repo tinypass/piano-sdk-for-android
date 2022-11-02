@@ -23,7 +23,7 @@ retrofit = "2.6.4"
 okhttp = "3.12.13"
 moshi = "1.13.0"
 timber = "5.0.1"
-cxense = "2.3.0"
+cxense = "2.3.1"
 
 # Test Libraries
 junit = "4.13.2"

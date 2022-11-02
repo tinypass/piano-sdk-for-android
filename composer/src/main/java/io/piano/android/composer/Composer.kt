@@ -142,6 +142,7 @@ class Composer internal constructor(
      *
      * @param trackingId Tracking id
      */
+    @Suppress("unused") // Public API.
     fun trackRecommendationsDisplay(trackingId: String) {
         generalApi.trackExternalEvent(
             httpHelper.buildEventTracking(
@@ -158,13 +159,15 @@ class Composer internal constructor(
      *
      * @param trackingId Tracking id
      */
-    fun trackRecommendationsClick(trackingId: String) {
+    @Suppress("unused") // Public API.
+    fun trackRecommendationsClick(trackingId: String, url: String? = null) {
+        val params = url?.let { CX_CUSTOM_PARAMS + Pair("href", it) } ?: CX_CUSTOM_PARAMS
         generalApi.trackExternalEvent(
             httpHelper.buildEventTracking(
                 trackingId,
                 EVENT_TYPE_EXTERNAL_LINK,
                 EVENT_GROUP_CLICK,
-                CX_CUSTOM_PARAMS
+                params
             )
         ).enqueue(emptyCallback)
     }

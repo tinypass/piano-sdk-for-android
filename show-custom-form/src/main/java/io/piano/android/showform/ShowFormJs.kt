@@ -53,7 +53,7 @@ class ShowFormJs(
 
     @UiThread
     fun close() {
-        Composer.getInstance().trackExternalEvent(trackingId)
+        Composer.getInstance().trackCloseEvent(trackingId)
         fragment?.dismissAllowingStateLoss()
             ?: webView?.apply {
                 visibility = View.GONE
