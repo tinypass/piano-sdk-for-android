@@ -16,7 +16,9 @@ class PianoUserProfile(
     val updated: Date,
     val token: String?,
     @Json(name = "linked_social_accounts")
-    val linkedSocialAccounts: LinkedSocialAccountsData?,
+    val linkedSocialAccounts: List<String>?,
+    @Json(name = "password_available")
+    val passwordAvailable: Boolean,
     @Json(name = "custom_field_values")
     val customFields: List<CustomField>?,
     @Json(name = "has_all_custom_field_values_filled")
