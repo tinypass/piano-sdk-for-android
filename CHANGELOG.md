@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.6.2
+* Fix getUserInfo API parser
+
 ## v2.6.1
 * Add support for updating user profile custom fields to ID
 * Fix using local storage for ShowRecommendationsController
