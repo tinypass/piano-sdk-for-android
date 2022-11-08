@@ -6,6 +6,9 @@ plugins {
 }
 
 android {
+    defaultConfig {
+        buildConfigField("String", "SDK_VERSION", """"$version"""")
+    }
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
@@ -31,6 +34,7 @@ dependencies {
     testImplementation(libs.mockitoKotlin)
     testImplementation(libs.mockitoCore)
     testImplementation(libs.junit)
+    testImplementation(libs.okhttpMockServer)
     testImplementation(libs.androidxTestCore)
     testImplementation(libs.androidxTestExtJunit)
     testImplementation(libs.robolectric)
