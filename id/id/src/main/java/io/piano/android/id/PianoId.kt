@@ -1,6 +1,7 @@
 package io.piano.android.id
 
 import android.net.Uri
+import android.os.Build
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.squareup.moshi.Moshi
@@ -34,7 +35,9 @@ class PianoId {
         @JvmStatic
         fun init(endpoint: String, aid: String): PianoIdClient =
             client ?: run {
+                val userAgent = "Piano ID SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE})"
                 val okHttpClient = OkHttpClient.Builder()
+                    .addInterceptor(UserAgentInterceptor(userAgent))
                     .addInterceptor(
                         HttpLoggingInterceptor().setLevel(
                             if (BuildConfig.DEBUG || isLogHttpSet())
