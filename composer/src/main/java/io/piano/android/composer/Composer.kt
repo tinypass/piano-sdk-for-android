@@ -264,7 +264,7 @@ class Composer internal constructor(
         internal val apiHost: HttpUrl = HttpUrl.get(apiHost)
 
         companion object {
-            private const val COMPOSER_SANDBOX_URL = "https://c2.sandbox.piano.io"
+            private const val COMPOSER_SANDBOX_URL = "https://c2-sandbox.piano.io"
             private const val API_SANDBOX_URL = "https://sandbox.piano.io"
             private const val COMPOSER_DEFAULT_URL = "https://c2.piano.io"
             private const val API_DEFAULT_URL = "https://buy.piano.io"
