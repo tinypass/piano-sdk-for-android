@@ -1,7 +1,8 @@
 [versions]
 # Plugins
-kotlin = "1.7.20"
+kotlin = "1.7.21"
 android = "7.3.1"
+dokka = "1.7.20"
 versionUpdater = "0.44.0"
 ktlint = "11.0.0"
 mavenRelease = "0.22.0"
@@ -19,9 +20,9 @@ multidex = "2.0.1"
 
 # Third party Libraries
 facebookLogin = "15.1.0"
-googlePlayServices = "20.3.0"
-retrofit = "2.6.4"
-okhttp = "3.12.13"
+googlePlayServices = "20.4.0"
+retrofit = "2.9.0"
+okhttp = "4.10.0"
 moshi = "1.14.0"
 timber = "5.0.1"
 cxense = "2.3.1"

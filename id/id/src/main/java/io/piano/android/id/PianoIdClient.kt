@@ -17,6 +17,7 @@ import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
 import io.piano.android.id.models.toProfileUpdateRequest
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -110,7 +111,7 @@ class PianoIdClient internal constructor(
                         runCatching {
                             with(response.bodyOrThrow()) {
                                 if (!hasError) {
-                                    hostUrl = HttpUrl.get(host).also {
+                                    hostUrl = host.toHttpUrl().also {
                                         callback(Result.success(it))
                                     }
                                 } else callback(Result.failure(PianoIdException(error)))

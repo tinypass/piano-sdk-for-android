@@ -21,7 +21,9 @@ import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.PianoUserInfo
 import io.piano.android.id.models.PianoUserProfile
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -180,7 +182,7 @@ class PianoIdClientTest {
     @Test
     fun signOutResponseSuccess() =
         signOutAuthEndpointSuccess { signOutCallback, retrofitCallback ->
-            val response = Response.success<ResponseBody>(ResponseBody.create(null, DUMMY))
+            val response = Response.success<ResponseBody>(DUMMY.toResponseBody(null))
             retrofitCallback.onResponse(signOutResponseCall, response)
             val valueCaptor = argumentCaptor<Result<Any>>()
             verify(signOutCallback).invoke(valueCaptor.capture())
@@ -224,7 +226,7 @@ class PianoIdClientTest {
             authUrlCallback(Result.success(url))
             val valueCaptor = argumentCaptor<Result<String>>()
             verify(pianoIdCallback).invoke(valueCaptor.capture())
-            val result = HttpUrl.parse(valueCaptor.lastValue.getOrNull() ?: "")
+            val result = valueCaptor.lastValue.getOrNull()?.toHttpUrlOrNull()
             assertNotNull(result)
             with(result) {
                 assertEquals(PianoIdClient.VALUE_RESPONSE_TYPE_TOKEN, queryParameter(PianoIdClient.PARAM_RESPONSE_TYPE))
@@ -246,7 +248,7 @@ class PianoIdClientTest {
                         PianoIdClient.PARAM_STAGE,
                         PianoIdClient.PARAM_OAUTH_PROVIDERS
                     ),
-                    queryParameterNames()
+                    queryParameterNames
                 )
             }
         }

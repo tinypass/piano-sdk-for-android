@@ -9,12 +9,6 @@ import org.gradle.kotlin.dsl.named
 import java.util.Locale
 
 class DependenciesUpdaterPlugin : Plugin<Project> {
-    // We use okhttp 3.12.* and retrofit 2.6.*, because okhttp 3.13+ requires API 21 and retrofit 2.7+ requires API 21
-    private val maxSupportedSquareLib = mapOf(
-        "com.squareup.okhttp3" to arrayOf(3, 12),
-        "com.squareup.retrofit2" to arrayOf(2, 6)
-    )
-
     override fun apply(target: Project) = target.run {
         if (this == rootProject) {
             configureDependencyUpdates()
@@ -27,8 +21,7 @@ class DependenciesUpdaterPlugin : Plugin<Project> {
         apply<VersionsPlugin>()
         tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
             rejectVersionIf {
-                isNotSupportedSquareLib(candidate.group, candidate.version) ||
-                        isNonStable(candidate.version) && !isNonStable(currentVersion)
+                isNonStable(candidate.version) && !isNonStable(currentVersion)
             }
 
             checkForGradleUpdate = true
@@ -44,12 +37,4 @@ class DependenciesUpdaterPlugin : Plugin<Project> {
         val isStable = stableKeyword || regex.matches(version)
         return !isStable
     }
-
-    private fun isNotSupportedSquareLib(group: String, version: String): Boolean =
-        maxSupportedSquareLib.any { (key, value) ->
-            group == key && version.split(".")
-                .map { it.toInt() }
-                .zip(value)
-                .any { it.first > it.second }
-        }
 }
