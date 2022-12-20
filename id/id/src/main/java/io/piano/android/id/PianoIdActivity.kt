@@ -155,6 +155,8 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
 
     override fun loginSuccess(payload: String?) = parsePayload(payload, false)
 
+    override fun error(payload: String?) = setFailureResultData(client.parseJsError(payload))
+
     override fun cancel() {
         setResult(Activity.RESULT_CANCELED)
         finish()

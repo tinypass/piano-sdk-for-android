@@ -10,6 +10,7 @@ import io.piano.android.id.models.HostResponse
 import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdAuthFailureResult
 import io.piano.android.id.models.PianoIdAuthSuccessResult
+import io.piano.android.id.models.PianoIdError
 import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.PianoUserInfo
 import io.piano.android.id.models.PianoUserProfile
@@ -40,6 +41,9 @@ class PianoIdClient internal constructor(
     }
     private val socialTokenDataAdapter by lazy {
         moshi.adapter(SocialTokenData::class.java)
+    }
+    private val errorAdapter by lazy {
+        moshi.adapter(PianoIdError::class.java)
     }
     internal var hostUrl: HttpUrl? = null
     private val exceptions = SparseArray<PianoIdException>()
@@ -271,6 +275,11 @@ class PianoIdClient internal constructor(
         )
         return "(function(){window.PianoIDMobileSDK.socialLoginCallback('$socialTokenData')})()"
     }
+
+    internal fun parseJsError(jsPayload: String?): Throwable = runCatching {
+        val payload = requireNotNull(jsPayload)
+        PianoIdException(errorAdapter.fromJson(payload)?.message ?: payload)
+    }.getOrElse { it }
 
     // mock in tests
     @Suppress("NOTHING_TO_INLINE")

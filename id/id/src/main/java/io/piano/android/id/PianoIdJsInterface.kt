@@ -13,5 +13,8 @@ internal interface PianoIdJsInterface {
     fun loginSuccess(payload: String?)
 
     @JavascriptInterface
+    fun error(payload: String?)
+
+    @JavascriptInterface
     fun cancel()
 }
