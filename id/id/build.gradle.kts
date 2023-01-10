@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
+    alias(libs.plugins.moshiIR)
     id("common-android-config")
     id("kotlin-parcelize")
-    kotlin("kapt")
 }
 
 android {
@@ -26,7 +26,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofitConverter)
     implementation(libs.moshi)
-    kapt(libs.moshiCodegen)
     implementation(libs.annotations)
     implementation(libs.timber)
 
