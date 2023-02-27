@@ -36,5 +36,4 @@ dependencies {
     testImplementation(libs.okhttpMockServer)
     testImplementation(libs.androidxTestCore)
     testImplementation(libs.androidxTestExtJunit)
-    testImplementation(libs.robolectric)
 }

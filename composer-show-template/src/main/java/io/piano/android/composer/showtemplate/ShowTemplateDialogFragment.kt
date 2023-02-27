@@ -3,7 +3,6 @@ package io.piano.android.composer.showtemplate
 import android.content.DialogInterface
 import android.os.Bundle
 import android.webkit.WebView
-import io.piano.android.composer.Composer
 import io.piano.android.composer.showtemplate.ShowTemplateController.Companion.prepare
 import io.piano.android.showhelper.BaseJsInterface
 import io.piano.android.showhelper.BaseShowDialogFragment
@@ -26,8 +25,7 @@ class ShowTemplateDialogFragment : BaseShowDialogFragment {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        Composer.getInstance().trackCloseEvent(trackingId)
-        (jsInterface as? ComposerJs)?.closeOverridden()
+        (jsInterface as? ComposerJs)?.close(null)
     }
 
     companion object {
