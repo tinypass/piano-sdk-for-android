@@ -40,6 +40,7 @@
 * Migrate to open-sourced CxSdk for C1X
 * Add support for setting contentId to C1X
 * Add support for stage parameter to ID
+* Add support for array values for Composer custom parameters
 * Updated dependencies:
     - androidx.activity:activity [1.4.0 -> 1.5.1]
       https://developer.android.com/jetpack/androidx/releases/activity#1.5.1
