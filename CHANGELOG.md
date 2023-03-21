@@ -1,11 +1,11 @@
 # Piano SDK for Android
 
-## v2.7.0-SNAPSHOT
+## v2.7.0
 * Increased minSdkVersion from 19 to 21
 * Migrate from Moshi Codegen to Moshi-IR
 * Use `close` funtion on cancelling template dialog
 * Updated dependencies:
-    - Kotlin [1.6.21 -> 1.7.21]
+    - Kotlin [1.6.21 -> 1.7.22]
     - androidx.activity:activity [1.5.1 -> 1.6.1]
       https://developer.android.com/jetpack/androidx/releases/activity#1.6.1
     - androidx.annotation:annotation [1.4.0 -> 1.5.0]

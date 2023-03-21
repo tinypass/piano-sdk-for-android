@@ -1,7 +1,7 @@
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../libs.versions.toml"))
             // We add plugins as dependencies for our configuration plugins. Added here for not exposing them to project
             library("versionUpdater", "com.github.ben-manes", "gradle-versions-plugin").versionRef("versionUpdater")
             library("android", "com.android.tools.build", "gradle").versionRef("android")
