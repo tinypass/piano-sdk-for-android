@@ -1,5 +1,7 @@
 # Piano SDK for Android
+![GitHub](https://img.shields.io/github/license/tinypass/piano-sdk-for-android)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/tinypass/piano-sdk-for-android)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/tinypass/piano-sdk-for-android/build.yml?branch=master)
 
 Welcome to Piano SDK for Android.
 

@@ -26,6 +26,11 @@ internal class PianoIdJavascriptDelegate(
     }
 
     @JavascriptInterface
+    override fun error(payload: String?) {
+        internalJsReference.get()?.error(payload)
+    }
+
+    @JavascriptInterface
     override fun cancel() {
         internalJsReference.get()?.cancel()
     }

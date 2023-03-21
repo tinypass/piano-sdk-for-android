@@ -1,5 +1,29 @@
 # Piano SDK for Android
 
+## v2.7.0
+* Increased minSdkVersion from 19 to 21
+* Migrate from Moshi Codegen to Moshi-IR
+* Use `close` funtion on cancelling template dialog
+* Updated dependencies:
+    - Kotlin [1.6.21 -> 1.7.22]
+    - androidx.activity:activity [1.5.1 -> 1.6.1]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.6.1
+    - androidx.annotation:annotation [1.4.0 -> 1.5.0]
+      https://developer.android.com/jetpack/androidx/releases/annotation#1.5.0
+    - androidx.appcompat:appcompat [1.4.1 -> 1.6.1]
+      https://developer.android.com/jetpack/androidx/releases/appcompat#1.6.1
+    - androidx.fragment:fragment [1.5.3 -> 1.5.5]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.5.5
+    - com.facebook.android:facebook-login [15.0.1 -> 16.0.0]
+      https://github.com/facebook/facebook-android-sdk
+    - com.google.android.gms:play-services-auth [20.4.0 -> 20.4.1]
+    - com.squareup.okhttp3:okhttp [3.12.13 -> 4.10.0]
+      https://square.github.io/okhttp/
+    - com.squareup.retrofit2:retrofit [2.6.4 -> 2.9.0]
+      https://github.com/square/retrofit
+    - com.squareup.moshi:moshi [1.13.0 -> 1.14.0]
+      https://github.com/square/moshi/
+
 ## v2.6.2
 * Fix getUserInfo API parser
 
@@ -16,6 +40,7 @@
 * Migrate to open-sourced CxSdk for C1X
 * Add support for setting contentId to C1X
 * Add support for stage parameter to ID
+* Add support for array values for Composer custom parameters
 * Updated dependencies:
     - androidx.activity:activity [1.4.0 -> 1.5.1]
       https://developer.android.com/jetpack/androidx/releases/activity#1.5.1

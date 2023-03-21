@@ -10,6 +10,7 @@ import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.EventType
 import io.piano.android.composer.model.events.ShowTemplate
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -260,11 +261,11 @@ class Composer internal constructor(
         composerHost: String,
         apiHost: String
     ) {
-        internal val composerHost: HttpUrl = HttpUrl.get(composerHost)
-        internal val apiHost: HttpUrl = HttpUrl.get(apiHost)
+        internal val composerHost: HttpUrl = composerHost.toHttpUrl()
+        internal val apiHost: HttpUrl = apiHost.toHttpUrl()
 
         companion object {
-            private const val COMPOSER_SANDBOX_URL = "https://c2.sandbox.piano.io"
+            private const val COMPOSER_SANDBOX_URL = "https://c2-sandbox.piano.io"
             private const val API_SANDBOX_URL = "https://sandbox.piano.io"
             private const val COMPOSER_DEFAULT_URL = "https://c2.piano.io"
             private const val API_DEFAULT_URL = "https://buy.piano.io"

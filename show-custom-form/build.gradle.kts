@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
+    alias(libs.plugins.moshiIR)
     id("common-android-config")
-    kotlin("kapt")
 }
 
 dependencies {
@@ -11,7 +11,6 @@ dependencies {
     implementation(libs.lifecycleCommon)
     implementation(libs.timber)
     implementation(libs.moshi)
-    kapt(libs.moshiCodegen)
 }
 android {
     namespace = "io.piano.android.showform"

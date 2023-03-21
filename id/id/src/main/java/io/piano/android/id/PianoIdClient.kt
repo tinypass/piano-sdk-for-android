@@ -10,6 +10,7 @@ import io.piano.android.id.models.HostResponse
 import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdAuthFailureResult
 import io.piano.android.id.models.PianoIdAuthSuccessResult
+import io.piano.android.id.models.PianoIdError
 import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.PianoUserInfo
 import io.piano.android.id.models.PianoUserProfile
@@ -17,6 +18,7 @@ import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
 import io.piano.android.id.models.toProfileUpdateRequest
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -40,6 +42,9 @@ class PianoIdClient internal constructor(
     }
     private val socialTokenDataAdapter by lazy {
         moshi.adapter(SocialTokenData::class.java)
+    }
+    private val errorAdapter by lazy {
+        moshi.adapter(PianoIdError::class.java)
     }
     internal var hostUrl: HttpUrl? = null
     private val exceptions = SparseArray<PianoIdException>()
@@ -110,7 +115,7 @@ class PianoIdClient internal constructor(
                         runCatching {
                             with(response.bodyOrThrow()) {
                                 if (!hasError) {
-                                    hostUrl = HttpUrl.get(host).also {
+                                    hostUrl = host.toHttpUrl().also {
                                         callback(Result.success(it))
                                     }
                                 } else callback(Result.failure(PianoIdException(error)))
@@ -271,6 +276,11 @@ class PianoIdClient internal constructor(
         )
         return "(function(){window.PianoIDMobileSDK.socialLoginCallback('$socialTokenData')})()"
     }
+
+    internal fun parseJsError(jsPayload: String?): Throwable = runCatching {
+        val payload = requireNotNull(jsPayload)
+        PianoIdException(errorAdapter.fromJson(payload)?.message ?: payload)
+    }.getOrElse { it }
 
     // mock in tests
     @Suppress("NOTHING_TO_INLINE")
