@@ -30,9 +30,9 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
     }
 
     private fun checkFormNotFilled(accessToken: String, callback: (Boolean) -> Unit) {
-        if (accessToken.isEmpty())
+        if (accessToken.isEmpty()) {
             callback(true)
-        else {
+        } else {
             PianoId.getUserInfo(accessToken, eventData.formName) { r ->
                 val shouldHideForm = r.onFailure {
                     Timber.w(it)
@@ -57,8 +57,9 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
         jsInterface.token = userToken
         if (checkProfileAtTokenChange) {
             checkFormNotFilled(userToken) { formNotFilled ->
-                if (!formNotFilled)
+                if (!formNotFilled) {
                     close()
+                }
             }
         }
     }

@@ -15,7 +15,7 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.0"
+    id("com.gradle.enterprise") version "3.13.3"
 }
 
 includeBuild("gradle/plugins")

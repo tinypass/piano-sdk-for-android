@@ -44,10 +44,11 @@ class C1xInterceptor(
                     location = request.url,
                     contentId = request.contentId,
                     referrer = request.referer,
-                    customParameters = mutableListOf(CustomParameter(PARAM_USERSTATE, userState)),
+                    customParameters = mutableListOf(CustomParameter(PARAM_USERSTATE, userState))
                 ).apply {
-                    if (externalUserId != null)
+                    if (externalUserId != null) {
                         addExternalUserIds(externalUserId)
+                    }
                 }.build()
                 CxenseSdk.getInstance().pushEvents(event)
             } ?: Timber.w("C1X can't find ExperienceExecute event")

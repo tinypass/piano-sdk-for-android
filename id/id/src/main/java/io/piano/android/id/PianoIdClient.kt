@@ -118,7 +118,9 @@ class PianoIdClient internal constructor(
                                     hostUrl = host.toHttpUrl().also {
                                         callback(Result.success(it))
                                     }
-                                } else callback(Result.failure(PianoIdException(error)))
+                                } else {
+                                    callback(Result.failure(PianoIdException(error)))
+                                }
                             }
                         }.onFailure {
                             callback(Result.failure(it.toPianoIdException()))
@@ -182,15 +184,18 @@ class PianoIdClient internal constructor(
                     .addQueryParameter(PARAM_REDIRECT_URI, "$LINK_SCHEME_PREFIX$aid://$LINK_AUTHORITY")
                     .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
                     .apply {
-                        if (!widget.isNullOrEmpty())
+                        if (!widget.isNullOrEmpty()) {
                             addQueryParameter(PARAM_SCREEN, widget)
-                        if (!stage.isNullOrEmpty())
+                        }
+                        if (!stage.isNullOrEmpty()) {
                             addQueryParameter(PARAM_STAGE, stage)
-                        if (oauthProviders.isNotEmpty())
+                        }
+                        if (oauthProviders.isNotEmpty()) {
                             addQueryParameter(
                                 PARAM_OAUTH_PROVIDERS,
                                 oauthProviders.keys.joinToString(separator = ",")
                             )
+                        }
                     }
                     .build()
                     .toString()
@@ -371,8 +376,9 @@ class PianoIdClient internal constructor(
         internal const val VALUE_GRANT_TYPE = "refresh_token"
 
         private fun <T> Response<T>.bodyOrThrow(): T {
-            if (!isSuccessful)
+            if (!isSuccessful) {
                 throw PianoIdException(HttpException(this))
+            }
             return body() ?: throw PianoIdException()
         }
 

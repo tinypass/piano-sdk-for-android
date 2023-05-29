@@ -1,31 +1,32 @@
 [versions]
 # Plugins
-kotlin = "1.7.22"
-android = "7.4.2"
-dokka = "1.7.20"
-versionUpdater = "0.44.0"
-ktlint = "11.3.1"
-mavenRelease = "0.24.0"
-moshiIR = "0.20.0"
+kotlin = "1.8.21"
+android = "8.0.2"
+dokka = "1.8.10"
+versionUpdater = "0.46.0"
+ktlint = "11.3.2"
+mavenRelease = "0.25.2"
+moshiIR = "0.22.1"
 
 # AndroidX libraries
 compatLibrary = "1.6.1"
-androidxActivity = "1.6.1"
-annotationsLibrary = "1.5.0"
-fragmentLibrary = "1.5.5"
-materialLibrary = "1.8.0"
-lifecycleLibrary = "2.5.1"
+androidxActivity = "1.7.2"
+annotationsLibrary = "1.6.0"
+fragmentLibrary = "1.5.7"
+materialLibrary = "1.9.0"
+lifecycleLibrary = "2.6.1"
 prefsLibrary = "1.2.0"
 multidex = "2.0.1"
 
 # Third party Libraries
-facebookLogin = "16.0.0"
-googlePlayServices = "20.4.1"
+facebookLogin = "16.0.1"
+googlePlayServices = "20.5.0"
 retrofit = "2.9.0"
-okhttp = "4.10.0"
-moshi = "1.14.0"
+okhttp = "4.11.0"
+moshi = "1.15.0"
 timber = "5.0.1"
 cxense = "2.4.0"
+coroutines = "1.7.1"
 
 # Test Libraries
 junit = "4.13.2"
@@ -35,6 +36,7 @@ mockitoKotlin = "2.2.0"
 mockitoCore = "3.12.1"
 
 [plugins]
+mavenRelease = { id = "com.vanniktech.maven.publish", version.ref = "mavenRelease" }
 moshiIR = { id = "dev.zacsweers.moshix", version.ref = "moshiIR"}
 
 [libraries]
@@ -57,6 +59,7 @@ moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref
 prefsKtx = { module = "androidx.preference:preference-ktx", version.ref = "prefsLibrary" }
 lifecycleKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleLibrary" }
 cxense = { module = "io.piano.android:cxense", version.ref = "cxense" }
+kotlinCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 kotlinJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 mockitoKotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }

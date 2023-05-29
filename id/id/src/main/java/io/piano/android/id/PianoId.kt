@@ -8,6 +8,7 @@ import com.squareup.moshi.Moshi
 import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.PianoUserInfo
 import io.piano.android.id.models.PianoUserProfile
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -40,9 +41,11 @@ class PianoId {
                     .addInterceptor(UserAgentInterceptor(userAgent))
                     .addInterceptor(
                         HttpLoggingInterceptor().setLevel(
-                            if (BuildConfig.DEBUG || isLogHttpSet())
+                            if (BuildConfig.DEBUG || isLogHttpSet()) {
                                 HttpLoggingInterceptor.Level.BODY
-                            else HttpLoggingInterceptor.Level.NONE
+                            } else {
+                                HttpLoggingInterceptor.Level.NONE
+                            }
                         )
                     )
                     .build()
@@ -85,6 +88,19 @@ class PianoId {
         }
 
         /**
+         * Sign out user by it's token
+         *
+         * @param accessToken User access token
+         */
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        suspend fun signOut(accessToken: String) = suspendCancellableCoroutine { continuation ->
+            signOut(accessToken) { result ->
+                continuation.resumeWith(result)
+            }
+        }
+
+        /**
          * Refresh user access token
          *
          * @param refreshToken User refresh token
@@ -98,8 +114,29 @@ class PianoId {
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
         }
 
+        /**
+         * Refresh user access token
+         *
+         * @param refreshToken User refresh token
+         */
         @Suppress("unused") // Public API.
         @JvmStatic
+        suspend fun refreshToken(refreshToken: String) = suspendCancellableCoroutine { continuation ->
+            refreshToken(refreshToken) { result ->
+                continuation.resumeWith(result)
+            }
+        }
+
+        /**
+         * Gets user info
+         *
+         * @param accessToken User access token
+         * @param formName Form name, which stores data. Use null for default
+         * @param callback callback, which will receive result
+         */
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        @JvmOverloads
         fun getUserInfo(
             accessToken: String,
             formName: String? = null,
@@ -109,6 +146,31 @@ class PianoId {
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
         }
 
+        /**
+         * Gets user info
+         *
+         * @param accessToken User access token
+         * @param formName Form name, which stores data. Use null for default
+         */
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        @JvmOverloads
+        suspend fun getUserInfo(
+            accessToken: String,
+            formName: String? = null
+        ) = suspendCancellableCoroutine { continuation ->
+            getUserInfo(accessToken, formName) { result ->
+                continuation.resumeWith(result)
+            }
+        }
+
+        /**
+         * Stores user info
+         *
+         * @param accessToken User access token
+         * @param newUserInfo New user info
+         * @param callback callback, which will receive result
+         */
         @Suppress("unused") // Public API.
         @JvmStatic
         fun putUserInfo(
@@ -120,12 +182,39 @@ class PianoId {
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
         }
 
+        /**
+         * Stores user info
+         *
+         * @param accessToken User access token
+         * @param newUserInfo New user info
+         */
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        suspend fun putUserInfo(
+            accessToken: String,
+            newUserInfo: PianoUserInfo
+        ) = suspendCancellableCoroutine { continuation ->
+            putUserInfo(accessToken, newUserInfo) { result ->
+                continuation.resumeWith(result)
+            }
+        }
+
         @Suppress("unused") // Public API.
         @JvmStatic
         fun Uri?.parsePianoIdToken(callback: PianoIdFuncCallback<PianoIdToken>) =
             if (isPianoIdUri()) {
                 getClient().parseToken(this!!, callback)
-            } else callback(Result.failure(PianoIdException("It's not Piano ID uri")))
+            } else {
+                callback(Result.failure(PianoIdException("It's not Piano ID uri")))
+            }
+
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        suspend fun Uri?.parsePianoIdToken() = suspendCancellableCoroutine { continuation ->
+            parsePianoIdToken { result ->
+                continuation.resumeWith(result)
+            }
+        }
 
         @Suppress("unused") // Public API.
         @JvmStatic
@@ -168,7 +257,7 @@ class PianoId {
          * Sandbox endpoint
          */
         @Suppress("unused") // Public API.
-        const val ENDPOINT_SANDBOX = "https://sandbox.tinypass.com"
+        const val ENDPOINT_SANDBOX = "https://sandbox.piano.io"
 
         /**
          * Widget for login screen

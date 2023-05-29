@@ -1,6 +1,5 @@
 package io.piano.android.showhelper
 
-import android.os.Build
 import android.view.View
 import android.webkit.WebView
 import androidx.annotation.UiThread
@@ -78,11 +77,6 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
     }
 
     companion object {
-        fun WebView.executeJavascriptCode(code: String) =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                evaluateJavascript(code, null)
-            else loadUrl("javascript:$code")
-
         @JvmStatic
         private val defaultWebViewProvider: (FragmentActivity, String) -> WebView? = { activity, webViewId ->
             activity.resources

@@ -5,5 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 class ErrorMessage(
-    @JvmField @Json(name = "msg") val message: String
+    @JvmField
+    @Json(name = "msg")
+    val message: String
 )

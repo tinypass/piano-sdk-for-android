@@ -28,8 +28,9 @@ class ShowTemplateController constructor(
 
     override fun processDelay(activity: FragmentActivity, showFunction: () -> Unit) {
         val func: () -> Unit = {
-            if (!activity.isFinishing)
+            if (!activity.isFinishing) {
                 showFunction()
+            }
         }
         eventData.delayBy.apply {
             if (isDelayedByTime) {
@@ -42,7 +43,9 @@ class ShowTemplateController constructor(
                     }
                 )
                 handler.postDelayed(func, value * 1000L)
-            } else func()
+            } else {
+                func()
+            }
         }
     }
 

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.webkit.CookieManager
@@ -42,7 +41,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                 setResult(Activity.RESULT_CANCELED)
                 finish()
             }
-            is OAuthSuccessResult -> evaluateJavascript(it.jsCommand)
+            is OAuthSuccessResult -> binding.webview.evaluateJavascript(it.jsCommand, null)
             is OAuthFailureResult -> setFailureResultData(it.exception)
         }
     }
@@ -77,8 +76,9 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                         isUserGesture: Boolean,
                         resultMsg: Message
                     ): Boolean {
-                        if (!isUserGesture)
+                        if (!isUserGesture) {
                             return false
+                        }
                         with(resultMsg) {
                             (obj as WebView.WebViewTransport).webView = WebView(view.context)
                             sendToTarget()
@@ -185,14 +185,6 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         client.authCallback?.invoke(PianoIdAuthResult.failure(exc))
         finish()
     }
-
-    @Suppress("NOTHING_TO_INLINE")
-    private inline fun evaluateJavascript(code: String) =
-        binding.webview.apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                evaluateJavascript(code, null)
-            } else loadUrl("javascript:$code")
-        }
 
     internal fun Intent.process() {
         widget = getStringExtra(KEY_WIDGET)

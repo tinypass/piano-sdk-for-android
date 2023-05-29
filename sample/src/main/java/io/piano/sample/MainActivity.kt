@@ -126,8 +126,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAccessToken(token: PianoIdToken?) {
         prefsStorage.pianoIdToken = token
-        if (token == null)
+        if (token == null) {
             return
+        }
         val userFields = token.info.map { (key, value) -> "$key = $value" }.joinToString(prefix = "[", postfix = "]")
         Timber.d("Token has these fields: %s", userFields)
         PianoId.getUserInfo(token.accessToken) { r ->

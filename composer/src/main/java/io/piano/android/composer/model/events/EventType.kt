@@ -31,8 +31,11 @@ data class Meter(
 ) : EventType() {
     @JsonClass(generateAdapter = false)
     enum class MeterState {
-        @Json(name = "active") ACTIVE,
-        @Json(name = "expired") EXPIRED
+        @Json(name = "active")
+        ACTIVE,
+
+        @Json(name = "expired")
+        EXPIRED
     }
 }
 
@@ -49,7 +52,7 @@ data class ShowForm(
     val hideCompletedFields: Boolean,
     override val containerSelector: String,
     override val displayMode: DisplayMode,
-    override val showCloseButton: Boolean,
+    override val showCloseButton: Boolean
 ) : EventType(), BaseShowType
 
 @JsonClass(generateAdapter = true)

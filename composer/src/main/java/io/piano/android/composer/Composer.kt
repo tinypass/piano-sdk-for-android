@@ -68,7 +68,7 @@ class Composer internal constructor(
     fun gaClientId(gaClientId: String?) = apply { this.gaClientId = gaClientId }
 
     /**
-     * Gets experience from server
+     * Gets experiences from server
      *
      * @param request            Prepared experience request
      * @param eventTypeListeners Collection of event listeners
@@ -208,8 +208,9 @@ class Composer internal constructor(
         experienceInterceptors.forEach { it.afterExecute(request, response) }
 
         // Don't process any custom logic if there's no listeners
-        if (eventTypeListeners.isEmpty())
+        if (eventTypeListeners.isEmpty()) {
             return
+        }
 
         response.result.events.forEach {
             val event = it.preprocess(request)
@@ -241,15 +242,18 @@ class Composer internal constructor(
                 builder.addQueryParameter(key, value)
             }
             eventData.copy(url = builder.build().toString())
-        } else eventData
+        } else {
+            eventData
+        }
         return copy(
             eventData = data
         )
     }
 
     private fun <T> Response<T>.bodyOrThrow(): T {
-        if (!isSuccessful)
+        if (!isSuccessful) {
             throw ComposerException(HttpException(this))
+        }
         return body() ?: throw ComposerException()
     }
 

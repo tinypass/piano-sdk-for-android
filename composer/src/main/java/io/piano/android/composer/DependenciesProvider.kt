@@ -28,9 +28,11 @@ internal class DependenciesProvider private constructor(
         .addInterceptor(RequestPolicyInterceptor(prefsStorage))
         .addInterceptor(
             HttpLoggingInterceptor().setLevel(
-                if (BuildConfig.DEBUG || isLogHttpSet())
+                if (BuildConfig.DEBUG || isLogHttpSet()) {
                     HttpLoggingInterceptor.Level.BODY
-                else HttpLoggingInterceptor.Level.NONE
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
             )
         )
         .build()

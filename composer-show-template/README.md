@@ -17,7 +17,6 @@ dependencies {
 
 ### Usage
 Add code into your show template listener
-`
 
 Kotlin
 ```kotlin

@@ -10,8 +10,11 @@ class DelayBy(
 ) {
     @JsonClass(generateAdapter = false)
     enum class DelayType {
-        @Json(name = "time") TIME,
-        @Json(name = "scroll") SCROLL
+        @Json(name = "time")
+        TIME,
+
+        @Json(name = "scroll")
+        SCROLL
     }
 
     val isDelayedByTime: Boolean

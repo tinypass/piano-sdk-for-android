@@ -15,8 +15,9 @@ class ShowFormJs(
     internal var loginCallback: () -> Unit = {}
 ) : BaseJsInterface() {
     internal var token: String by Delegates.observable("") { _, oldValue, newValue ->
-        if (isReady && oldValue != newValue)
+        if (isReady && oldValue != newValue) {
             updateToken()
+        }
     }
     private var isReady: Boolean = false
 
