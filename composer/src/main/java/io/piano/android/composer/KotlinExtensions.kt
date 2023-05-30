@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.callbackFlow
  * @return [Flow] which emits all experience events
  */
 @Suppress("unused") // Public API.
-fun Composer.getExperiences(
+fun Composer.getExperience(
     request: ExperienceRequest
 ): Flow<Event<EventType>> = callbackFlow {
     getExperience(
