@@ -2,6 +2,7 @@ package io.piano.android.composer
 
 import android.content.Context
 import io.piano.android.composer.listeners.EventTypeListener
+import io.piano.android.composer.listeners.EventsListener
 import io.piano.android.composer.listeners.ExceptionListener
 import io.piano.android.composer.model.Data
 import io.piano.android.composer.model.Event
@@ -79,37 +80,40 @@ class Composer internal constructor(
         request: ExperienceRequest,
         eventTypeListeners: Collection<EventTypeListener<out EventType>>,
         exceptionListener: ExceptionListener
-    ) {
-        experienceInterceptors.forEach { it.beforeExecute(request) }
-        composerApi.getExperience(
-            httpHelper.convertExperienceRequest(request, aid, browserIdProvider, userToken)
-        ).enqueue(
-            object : Callback<Data<ExperienceResponse>> {
-                override fun onResponse(
-                    call: Call<Data<ExperienceResponse>>,
-                    response: Response<Data<ExperienceResponse>>
-                ) {
-                    runCatching {
-                        with(response.bodyOrThrow()) {
-                            if (errors.isNotEmpty()) {
-                                throw ComposerException(errors.joinToString(separator = "\n") { it.message })
-                            }
+    ) = getExperience(
+        request,
+        exceptionListener
+    ) { response ->
+        processExperienceResponse(
+            request,
+            response,
+            eventTypeListeners,
+            null,
+            exceptionListener
+        )
+    }
 
-                            processExperienceResponse(
-                                request,
-                                data,
-                                eventTypeListeners,
-                                exceptionListener
-                            )
-                        }
-                    }.onFailure {
-                        exceptionListener.onException(it.toComposerException())
-                    }
-                }
-
-                override fun onFailure(call: Call<Data<ExperienceResponse>>, t: Throwable) =
-                    exceptionListener.onException(t.toComposerException())
-            }
+    /**
+     * Gets experiences from server
+     *
+     * @param request            Prepared experience request
+     * @param eventsListener     Listener for list of events
+     * @param exceptionListener  Listener for exceptions
+     */
+    fun getExperience(
+        request: ExperienceRequest,
+        eventsListener: EventsListener,
+        exceptionListener: ExceptionListener
+    ) = getExperience(
+        request,
+        exceptionListener
+    ) { response ->
+        processExperienceResponse(
+            request,
+            response,
+            emptyList(),
+            eventsListener,
+            exceptionListener
         )
     }
 
@@ -199,28 +203,72 @@ class Composer internal constructor(
     @Suppress("unused") // Public API.
     fun clearStoredData() = prefsStorage.clear()
 
+    internal fun getExperience(
+        request: ExperienceRequest,
+        exceptionListener: ExceptionListener,
+        processResponse: (ExperienceResponse) -> Unit
+    ) {
+        experienceInterceptors.forEach { it.beforeExecute(request) }
+        composerApi.getExperience(
+            httpHelper.convertExperienceRequest(request, aid, browserIdProvider, userToken)
+        ).enqueue(
+            object : Callback<Data<ExperienceResponse>> {
+                override fun onResponse(
+                    call: Call<Data<ExperienceResponse>>,
+                    response: Response<Data<ExperienceResponse>>
+                ) {
+                    runCatching {
+                        with(response.bodyOrThrow()) {
+                            if (errors.isNotEmpty()) {
+                                throw ComposerException(errors.joinToString(separator = "\n") { it.message })
+                            }
+
+                            processResponse(data)
+                        }
+                    }.onFailure {
+                        exceptionListener.onException(it.toComposerException())
+                    }
+                }
+
+                override fun onFailure(call: Call<Data<ExperienceResponse>>, t: Throwable) =
+                    exceptionListener.onException(t.toComposerException())
+            }
+        )
+    }
+
     internal fun processExperienceResponse(
         request: ExperienceRequest,
         response: ExperienceResponse,
         eventTypeListeners: Collection<EventTypeListener<out EventType>>,
+        eventsListener: EventsListener?,
         exceptionListener: ExceptionListener
     ) {
         experienceInterceptors.forEach { it.afterExecute(request, response) }
 
         // Don't process any custom logic if there's no listeners
-        if (eventTypeListeners.isEmpty()) {
+        if (eventTypeListeners.isEmpty() && eventsListener == null) {
             return
         }
 
-        response.result.events.forEach {
-            val event = it.preprocess(request)
-            eventTypeListeners.forEach { listener ->
-                if (listener.canProcess(it)) {
-                    runCatching {
-                        @Suppress("UNCHECKED_CAST")
-                        (listener as EventTypeListener<EventType>).onExecuted(event)
-                    }.onFailure {
-                        exceptionListener.onException(it.toComposerException())
+        val events = response.result.events.map {
+            it.preprocess(request)
+        }
+        if (eventsListener != null) {
+            runCatching {
+                eventsListener(events)
+            }.onFailure {
+                exceptionListener.onException(it.toComposerException())
+            }
+        } else {
+            events.forEach { event ->
+                eventTypeListeners.forEach { listener ->
+                    if (listener.canProcess(event)) {
+                        runCatching {
+                            @Suppress("UNCHECKED_CAST")
+                            (listener as EventTypeListener<EventType>).onExecuted(event)
+                        }.onFailure {
+                            exceptionListener.onException(it.toComposerException())
+                        }
                     }
                 }
             }

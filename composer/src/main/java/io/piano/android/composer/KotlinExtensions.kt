@@ -2,35 +2,27 @@
 
 package io.piano.android.composer
 
-import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.events.EventType
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * Gets experiences from server
  *
  * @param request Prepared experience request
- * @return [Flow] which emits all experience events
+ * @return List of all experience events
  */
 @Suppress("unused") // Public API.
-fun Composer.getExperience(
+suspend fun Composer.getExperience(
     request: ExperienceRequest
-): Flow<Event<EventType>> = callbackFlow {
+) = suspendCancellableCoroutine { continuation ->
     getExperience(
         request,
-        listOf(
-            object : EventTypeListener<EventType> {
-                override fun onExecuted(event: Event<EventType>) {
-                    trySend(event)
-                }
-
-                override fun canProcess(event: Event<EventType>): Boolean = true
-            }
-        )
+        { events: List<Event<EventType>> -> continuation.resume(events) }
     ) {
-        close(it)
+        continuation.resumeWithException(it)
     }
 }

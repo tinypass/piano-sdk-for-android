@@ -85,7 +85,7 @@ class ComposerTest {
     }
 
     private fun getExperienceWithCallbackCheck(callbackTest: (Callback<Data<ExperienceResponse>>) -> Unit) {
-        doNothing().`when`(composer).processExperienceResponse(any(), any(), any(), any())
+        doNothing().`when`(composer).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
         composer.getExperience(experienceRequest, resultListeners, exceptionListener)
         verify(httpHelper).convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull())
         verify(composerApi).getExperience(any())
@@ -119,7 +119,7 @@ class ComposerTest {
             val response = Response.success<Data<ExperienceResponse>>(null)
             it.onResponse(experienceCall, response)
             verifyExceptionListenerArgument(null)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), any())
+            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
         }
 
     @Test
@@ -136,7 +136,7 @@ class ComposerTest {
             )
             it.onResponse(experienceCall, response)
             verifyExceptionListenerArgument(null)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), any())
+            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
         }
 
     @Test
@@ -151,6 +151,7 @@ class ComposerTest {
                 experienceRequest,
                 experienceResponse,
                 resultListeners,
+                null,
                 exceptionListener
             )
             verify(exceptionListener, never()).onException(any())
@@ -162,7 +163,7 @@ class ComposerTest {
             val exc = RuntimeException()
             it.onFailure(experienceCall, exc)
             verifyExceptionListenerArgument(exc)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), any())
+            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
         }
 
     @Test
@@ -209,6 +210,7 @@ class ComposerTest {
             experienceRequest,
             response,
             listeners,
+            null,
             exceptionListener
         )
         verify(httpHelper).afterExecute(experienceRequest, response)
@@ -237,6 +239,7 @@ class ComposerTest {
             experienceRequest,
             experienceResponse,
             listOf(),
+            null,
             exceptionListener
         )
         verify(httpHelper).afterExecute(experienceRequest, experienceResponse)
@@ -259,6 +262,7 @@ class ComposerTest {
             experienceRequest,
             response,
             resultListeners,
+            null,
             exceptionListener
         )
         verify(httpHelper).afterExecute(experienceRequest, response)
