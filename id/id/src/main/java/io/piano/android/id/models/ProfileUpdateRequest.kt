@@ -8,5 +8,5 @@ class ProfileUpdateRequest(
     @Json(name = "form_name")
     val formName: String,
     @Json(name = "custom_field_values")
-    val customFields: List<CustomField>
+    val customFields: List<CustomField>,
 )

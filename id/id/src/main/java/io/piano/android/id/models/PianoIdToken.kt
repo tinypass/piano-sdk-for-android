@@ -10,7 +10,7 @@ import java.util.Date
 class PianoIdToken(
     @JvmField val accessToken: String,
     @JvmField val refreshToken: String = "",
-    @JvmField val info: @RawValue Map<String, Any> = emptyMap()
+    @JvmField val info: @RawValue Map<String, Any> = emptyMap(),
 ) : Parcelable {
     @IgnoredOnParcel
     @JvmField

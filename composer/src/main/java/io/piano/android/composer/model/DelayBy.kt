@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 class DelayBy(
     @JvmField val type: DelayType?,
-    @JvmField val value: Int
+    @JvmField val value: Int,
 ) {
     @JsonClass(generateAdapter = false)
     enum class DelayType {
@@ -14,7 +14,7 @@ class DelayBy(
         TIME,
 
         @Json(name = "scroll")
-        SCROLL
+        SCROLL,
     }
 
     val isDelayedByTime: Boolean

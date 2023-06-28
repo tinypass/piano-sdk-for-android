@@ -10,5 +10,5 @@ data class User(
     val userId: String,
     @JvmField val firstName: String?,
     @JvmField val lastName: String?,
-    @JvmField val email: String
+    @JvmField val email: String,
 )

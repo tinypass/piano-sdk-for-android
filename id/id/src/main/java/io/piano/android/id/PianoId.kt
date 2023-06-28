@@ -140,7 +140,7 @@ class PianoId {
         fun getUserInfo(
             accessToken: String,
             formName: String? = null,
-            callback: PianoIdFuncCallback<PianoUserProfile>
+            callback: PianoIdFuncCallback<PianoUserProfile>,
         ) {
             client?.getUserInfo(accessToken, formName, callback)
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
@@ -157,7 +157,7 @@ class PianoId {
         @JvmOverloads
         suspend fun getUserInfo(
             accessToken: String,
-            formName: String? = null
+            formName: String? = null,
         ) = suspendCancellableCoroutine { continuation ->
             getUserInfo(accessToken, formName) { result ->
                 continuation.resumeWith(result)
@@ -176,7 +176,7 @@ class PianoId {
         fun putUserInfo(
             accessToken: String,
             newUserInfo: PianoUserInfo,
-            callback: PianoIdFuncCallback<PianoUserProfile>
+            callback: PianoIdFuncCallback<PianoUserProfile>,
         ) {
             client?.putUserInfo(accessToken, newUserInfo, callback)
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
@@ -192,7 +192,7 @@ class PianoId {
         @JvmStatic
         suspend fun putUserInfo(
             accessToken: String,
-            newUserInfo: PianoUserInfo
+            newUserInfo: PianoUserInfo,
         ) = suspendCancellableCoroutine { continuation ->
             putUserInfo(accessToken, newUserInfo) { result ->
                 continuation.resumeWith(result)

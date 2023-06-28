@@ -15,7 +15,7 @@ import timber.log.Timber
 
 class ShowTemplateController constructor(
     event: Event<ShowTemplate>,
-    jsInterface: ComposerJs? = null
+    jsInterface: ComposerJs? = null,
 ) : BaseShowController<ShowTemplate, ComposerJs>(event.eventData, jsInterface ?: ComposerJs()) {
     private val trackingId = event.eventExecutionContext.trackingId
     override val url = event.eventData.url ?: "about:blank"
@@ -70,7 +70,7 @@ class ShowTemplateController constructor(
         internal fun WebView.prepare(
             dialogFragment: ShowTemplateDialogFragment? = null,
             javascriptInterface: ComposerJs?,
-            trackingId: String
+            trackingId: String,
         ) {
             settings.javaScriptEnabled = true
             val jsInterface = javascriptInterface ?: ComposerJs()
@@ -106,7 +106,7 @@ class ShowTemplateController constructor(
             activity: FragmentActivity,
             showTemplateEvent: Event<ShowTemplate>,
             javascriptInterface: ComposerJs? = null,
-            inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider
+            inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider,
         ): ShowTemplateController = ShowTemplateController(showTemplateEvent, javascriptInterface).apply {
             show(activity, inlineWebViewProvider)
         }

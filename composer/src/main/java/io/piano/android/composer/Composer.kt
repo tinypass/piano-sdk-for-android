@@ -24,7 +24,7 @@ class Composer internal constructor(
     private val httpHelper: HttpHelper,
     private val prefsStorage: PrefsStorage,
     private val aid: String,
-    private val endpoint: Endpoint
+    private val endpoint: Endpoint,
 ) {
     private val templateUrl by lazy {
         endpoint.apiHost.newBuilder().addPathSegments(URL_TEMPLATE).build()
@@ -79,7 +79,7 @@ class Composer internal constructor(
     fun getExperience(
         request: ExperienceRequest,
         eventTypeListeners: Collection<EventTypeListener<out EventType>>,
-        exceptionListener: ExceptionListener
+        exceptionListener: ExceptionListener,
     ) = getExperience(
         request,
         exceptionListener
@@ -103,7 +103,7 @@ class Composer internal constructor(
     fun getExperience(
         request: ExperienceRequest,
         eventsListener: EventsListener,
-        exceptionListener: ExceptionListener
+        exceptionListener: ExceptionListener,
     ) = getExperience(
         request,
         exceptionListener
@@ -206,7 +206,7 @@ class Composer internal constructor(
     internal fun getExperience(
         request: ExperienceRequest,
         exceptionListener: ExceptionListener,
-        processResponse: (ExperienceResponse) -> Unit
+        processResponse: (ExperienceResponse) -> Unit,
     ) {
         experienceInterceptors.forEach { it.beforeExecute(request) }
         composerApi.getExperience(
@@ -215,7 +215,7 @@ class Composer internal constructor(
             object : Callback<Data<ExperienceResponse>> {
                 override fun onResponse(
                     call: Call<Data<ExperienceResponse>>,
-                    response: Response<Data<ExperienceResponse>>
+                    response: Response<Data<ExperienceResponse>>,
                 ) {
                     runCatching {
                         with(response.bodyOrThrow()) {
@@ -241,7 +241,7 @@ class Composer internal constructor(
         response: ExperienceResponse,
         eventTypeListeners: Collection<EventTypeListener<out EventType>>,
         eventsListener: EventsListener?,
-        exceptionListener: ExceptionListener
+        exceptionListener: ExceptionListener,
     ) {
         experienceInterceptors.forEach { it.afterExecute(request, response) }
 
@@ -311,7 +311,7 @@ class Composer internal constructor(
 
     class Endpoint(
         composerHost: String,
-        apiHost: String
+        apiHost: String,
     ) {
         internal val composerHost: HttpUrl = composerHost.toHttpUrl()
         internal val apiHost: HttpUrl = apiHost.toHttpUrl()

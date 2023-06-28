@@ -53,7 +53,7 @@ class EventJsonAdapterFactory : JsonAdapter.Factory {
 
     private class DelegateAdapter<T>(
         private val delegateAdapter: JsonAdapter<T>,
-        private val postProcessAction: T.() -> T
+        private val postProcessAction: T.() -> T,
     ) : JsonAdapter<T>() {
         override fun fromJson(reader: JsonReader): T? = delegateAdapter.fromJson(reader)?.run(postProcessAction)
 
@@ -63,7 +63,7 @@ class EventJsonAdapterFactory : JsonAdapter.Factory {
     class EventJsonAdapter(
         private val eventModuleParamsAdapter: JsonAdapter<EventModuleParams>,
         private val eventExecutionContextAdapter: JsonAdapter<EventExecutionContext>,
-        private val eventDataAdapters: List<JsonAdapter<out EventType>>
+        private val eventDataAdapters: List<JsonAdapter<out EventType>>,
     ) : JsonAdapter<Event<*>>() {
         private val options = JsonReader.Options.of(
             EVENT_MODULE_PARAMS,

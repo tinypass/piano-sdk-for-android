@@ -16,7 +16,7 @@ interface BaseShowType {
 
 @JsonClass(generateAdapter = true)
 data class ExperienceExecute(
-    val user: User?
+    val user: User?,
 ) : EventType()
 
 @JsonClass(generateAdapter = true)
@@ -27,7 +27,7 @@ data class Meter(
     val maxViews: Int,
     val totalViews: Int,
     val incremented: Boolean,
-    val state: MeterState = MeterState.ACTIVE
+    val state: MeterState = MeterState.ACTIVE,
 ) : EventType() {
     @JsonClass(generateAdapter = false)
     enum class MeterState {
@@ -35,7 +35,7 @@ data class Meter(
         ACTIVE,
 
         @Json(name = "expired")
-        EXPIRED
+        EXPIRED,
     }
 }
 
@@ -43,7 +43,7 @@ object NonSite : EventType()
 
 @JsonClass(generateAdapter = true)
 data class SetResponseVariable(
-    val responseVariables: Map<String, Any>
+    val responseVariables: Map<String, Any>,
 ) : EventType()
 
 @JsonClass(generateAdapter = true)
@@ -52,12 +52,12 @@ data class ShowForm(
     val hideCompletedFields: Boolean,
     override val containerSelector: String,
     override val displayMode: DisplayMode,
-    override val showCloseButton: Boolean
+    override val showCloseButton: Boolean,
 ) : EventType(), BaseShowType
 
 @JsonClass(generateAdapter = true)
 data class ShowLogin(
-    val userProvider: String
+    val userProvider: String,
 ) : EventType()
 
 @JsonClass(generateAdapter = true)
@@ -68,7 +68,7 @@ data class ShowRecommendations(
     override val displayMode: DisplayMode,
     override val showCloseButton: Boolean,
     val siteId: String,
-    val type: String
+    val type: String,
 ) : EventType(), BaseShowType
 
 @JsonClass(generateAdapter = true)
@@ -79,9 +79,9 @@ data class ShowTemplate(
     override val containerSelector: String?,
     val delayBy: DelayBy,
     override val showCloseButton: Boolean,
-    val url: String? = null
+    val url: String? = null,
 ) : EventType(), BaseShowType
 
 data class UserSegment(
-    val state: Boolean
+    val state: Boolean,
 ) : EventType()

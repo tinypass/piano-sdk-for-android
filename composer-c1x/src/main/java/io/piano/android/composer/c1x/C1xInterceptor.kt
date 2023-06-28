@@ -11,11 +11,11 @@ import io.piano.android.cxense.model.PageViewEvent
 import timber.log.Timber
 
 class C1xInterceptor(
-    private val siteId: String
+    private val siteId: String,
 ) : ExperienceInterceptor {
 
     override fun beforeExecute(
-        request: ExperienceRequest
+        request: ExperienceRequest,
     ) {
         check(!request.url.isNullOrEmpty() || !request.contentId.isNullOrEmpty()) {
             "URL or Content Id is required for C1X"

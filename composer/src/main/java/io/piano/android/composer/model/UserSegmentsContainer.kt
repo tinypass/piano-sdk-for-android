@@ -10,5 +10,5 @@ class UserSegmentsContainer(
     val standard: UserSegmentsInfo?,
     @JvmField
     @Json(name = "COMPOSER1X")
-    val composer1x: UserSegmentsInfo?
+    val composer1x: UserSegmentsInfo?,
 )

@@ -73,7 +73,7 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
         internal fun WebView.prepare(
             jsInterface: ShowFormJs,
             dialogFragment: ShowFormDialogFragment? = null,
-            loginCallback: () -> Unit = jsInterface.loginCallback
+            loginCallback: () -> Unit = jsInterface.loginCallback,
         ) {
             settings.javaScriptEnabled = true
             jsInterface.init(dialogFragment, this, loginCallback)

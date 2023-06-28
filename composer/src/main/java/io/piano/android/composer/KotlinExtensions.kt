@@ -17,7 +17,7 @@ import kotlin.coroutines.resumeWithException
  */
 @Suppress("unused") // Public API.
 suspend fun Composer.getExperience(
-    request: ExperienceRequest
+    request: ExperienceRequest,
 ) = suspendCancellableCoroutine { continuation ->
     getExperience(
         request,

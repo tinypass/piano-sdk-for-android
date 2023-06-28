@@ -7,5 +7,5 @@ import com.squareup.moshi.JsonClass
 class CookieObject(
     @JvmField
     @Json(name = "cookie_value")
-    val value: String
+    val value: String,
 )

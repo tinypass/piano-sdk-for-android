@@ -264,7 +264,7 @@ class PianoIdClientTest {
         }
 
     private fun getUserInfo(
-        callbackTest: (PianoIdFuncCallback<PianoUserProfile>, PianoIdFuncCallback<HttpUrl>) -> Unit
+        callbackTest: (PianoIdFuncCallback<PianoUserProfile>, PianoIdFuncCallback<HttpUrl>) -> Unit,
     ) {
         doNothing().`when`(pianoIdClient).getHostUrl(any())
         val callback: PianoIdFuncCallback<PianoUserProfile> = mock()
@@ -299,7 +299,7 @@ class PianoIdClientTest {
         }
 
     private fun putUserInfoFields(
-        callbackTest: (PianoIdFuncCallback<PianoUserProfile>, PianoIdFuncCallback<HttpUrl>) -> Unit
+        callbackTest: (PianoIdFuncCallback<PianoUserProfile>, PianoIdFuncCallback<HttpUrl>) -> Unit,
     ) {
         doNothing().`when`(pianoIdClient).getHostUrl(any())
         val callback: PianoIdFuncCallback<PianoUserProfile> = mock()

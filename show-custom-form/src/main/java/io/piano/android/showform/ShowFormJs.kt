@@ -12,7 +12,7 @@ import kotlin.properties.Delegates
 class ShowFormJs(
     private val formName: String,
     private val trackingId: String,
-    internal var loginCallback: () -> Unit = {}
+    internal var loginCallback: () -> Unit = {},
 ) : BaseJsInterface() {
     internal var token: String by Delegates.observable("") { _, oldValue, newValue ->
         if (isReady && oldValue != newValue) {

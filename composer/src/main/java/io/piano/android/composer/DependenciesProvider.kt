@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 internal class DependenciesProvider private constructor(
     context: Context,
     aid: String,
-    endpoint: Composer.Endpoint
+    endpoint: Composer.Endpoint,
 ) {
     private val prefsStorage = PrefsStorage(context)
     private val userAgent = "Piano composer SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE} " +

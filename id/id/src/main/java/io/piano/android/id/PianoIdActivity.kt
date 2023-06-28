@@ -74,7 +74,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                         view: WebView,
                         isDialog: Boolean,
                         isUserGesture: Boolean,
-                        resultMsg: Message
+                        resultMsg: Message,
                     ): Boolean {
                         if (!isUserGesture) {
                             return false

@@ -32,7 +32,7 @@ import java.util.Locale
 class PianoIdClient internal constructor(
     private val api: PianoIdApi,
     private val moshi: Moshi,
-    internal val aid: String
+    internal val aid: String,
 ) {
     private val pianoIdTokenAdapter by lazy {
         moshi.adapter(PianoIdToken::class.java)
@@ -171,7 +171,7 @@ class PianoIdClient internal constructor(
         disableSignUp: Boolean,
         widget: String?,
         stage: String?,
-        callback: PianoIdFuncCallback<String>
+        callback: PianoIdFuncCallback<String>,
     ) = getHostUrl { r ->
         callback(
             r.mapCatching { url ->
@@ -219,7 +219,7 @@ class PianoIdClient internal constructor(
     internal fun putUserInfo(
         accessToken: String,
         newUserInfo: PianoUserInfo,
-        callback: PianoIdFuncCallback<PianoUserProfile>
+        callback: PianoIdFuncCallback<PianoUserProfile>,
     ) {
         getHostUrl { r ->
             r.getOrNull()?.let {
@@ -308,7 +308,7 @@ class PianoIdClient internal constructor(
     }
 
     class SignInContext internal constructor(
-        internal val client: PianoIdClient
+        internal val client: PianoIdClient,
     ) {
         internal var disableSignUp: Boolean = false
         internal var widget: String? = null

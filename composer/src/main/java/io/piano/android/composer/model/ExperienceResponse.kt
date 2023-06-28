@@ -24,5 +24,5 @@ class ExperienceResponse(
     @Json(name = "uid")
     val userId: String?,
     @JvmField val cxenseCustomerPrefix: String?,
-    @JvmField val result: EventsContainer
+    @JvmField val result: EventsContainer,
 )

@@ -14,5 +14,5 @@ class EventExecutionContext(
     @JvmField val countryCode: String,
     @JvmField val userSegments: UserSegmentsContainer,
     @JvmField val accessList: List<Access>?,
-    @JvmField val activeMeters: List<ActiveMeter>?
+    @JvmField val activeMeters: List<ActiveMeter>?,
 )

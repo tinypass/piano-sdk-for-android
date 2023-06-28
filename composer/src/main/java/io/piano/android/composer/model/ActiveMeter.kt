@@ -8,5 +8,5 @@ class ActiveMeter(
     @JvmField val views: Int,
     @JvmField val viewsLeft: Int,
     @JvmField val maxViews: Int,
-    @JvmField val totalViews: Int
+    @JvmField val totalViews: Int,
 )
