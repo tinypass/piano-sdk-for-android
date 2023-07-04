@@ -39,6 +39,7 @@ internal class DependenciesProvider private constructor(
     private val moshi = Moshi.Builder()
         .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
+        .add(CustomValuesJsonAdapter)
         .add(UnixTimeDateAdapter)
         .build()
 

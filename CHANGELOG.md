@@ -1,6 +1,7 @@
 # Piano SDK for Android
 
 ## v2.8.0-SNAPSHOT
+* Behavior change: custom variable is simplified before sending, if it contains only one value  (similar to 2.5.0 and earlier)
 * Add Kotlin coroutine suspend support for API
 * Update Piano ID default sandbox domain
 * Add Android 14 compatibility
@@ -25,7 +26,7 @@
 ## v2.7.0
 * Increased minSdkVersion from 19 to 21
 * Migrate from Moshi Codegen to Moshi-IR
-* Use `close` funtion on cancelling template dialog
+* Use `close` function on cancelling template dialog
 * Updated dependencies:
     - Kotlin [1.6.21 -> 1.7.22]
     - androidx.activity:activity [1.5.1 -> 1.6.1]
