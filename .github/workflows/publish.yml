@@ -28,6 +28,6 @@ jobs:
     -   name: Generate Javadoc
         run: ./gradlew javaDocReleaseGeneration --no-parallel
     -   name: Upload artifacts
-        run: ./gradlew publish
+        run: ./gradlew publish --no-configuration-cache
     -   name: Close repository
-        run: ./gradlew closeAndReleaseRepository
+        run: ./gradlew closeAndReleaseRepository --no-configuration-cache
