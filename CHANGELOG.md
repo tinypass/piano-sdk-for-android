@@ -6,7 +6,7 @@
 * Update Piano ID default sandbox domain
 * Add Android 14 compatibility
 * Updated dependencies:
-    - Kotlin [1.7.22 -> 1.8.21]
+    - Kotlin [1.7.22 -> 1.8.22]
     - androidx.activity:activity [1.6.1 -> 1.7.2]
       https://developer.android.com/jetpack/androidx/releases/activity#1.7.2
     - androidx.annotation:annotation [1.5.0 -> 1.6.0]

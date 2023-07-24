@@ -52,12 +52,18 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         }
     }
 
+    init {
+        addOnNewIntentListener {
+            it?.process()
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPianoIdBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        intent.process()
+        intent?.process()
         onBackPressedDispatcher.addCallback(webviewBackPressedCallback)
         with(binding) {
             webview.apply {
@@ -111,26 +117,16 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                     }
                 }
             }
-            client.getSignInUrl(disableSignUp, widget, stage) { r ->
-                r.onSuccess {
-                    CookieManager.getInstance().setCookie(it, "${client.aid}__ut=")
-                    progressBar.isIndeterminate = false
-                    webview.apply {
-                        addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
-                        clearCache(true)
-                        clearHistory()
-                        loadUrl(it)
-                    }
-                }.onFailure {
-                    setFailureResultData(it)
-                }
+            val url = client.getSignInUrl(disableSignUp, widget, stage)
+            CookieManager.getInstance().setCookie(url, "${client.aid}__ut=")
+            progressBar.isIndeterminate = false
+            webview.apply {
+                addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
+                clearCache(true)
+                clearHistory()
+                loadUrl(url)
             }
         }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        intent.process()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

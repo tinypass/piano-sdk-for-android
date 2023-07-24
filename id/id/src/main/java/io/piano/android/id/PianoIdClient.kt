@@ -23,7 +23,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
-import timber.log.Timber
 import java.util.Locale
 
 /**
@@ -33,6 +32,7 @@ class PianoIdClient internal constructor(
     private val api: PianoIdApi,
     private val moshi: Moshi,
     internal val aid: String,
+    endpoint: HttpUrl,
 ) {
     private val pianoIdTokenAdapter by lazy {
         moshi.adapter(PianoIdToken::class.java)
@@ -46,7 +46,7 @@ class PianoIdClient internal constructor(
     private val errorAdapter by lazy {
         moshi.adapter(PianoIdError::class.java)
     }
-    internal var hostUrl: HttpUrl? = null
+    internal var hostUrl: HttpUrl = endpoint
     private val exceptions = SparseArray<PianoIdException>()
     internal val oauthProviders: MutableMap<String, PianoIdOAuthProvider> = mutableMapOf()
 
@@ -55,7 +55,7 @@ class PianoIdClient internal constructor(
     var javascriptInterface: PianoIdJs? = null
 
     init {
-        getHostUrl { Timber.d("Getting host success = ${it.isSuccess}") }
+        loadHostUrl()
     }
 
     /**
@@ -107,113 +107,86 @@ class PianoIdClient internal constructor(
     @Suppress("unused") // Public API.
     fun signIn(): SignInContext = SignInContext(this)
 
-    internal fun getHostUrl(callback: PianoIdFuncCallback<HttpUrl>) {
-        hostUrl?.let { callback(Result.success(it)) } ?: run {
-            api.getDeploymentHost(aid).enqueue(
-                object : Callback<HostResponse> {
-                    override fun onResponse(call: Call<HostResponse>, response: Response<HostResponse>) {
-                        runCatching {
-                            with(response.bodyOrThrow()) {
-                                if (!hasError) {
-                                    hostUrl = host.toHttpUrl().also {
-                                        callback(Result.success(it))
-                                    }
-                                } else {
-                                    callback(Result.failure(PianoIdException(error)))
-                                }
+    internal fun loadHostUrl() {
+        api.getDeploymentHost(aid).enqueue(
+            object : Callback<HostResponse> {
+                override fun onResponse(call: Call<HostResponse>, response: Response<HostResponse>) {
+                    runCatching {
+                        with(response.bodyOrThrow()) {
+                            if (!hasError) {
+                                hostUrl = host.toHttpUrl()
                             }
-                        }.onFailure {
-                            callback(Result.failure(it.toPianoIdException()))
                         }
                     }
-
-                    override fun onFailure(call: Call<HostResponse>, t: Throwable) =
-                        callback(Result.failure(t.toPianoIdException()))
                 }
+
+                override fun onFailure(call: Call<HostResponse>, t: Throwable) {
+                    // don't change predefined
+                }
+            }
+        )
+    }
+
+    internal fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>) {
+        api.signOut(hostUrl.newBuilder().encodedPath(SIGN_OUT_PATH).build().toString(), aid, accessToken)
+            .enqueue(callback.asRetrofitCallback())
+    }
+
+    internal fun getTokenByAuthCode(authCode: String, callback: PianoIdFuncCallback<PianoIdToken>) {
+        api.exchangeAuthCode(
+            hostUrl.newBuilder().encodedPath(EXCHANGE_AUTH_CODE_PATH).build().toString(),
+            aid,
+            authCode
+        ).enqueue(callback.asRetrofitCallback())
+    }
+
+    internal fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
+        api.refreshToken(
+            hostUrl.newBuilder().encodedPath(REFRESH_TOKEN_PATH).build().toString(),
+            mapOf(
+                PARAM_CLIENT_ID to aid,
+                PARAM_GRANT_TYPE to VALUE_GRANT_TYPE,
+                PARAM_REFRESH_TOKEN to refreshToken
             )
-        }
+        ).enqueue(callback.asRetrofitCallback())
     }
-
-    internal fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>) = getHostUrl { r ->
-        r.getOrNull()?.resolve(SIGN_OUT_PATH)?.let {
-            api.signOut(it.toString(), aid, accessToken)
-                .enqueue(callback.asRetrofitCallback())
-        } ?: callback(Result.failure(r.exceptionOrNull() ?: PianoIdException("Can't resolve sign out url")))
-    }
-
-    internal fun getTokenByAuthCode(authCode: String, callback: PianoIdFuncCallback<PianoIdToken>) =
-        getHostUrl { r ->
-            r.getOrNull()?.let {
-                api.exchangeAuthCode(
-                    it.newBuilder().encodedPath(EXCHANGE_AUTH_CODE_PATH).build().toString(),
-                    aid,
-                    authCode
-                ).enqueue(callback.asRetrofitCallback())
-            } ?: callback(Result.failure(r.exceptionOrNull()!!))
-        }
-
-    internal fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) =
-        getHostUrl { r ->
-            r.getOrNull()?.let {
-                api.refreshToken(
-                    it.newBuilder().encodedPath(REFRESH_TOKEN_PATH).build().toString(),
-                    mapOf(
-                        PARAM_CLIENT_ID to aid,
-                        PARAM_GRANT_TYPE to VALUE_GRANT_TYPE,
-                        PARAM_REFRESH_TOKEN to refreshToken
-                    )
-                )
-                    .enqueue(callback.asRetrofitCallback())
-            } ?: callback(Result.failure(r.exceptionOrNull()!!))
-        }
 
     internal fun getSignInUrl(
         disableSignUp: Boolean,
         widget: String?,
         stage: String?,
-        callback: PianoIdFuncCallback<String>,
-    ) = getHostUrl { r ->
-        callback(
-            r.mapCatching { url ->
-                url.newBuilder()
-                    .encodedPath(AUTH_PATH)
-                    .addQueryParameter(PARAM_RESPONSE_TYPE, VALUE_RESPONSE_TYPE_TOKEN)
-                    .addQueryParameter(PARAM_CLIENT_ID, aid)
-                    .addQueryParameter(PARAM_FORCE_REDIRECT, VALUE_FORCE_REDIRECT)
-                    .addQueryParameter(PARAM_DISABLE_SIGN_UP, disableSignUp.toString())
-                    .addQueryParameter(PARAM_REDIRECT_URI, "$LINK_SCHEME_PREFIX$aid://$LINK_AUTHORITY")
-                    .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
-                    .apply {
-                        if (!widget.isNullOrEmpty()) {
-                            addQueryParameter(PARAM_SCREEN, widget)
-                        }
-                        if (!stage.isNullOrEmpty()) {
-                            addQueryParameter(PARAM_STAGE, stage)
-                        }
-                        if (oauthProviders.isNotEmpty()) {
-                            addQueryParameter(
-                                PARAM_OAUTH_PROVIDERS,
-                                oauthProviders.keys.joinToString(separator = ",")
-                            )
-                        }
-                    }
-                    .build()
-                    .toString()
+    ): String = hostUrl.newBuilder()
+        .encodedPath(AUTH_PATH)
+        .addQueryParameter(PARAM_RESPONSE_TYPE, VALUE_RESPONSE_TYPE_TOKEN)
+        .addQueryParameter(PARAM_CLIENT_ID, aid)
+        .addQueryParameter(PARAM_FORCE_REDIRECT, VALUE_FORCE_REDIRECT)
+        .addQueryParameter(PARAM_DISABLE_SIGN_UP, disableSignUp.toString())
+        .addQueryParameter(PARAM_REDIRECT_URI, "$LINK_SCHEME_PREFIX$aid://$LINK_AUTHORITY")
+        .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
+        .apply {
+            if (!widget.isNullOrEmpty()) {
+                addQueryParameter(PARAM_SCREEN, widget)
             }
-        )
-    }
+            if (!stage.isNullOrEmpty()) {
+                addQueryParameter(PARAM_STAGE, stage)
+            }
+            if (oauthProviders.isNotEmpty()) {
+                addQueryParameter(
+                    PARAM_OAUTH_PROVIDERS,
+                    oauthProviders.keys.joinToString(separator = ",")
+                )
+            }
+        }
+        .build()
+        .toString()
 
     internal fun getUserInfo(accessToken: String, formName: String?, callback: PianoIdFuncCallback<PianoUserProfile>) {
-        getHostUrl { r ->
-            r.getOrNull()?.let {
-                api.getUserInfo(
-                    it.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
-                    aid,
-                    accessToken,
-                    formName
-                ).enqueue(callback.asRetrofitCallback())
-            } ?: callback(Result.failure(r.exceptionOrNull()!!))
-        }
+        api.getUserInfo(
+            hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
+            aid,
+            accessToken,
+            formName
+        ).enqueue(callback.asRetrofitCallback())
     }
 
     internal fun putUserInfo(
@@ -221,30 +194,24 @@ class PianoIdClient internal constructor(
         newUserInfo: PianoUserInfo,
         callback: PianoIdFuncCallback<PianoUserProfile>,
     ) {
-        getHostUrl { r ->
-            r.getOrNull()?.let {
-                api.putUserInfo(
-                    it.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
-                    aid,
-                    accessToken,
-                    newUserInfo.toProfileUpdateRequest()
-                ).enqueue(callback.asRetrofitCallback())
-            } ?: callback(Result.failure(r.exceptionOrNull()!!))
-        }
+        api.putUserInfo(
+            hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
+            aid,
+            accessToken,
+            newUserInfo.toProfileUpdateRequest()
+        ).enqueue(callback.asRetrofitCallback())
     }
 
     internal fun getFormUrl(formName: String?, hideCompletedFields: Boolean, trackingId: String) =
-        hostUrl?.let { url ->
-            url.newBuilder()
-                .encodedPath(FORM_PATH)
-                .addQueryParameter(PARAM_CLIENT_ID, aid)
-                .addQueryParameter(PARAM_FORM_NAME, formName ?: "")
-                .addQueryParameter(PARAM_HIDE_COMPLETE, hideCompletedFields.toString())
-                .addQueryParameter(PARAM_TRACKING_ID, trackingId)
-                .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
-                .build()
-                .toString()
-        } ?: "about:blank"
+        hostUrl.newBuilder()
+            .encodedPath(FORM_PATH)
+            .addQueryParameter(PARAM_CLIENT_ID, aid)
+            .addQueryParameter(PARAM_FORM_NAME, formName ?: "")
+            .addQueryParameter(PARAM_HIDE_COMPLETE, hideCompletedFields.toString())
+            .addQueryParameter(PARAM_TRACKING_ID, trackingId)
+            .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
+            .build()
+            .toString()
 
     internal fun saveException(exc: PianoIdException): Int =
         exc.hashCode().also {

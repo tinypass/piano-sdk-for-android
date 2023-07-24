@@ -9,6 +9,8 @@ import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.PianoUserInfo
 import io.piano.android.id.models.PianoUserProfile
 import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -34,7 +36,18 @@ class PianoId {
          */
         @Suppress("unused") // Public API.
         @JvmStatic
-        fun init(endpoint: String, aid: String): PianoIdClient =
+        fun init(endpoint: String, aid: String): PianoIdClient = init(endpoint.toHttpUrl(), aid)
+
+        /**
+         * Initialize {@link PianoIdClient} singleton instance. It doesn't re-init it at next calls.
+         *
+         * @param endpoint Endpoint, which will be used.
+         * @param aid      Your AID
+         * @return {@link PianoIdClient} instance.
+         */
+        @Suppress("unused") // Public API.
+        @JvmStatic
+        fun init(endpoint: HttpUrl, aid: String): PianoIdClient =
             client ?: run {
                 val userAgent = "Piano ID SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE})"
                 val okHttpClient = OkHttpClient.Builder()
@@ -58,7 +71,7 @@ class PianoId {
                     .baseUrl(endpoint)
                     .addConverterFactory(MoshiConverterFactory.create(moshi))
                     .build()
-                PianoIdClient(retrofit.create(), moshi, aid).also { client = it }
+                PianoIdClient(retrofit.create(), moshi, aid, endpoint).also { client = it }
             }
 
         /**
