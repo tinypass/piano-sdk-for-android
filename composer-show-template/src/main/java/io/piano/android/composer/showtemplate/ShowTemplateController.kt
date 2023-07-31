@@ -42,7 +42,23 @@ class ShowTemplateController constructor(
     override fun WebView.configure() = prepare(null, jsInterface, trackingId)
 
     override fun processDelay(activity: FragmentActivity, showFunction: () -> Unit) {
-        // Implementation details of processDelay go here...
+        val func: () -> Unit = {
+            if (!activity.isFinishing)
+                showFunction()
+        }
+        eventData.delayBy.apply {
+            if (isDelayedByTime) {
+                val handler = Handler(Looper.getMainLooper())
+                activity.lifecycle.addObserver(
+                    object : DefaultLifecycleObserver {
+                        override fun onPause(owner: LifecycleOwner) {
+                            handler.removeCallbacksAndMessages(null)
+                        }
+                    }
+                )
+                handler.postDelayed(func, value * 1000L)
+            } else func()
+        }
     }
 
     /**
