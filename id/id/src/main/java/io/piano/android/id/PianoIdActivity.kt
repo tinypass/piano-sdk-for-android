@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.webkit.CookieManager
@@ -42,7 +41,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                 setResult(Activity.RESULT_CANCELED)
                 finish()
             }
-            is OAuthSuccessResult -> evaluateJavascript(it.jsCommand)
+            is OAuthSuccessResult -> binding.webview.evaluateJavascript(it.jsCommand, null)
             is OAuthFailureResult -> setFailureResultData(it.exception)
         }
     }
@@ -53,12 +52,18 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         }
     }
 
+    init {
+        addOnNewIntentListener {
+            it?.process()
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled", "AddJavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPianoIdBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        intent.process()
+        intent?.process()
         onBackPressedDispatcher.addCallback(webviewBackPressedCallback)
         with(binding) {
             webview.apply {
@@ -75,10 +80,11 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                         view: WebView,
                         isDialog: Boolean,
                         isUserGesture: Boolean,
-                        resultMsg: Message
+                        resultMsg: Message,
                     ): Boolean {
-                        if (!isUserGesture)
+                        if (!isUserGesture) {
                             return false
+                        }
                         with(resultMsg) {
                             (obj as WebView.WebViewTransport).webView = WebView(view.context)
                             sendToTarget()
@@ -111,26 +117,16 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                     }
                 }
             }
-            client.getSignInUrl(disableSignUp, widget, stage) { r ->
-                r.onSuccess {
-                    CookieManager.getInstance().setCookie(it, "${client.aid}__ut=")
-                    progressBar.isIndeterminate = false
-                    webview.apply {
-                        addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
-                        clearCache(true)
-                        clearHistory()
-                        loadUrl(it)
-                    }
-                }.onFailure {
-                    setFailureResultData(it)
-                }
+            val url = client.getSignInUrl(disableSignUp, widget, stage)
+            CookieManager.getInstance().setCookie(url, "${client.aid}__ut=")
+            progressBar.isIndeterminate = false
+            webview.apply {
+                addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
+                clearCache(true)
+                clearHistory()
+                loadUrl(url)
             }
         }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        intent.process()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -185,14 +181,6 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         client.authCallback?.invoke(PianoIdAuthResult.failure(exc))
         finish()
     }
-
-    @Suppress("NOTHING_TO_INLINE")
-    private inline fun evaluateJavascript(code: String) =
-        binding.webview.apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                evaluateJavascript(code, null)
-            } else loadUrl("javascript:$code")
-        }
 
     internal fun Intent.process() {
         widget = getStringExtra(KEY_WIDGET)

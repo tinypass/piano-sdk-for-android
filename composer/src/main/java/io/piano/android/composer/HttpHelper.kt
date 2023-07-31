@@ -20,7 +20,7 @@ internal class HttpHelper(
     private val experienceIdsProvider: ExperienceIdsProvider,
     private val prefsStorage: PrefsStorage,
     moshi: Moshi,
-    private val userAgent: String
+    private val userAgent: String,
 ) : ExperienceInterceptor {
     private val mapAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(
         Types.newParameterizedType(
@@ -54,7 +54,7 @@ internal class HttpHelper(
         request: ExperienceRequest,
         aid: String,
         browserIdProvider: () -> String?,
-        userToken: String?
+        userToken: String?,
     ): Map<String, String> =
         with(request) {
             val calendar = Calendar.getInstance()
@@ -109,7 +109,7 @@ internal class HttpHelper(
         trackingId: String,
         eventType: String,
         eventGroup: String,
-        customParameters: Map<String, String> = emptyMap()
+        customParameters: Map<String, String> = emptyMap(),
     ): Map<String, String> =
         mapOf(
             PARAM_EVENT_TRACKING_ID to trackingId,
@@ -123,7 +123,7 @@ internal class HttpHelper(
         aid: String,
         customFormName: String,
         trackingId: String,
-        userToken: String?
+        userToken: String?,
     ): Map<String, String> {
         return sequenceOf(
             PARAM_AID to aid,
@@ -139,7 +139,7 @@ internal class HttpHelper(
         experienceRequest: ExperienceRequest,
         aid: String,
         userToken: String?,
-        gaClientId: String?
+        gaClientId: String?,
     ): Map<String, String> =
         with(showTemplateEvent) {
             experienceRequest.toMinimalSequence() + sequenceOf(

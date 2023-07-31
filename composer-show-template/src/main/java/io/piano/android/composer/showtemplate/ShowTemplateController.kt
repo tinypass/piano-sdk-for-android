@@ -27,7 +27,7 @@ import timber.log.Timber
  */
 class ShowTemplateController constructor(
     event: Event<ShowTemplate>,
-    jsInterface: ComposerJs? = null
+    jsInterface: ComposerJs? = null,
 ) : BaseShowController<ShowTemplate, ComposerJs>(event.eventData, jsInterface ?: ComposerJs()) {
     // Private properties
     private val trackingId = event.eventExecutionContext.trackingId
@@ -43,8 +43,9 @@ class ShowTemplateController constructor(
 
     override fun processDelay(activity: FragmentActivity, showFunction: () -> Unit) {
         val func: () -> Unit = {
-            if (!activity.isFinishing)
+            if (!activity.isFinishing) {
                 showFunction()
+            }
         }
         eventData.delayBy.apply {
             if (isDelayedByTime) {
@@ -57,7 +58,9 @@ class ShowTemplateController constructor(
                     }
                 )
                 handler.postDelayed(func, value * 1000L)
-            } else func()
+            } else {
+                func()
+            }
         }
     }
 
@@ -87,7 +90,7 @@ class ShowTemplateController constructor(
         internal fun WebView.prepare(
             dialogFragment: ShowTemplateDialogFragment? = null,
             javascriptInterface: ComposerJs?,
-            trackingId: String
+            trackingId: String,
         ) {
             settings.javaScriptEnabled = true
             val jsInterface = javascriptInterface ?: ComposerJs()
@@ -139,7 +142,7 @@ class ShowTemplateController constructor(
             activity: FragmentActivity,
             showTemplateEvent: Event<ShowTemplate>,
             javascriptInterface: ComposerJs? = null,
-            inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider
+            inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider,
         ): ShowTemplateController = ShowTemplateController(showTemplateEvent, javascriptInterface).apply {
             show(activity, inlineWebViewProvider)
         }

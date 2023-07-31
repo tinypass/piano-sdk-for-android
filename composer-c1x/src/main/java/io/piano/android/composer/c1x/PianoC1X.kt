@@ -22,7 +22,7 @@ object PianoC1X {
         context: Context,
         siteId: String,
         aid: String,
-        endpoint: Composer.Endpoint = Composer.Endpoint.PRODUCTION
+        endpoint: Composer.Endpoint = Composer.Endpoint.PRODUCTION,
     ) {
         require(siteId.isNotEmpty()) {
             "Site id can't be empty"

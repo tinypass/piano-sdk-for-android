@@ -18,21 +18,21 @@ internal interface PianoIdApi {
     fun signOut(
         @Url url: String,
         @Query("client_id") aid: String,
-        @Header("Authorization") accessToken: String
+        @Header("Authorization") accessToken: String,
     ): Call<ResponseBody>
 
     @POST
     fun exchangeAuthCode(
         @Url url: String,
         @Query("aid") aid: String,
-        @Query("passwordless_token") authCode: String
+        @Query("passwordless_token") authCode: String,
     ): Call<PianoIdToken>
 
     @FormUrlEncoded
     @POST
     fun refreshToken(
         @Url url: String,
-        @FieldMap tokenParams: Map<String, String>
+        @FieldMap tokenParams: Map<String, String>,
     ): Call<PianoIdToken>
 
     @GET
@@ -40,7 +40,7 @@ internal interface PianoIdApi {
         @Url url: String,
         @Query("client_id") aid: String,
         @Header("Authorization") accessToken: String,
-        @Query("form_name") formName: String?
+        @Query("form_name") formName: String?,
     ): Call<PianoUserProfile>
 
     @PUT
@@ -48,7 +48,7 @@ internal interface PianoIdApi {
         @Url url: String,
         @Query("aid") aid: String,
         @Header("Authorization") accessToken: String,
-        @Body updateRequest: ProfileUpdateRequest
+        @Body updateRequest: ProfileUpdateRequest,
     ): Call<PianoUserProfile>
 
     @FormUrlEncoded

@@ -27,5 +27,5 @@ class PianoUserProfile(
     val needResendConfirmationEmail: Boolean,
     @Json(name = "changed_email")
     val changedEmail: Boolean,
-    val passwordless: Boolean
+    val passwordless: Boolean,
 )

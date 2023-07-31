@@ -40,7 +40,7 @@ class ExperienceRequest private constructor(
     val contentAuthor: String?,
     val contentSection: String?,
     val contentIsNative: Boolean?,
-    val customParameters: CustomParameters?
+    val customParameters: CustomParameters?,
 ) {
 
     data class Builder @JvmOverloads constructor(
@@ -59,7 +59,7 @@ class ExperienceRequest private constructor(
         var contentAuthor: String? = null,
         var contentSection: String? = null,
         var contentIsNative: Boolean? = null,
-        var customParameters: CustomParameters? = null
+        var customParameters: CustomParameters? = null,
     ) {
         /**
          * Sets "debug" flag for request
@@ -78,7 +78,7 @@ class ExperienceRequest private constructor(
         // Public API.
         fun customVariable(
             key: String,
-            value: String?
+            value: String?,
         ) = apply {
             customVariables[key] = value?.let { v ->
                 (customVariables[key]?.toMutableList() ?: mutableListOf()).apply { add(v) }
@@ -94,7 +94,7 @@ class ExperienceRequest private constructor(
         // Public API.
         fun customVariable(
             key: String,
-            value: List<String>?
+            value: List<String>?,
         ) = apply {
             customVariables[key] = value
         }

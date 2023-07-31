@@ -34,7 +34,7 @@ class ComposerScrollDepthActivity : AppCompatActivity() {
                                 scrollX: Int,
                                 scrollY: Int,
                                 oldScrollX: Int,
-                                oldScrollY: Int
+                                oldScrollY: Int,
                             ) {
                                 if (!isShown) {
                                     if (v.scrollY >= it.value) {

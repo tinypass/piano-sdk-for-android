@@ -18,6 +18,7 @@ dependencies {
     implementation(libs.moshi)
     implementation(libs.annotations)
     implementation(libs.timber)
+    compileOnly(libs.kotlinCoroutines)
 
     testImplementation(libs.kotlinJunit)
     testImplementation(libs.mockitoKotlin)

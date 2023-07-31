@@ -12,11 +12,13 @@ import io.piano.android.composer.model.events.ShowRecommendations
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.model.events.UserSegment
 
+typealias EventsListener = (List<Event<EventType>>) -> Unit
+
 /**
  * Generic event listener
  *
  * @param <T> event type
-</T> */
+*/
 interface EventTypeListener<T : EventType> {
     /**
      * Processes event

@@ -1,6 +1,5 @@
 package io.piano.android.showhelper
 
-import android.os.Build
 import android.view.View
 import android.webkit.WebView
 import androidx.annotation.UiThread
@@ -11,7 +10,7 @@ import timber.log.Timber
 
 abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constructor(
     protected val eventData: T,
-    protected val jsInterface: V
+    protected val jsInterface: V,
 ) {
 
     abstract val url: String
@@ -28,7 +27,7 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
     @UiThread
     fun show(
         activity: FragmentActivity,
-        inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider
+        inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider,
     ) {
         checkPrerequisites { canShow ->
             if (canShow) {
@@ -49,7 +48,7 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
 
     private fun showInline(
         activity: FragmentActivity,
-        webViewProvider: (FragmentActivity, String) -> WebView?
+        webViewProvider: (FragmentActivity, String) -> WebView?,
     ) = eventData.containerSelector
         .takeUnless { it.isNullOrEmpty() }
         ?.let { id ->
@@ -68,7 +67,7 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
         }
 
     private fun showModal(
-        activity: FragmentActivity
+        activity: FragmentActivity,
     ) = fragmentProvider().apply {
         isCancelable = eventData.showCloseButton
         javascriptInterface = jsInterface
@@ -78,11 +77,6 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
     }
 
     companion object {
-        fun WebView.executeJavascriptCode(code: String) =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                evaluateJavascript(code, null)
-            else loadUrl("javascript:$code")
-
         @JvmStatic
         private val defaultWebViewProvider: (FragmentActivity, String) -> WebView? = { activity, webViewId ->
             activity.resources

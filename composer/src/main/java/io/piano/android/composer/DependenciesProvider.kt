@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 internal class DependenciesProvider private constructor(
     context: Context,
     aid: String,
-    endpoint: Composer.Endpoint
+    endpoint: Composer.Endpoint,
 ) {
     private val prefsStorage = PrefsStorage(context)
     private val userAgent = "Piano composer SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE} " +
@@ -28,15 +28,18 @@ internal class DependenciesProvider private constructor(
         .addInterceptor(RequestPolicyInterceptor(prefsStorage))
         .addInterceptor(
             HttpLoggingInterceptor().setLevel(
-                if (BuildConfig.DEBUG || isLogHttpSet())
+                if (BuildConfig.DEBUG || isLogHttpSet()) {
                     HttpLoggingInterceptor.Level.BODY
-                else HttpLoggingInterceptor.Level.NONE
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
             )
         )
         .build()
     private val moshi = Moshi.Builder()
         .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
+        .add(CustomValuesJsonAdapter)
         .add(UnixTimeDateAdapter)
         .build()
 

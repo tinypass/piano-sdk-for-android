@@ -8,5 +8,5 @@ class HostResponse(
     @Json(name = "data") val host: String,
     code: Int,
     message: String?,
-    validationErrors: Map<String, String>?
+    validationErrors: Map<String, String>?,
 ) : BaseResponse(code, message, validationErrors)

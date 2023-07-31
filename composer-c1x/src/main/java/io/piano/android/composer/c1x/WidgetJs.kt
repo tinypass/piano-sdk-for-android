@@ -15,7 +15,7 @@ class WidgetJs(
     @get:JavascriptInterface
     val siteId: String,
     @get:JavascriptInterface
-    val renderTemplateUrl: String = "auto"
+    val renderTemplateUrl: String = "auto",
 ) : BaseJsInterface() {
 
     internal fun init(dialogFragment: ShowRecommendationsDialogFragment?, webView: WebView?) {

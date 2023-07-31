@@ -31,7 +31,7 @@ interface BaseShowType {
  */
 @JsonClass(generateAdapter = true)
 data class ExperienceExecute(
-    val user: User?
+    val user: User?,
 ) : EventType()
 
 /**
@@ -53,15 +53,18 @@ data class Meter(
     val maxViews: Int,
     val totalViews: Int,
     val incremented: Boolean,
-    val state: MeterState = MeterState.ACTIVE
+    val state: MeterState = MeterState.ACTIVE,
 ) : EventType() {
     /**
      * Enumeration representing the state of the meter.
      */
     @JsonClass(generateAdapter = false)
     enum class MeterState {
-        @Json(name = "active") ACTIVE,
-        @Json(name = "expired") EXPIRED
+        @Json(name = "active")
+        ACTIVE,
+
+        @Json(name = "expired")
+        EXPIRED,
     }
 }
 
@@ -77,7 +80,7 @@ object NonSite : EventType()
  */
 @JsonClass(generateAdapter = true)
 data class SetResponseVariable(
-    val responseVariables: Map<String, Any>
+    val responseVariables: Map<String, Any>,
 ) : EventType()
 
 /**
@@ -105,7 +108,7 @@ data class ShowForm(
  */
 @JsonClass(generateAdapter = true)
 data class ShowLogin(
-    val userProvider: String
+    val userProvider: String,
 ) : EventType()
 
 /**
@@ -127,7 +130,7 @@ data class ShowRecommendations(
     override val displayMode: DisplayMode,
     override val showCloseButton: Boolean,
     val siteId: String,
-    val type: String
+    val type: String,
 ) : EventType(), BaseShowType
 
 /**
@@ -149,7 +152,7 @@ data class ShowTemplate(
     override val containerSelector: String?,
     val delayBy: DelayBy,
     override val showCloseButton: Boolean,
-    val url: String? = null
+    val url: String? = null,
 ) : EventType(), BaseShowType
 
 /**
@@ -158,5 +161,5 @@ data class ShowTemplate(
  * @property state A boolean flag indicating the state of the user segmentation.
  */
 data class UserSegment(
-    val state: Boolean
+    val state: Boolean,
 ) : EventType()

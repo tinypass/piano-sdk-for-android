@@ -4,5 +4,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 class PianoIdError(
-    val message: String
+    val message: String,
 )

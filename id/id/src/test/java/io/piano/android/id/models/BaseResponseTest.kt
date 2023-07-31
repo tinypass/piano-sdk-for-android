@@ -10,7 +10,7 @@ class BaseResponseTest {
     private inline fun makeResponse(
         code: Int = 0,
         message: String? = null,
-        validationErrors: Map<String, String>? = null
+        validationErrors: Map<String, String>? = null,
     ) =
         BaseResponse(code, message, validationErrors)
 

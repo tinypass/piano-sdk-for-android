@@ -5,7 +5,7 @@ import java.lang.ref.WeakReference
 
 internal class PianoIdJavascriptDelegate(
     internalDelegate: PianoIdJsInterface,
-    publicDelegate: PianoIdJs?
+    publicDelegate: PianoIdJs?,
 ) : PianoIdJsInterface, PianoIdJs {
     private val internalJsReference: WeakReference<PianoIdJsInterface> = WeakReference(internalDelegate)
     private val publicJsReference: WeakReference<PianoIdJs?> = WeakReference(publicDelegate)
