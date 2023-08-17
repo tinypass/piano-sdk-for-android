@@ -5,6 +5,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.annotation.UiThread
 import io.piano.android.composer.Composer
+import io.piano.android.id.FormHelper
 import io.piano.android.showhelper.BaseJsInterface
 import timber.log.Timber
 import kotlin.properties.Delegates
@@ -45,9 +46,10 @@ class ShowFormJs(
                 "stateReady" -> {
                     isReady = true
                     Composer.getInstance().trackCustomFormImpression(formName, trackingId)
+                    executeJavascript(FormHelper.buildConsentsCode())
                     updateToken()
                 }
-                "tokenRejected" -> loginCallback.invoke()
+                "tokenRejected" -> loginCallback()
             }
         } ?: Timber.d("Can't parse $data")
     }

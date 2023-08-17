@@ -12,6 +12,7 @@ android {
 }
 
 dependencies {
+    api(libs.pianoConsents)
     implementation(libs.okhttpLogging)
     implementation(libs.retrofit)
     implementation(libs.retrofitConverter)

@@ -5,7 +5,7 @@ import android.webkit.WebView
 import com.squareup.moshi.Moshi
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.events.ShowForm
-import io.piano.android.id.FormUrlBuilder
+import io.piano.android.id.FormHelper
 import io.piano.android.id.PianoId
 import io.piano.android.showhelper.BaseShowController
 import timber.log.Timber
@@ -19,7 +19,7 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
     private val trackingId = event.eventExecutionContext.trackingId
     override val url: String by lazy {
         with(eventData) {
-            FormUrlBuilder.buildUrl(formName, hideCompletedFields, trackingId)
+            FormHelper.buildUrl(formName, hideCompletedFields, trackingId)
         }
     }
     override val fragmentTag = FRAGMENT_TAG
@@ -33,7 +33,7 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
         if (accessToken.isEmpty()) {
             callback(true)
         } else {
-            PianoId.getUserInfo(accessToken, eventData.formName) { r ->
+            PianoId.getInstance().getUserInfo(accessToken, eventData.formName) { r ->
                 val shouldHideForm = r.onFailure {
                     Timber.w(it)
                 }.getOrNull()?.allCustomFieldsFilled ?: false

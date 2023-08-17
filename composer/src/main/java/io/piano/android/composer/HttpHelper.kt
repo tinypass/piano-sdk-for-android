@@ -11,6 +11,9 @@ import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.ShowTemplate
+import io.piano.android.consents.models.Consent
+import io.piano.android.consents.models.Product
+import io.piano.android.consents.models.Purpose
 import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -22,39 +25,79 @@ internal class HttpHelper(
     moshi: Moshi,
     private val userAgent: String,
 ) : ExperienceInterceptor {
-    private val mapAdapter: JsonAdapter<Map<String, String>> = moshi.adapter(
-        Types.newParameterizedType(
-            Map::class.java,
-            String::class.java,
-            String::class.java
-        )
-    )
-
-    private val customVariablesAdapter: JsonAdapter<Map<String, List<String>?>> = moshi.adapter(
-        Types.newParameterizedType(
-            Map::class.java,
-            String::class.java,
+    private val mapAdapter: JsonAdapter<Map<String, String>> by lazy {
+        moshi.adapter(
             Types.newParameterizedType(
-                List::class.java,
+                Map::class.java,
+                String::class.java,
                 String::class.java
             )
         )
-    )
+    }
 
-    private val activeMetersAdapter = moshi.adapter<List<ActiveMeter>>(
-        Types.newParameterizedType(
-            List::class.java,
-            ActiveMeter::class.java
+    private val customVariablesAdapter: JsonAdapter<Map<String, List<String>?>> by lazy {
+        moshi.adapter(
+            Types.newParameterizedType(
+                Map::class.java,
+                String::class.java,
+                Types.newParameterizedType(
+                    List::class.java,
+                    String::class.java
+                )
+            )
         )
-    )
+    }
 
-    private val customParametersAdapter = moshi.adapter(CustomParameters::class.java)
+    private val activeMetersAdapter by lazy {
+        moshi.adapter<List<ActiveMeter>>(
+            Types.newParameterizedType(
+                List::class.java,
+                ActiveMeter::class.java
+            )
+        )
+    }
+
+    private val customParametersAdapter by lazy {
+        moshi.adapter(CustomParameters::class.java)
+    }
+
+    private val consentModesAdapter: JsonAdapter<Map<Int, Int>> by lazy {
+        moshi.adapter(
+            Types.newParameterizedType(
+                Map::class.java,
+                Int::class.javaObjectType,
+                Int::class.javaObjectType
+            )
+        )
+    }
+
+    private val consentPurposesAdapter: JsonAdapter<Map<Int, Purpose>> by lazy {
+        moshi.adapter(
+            Types.newParameterizedType(
+                Map::class.java,
+                Int::class.javaObjectType,
+                Purpose::class.java
+            )
+        )
+    }
+
+    private val vxConsentAdapter: JsonAdapter<Map<Purpose, Consent>> by lazy {
+        moshi.adapter(
+            Types.newParameterizedType(
+                Map::class.java,
+                Purpose::class.java,
+                Consent::class.java
+            )
+        )
+    }
 
     internal fun convertExperienceRequest(
         request: ExperienceRequest,
         aid: String,
         browserIdProvider: () -> String?,
         userToken: String?,
+        consents: Map<Purpose, Consent>,
+        productsToPurposesMapping: Map<Product, Purpose>,
     ): Map<String, String> =
         with(request) {
             val calendar = Calendar.getInstance()
@@ -92,6 +135,18 @@ internal class HttpHelper(
                     .orEmpty(),
                 PARAM_CUSTOM_PARAMS to customParameters?.takeUnless { it.isEmpty() }
                     ?.let { customParametersAdapter.toJson(it) }
+                    .orEmpty(),
+                PARAM_CONSENT_MODES to consents.values
+                    .flatMap { c ->
+                        c.products.map {
+                            it.id to c.mode.id
+                        }
+                    }.toMap()
+                    .takeUnless { it.isEmpty() }
+                    ?.let { consentModesAdapter.toJson(it) }
+                    .orEmpty(),
+                PARAM_CONSENT_PURPOSES to productsToPurposesMapping.mapKeys { it.key.id }.takeUnless { it.isEmpty() }
+                    ?.let { consentPurposesAdapter.toJson(it) }
                     .orEmpty()
             ).filterNotEmptyValues()
         }.toMap()
@@ -109,6 +164,7 @@ internal class HttpHelper(
         trackingId: String,
         eventType: String,
         eventGroup: String,
+        consents: Map<Purpose, Consent>,
         customParameters: Map<String, String> = emptyMap(),
     ): Map<String, String> =
         mapOf(
@@ -116,7 +172,9 @@ internal class HttpHelper(
             PARAM_EVENT_TYPE to eventType,
             PARAM_EVENT_GROUP_ID to eventGroup,
             PARAM_EVENT_CUSTOM_PARAMS to customParameters.takeUnless { it.isEmpty() }
-                ?.let { mapAdapter.toJson(it) }.orEmpty()
+                ?.let { mapAdapter.toJson(it) }.orEmpty(),
+            PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
+                ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
         )
 
     internal fun buildCustomFormTracking(
@@ -124,15 +182,17 @@ internal class HttpHelper(
         customFormName: String,
         trackingId: String,
         userToken: String?,
-    ): Map<String, String> {
-        return sequenceOf(
+        consents: Map<Purpose, Consent>,
+    ): Map<String, String> =
+        sequenceOf(
             PARAM_AID to aid,
             PARAM_USER_TOKEN to userToken.orEmpty(),
             PARAM_PAGEVIEW_ID to experienceIdsProvider.getPageViewId(Date()),
             PARAM_EVENT_TRACKING_ID to trackingId,
-            PARAM_CUSTOM_FORM_NAME to customFormName
+            PARAM_CUSTOM_FORM_NAME to customFormName,
+            PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
+                ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
         ).filterNotEmptyValues().toMap()
-    }
 
     internal fun buildShowTemplateParameters(
         showTemplateEvent: Event<ShowTemplate>,
@@ -140,6 +200,7 @@ internal class HttpHelper(
         aid: String,
         userToken: String?,
         gaClientId: String?,
+        consents: Map<Purpose, Consent>,
     ): Map<String, String> =
         with(showTemplateEvent) {
             experienceRequest.toMinimalSequence() + sequenceOf(
@@ -158,7 +219,9 @@ internal class HttpHelper(
                 PARAM_TEMPLATE_ID to eventData.templateId,
                 PARAM_TEMPLATE_VARIANT_ID to eventData.templateVariantId.orEmpty(),
                 PARAM_ACTIVE_METERS to eventExecutionContext.activeMeters.takeUnless { it.isNullOrEmpty() }
-                    ?.let { activeMetersAdapter.toJson(it) }.orEmpty()
+                    ?.let { activeMetersAdapter.toJson(it) }.orEmpty(),
+                PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
+                    ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
             ).filterNotEmptyValues()
         }.toMap()
 
@@ -208,6 +271,8 @@ internal class HttpHelper(
         internal const val PARAM_CONTENT_SECTION = "content_section"
         internal const val PARAM_CONTENT_NATIVE = "content_is_native"
         internal const val PARAM_CUSTOM_PARAMS = "custom_params"
+        internal const val PARAM_CONSENT_MODES = "consent_modes"
+        internal const val PARAM_CONSENT_PURPOSES = "consent_purposes"
 
         private const val VALUE_PROTOCOL_VERSION = 1
         internal const val VALUE_MANUAL_SUBMIT_TYPE = "manual"
@@ -217,6 +282,7 @@ internal class HttpHelper(
         internal const val PARAM_EVENT_TYPE = "event_type"
         internal const val PARAM_EVENT_GROUP_ID = "event_group_id"
         internal const val PARAM_EVENT_CUSTOM_PARAMS = "custom_params"
+        internal const val PARAM_EVENT_COOKIE_CONSENTS = "cookie_consents"
 
         // Custom form tracking constants
         internal const val PARAM_CUSTOM_FORM_NAME = "custom_form_name"

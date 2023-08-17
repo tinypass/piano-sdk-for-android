@@ -28,7 +28,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     @VisibleForTesting
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     private lateinit var binding: ActivityPianoIdBinding
-    private val client: PianoIdClient = PianoId.getClient()
+    private val client: PianoIdClient = PianoId.getInstance()
 
     private val jsInterface = PianoIdJavascriptDelegate(this, client.javascriptInterface)
     private var widget: String? = null
@@ -41,6 +41,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                 setResult(Activity.RESULT_CANCELED)
                 finish()
             }
+
             is OAuthSuccessResult -> binding.webview.evaluateJavascript(it.jsCommand, null)
             is OAuthFailureResult -> setFailureResultData(it.exception)
         }
@@ -101,6 +102,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
 
                     override fun onPageFinished(view: WebView, url: String?) {
                         super.onPageFinished(view, url)
+                        evaluateJavascript(FormHelper.buildConsentsCode(), null)
                         progressBar.hide()
                     }
 
@@ -124,7 +126,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                 addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
                 clearCache(true)
                 clearHistory()
-                loadUrl(url)
+                loadUrl(url, client.consentsDataProvider.packedConsents)
             }
         }
     }

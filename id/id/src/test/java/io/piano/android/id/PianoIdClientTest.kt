@@ -56,11 +56,12 @@ class PianoIdClientTest {
         on { name } doReturn NAME
         on { buildIntent(any(), any()) } doReturn oauthIntent
     }
+    private val consentsDataProvider: ConsentsDataProvider = mock()
     private lateinit var pianoIdClient: PianoIdClient
 
     @BeforeTest
     fun setUp() {
-        pianoIdClient = spy(PianoIdClient(api, moshi, AID, endpoint))
+        pianoIdClient = spy(PianoIdClient(api, moshi, AID, consentsDataProvider, endpoint))
     }
 
     @Test

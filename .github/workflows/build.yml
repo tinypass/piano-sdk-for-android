@@ -27,6 +27,6 @@ jobs:
           AID: ${{ secrets.SAMPLE_AID }}
         run: echo "io.piano.aid=$AID" > sample/piano.properties
     -   name: Check codestyle
-        run: ./gradlew ktlintCheck
+        run: ./gradlew ktlintCheck --continue
     -   name: Build project
         run: ./gradlew testDebug sample:asDeb

@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RestrictTo
 import com.squareup.moshi.Moshi
+import io.piano.android.consents.ConsentJsonAdapterFactory
+import io.piano.android.consents.PianoConsents
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,10 +18,11 @@ internal class DependenciesProvider private constructor(
     context: Context,
     aid: String,
     endpoint: Composer.Endpoint,
+    pianoConsents: PianoConsents?,
 ) {
     private val prefsStorage = PrefsStorage(context)
     private val userAgent = "Piano composer SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE} " +
-        "(Build ${Build.ID}); ${context.applicationContext.deviceType()} ${Build.MANUFACTURER}/${Build.MODEL})"
+        "(Build ${Build.ID}); ${context.deviceType()} ${Build.MANUFACTURER}/${Build.MODEL})"
 
     private val okHttpClient = OkHttpClient.Builder()
         .readTimeout(30, TimeUnit.SECONDS)
@@ -41,6 +44,7 @@ internal class DependenciesProvider private constructor(
         .add(EventJsonAdapterFactory())
         .add(CustomValuesJsonAdapter)
         .add(UnixTimeDateAdapter)
+        .add(ConsentJsonAdapterFactory)
         .build()
 
     private val moshiConverterFactory = MoshiConverterFactory.create(moshi)
@@ -65,7 +69,8 @@ internal class DependenciesProvider private constructor(
         HttpHelper(ExperienceIdsProvider(prefsStorage, PageViewIdProvider), prefsStorage, moshi, userAgent),
         prefsStorage,
         aid,
-        endpoint
+        endpoint,
+        pianoConsents
     )
 
     @Suppress("NOTHING_TO_INLINE")
@@ -77,22 +82,24 @@ internal class DependenciesProvider private constructor(
         private var instance: DependenciesProvider? = null
 
         @JvmStatic
-        internal fun init(context: Context, aid: String, endpoint: Composer.Endpoint) {
+        internal fun init(
+            context: Context,
+            aid: String,
+            endpoint: Composer.Endpoint,
+            pianoConsents: PianoConsents?,
+        ) {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {
-                        instance = DependenciesProvider(context, aid, endpoint)
+                        instance = DependenciesProvider(context, aid, endpoint, pianoConsents)
                     }
                 }
             }
         }
 
         @JvmStatic
-        fun getInstance(): DependenciesProvider {
-            checkNotNull(instance) {
-                "Piano Composer SDK is not initialized! Make sure that you initialize it"
-            }
-            return instance as DependenciesProvider
+        fun getInstance(): DependenciesProvider = checkNotNull(instance) {
+            "Piano Composer SDK is not initialized! Make sure that you initialize it"
         }
     }
 }

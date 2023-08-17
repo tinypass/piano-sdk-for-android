@@ -3,6 +3,9 @@ package io.piano.android.composer
 import java.io.IOException
 import java.util.Date
 
+/**
+ * Basic exception, wraps other exceptions for simplifying `catch`.
+ */
 class ComposerException : RuntimeException {
     constructor() {}
     constructor(message: String?) : super(message) {}
@@ -10,7 +13,13 @@ class ComposerException : RuntimeException {
     constructor(cause: Throwable?) : super(cause) {}
 }
 
+/**
+ * Exception, that thrown if app calls experiences too frequently.
+ */
 class ComposerPolicyException : IOException {
+    /**
+     * Date until requests limiting policy is active.
+     */
     val policyActiveUntilDate: Date
 
     constructor(date: Date) : super(MSG) {

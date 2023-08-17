@@ -10,6 +10,7 @@ import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.EventType
 import io.piano.android.composer.model.events.ShowTemplate
+import io.piano.android.consents.PianoConsents
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.ResponseBody
@@ -17,6 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
+
 /**
  * Main entry point for the Piano Composer SDK.
  *
@@ -29,8 +31,8 @@ import retrofit2.Response
  * @param httpHelper The instance of [HttpHelper] for handling HTTP-related tasks.
  * @param prefsStorage The instance of [PrefsStorage] for handling shared preferences.
  * @param aid Your Application ID (AID).
- * @param endpoint The custom API endpoint. It should be one of the predefined endpoints in
- *                 [Endpoint].
+ * @param endpoint The custom API endpoint. It should be one of the predefined endpoints in [Endpoint].
+ * @property pianoConsents [PianoConsents] instance for managing user consent.
  */
 class Composer internal constructor(
     private val composerApi: ComposerApi,
@@ -39,6 +41,8 @@ class Composer internal constructor(
     private val prefsStorage: PrefsStorage,
     private val aid: String,
     private val endpoint: Endpoint,
+    @Suppress("unused") // Public API.
+    val pianoConsents: PianoConsents?,
 ) {
     // Private properties
     private val templateUrl by lazy {
@@ -67,7 +71,7 @@ class Composer internal constructor(
      * Adds an experience interceptor to the Composer.
      *
      * This function adds a custom [ExperienceInterceptor] to the list of interceptors. Interceptors
-     * can modify the experience request before it is sent to the server or handle the response.
+     * can verify the experience request before it is sent to the server and handle the response.
      *
      * @param interceptor The custom [ExperienceInterceptor] to be added.
      */
@@ -118,7 +122,7 @@ class Composer internal constructor(
      * request.
      *
      * @param request The prepared [ExperienceRequest] to be sent to the server.
-     * @param eventTypeListeners Collection of event listeners for handling received events.
+     * @param eventTypeListeners Collection of event listeners for handling received events separately.
      * @param exceptionListener Listener for handling exceptions that may occur during the request.
      */
     @Suppress("unused") // Public API.
@@ -140,16 +144,16 @@ class Composer internal constructor(
     }
 
     /**
-     * Gets experiences from server
+     * Gets an experience from server
      *
      * This function is used to retrieve an experience from the server based on the provided
      * [request]. It also takes a [eventsListener] to handle all events received from
-     * the server and an [exceptionListener] to handle any exceptions that may occur during the
+     * the server as one list and an [exceptionListener] to handle any exceptions that may occur during the
      * request.
      *
-     * @param request            Prepared experience request
-     * @param eventsListener     Listener for list of events
-     * @param exceptionListener  Listener for exceptions
+     * @param request The prepared [ExperienceRequest] to be sent to the server.
+     * @param eventsListener Listener for handling received list of events.
+     * @param exceptionListener Listener for handling exceptions that may occur during the request.
      */
     fun getExperience(
         request: ExperienceRequest,
@@ -188,7 +192,8 @@ class Composer internal constructor(
             httpHelper.buildEventTracking(
                 trackingId,
                 EVENT_TYPE_EXTERNAL_EVENT,
-                EVENT_GROUP_CLOSE
+                EVENT_GROUP_CLOSE,
+                pianoConsents?.consents.orEmpty()
             )
         ).enqueue(emptyCallback)
     }
@@ -205,6 +210,7 @@ class Composer internal constructor(
                 trackingId,
                 EVENT_TYPE_EXTERNAL_EVENT,
                 EVENT_GROUP_INIT,
+                pianoConsents?.consents.orEmpty(),
                 CX_CUSTOM_PARAMS
             )
         ).enqueue(emptyCallback)
@@ -224,6 +230,7 @@ class Composer internal constructor(
                 trackingId,
                 EVENT_TYPE_EXTERNAL_LINK,
                 EVENT_GROUP_CLICK,
+                pianoConsents?.consents.orEmpty(),
                 params
             )
         ).enqueue(emptyCallback)
@@ -237,8 +244,15 @@ class Composer internal constructor(
      */
     @Suppress("unused") // Public API.
     fun trackCustomFormImpression(customFormName: String, trackingId: String) =
-        generalApi.customFormImpression(httpHelper.buildCustomFormTracking(aid, customFormName, trackingId, userToken))
-            .enqueue(emptyCallback)
+        generalApi.customFormImpression(
+            httpHelper.buildCustomFormTracking(
+                aid,
+                customFormName,
+                trackingId,
+                userToken,
+                pianoConsents?.consents.orEmpty()
+            )
+        ).enqueue(emptyCallback)
 
     /**
      * Tracks a custom form submission by name.
@@ -248,8 +262,15 @@ class Composer internal constructor(
      */
     @Suppress("unused") // Public API.
     fun trackCustomFormSubmission(customFormName: String, trackingId: String) =
-        generalApi.customFormSubmission(httpHelper.buildCustomFormTracking(aid, customFormName, trackingId, userToken))
-            .enqueue(emptyCallback)
+        generalApi.customFormSubmission(
+            httpHelper.buildCustomFormTracking(
+                aid,
+                customFormName,
+                trackingId,
+                userToken,
+                pianoConsents?.consents.orEmpty()
+            )
+        ).enqueue(emptyCallback)
 
     /**
      * Clears stored data, like cookies and visit data.
@@ -264,7 +285,14 @@ class Composer internal constructor(
     ) {
         experienceInterceptors.forEach { it.beforeExecute(request) }
         composerApi.getExperience(
-            httpHelper.convertExperienceRequest(request, aid, browserIdProvider, userToken)
+            httpHelper.convertExperienceRequest(
+                request,
+                aid,
+                browserIdProvider,
+                userToken,
+                pianoConsents?.consents.orEmpty(),
+                pianoConsents?.productsToPurposesMapping.orEmpty()
+            )
         ).enqueue(
             object : Callback<Data<ExperienceResponse>> {
                 override fun onResponse(
@@ -339,7 +367,8 @@ class Composer internal constructor(
                 request,
                 aid,
                 userToken,
-                gaClientId
+                gaClientId,
+                pianoConsents?.consents.orEmpty()
             ).forEach { (key, value) ->
                 builder.addQueryParameter(key, value)
             }
@@ -442,12 +471,22 @@ class Composer internal constructor(
          * @param context The Activity or Application context.
          * @param aid Your Application ID (AID).
          * @param endpoint Custom API endpoint. Default is [Endpoint.PRODUCTION].
+         * @param pianoConsents [PianoConsents] instance for managing user consent. Default is null.
          */
         @JvmStatic
         @JvmOverloads
         @Suppress("unused") // Public API.
-        fun init(context: Context, aid: String, endpoint: Endpoint = Endpoint.PRODUCTION) =
-            DependenciesProvider.init(context, aid, endpoint)
+        fun init(
+            context: Context,
+            aid: String,
+            endpoint: Endpoint = Endpoint.PRODUCTION,
+            pianoConsents: PianoConsents? = null,
+        ) = DependenciesProvider.init(
+            context.applicationContext,
+            aid,
+            endpoint,
+            pianoConsents ?: runCatching { PianoConsents.getInstance() }.getOrNull()
+        )
 
         /**
          * Retrieves the singleton instance of the Composer class.
@@ -505,12 +544,12 @@ class Composer internal constructor(
         internal const val EVENT_GROUP_CLICK = "click"
 
         /**
-         * Internal constant for custom parameters with the key "source" set to "CX".
+         * Internal constant for Cxense custom parameters.
          */
         internal val CX_CUSTOM_PARAMS = mapOf("source" to "CX")
 
         /**
-         * Internal constant for the URL template used in the checkout process.
+         * Internal constant for the URL template used for "Show Template" card.
          */
         private const val URL_TEMPLATE = "checkout/template/show"
 
