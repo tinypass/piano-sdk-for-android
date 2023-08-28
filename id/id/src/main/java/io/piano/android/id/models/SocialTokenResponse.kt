@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 class SocialTokenResponse(
     val oauthProvider: String,
     val code: String,
-    val clientId: String
+    val clientId: String,
 )

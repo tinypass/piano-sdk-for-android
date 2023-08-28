@@ -13,5 +13,5 @@ class CustomField(
     @Json(name = "email_creator")
     val emailCreator: String? = null,
     @Json(name = "sort_order")
-    val sortOrder: Long? = null
+    val sortOrder: Long? = null,
 )

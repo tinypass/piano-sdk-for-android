@@ -1,31 +1,33 @@
 [versions]
 # Plugins
-kotlin = "1.7.22"
-android = "7.4.2"
-dokka = "1.7.20"
-versionUpdater = "0.44.0"
-ktlint = "11.3.1"
-mavenRelease = "0.24.0"
-moshiIR = "0.20.0"
+kotlin = "1.8.22"
+android = "8.1.1"
+dokka = "1.8.20"
+versionUpdater = "0.47.0"
+ktlint = "11.5.0"
+mavenRelease = "0.25.3"
+moshiIR = "0.22.1"
 
 # AndroidX libraries
 compatLibrary = "1.6.1"
-androidxActivity = "1.6.1"
-annotationsLibrary = "1.5.0"
-fragmentLibrary = "1.5.5"
-materialLibrary = "1.8.0"
-lifecycleLibrary = "2.5.1"
-prefsLibrary = "1.2.0"
+androidxActivity = "1.7.2"
+annotationsLibrary = "1.6.0"
+fragmentLibrary = "1.6.1"
+materialLibrary = "1.9.0"
+lifecycleLibrary = "2.6.1"
+prefsLibrary = "1.2.1"
 multidex = "2.0.1"
 
 # Third party Libraries
-facebookLogin = "16.0.0"
-googlePlayServices = "20.4.1"
+facebookLogin = "16.2.0"
+googlePlayServices = "20.6.0"
 retrofit = "2.9.0"
-okhttp = "4.10.0"
-moshi = "1.14.0"
+okhttp = "4.11.0"
+moshi = "1.15.0"
 timber = "5.0.1"
+pianoConsents = "1.0.0"
 cxense = "2.4.0"
+coroutines = "1.7.3"
 
 # Test Libraries
 junit = "4.13.2"
@@ -35,6 +37,7 @@ mockitoKotlin = "2.2.0"
 mockitoCore = "3.12.1"
 
 [plugins]
+mavenRelease = { id = "com.vanniktech.maven.publish", version.ref = "mavenRelease" }
 moshiIR = { id = "dev.zacsweers.moshix", version.ref = "moshiIR"}
 
 [libraries]
@@ -53,10 +56,11 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 okhttpLogging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
-moshiCodegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 prefsKtx = { module = "androidx.preference:preference-ktx", version.ref = "prefsLibrary" }
 lifecycleKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleLibrary" }
+pianoConsents = { module = "io.piano.android:consents", version.ref = "pianoConsents" }
 cxense = { module = "io.piano.android:cxense", version.ref = "cxense" }
+kotlinCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
 kotlinJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 mockitoKotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }

@@ -15,9 +15,9 @@ internal sealed class OAuthResult {
 }
 
 internal class OAuthSuccessResult constructor(
-    val jsCommand: String
+    val jsCommand: String,
 ) : OAuthResult()
 
 internal class OAuthFailureResult constructor(
-    val exception: PianoIdException
+    val exception: PianoIdException,
 ) : OAuthResult()

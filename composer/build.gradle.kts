@@ -12,12 +12,14 @@ android {
 }
 
 dependencies {
+    api(libs.pianoConsents)
     implementation(libs.okhttpLogging)
     implementation(libs.retrofit)
     implementation(libs.retrofitConverter)
     implementation(libs.moshi)
     implementation(libs.annotations)
     implementation(libs.timber)
+    compileOnly(libs.kotlinCoroutines)
 
     testImplementation(libs.kotlinJunit)
     testImplementation(libs.mockitoKotlin)

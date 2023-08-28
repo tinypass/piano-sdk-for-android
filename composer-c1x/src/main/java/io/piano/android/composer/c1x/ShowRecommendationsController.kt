@@ -30,7 +30,7 @@ class ShowRecommendationsController(event: Event<ShowRecommendations>) :
         @SuppressLint("SetJavaScriptEnabled")
         internal fun WebView.prepare(
             jsInterface: WidgetJs,
-            dialogFragment: ShowRecommendationsDialogFragment? = null
+            dialogFragment: ShowRecommendationsDialogFragment? = null,
         ) {
             settings.domStorageEnabled = true
             settings.javaScriptEnabled = true

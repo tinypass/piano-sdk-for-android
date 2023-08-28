@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonWriter
 
 internal class ObjectJsonAdapter(
     private val delegate: JsonAdapter<Any>,
-    private val longAdapter: JsonAdapter<Long>
+    private val longAdapter: JsonAdapter<Long>,
 ) : JsonAdapter<Any>() {
     override fun fromJson(reader: JsonReader): Any? {
         return if (reader.peek() == JsonReader.Token.NUMBER) {

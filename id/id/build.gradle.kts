@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
+    api(libs.pianoConsents)
     implementation(libs.appcompat)
     api(libs.androidxActivity)
     implementation(libs.okhttp)

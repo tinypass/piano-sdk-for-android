@@ -20,9 +20,9 @@ sealed class PianoIdAuthResult {
 
 class PianoIdAuthSuccessResult internal constructor(
     val token: PianoIdToken?,
-    val isNewUser: Boolean
+    val isNewUser: Boolean,
 ) : PianoIdAuthResult()
 
 class PianoIdAuthFailureResult internal constructor(
-    val exception: PianoIdException
+    val exception: PianoIdException,
 ) : PianoIdAuthResult()

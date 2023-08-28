@@ -26,6 +26,7 @@ import io.piano.android.composer.model.events.EventType
 import io.piano.android.composer.model.events.ExperienceExecute
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.model.events.UserSegment
+import io.piano.android.consents.PianoConsents
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,19 +45,23 @@ class ComposerTest {
         on { tpAccessCookie } doReturn DUMMY_STRING
     }
     private val httpHelper: HttpHelper = mock() {
-        on { convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull()) } doReturn mapOf()
-        on { buildEventTracking(any(), any(), any(), any()) } doReturn mapOf()
+        on { convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull(), any(), any()) } doReturn mapOf()
+        on { buildEventTracking(any(), any(), any(), any(), any()) } doReturn mapOf()
         on {
             buildShowTemplateParameters(
                 any(),
                 any(),
                 any(),
                 anyOrNull(),
-                anyOrNull()
+                anyOrNull(),
+                any()
             )
         } doReturn mapOf(
             DUMMY_STRING to DUMMY_STRING2
         )
+    }
+    private val pianoConsents: PianoConsents = mock() {
+        on { consents } doReturn emptyMap()
     }
     private val composer: Composer = spy(
         Composer(
@@ -65,7 +70,8 @@ class ComposerTest {
             httpHelper,
             prefsStorage,
             DUMMY_AID,
-            Composer.Endpoint.SANDBOX
+            Composer.Endpoint.SANDBOX,
+            pianoConsents
         )
     )
 
@@ -85,9 +91,9 @@ class ComposerTest {
     }
 
     private fun getExperienceWithCallbackCheck(callbackTest: (Callback<Data<ExperienceResponse>>) -> Unit) {
-        doNothing().`when`(composer).processExperienceResponse(any(), any(), any(), any())
+        doNothing().`when`(composer).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
         composer.getExperience(experienceRequest, resultListeners, exceptionListener)
-        verify(httpHelper).convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull())
+        verify(httpHelper).convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull(), any(), any())
         verify(composerApi).getExperience(any())
         val callbackCaptor = argumentCaptor<Callback<Data<ExperienceResponse>>>()
         verify(experienceCall).enqueue(callbackCaptor.capture())
@@ -103,7 +109,8 @@ class ComposerTest {
                 httpHelper,
                 prefsStorage,
                 "",
-                Composer.Endpoint.SANDBOX
+                Composer.Endpoint.SANDBOX,
+                pianoConsents
             )
         }
     }
@@ -119,7 +126,7 @@ class ComposerTest {
             val response = Response.success<Data<ExperienceResponse>>(null)
             it.onResponse(experienceCall, response)
             verifyExceptionListenerArgument(null)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), any())
+            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
         }
 
     @Test
@@ -136,7 +143,7 @@ class ComposerTest {
             )
             it.onResponse(experienceCall, response)
             verifyExceptionListenerArgument(null)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), any())
+            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
         }
 
     @Test
@@ -151,6 +158,7 @@ class ComposerTest {
                 experienceRequest,
                 experienceResponse,
                 resultListeners,
+                null,
                 exceptionListener
             )
             verify(exceptionListener, never()).onException(any())
@@ -162,7 +170,7 @@ class ComposerTest {
             val exc = RuntimeException()
             it.onFailure(experienceCall, exc)
             verifyExceptionListenerArgument(exc)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), any())
+            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
         }
 
     @Test
@@ -209,6 +217,7 @@ class ComposerTest {
             experienceRequest,
             response,
             listeners,
+            null,
             exceptionListener
         )
         verify(httpHelper).afterExecute(experienceRequest, response)
@@ -237,6 +246,7 @@ class ComposerTest {
             experienceRequest,
             experienceResponse,
             listOf(),
+            null,
             exceptionListener
         )
         verify(httpHelper).afterExecute(experienceRequest, experienceResponse)
@@ -259,6 +269,7 @@ class ComposerTest {
             experienceRequest,
             response,
             resultListeners,
+            null,
             exceptionListener
         )
         verify(httpHelper).afterExecute(experienceRequest, response)
@@ -278,13 +289,15 @@ class ComposerTest {
         verify(httpHelper).buildEventTracking(
             DUMMY_STRING,
             Composer.EVENT_TYPE_EXTERNAL_EVENT,
-            Composer.EVENT_GROUP_CLOSE
+            Composer.EVENT_GROUP_CLOSE,
+            emptyMap()
         )
         composer.trackRecommendationsDisplay(DUMMY_STRING)
         verify(httpHelper).buildEventTracking(
             DUMMY_STRING,
             Composer.EVENT_TYPE_EXTERNAL_EVENT,
             Composer.EVENT_GROUP_INIT,
+            emptyMap(),
             Composer.CX_CUSTOM_PARAMS
         )
         composer.trackRecommendationsClick(DUMMY_STRING)
@@ -292,6 +305,7 @@ class ComposerTest {
             DUMMY_STRING,
             Composer.EVENT_TYPE_EXTERNAL_LINK,
             Composer.EVENT_GROUP_CLICK,
+            emptyMap(),
             Composer.CX_CUSTOM_PARAMS
         )
         verify(generalApi, times(3)).trackExternalEvent(any())
@@ -303,7 +317,7 @@ class ComposerTest {
         val call: Call<ResponseBody> = mock()
         whenever(generalApi.customFormImpression(any())).doReturn(call)
         composer.trackCustomFormImpression(DUMMY_STRING, DUMMY_STRING2)
-        verify(httpHelper).buildCustomFormTracking(DUMMY_AID, DUMMY_STRING, DUMMY_STRING2, null)
+        verify(httpHelper).buildCustomFormTracking(DUMMY_AID, DUMMY_STRING, DUMMY_STRING2, null, emptyMap())
         verify(generalApi).customFormImpression(any())
         verify(call).enqueue(any())
     }
@@ -313,7 +327,7 @@ class ComposerTest {
         val call: Call<ResponseBody> = mock()
         whenever(generalApi.customFormSubmission(any())).doReturn(call)
         composer.trackCustomFormSubmission(DUMMY_STRING, DUMMY_STRING2)
-        verify(httpHelper).buildCustomFormTracking(DUMMY_AID, DUMMY_STRING, DUMMY_STRING2, null)
+        verify(httpHelper).buildCustomFormTracking(DUMMY_AID, DUMMY_STRING, DUMMY_STRING2, null, emptyMap())
         verify(generalApi).customFormSubmission(any())
         verify(call).enqueue(any())
     }

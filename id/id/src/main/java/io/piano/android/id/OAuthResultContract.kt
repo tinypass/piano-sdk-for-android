@@ -7,7 +7,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import io.piano.android.id.models.OAuthResult
 
 internal class OAuthResultContract : ActivityResultContract<String, OAuthResult?>() {
-    private val client: PianoIdClient = PianoId.getClient()
+    private val client: PianoIdClient = PianoId.getInstance()
 
     override fun createIntent(context: Context, input: String): Intent =
         client.buildSocialAuthIntent(context, input)

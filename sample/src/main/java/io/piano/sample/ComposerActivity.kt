@@ -219,6 +219,6 @@ class ComposerActivity : AppCompatActivity() {
     }
 
     private fun signIn() {
-        authResult.launch(PianoId.signIn())
+        authResult.launch(PianoId.getInstance().signIn())
     }
 }

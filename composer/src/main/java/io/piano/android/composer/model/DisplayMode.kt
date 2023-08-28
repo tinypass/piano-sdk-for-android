@@ -9,7 +9,8 @@ enum class DisplayMode(val mode: String) {
     MODAL("modal"),
 
     @Json(name = "inline")
-    INLINE("inline");
+    INLINE("inline"),
+    ;
 
     override fun toString(): String {
         return mode

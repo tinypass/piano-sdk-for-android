@@ -12,16 +12,16 @@ internal interface GeneralApi {
     @POST("/api/v3/conversion/logAutoMicroConversion")
     @FormUrlEncoded
     fun trackExternalEvent(
-        @FieldMap fields: Map<String, String>
+        @FieldMap fields: Map<String, String>,
     ): Call<ResponseBody>
 
     @GET("/api/v3/customform/log/impression?custom_form_source=show_form")
     fun customFormImpression(
-        @QueryMap fields: Map<String, String>
+        @QueryMap fields: Map<String, String>,
     ): Call<ResponseBody>
 
     @GET("/api/v3/customform/log/submission?custom_form_source=show_form")
     fun customFormSubmission(
-        @QueryMap fields: Map<String, String>
+        @QueryMap fields: Map<String, String>,
     ): Call<ResponseBody>
 }

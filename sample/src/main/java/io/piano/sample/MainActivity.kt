@@ -1,10 +1,8 @@
 package io.piano.sample
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.webkit.CookieManager
-import android.webkit.CookieSyncManager
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import io.piano.android.composer.Composer
@@ -100,14 +98,7 @@ class MainActivity : AppCompatActivity() {
             buttonClearAccessToken.setOnClickListener {
                 signOut()
                 val cookieManager = CookieManager.getInstance()
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    val cookieSyncManager = CookieSyncManager.createInstance(this@MainActivity)
-                    cookieSyncManager.startSync()
-                    cookieManager.removeAllCookie()
-                    cookieSyncManager.stopSync()
-                } else {
-                    cookieManager.removeAllCookies(null)
-                }
+                cookieManager.removeAllCookies(null)
             }
         }
     }
@@ -115,7 +106,7 @@ class MainActivity : AppCompatActivity() {
     private fun signOut() {
         val token = prefsStorage.pianoIdToken
         setAccessToken(null)
-        PianoId.signOut(token?.accessToken ?: "tmp") { r ->
+        PianoId.getInstance().signOut(token?.accessToken ?: "tmp") { r ->
             r.onSuccess {
                 showMessage("Sign out success callback")
             }.onFailure {
@@ -126,11 +117,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAccessToken(token: PianoIdToken?) {
         prefsStorage.pianoIdToken = token
-        if (token == null)
+        if (token == null) {
             return
+        }
         val userFields = token.info.map { (key, value) -> "$key = $value" }.joinToString(prefix = "[", postfix = "]")
         Timber.d("Token has these fields: %s", userFields)
-        PianoId.getUserInfo(token.accessToken) { r ->
+        PianoId.getInstance().getUserInfo(token.accessToken) { r ->
             val customFields = r.getOrNull()
                 ?.customFields
                 ?.joinToString(prefix = "[", postfix = "]") { "${it.fieldName} = ${it.value}" }
@@ -140,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                 .customField("test1", "test")
                 .customField("test2", true)
                 .customField("test3", 5)
-            PianoId.putUserInfo(token.accessToken, newUserInfo) { r2 ->
+            PianoId.getInstance().putUserInfo(token.accessToken, newUserInfo) { r2 ->
                 val newCustomFields = r2.getOrNull()
                     ?.customFields
                     ?.joinToString(prefix = "[", postfix = "]") { "${it.fieldName} = ${it.value}" }

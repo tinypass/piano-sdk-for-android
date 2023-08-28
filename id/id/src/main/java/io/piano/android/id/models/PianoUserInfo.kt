@@ -1,7 +1,7 @@
 package io.piano.android.id.models
 
 class PianoUserInfo(
-    val formName: String
+    val formName: String,
 ) {
     internal val customFields = mutableMapOf<String, String>()
     fun customField(name: String, value: String) = apply { customFields[name] = value }

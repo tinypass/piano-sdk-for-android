@@ -8,7 +8,7 @@ import java.util.TimeZone
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 internal class ExperienceIdsProvider(
     private val prefsStorage: PrefsStorage,
-    private val pageViewIdProvider: PageViewIdProvider
+    private val pageViewIdProvider: PageViewIdProvider,
 ) {
     internal var isVisitIdGenerated = false
         private set

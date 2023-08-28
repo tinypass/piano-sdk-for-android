@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 open class BaseResponse(
     val code: Int,
     val message: String?,
-    @Json(name = "validation_errors") val validationErrors: Map<String, String>?
+    @Json(name = "validation_errors") val validationErrors: Map<String, String>?,
 ) {
     val hasError: Boolean = code != 0
 

@@ -17,8 +17,9 @@ class SimpleDependenciesProvider private constructor(context: Context) {
         fun getInstance(context: Context): SimpleDependenciesProvider {
             if (instance == null) {
                 synchronized(SimpleDependenciesProvider::class.java) {
-                    if (instance == null)
+                    if (instance == null) {
                         instance = SimpleDependenciesProvider(context)
+                    }
                 }
             }
             return instance!!
