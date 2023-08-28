@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 
 class ConsentsInterceptorTest {
     private val consentsDataProvider: ConsentsDataProvider = mock() {
-        on { packedConsents } doReturn mapOf(HEADER_NAME to CONSENTS_VALUE)
+        on { packedConsents } doReturn CONSENTS_VALUE
     }
     private val consentsInterceptor = ConsentsInterceptor(consentsDataProvider)
     private lateinit var mockWebServer: MockWebServer
@@ -41,11 +41,10 @@ class ConsentsInterceptorTest {
                     .url(mockWebServer.url("/"))
                     .build()
             ).execute()
-        assertEquals(CONSENTS_VALUE, mockWebServer.takeRequest().getHeader(HEADER_NAME))
+        assertEquals(CONSENTS_VALUE, mockWebServer.takeRequest().getHeader(ConsentsInterceptor.CONSENTS_HEADER))
     }
 
     companion object {
-        private const val HEADER_NAME = "Pn-Consents"
         private const val CONSENTS_VALUE = "test consents"
     }
 }

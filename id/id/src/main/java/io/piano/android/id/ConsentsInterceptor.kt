@@ -10,13 +10,11 @@ internal class ConsentsInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response = chain.proceed(chain.request().addConsents())
 
     internal fun Request.addConsents(): Request =
-        with(consentsDataProvider.packedConsents) {
-            if (isEmpty()) {
-                this@addConsents
-            } else {
-                newBuilder().apply {
-                    forEach { (k, v) -> header(k, v) }
-                }.build()
-            }
-        }
+        consentsDataProvider.packedConsents?.let {
+            newBuilder().header(CONSENTS_HEADER, it).build()
+        } ?: this
+
+    companion object {
+        internal const val CONSENTS_HEADER = "Pn-Consents"
+    }
 }

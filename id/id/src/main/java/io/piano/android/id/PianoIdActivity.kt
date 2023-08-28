@@ -126,7 +126,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                 addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
                 clearCache(true)
                 clearHistory()
-                loadUrl(url, client.consentsDataProvider.packedConsents)
+                loadUrl(url)
             }
         }
     }

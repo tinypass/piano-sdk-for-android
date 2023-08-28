@@ -19,22 +19,15 @@ internal class ConsentsDataProvider(
             .orEmpty()
             .replace("\"", "\\\\\"")
 
-    internal val packedConsents: Map<String, String>
-        get() {
-            val consentModes = pianoConsents?.consents?.map {
-                ConsentData(it.key, it.value.mode, it.value.products)
-            }?.takeUnless {
-                it.isEmpty()
-            }?.let {
-                Base64.encode(
-                    packedConsentAdapter.toJson(it).encodeToByteArray(),
-                    Base64.URL_SAFE or Base64.NO_WRAP
-                ).decodeToString()
-            }.orEmpty()
-            return if (consentModes.isEmpty()) {
-                emptyMap()
-            } else {
-                mapOf("Pn-Consents" to consentModes)
-            }
+    internal val packedConsents: String?
+        get() = pianoConsents?.consents?.map {
+            ConsentData(it.key, it.value.mode, it.value.products)
+        }?.takeUnless {
+            it.isEmpty()
+        }?.let {
+            Base64.encode(
+                packedConsentAdapter.toJson(it).encodeToByteArray(),
+                Base64.URL_SAFE or Base64.NO_WRAP
+            ).decodeToString()
         }
 }
