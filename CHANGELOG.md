@@ -1,6 +1,6 @@
 # Piano SDK for Android
 
-## v2.8.0-SNAPSHOT
+## v2.8.0
 * Add support for Piano Consents
 * Deprecated static methods of `PianoId` class, use instance methods
 * Behavior change: custom variable is simplified before sending, if it contains only one value (similar to 2.5.0 and earlier)
