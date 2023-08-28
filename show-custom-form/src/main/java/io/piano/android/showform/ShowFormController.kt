@@ -10,6 +10,16 @@ import io.piano.android.id.PianoId
 import io.piano.android.showhelper.BaseShowController
 import timber.log.Timber
 
+/**
+ * A controller for displaying a custom form using the Piano ID API.
+ *
+ * This controller is responsible for showing a custom form specified by the [ShowForm] event.
+ * It extends the [BaseShowController] with [ShowForm] data and handles form display.
+ *
+ * @param event The [Event] containing the [ShowForm] data to be displayed.
+ * @param initialToken Initial value for user access token.
+ * @param loginCallback Callback, which be called if current user access token is invalid.
+ */
 class ShowFormController(event: Event<ShowForm>, initialToken: String = "", private val loginCallback: () -> Unit) :
     BaseShowController<ShowForm, ShowFormJs>(
         event.eventData,
@@ -53,6 +63,11 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
 
     override fun WebView.configure() = prepare(jsInterface, loginCallback = loginCallback)
 
+    /**
+     * Updates user token for form.
+     *
+     * @param userToken The updated user token
+     */
     fun updateToken(userToken: String) {
         jsInterface.token = userToken
         if (checkProfileAtTokenChange) {
