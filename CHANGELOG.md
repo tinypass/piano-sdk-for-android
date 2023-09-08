@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.8.1-SNAPSHOT
+* Fix bug with logout url
+
 ## v2.8.0
 * Add support for Piano Consents
 * Deprecated static methods of `PianoId` class, use instance methods
