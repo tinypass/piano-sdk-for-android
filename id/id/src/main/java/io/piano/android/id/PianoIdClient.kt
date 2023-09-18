@@ -131,7 +131,7 @@ class PianoIdClient internal constructor(
     @JvmOverloads
     fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>? = null) {
         val signOutCallback = callback ?: {}
-        api.signOut(hostUrl.newBuilder().encodedPath(SIGN_OUT_PATH).build().toString(), aid, accessToken)
+        api.signOut(hostUrl.resolve(SIGN_OUT_PATH).toString(), aid, accessToken)
             .enqueue(signOutCallback.asRetrofitCallback())
     }
 

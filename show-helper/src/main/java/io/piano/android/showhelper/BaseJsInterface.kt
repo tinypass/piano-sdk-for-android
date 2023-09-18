@@ -16,7 +16,7 @@ abstract class BaseJsInterface {
         val view = fragment?.webView ?: webView
         view?.also {
             val func = { it.evaluateJavascript(code, null) }
-            if (delay > 0) it.postDelayed(func, delay) else func()
+            if (delay > 0) it.postDelayed(func, delay) else it.post(func)
         } ?: Timber.w("We got null for webview")
     }
 }
