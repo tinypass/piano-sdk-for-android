@@ -1,7 +1,15 @@
 # Piano SDK for Android
 
-## v2.8.1-SNAPSHOT
+## v2.8.1
 * Fix bug with logout url
+* Fix bug with Javascript threads in Show Forms
+* Updated dependencies:
+    - androidx.annotation:annotation [1.6.0 -> 1.7.0]
+      https://developer.android.com/jetpack/androidx/releases/annotation#1.7.0
+    - androidx.lifecycle:lifecycle-common-java8 [2.6.1 -> 2.6.2]
+      https://developer.android.com/jetpack/androidx/releases/lifecycle#2.6.2
+    - com.google.android.gms:play-services-auth [20.6.0 -> 20.7.0]
+    - io.piano.android:cxense [2.4.0 -> 2.5.0]
 
 ## v2.8.0
 * Add support for Piano Consents
@@ -51,6 +59,7 @@
       https://github.com/square/retrofit
     - com.squareup.moshi:moshi [1.13.0 -> 1.14.0]
       https://github.com/square/moshi/
+    - io.piano.android:cxense [2.3.1 -> 2.4.0]
 
 ## v2.6.2
 * Fix getUserInfo API parser
