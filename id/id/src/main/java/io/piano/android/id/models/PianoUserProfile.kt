@@ -9,9 +9,9 @@ class PianoUserProfile(
     val email: String,
     val uid: String,
     @Json(name = "first_name")
-    val firstName: String,
+    val firstName: String?,
     @Json(name = "last_name")
-    val lastName: String,
+    val lastName: String?,
     val aid: String,
     val updated: Date,
     val token: String?,
