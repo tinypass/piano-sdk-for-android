@@ -21,6 +21,9 @@ class ExperienceResponse(
     @Json(name = "visit_timeout")
     val visitTimeoutMinutes: Long?,
     @JvmField
+    @Json(name = "bid")
+    val browserId: String?,
+    @JvmField
     @Json(name = "uid")
     val userId: String?,
     @JvmField val cxenseCustomerPrefix: String?,

@@ -94,6 +94,7 @@ class HttpHelperTest {
             1,
             null,
             null,
+            null,
             EventsContainer(emptyList())
         )
         httpHelper.afterExecute(mock(), experienceResponse)

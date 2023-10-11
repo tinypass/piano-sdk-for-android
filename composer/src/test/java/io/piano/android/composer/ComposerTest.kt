@@ -188,6 +188,7 @@ class ComposerTest {
             0,
             null,
             null,
+            null,
             EventsContainer(
                 eventTypes.map {
                     Event(mock(), mock(), it)
@@ -240,6 +241,7 @@ class ComposerTest {
             0,
             null,
             null,
+            null,
             EventsContainer(listOf(Event(mock(), mock(), mock())))
         )
         composer.processExperienceResponse(
@@ -261,6 +263,7 @@ class ComposerTest {
             null,
             0,
             0,
+            null,
             null,
             null,
             EventsContainer(emptyList())
