@@ -1,5 +1,13 @@
 # Piano SDK for Android
 
+## v2.8.2
+* Fix nullability for first name / last name in Piano ID user profile
+* Add access to current browser id
+* Add support for backend changes
+* Updated dependencies:
+    - androidx.activity:activity [1.7.2 -> 1.8.0]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.8.0
+
 ## v2.8.1
 * Fix bug with logout url
 * Fix bug with Javascript threads in Show Forms

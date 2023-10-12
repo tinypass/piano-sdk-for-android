@@ -59,6 +59,9 @@ class Composer internal constructor(
         }
     }
 
+    var browserId: String? = null
+        private set
+
     /**
      * Gets Composer's user access token for Edge CDN.
      *
@@ -326,6 +329,7 @@ class Composer internal constructor(
         exceptionListener: ExceptionListener,
     ) {
         experienceInterceptors.forEach { it.afterExecute(request, response) }
+        browserId = response.browserId
 
         // Don't process any custom logic if there are no listeners
         if (eventTypeListeners.isEmpty() && eventsListener == null) {

@@ -1,19 +1,19 @@
 [versions]
 # Plugins
 kotlin = "1.8.22"
-android = "8.1.1"
+android = "8.1.2"
 dokka = "1.8.20"
-versionUpdater = "0.47.0"
+versionUpdater = "0.49.0"
 ktlint = "11.5.0"
 mavenRelease = "0.25.3"
 moshiIR = "0.22.1"
 
 # AndroidX libraries
 compatLibrary = "1.6.1"
-androidxActivity = "1.7.2"
+androidxActivity = "1.8.0"
 annotationsLibrary = "1.7.0"
 fragmentLibrary = "1.6.1"
-materialLibrary = "1.9.0"
+materialLibrary = "1.10.0"
 lifecycleLibrary = "2.6.2"
 prefsLibrary = "1.2.1"
 multidex = "2.0.1"

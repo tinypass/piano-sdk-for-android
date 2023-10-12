@@ -83,6 +83,7 @@ class ComposerActivity : AppCompatActivity() {
         val listeners: Collection<EventTypeListener<out EventType>> = listOf(
             ExperienceExecuteListener { (_, eventExecutionContext, eventData) ->
                 Timber.d("Composer's user access token for Edge CDN ${Composer.getInstance().accessToken}")
+                Timber.d("Composer's browser id ${Composer.getInstance().browserId}")
                 eventExecutionContext.userSegments.standard?.let {
                     Timber.d(
                         "Standard user segments are ${it.segments.joinToString(prefix = "[", postfix = "]")}," +
