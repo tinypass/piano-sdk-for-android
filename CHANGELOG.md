@@ -1,6 +1,6 @@
 # Piano SDK for Android
 
-## v2.8.2-SNAPSHOT
+## v2.8.2
 * Fix nullability for first name / last name in Piano ID user profile
 * Add access to current browser id
 * Add support for backend changes
