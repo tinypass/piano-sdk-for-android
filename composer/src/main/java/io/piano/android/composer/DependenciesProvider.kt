@@ -28,6 +28,7 @@ internal class DependenciesProvider private constructor(
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
         .addInterceptor(UserAgentInterceptor(userAgent))
+        .addInterceptor(AidInterceptor(aid))
         .addInterceptor(RequestPolicyInterceptor(prefsStorage))
         .addInterceptor(
             HttpLoggingInterceptor().setLevel(
