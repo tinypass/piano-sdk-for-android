@@ -30,10 +30,7 @@ internal interface PianoIdApi {
 
     @FormUrlEncoded
     @POST
-    fun refreshToken(
-        @Url url: String,
-        @FieldMap tokenParams: Map<String, String>,
-    ): Call<PianoIdToken>
+    fun refreshToken(@Url url: String, @FieldMap tokenParams: Map<String, String>): Call<PianoIdToken>
 
     @GET
     fun getUserInfo(

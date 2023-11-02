@@ -55,29 +55,25 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
     @UiThread
     abstract fun close(data: String? = null)
 
-    private fun showInline(
-        activity: FragmentActivity,
-        webViewProvider: (FragmentActivity, String) -> WebView?,
-    ) = eventData.containerSelector
-        .takeUnless { it.isNullOrEmpty() }
-        ?.let { id ->
-            runCatching {
-                val webView = requireNotNull(webViewProvider(activity, id)) {
-                    "Can't find WebView with id $id"
-                }
-                webView.configure()
-                processDelay(activity) {
-                    webView.loadUrl(url)
-                    webView.visibility = View.VISIBLE
-                }
-            }.onFailure {
-                Timber.e(it)
-            }.getOrNull()
-        }
+    private fun showInline(activity: FragmentActivity, webViewProvider: (FragmentActivity, String) -> WebView?) =
+        eventData.containerSelector
+            .takeUnless { it.isNullOrEmpty() }
+            ?.let { id ->
+                runCatching {
+                    val webView = requireNotNull(webViewProvider(activity, id)) {
+                        "Can't find WebView with id $id"
+                    }
+                    webView.configure()
+                    processDelay(activity) {
+                        webView.loadUrl(url)
+                        webView.visibility = View.VISIBLE
+                    }
+                }.onFailure {
+                    Timber.e(it)
+                }.getOrNull()
+            }
 
-    private fun showModal(
-        activity: FragmentActivity,
-    ) = fragmentProvider().apply {
+    private fun showModal(activity: FragmentActivity) = fragmentProvider().apply {
         isCancelable = eventData.showCloseButton
         javascriptInterface = jsInterface
         processDelay(activity) {

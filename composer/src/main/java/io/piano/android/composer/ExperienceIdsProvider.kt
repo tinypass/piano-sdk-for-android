@@ -32,12 +32,11 @@ internal class ExperienceIdsProvider(
         }
     }
 
-    internal fun generateVisitId(date: Date): String =
-        (VISIT_ID_PREFIX + getPageViewId(date)).also {
-            prefsStorage.visitId = it
-            prefsStorage.setVisitDate(date)
-            isVisitIdGenerated = true
-        }
+    internal fun generateVisitId(date: Date): String = (VISIT_ID_PREFIX + getPageViewId(date)).also {
+        prefsStorage.visitId = it
+        prefsStorage.setVisitDate(date)
+        isVisitIdGenerated = true
+    }
 
     internal fun getServerMidnightTimestamp(date: Date): Long {
         val timeZone = TimeZone.getAvailableIDs(prefsStorage.serverTimezoneOffset)

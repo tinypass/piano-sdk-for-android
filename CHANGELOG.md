@@ -2,6 +2,11 @@
 
 ## v2.8.3-SNAPSHOT
 * Change `pageview_id`/`visit_id` format
+* Updated dependencies:
+    - androidx.fragment:fragment [1.6.1 -> 1.6.2]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.6.2
+    - com.squareup.okhttp3:okhttp [4.11.0 -> 4.12.0]
+      https://square.github.io/okhttp/
 
 ## v2.8.2
 * Fix nullability for first name / last name in Piano ID user profile

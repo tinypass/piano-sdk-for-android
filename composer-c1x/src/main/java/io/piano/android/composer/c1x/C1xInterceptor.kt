@@ -14,9 +14,7 @@ class C1xInterceptor(
     private val siteId: String,
 ) : ExperienceInterceptor {
 
-    override fun beforeExecute(
-        request: ExperienceRequest,
-    ) {
+    override fun beforeExecute(request: ExperienceRequest) {
         check(!request.url.isNullOrEmpty() || !request.contentId.isNullOrEmpty()) {
             "URL or Content Id is required for C1X"
         }

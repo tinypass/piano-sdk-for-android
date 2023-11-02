@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ConsentsInterceptorTest {
-    private val consentsDataProvider: ConsentsDataProvider = mock() {
+    private val consentsDataProvider: ConsentsDataProvider = mock {
         on { packedConsents } doReturn CONSENTS_VALUE
     }
     private val consentsInterceptor = ConsentsInterceptor(consentsDataProvider)

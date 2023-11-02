@@ -83,12 +83,7 @@ internal class DependenciesProvider private constructor(
         private var instance: DependenciesProvider? = null
 
         @JvmStatic
-        internal fun init(
-            context: Context,
-            aid: String,
-            endpoint: Composer.Endpoint,
-            pianoConsents: PianoConsents?,
-        ) {
+        internal fun init(context: Context, aid: String, endpoint: Composer.Endpoint, pianoConsents: PianoConsents?) {
             if (instance == null) {
                 synchronized(this) {
                     if (instance == null) {

@@ -11,8 +11,7 @@ class BaseResponseTest {
         code: Int = 0,
         message: String? = null,
         validationErrors: Map<String, String>? = null,
-    ) =
-        BaseResponse(code, message, validationErrors)
+    ) = BaseResponse(code, message, validationErrors)
 
     @Test
     fun hasError() {

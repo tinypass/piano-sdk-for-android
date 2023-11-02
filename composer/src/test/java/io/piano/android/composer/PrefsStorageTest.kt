@@ -70,7 +70,7 @@ class PrefsStorageTest {
     @Test
     fun setVisitDateByDate() {
         doNothing().`when`(prefsStorage).setVisitDate(any<Long>())
-        val date: Date = mock() {
+        val date: Date = mock {
             on { time } doReturn DUMMY_LONG
         }
         prefsStorage.setVisitDate(date)

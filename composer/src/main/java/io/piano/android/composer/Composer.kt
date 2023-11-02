@@ -41,7 +41,8 @@ class Composer internal constructor(
     private val prefsStorage: PrefsStorage,
     private val aid: String,
     private val endpoint: Endpoint,
-    @Suppress("unused") // Public API.
+    // Public API.
+    @Suppress("unused")
     val pianoConsents: PianoConsents?,
 ) {
     // Private properties
@@ -246,16 +247,15 @@ class Composer internal constructor(
      * @param trackingId The tracking ID of the custom form impression.
      */
     @Suppress("unused") // Public API.
-    fun trackCustomFormImpression(customFormName: String, trackingId: String) =
-        generalApi.customFormImpression(
-            httpHelper.buildCustomFormTracking(
-                aid,
-                customFormName,
-                trackingId,
-                userToken,
-                pianoConsents?.consents.orEmpty()
-            )
-        ).enqueue(emptyCallback)
+    fun trackCustomFormImpression(customFormName: String, trackingId: String) = generalApi.customFormImpression(
+        httpHelper.buildCustomFormTracking(
+            aid,
+            customFormName,
+            trackingId,
+            userToken,
+            pianoConsents?.consents.orEmpty()
+        )
+    ).enqueue(emptyCallback)
 
     /**
      * Tracks a custom form submission by name.
@@ -264,16 +264,15 @@ class Composer internal constructor(
      * @param trackingId The tracking ID of the custom form submission.
      */
     @Suppress("unused") // Public API.
-    fun trackCustomFormSubmission(customFormName: String, trackingId: String) =
-        generalApi.customFormSubmission(
-            httpHelper.buildCustomFormTracking(
-                aid,
-                customFormName,
-                trackingId,
-                userToken,
-                pianoConsents?.consents.orEmpty()
-            )
-        ).enqueue(emptyCallback)
+    fun trackCustomFormSubmission(customFormName: String, trackingId: String) = generalApi.customFormSubmission(
+        httpHelper.buildCustomFormTracking(
+            aid,
+            customFormName,
+            trackingId,
+            userToken,
+            pianoConsents?.consents.orEmpty()
+        )
+    ).enqueue(emptyCallback)
 
     /**
      * Clears stored data, like cookies and visit data.
