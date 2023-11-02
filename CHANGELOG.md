@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.8.3-SNAPSHOT
+* Change `pageview_id`/`visit_id` format
+
 ## v2.8.2
 * Fix nullability for first name / last name in Piano ID user profile
 * Add access to current browser id
