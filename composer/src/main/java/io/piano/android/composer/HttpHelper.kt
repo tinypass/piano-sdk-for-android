@@ -205,6 +205,7 @@ internal class HttpHelper(
             PARAM_GA_CLIENT_ID to gaClientId.orEmpty(),
             PARAM_OS to VALUE_ANDROID_OS,
             PARAM_DISPLAY_MODE to DisplayMode.INLINE.mode,
+            PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie.orEmpty(),
             PARAM_SHOW_CLOSE_BUTTON to eventData.showCloseButton.toString(),
             PARAM_SHOW_TEMPLATE_TRACKING_ID to eventExecutionContext.trackingId,
             PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),
