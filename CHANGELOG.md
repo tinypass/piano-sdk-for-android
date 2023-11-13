@@ -1,7 +1,8 @@
 # Piano SDK for Android
 
-## v2.8.3-SNAPSHOT
+## v2.9.0-SNAPSHOT
 * Change `pageview_id`/`visit_id` format
+* Add support for Edge integration and deprecated `Composer.accessToken`
 * Updated dependencies:
     - androidx.fragment:fragment [1.6.1 -> 1.6.2]
       https://developer.android.com/jetpack/androidx/releases/fragment#1.6.2

@@ -23,6 +23,7 @@ import java.util.Locale
  * @property contentSection Content section value
  * @property contentIsNative Content is native flag
  * @property customParameters Custom parameters
+ * @property edgeResult Edge result
  */
 class ExperienceRequest private constructor(
     val isDebug: Boolean,
@@ -41,6 +42,7 @@ class ExperienceRequest private constructor(
     val contentSection: String?,
     val contentIsNative: Boolean?,
     val customParameters: CustomParameters?,
+    val edgeResult: EdgeResult?,
 ) {
 
     data class Builder @JvmOverloads constructor(
@@ -60,6 +62,7 @@ class ExperienceRequest private constructor(
         var contentSection: String? = null,
         var contentIsNative: Boolean? = null,
         var customParameters: CustomParameters? = null,
+        var edgeResult: EdgeResult? = null,
     ) {
         /**
          * Sets "debug" flag for request
@@ -246,6 +249,14 @@ class ExperienceRequest private constructor(
         fun customParams(customParameters: CustomParameters?) = apply { this.customParameters = customParameters }
 
         /**
+         * Sets result from Edge CDN
+         * @param edgeResult Edge result object
+         * @return Builder instance
+         */
+        @Suppress("unused") // Public API.
+        fun edgeResult(edgeResult: EdgeResult?) = apply { this.edgeResult = edgeResult }
+
+        /**
          * Builds request
          * @return ExperienceRequest instance
          */
@@ -267,7 +278,8 @@ class ExperienceRequest private constructor(
                 contentAuthor,
                 contentSection,
                 contentIsNative,
-                customParameters
+                customParameters,
+                edgeResult
             )
         }
     }

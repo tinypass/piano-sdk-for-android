@@ -112,8 +112,9 @@ internal class HttpHelper(
             PARAM_NEW_VISIT to experienceIdsProvider.isVisitIdGenerated.toString(),
             PARAM_SUBMIT_TYPE to VALUE_MANUAL_SUBMIT_TYPE,
             PARAM_SDK_VERSION to BuildConfig.SDK_VERSION,
-            PARAM_XBUILDER_BROWSER_COOKIE to prefsStorage.xbuilderBrowserCookie,
-            PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie,
+            PARAM_EDGE_RESULT_COOKIE to edgeResult?.pcer.orEmpty(),
+            PARAM_XBUILDER_BROWSER_COOKIE to edgeResult?.xbc.ifNullOrEmpty { prefsStorage.xbuilderBrowserCookie },
+            PARAM_TP_BROWSER_COOKIE to edgeResult?.tbc.ifNullOrEmpty { prefsStorage.tpBrowserCookie },
             PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie,
             PARAM_USER_TOKEN to userToken.orEmpty(),
             PARAM_NEW_BID to browserIdProvider().orEmpty(),
@@ -233,6 +234,9 @@ internal class HttpHelper(
     private inline fun Sequence<Pair<String, String>>.filterNotEmptyValues(): Sequence<Pair<String, String>> =
         filter { it.second.isNotEmpty() }
 
+    private inline fun String?.ifNullOrEmpty(defaultValue: () -> String): String =
+        if (isNullOrEmpty()) defaultValue() else this
+
     companion object {
         // Experience request constants
         internal const val PARAM_AID = "aid"
@@ -246,6 +250,7 @@ internal class HttpHelper(
         internal const val PARAM_NEW_VISIT = "new_visit"
         internal const val PARAM_SUBMIT_TYPE = "submit_type"
         internal const val PARAM_SDK_VERSION = "sdk_version"
+        internal const val PARAM_EDGE_RESULT_COOKIE = "edge_result"
         internal const val PARAM_XBUILDER_BROWSER_COOKIE = "xbc"
         internal const val PARAM_TP_BROWSER_COOKIE = "tbc"
         internal const val PARAM_TP_ACCESS_COOKIE = "tac"

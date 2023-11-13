@@ -5,10 +5,12 @@ import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.EventsListener
 import io.piano.android.composer.listeners.ExceptionListener
 import io.piano.android.composer.model.Data
+import io.piano.android.composer.model.EdgeCookies
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.events.EventType
+import io.piano.android.composer.model.events.ExperienceExecute
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.consents.PianoConsents
 import okhttp3.HttpUrl
@@ -41,6 +43,7 @@ class Composer internal constructor(
     private val prefsStorage: PrefsStorage,
     private val aid: String,
     private val endpoint: Endpoint,
+    private val edgeCookiesProvider: EdgeCookiesProvider,
     // Public API.
     @Suppress("unused")
     val pianoConsents: PianoConsents?,
@@ -68,8 +71,17 @@ class Composer internal constructor(
      *
      * @return Access token for Edge CDN.
      */
+    @Deprecated("Use `edgeCookies.tac`", ReplaceWith("edgeCookies.tac"))
     val accessToken: String
         get() = prefsStorage.tpAccessCookie
+
+    /**
+     * Gets all required cookies for Edge CDN
+     *
+     * @return cookies for Edge CDN
+     */
+    val edgeCookies: EdgeCookies
+        get() = edgeCookiesProvider.edgeCookies
 
     /**
      * Adds an experience interceptor to the Composer.
@@ -337,6 +349,11 @@ class Composer internal constructor(
 
         val events = response.result.events.map {
             it.preprocess(request)
+        }
+        events.firstOrNull {
+            it.eventData is ExperienceExecute
+        }?.eventExecutionContext?.also {
+            edgeCookiesProvider.userSegments(it.userSegments)
         }
         if (eventsListener != null) {
             runCatching {

@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RestrictTo
 import com.squareup.moshi.Moshi
+import io.piano.android.composer.model.PcusContainer
+import io.piano.android.composer.model.PprvContainer
 import io.piano.android.consents.ConsentJsonAdapterFactory
 import io.piano.android.consents.PianoConsents
 import okhttp3.OkHttpClient
@@ -64,6 +66,13 @@ internal class DependenciesProvider private constructor(
         .build()
         .create()
 
+    private val edgeCookiesProvider = EdgeCookiesProvider(
+        prefsStorage,
+        pianoConsents,
+        moshi.adapter(PprvContainer::class.java),
+        moshi.adapter(PcusContainer::class.java)
+    )
+
     internal val composer: Composer = Composer(
         composerApi,
         generalApi,
@@ -71,6 +80,7 @@ internal class DependenciesProvider private constructor(
         prefsStorage,
         aid,
         endpoint,
+        edgeCookiesProvider,
         pianoConsents
     )
 

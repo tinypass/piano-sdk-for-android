@@ -18,6 +18,7 @@ import io.piano.android.composer.listeners.ExperienceExecuteListener
 import io.piano.android.composer.listeners.ShowTemplateListener
 import io.piano.android.composer.listeners.UserSegmentListener
 import io.piano.android.composer.model.Data
+import io.piano.android.composer.model.EdgeCookies
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.EventsContainer
 import io.piano.android.composer.model.ExperienceRequest
@@ -60,6 +61,9 @@ class ComposerTest {
             DUMMY_STRING to DUMMY_STRING2
         )
     }
+    private val edgeCookiesProvider: EdgeCookiesProvider = mock {
+        on { edgeCookies } doReturn EdgeCookies(DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING)
+    }
     private val pianoConsents: PianoConsents = mock {
         on { consents } doReturn emptyMap()
     }
@@ -71,6 +75,7 @@ class ComposerTest {
             prefsStorage,
             DUMMY_AID,
             Composer.Endpoint.SANDBOX,
+            edgeCookiesProvider,
             pianoConsents
         )
     )
@@ -110,6 +115,7 @@ class ComposerTest {
                 prefsStorage,
                 "",
                 Composer.Endpoint.SANDBOX,
+                edgeCookiesProvider,
                 pianoConsents
             )
         }
