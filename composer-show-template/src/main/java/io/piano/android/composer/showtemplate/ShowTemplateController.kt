@@ -112,39 +112,5 @@ class ShowTemplateController constructor(
                     }.getOrNull()
                 }
         }
-
-        /**
-         * Shows the template using the [ShowTemplateController].
-         *
-         * @param activity The [FragmentActivity] where the template will be displayed.
-         * @param showTemplateEvent The [Event] containing the [ShowTemplate] data to be displayed.
-         * @param javascriptInterface The optional [ComposerJs] JavaScript interface for
-         *                            communication with the displayed template. If not provided,
-         *                            a default instance of [ComposerJs] will be used.
-         * @param inlineWebViewProvider The function to provide the [WebView] to show the template
-         *                               inline within the activity. If not provided, a default
-         *                               provider will be used.
-         * @return The [ShowTemplateController] instance used for displaying the template.
-         *
-         * @deprecated Use the constructor and separated method `show()`.
-         */
-        @Deprecated(
-            "Use constructor and separated method `show()`",
-            ReplaceWith(
-                "ShowTemplateController(showTemplateEvent, javascriptInterface)" +
-                    ".apply { show(activity, inlineWebViewProvider) }"
-            )
-        )
-        @JvmStatic
-        @JvmOverloads
-        @Suppress("unused") // Public API.
-        fun show(
-            activity: FragmentActivity,
-            showTemplateEvent: Event<ShowTemplate>,
-            javascriptInterface: ComposerJs? = null,
-            inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider,
-        ): ShowTemplateController = ShowTemplateController(showTemplateEvent, javascriptInterface).apply {
-            show(activity, inlineWebViewProvider)
-        }
     }
 }

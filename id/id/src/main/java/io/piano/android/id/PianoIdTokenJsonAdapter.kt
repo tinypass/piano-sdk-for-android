@@ -93,12 +93,5 @@ class PianoIdTokenJsonAdapter(
         private const val REFRESH_TOKEN = "refresh_token"
         private const val REFRESH_TOKEN_CAMEL = "refreshToken"
         private const val EXPIRES_IN_CAMEL = "expiresIn"
-
-        @JvmField
-        @Deprecated(
-            "Use PianoIdJsonAdapterFactory directly, will be removed in future versions",
-            ReplaceWith("PianoIdJsonAdapterFactory()")
-        )
-        val FACTORY = PianoIdJsonAdapterFactory()
     }
 }

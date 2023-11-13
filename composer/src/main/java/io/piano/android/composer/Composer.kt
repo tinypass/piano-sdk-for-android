@@ -189,15 +189,6 @@ class Composer internal constructor(
     }
 
     /**
-     * Tracks an external event by ID.
-     *
-     * @param trackingId The tracking ID of the external event.
-     */
-    @Suppress("unused") // Public API.
-    @Deprecated("Renamed due to introducing other external events", ReplaceWith("trackCloseEvent(trackingId)"))
-    fun trackExternalEvent(trackingId: String) = trackCloseEvent(trackingId)
-
-    /**
      * Tracks a close event by ID.
      *
      * @param trackingId The tracking ID of the close event.
