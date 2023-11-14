@@ -154,7 +154,7 @@ internal class HttpHelper(
     override fun afterExecute(request: ExperienceRequest, response: ExperienceResponse) = with(response) {
         prefsStorage.xbuilderBrowserCookie = xbCookie?.value.orEmpty()
         prefsStorage.tpBrowserCookie = tbCookie?.value.orEmpty()
-        prefsStorage.tpAccessCookie = taCookie?.value.orEmpty()
+        taCookie?.value.takeUnless { it.isNullOrEmpty() }?.also { prefsStorage.tpAccessCookie = it }
         visitTimeoutMinutes?.let { prefsStorage.visitTimeout = TimeUnit.MILLISECONDS.convert(it, TimeUnit.MINUTES) }
         prefsStorage.serverTimezoneOffset = timeZoneOffsetMillis
     }
