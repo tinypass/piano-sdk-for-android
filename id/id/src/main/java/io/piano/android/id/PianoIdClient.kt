@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
 import com.squareup.moshi.Moshi
+import io.piano.android.consents.PianoConsents
 import io.piano.android.id.models.HostResponse
 import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdAuthFailureResult
@@ -17,6 +18,7 @@ import io.piano.android.id.models.PianoUserProfile
 import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
 import io.piano.android.id.models.toProfileUpdateRequest
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import retrofit2.Call
@@ -26,12 +28,13 @@ import retrofit2.Response
 import java.util.Locale
 
 /**
- * Piano ID authorization
+ * Piano ID client for authorization.
  */
 class PianoIdClient internal constructor(
     private val api: PianoIdApi,
     private val moshi: Moshi,
     internal val aid: String,
+    internal val consentsDataProvider: ConsentsDataProvider,
     endpoint: HttpUrl,
     useCustomHost: Boolean
 ) {
@@ -62,10 +65,16 @@ class PianoIdClient internal constructor(
     }
 
     /**
-     * Sets callback for {@link PianoIdAuthSuccessResult} data
+     * [PianoConsents] instance for managing user consent.
+     */
+    @Suppress("unused") // Public API.
+    val pianoConsents: PianoConsents? = consentsDataProvider.pianoConsents
+
+    /**
+     * Sets callback for {@link PianoIdAuthSuccessResult} data.
      *
-     * @param callback {@link PianoIdCallback} for listening changes
-     * @return {@link PianoIdClient} instance
+     * @param callback {@link PianoIdCallback} for listening changes.
+     * @return {@link PianoIdClient} instance.
      */
     @Suppress("unused") // Public API.
     fun with(callback: PianoIdCallback<PianoIdAuthSuccessResult>?) = apply {
@@ -80,35 +89,168 @@ class PianoIdClient internal constructor(
     }
 
     /**
-     * Sets callback for {@link PianoIdToken} changes
+     * Sets callback for {@link PianoIdToken} changes.
      *
-     * @param callback Callback with {@link kotlin.Result} for listening changes
-     * @return {@link PianoIdClient} instance
+     * @param callback Callback with {@link kotlin.Result} for listening changes.
+     * @return {@link PianoIdClient} instance.
      */
     @Suppress("unused") // Public API.
     fun with(callback: PianoIdAuthCallback?) = apply { authCallback = callback }
 
     /**
-     * Sets javascript interface for processing custom events
+     * Sets javascript interface for processing custom events.
      *
-     * @param jsInterface {@link PianoIdJs} instance for processing events
-     * @return {@link PianoIdClient} instance
+     * @param jsInterface {@link PianoIdJs} instance for processing events.
+     * @return {@link PianoIdClient} instance.
      */
     fun with(jsInterface: PianoIdJs?) = apply { javascriptInterface = jsInterface }
 
     /**
-     * Adds OAuth provider
+     * Adds OAuth provider.
      *
-     * @param provider {@link PianoIdOAuthProvider} instance
-     * @return {@link PianoIdClient} instance
+     * @param provider {@link PianoIdOAuthProvider} instance.
+     * @return {@link PianoIdClient} instance.
      */
     @Suppress("unused") // Public API.
     fun with(provider: PianoIdOAuthProvider) = apply {
         oauthProviders[provider.name.lowercase(Locale.US)] = provider
     }
 
+    /**
+     * Gets preferences for authorization process.
+     *
+     * @return {@link PianoIdClient.SignInContext} instance.
+     */
     @Suppress("unused") // Public API.
     fun signIn(): SignInContext = SignInContext(this)
+
+    /**
+     * Sign out user by it's token.
+     *
+     * @param accessToken User access token.
+     * @param callback callback, which will receive sign-out result.
+     */
+    @Suppress("unused") // Public API.
+    @JvmOverloads
+    fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>? = null) {
+        val signOutCallback = callback ?: {}
+        api.signOut(hostUrl.resolve(SIGN_OUT_PATH).toString(), aid, accessToken)
+            .enqueue(signOutCallback.asRetrofitCallback())
+    }
+
+    /**
+     * Sign out user by it's token.
+     *
+     * @param accessToken User access token.
+     */
+    @Suppress("unused") // Public API.
+    suspend fun signOut(accessToken: String) = suspendCancellableCoroutine { continuation ->
+        signOut(accessToken) { result ->
+            continuation.resumeWith(result)
+        }
+    }
+
+    /**
+     * Refresh user access token.
+     *
+     * @param refreshToken User refresh token.
+     * @param callback callback, which will receive result.
+     */
+    @Suppress("unused") // Public API.
+    fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
+        api.refreshToken(
+            hostUrl.newBuilder().encodedPath(REFRESH_TOKEN_PATH).build().toString(),
+            mapOf(
+                PARAM_CLIENT_ID to aid,
+                PARAM_GRANT_TYPE to VALUE_GRANT_TYPE,
+                PARAM_REFRESH_TOKEN to refreshToken
+            )
+        ).enqueue(callback.asRetrofitCallback())
+    }
+
+    /**
+     * Refresh user access token.
+     *
+     * @param refreshToken User refresh token.
+     */
+    @Suppress("unused") // Public API.
+    suspend fun refreshToken(refreshToken: String) = suspendCancellableCoroutine { continuation ->
+        refreshToken(refreshToken) { result ->
+            continuation.resumeWith(result)
+        }
+    }
+
+    /**
+     * Gets user info.
+     *
+     * @param accessToken User access token.
+     * @param formName Form name, which stores data. Use null for default.
+     * @param callback callback, which will receive result.
+     */
+    @Suppress("unused") // Public API.
+    @JvmOverloads
+    fun getUserInfo(accessToken: String, formName: String? = null, callback: PianoIdFuncCallback<PianoUserProfile>) {
+        api.getUserInfo(
+            hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
+            aid,
+            accessToken,
+            formName
+        ).enqueue(callback.asRetrofitCallback())
+    }
+
+    /**
+     * Gets user info.
+     *
+     * @param accessToken User access token.
+     * @param formName Form name, which stores data. Use null for default.
+     */
+    @Suppress("unused") // Public API.
+    @JvmOverloads
+    suspend fun getUserInfo(
+        accessToken: String,
+        formName: String? = null,
+    ) = suspendCancellableCoroutine { continuation ->
+        getUserInfo(accessToken, formName) { result ->
+            continuation.resumeWith(result)
+        }
+    }
+
+    /**
+     * Stores user info.
+     *
+     * @param accessToken User access token.
+     * @param newUserInfo New user info.
+     * @param callback callback, which will receive result.
+     */
+    @Suppress("unused") // Public API.
+    fun putUserInfo(
+        accessToken: String,
+        newUserInfo: PianoUserInfo,
+        callback: PianoIdFuncCallback<PianoUserProfile>,
+    ) {
+        api.putUserInfo(
+            hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
+            aid,
+            accessToken,
+            newUserInfo.toProfileUpdateRequest()
+        ).enqueue(callback.asRetrofitCallback())
+    }
+
+    /**
+     * Stores user info.
+     *
+     * @param accessToken User access token.
+     * @param newUserInfo New user info.
+     */
+    @Suppress("unused") // Public API.
+    suspend fun putUserInfo(
+        accessToken: String,
+        newUserInfo: PianoUserInfo,
+    ) = suspendCancellableCoroutine { continuation ->
+        putUserInfo(accessToken, newUserInfo) { result ->
+            continuation.resumeWith(result)
+        }
+    }
 
     internal fun loadHostUrl() {
         api.getDeploymentHost(aid).enqueue(
@@ -130,27 +272,11 @@ class PianoIdClient internal constructor(
         )
     }
 
-    internal fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>) {
-        api.signOut(hostUrl.newBuilder().encodedPath(SIGN_OUT_PATH).build().toString(), aid, accessToken)
-            .enqueue(callback.asRetrofitCallback())
-    }
-
     internal fun getTokenByAuthCode(authCode: String, callback: PianoIdFuncCallback<PianoIdToken>) {
         api.exchangeAuthCode(
             hostUrl.newBuilder().encodedPath(EXCHANGE_AUTH_CODE_PATH).build().toString(),
             aid,
             authCode
-        ).enqueue(callback.asRetrofitCallback())
-    }
-
-    internal fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
-        api.refreshToken(
-            hostUrl.newBuilder().encodedPath(REFRESH_TOKEN_PATH).build().toString(),
-            mapOf(
-                PARAM_CLIENT_ID to aid,
-                PARAM_GRANT_TYPE to VALUE_GRANT_TYPE,
-                PARAM_REFRESH_TOKEN to refreshToken
-            )
         ).enqueue(callback.asRetrofitCallback())
     }
 
@@ -182,28 +308,6 @@ class PianoIdClient internal constructor(
         }
         .build()
         .toString()
-
-    internal fun getUserInfo(accessToken: String, formName: String?, callback: PianoIdFuncCallback<PianoUserProfile>) {
-        api.getUserInfo(
-            hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
-            aid,
-            accessToken,
-            formName
-        ).enqueue(callback.asRetrofitCallback())
-    }
-
-    internal fun putUserInfo(
-        accessToken: String,
-        newUserInfo: PianoUserInfo,
-        callback: PianoIdFuncCallback<PianoUserProfile>,
-    ) {
-        api.putUserInfo(
-            hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
-            aid,
-            accessToken,
-            newUserInfo.toProfileUpdateRequest()
-        ).enqueue(callback.asRetrofitCallback())
-    }
 
     internal fun getFormUrl(formName: String?, hideCompletedFields: Boolean, trackingId: String) =
         hostUrl.newBuilder()
@@ -285,9 +389,9 @@ class PianoIdClient internal constructor(
         internal var stage: String? = null
 
         /**
-         * Turns off the registration screen
+         * Turns off the registration screen.
          *
-         * @return {@link SignInContext} instance
+         * @return {@link SignInContext} instance.
          */
         @Suppress("unused") // Public API.
         fun disableSignUp() = apply { disableSignUp = true }
@@ -296,17 +400,17 @@ class PianoIdClient internal constructor(
          * Sets the screen when opening Piano ID. Use {@link PianoId#WIDGET_LOGIN} to open the login screen
          * or {@link PianoId#WIDGET_REGISTER} to open the registration screen.
          *
-         * @param widget {@link PianoId#WIDGET_LOGIN}, {@link PianoId#WIDGET_REGISTER} or null
-         * @return {@link SignInContext} instance
+         * @param widget {@link PianoId#WIDGET_LOGIN}, {@link PianoId#WIDGET_REGISTER} or null.
+         * @return {@link SignInContext} instance.
          */
         @Suppress("unused") // Public API.
         fun widget(widget: String?) = apply { this.widget = widget }
 
         /**
-         * Sets the stage directive element value, which can be used for show or hide parts of template
+         * Sets the stage directive element value, which can be used for show or hide parts of template.
          *
-         * @param stage Value for passing to template
-         * @return {@link SignInContext} instance
+         * @param stage Value for passing to template.
+         * @return {@link SignInContext} instance.
          */
         @Suppress("unused") // Public API.
         fun stage(stage: String?) = apply { this.stage = stage }

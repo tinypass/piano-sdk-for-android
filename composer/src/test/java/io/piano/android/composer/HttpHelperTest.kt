@@ -18,6 +18,11 @@ import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.UserSegmentsContainer
 import io.piano.android.composer.model.events.ShowTemplate
+import io.piano.android.consents.ConsentJsonAdapterFactory
+import io.piano.android.consents.models.Consent
+import io.piano.android.consents.models.ConsentMode
+import io.piano.android.consents.models.Product
+import io.piano.android.consents.models.Purpose
 import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -35,6 +40,9 @@ class HttpHelperTest {
     private val moshi: Moshi = Moshi.Builder()
         .add(ComposerJsonAdapterFactory())
         .add(EventJsonAdapterFactory())
+        .add(CustomValuesJsonAdapter)
+        .add(UnixTimeDateAdapter)
+        .add(ConsentJsonAdapterFactory)
         .build()
     private val customParameters: CustomParameters = mock() {
         on { isEmpty() } doReturn false
@@ -56,7 +64,14 @@ class HttpHelperTest {
 
     @Test
     fun convertExperienceRequest() {
-        val requestMap = httpHelper.convertExperienceRequest(experienceRequest, DUMMY_STRING, { null }, null)
+        val requestMap = httpHelper.convertExperienceRequest(
+            experienceRequest,
+            DUMMY_STRING,
+            { null },
+            null,
+            emptyMap(),
+            emptyMap()
+        )
         requestMap.apply {
             assertEquals(17, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
@@ -79,6 +94,7 @@ class HttpHelperTest {
             1,
             null,
             null,
+            null,
             EventsContainer(emptyList())
         )
         httpHelper.afterExecute(mock(), experienceResponse)
@@ -91,21 +107,36 @@ class HttpHelperTest {
 
     @Test
     fun buildEventTracking() {
-        with(httpHelper.buildEventTracking(DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING)) {
-            assertEquals(4, size)
+        with(httpHelper.buildEventTracking(DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING, emptyMap())) {
+            assertEquals(5, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_EVENT_TRACKING_ID])
             assertEquals(DUMMY_STRING2, this[HttpHelper.PARAM_EVENT_TYPE])
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_EVENT_GROUP_ID])
             assertEquals("", this[HttpHelper.PARAM_EVENT_CUSTOM_PARAMS])
+            assertEquals("", this[HttpHelper.PARAM_EVENT_COOKIE_CONSENTS])
         }
     }
 
     @Test
     fun buildCustomFormTracking() {
-        with(httpHelper.buildCustomFormTracking(DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING, DUMMY_STRING2)) {
-            assertEquals(5, size)
+        with(
+            httpHelper.buildCustomFormTracking(
+                DUMMY_STRING,
+                DUMMY_STRING2,
+                DUMMY_STRING,
+                DUMMY_STRING2,
+                mapOf(
+                    Purpose.CONTENT_PERSONALISATION to Consent(ConsentMode.OPT_OUT, listOf(Product.COMPOSER))
+                )
+            )
+        ) {
+            assertEquals(6, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_EVENT_TRACKING_ID])
             assertEquals(DUMMY_STRING2, this[HttpHelper.PARAM_USER_TOKEN])
+            assertEquals(
+                """{"CP":{"mode":"opt-out","products":["COMPOSER"]}}""",
+                this[HttpHelper.PARAM_EVENT_COOKIE_CONSENTS]
+            )
             verify(experienceIdsProvider).getPageViewId(any<Date>())
         }
     }
@@ -147,10 +178,13 @@ class HttpHelperTest {
                 experienceRequest,
                 DUMMY_STRING,
                 null,
-                null
+                null,
+                mapOf(
+                    Purpose.CONTENT_PERSONALISATION to Consent(ConsentMode.OPT_OUT, listOf(Product.COMPOSER))
+                )
             )
         ) {
-            assertEquals(10, size)
+            assertEquals(11, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
     }

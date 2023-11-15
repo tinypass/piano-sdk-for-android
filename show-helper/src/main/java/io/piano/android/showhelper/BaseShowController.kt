@@ -1,5 +1,6 @@
 package io.piano.android.showhelper
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.webkit.WebView
 import androidx.annotation.UiThread
@@ -22,6 +23,11 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
 
     protected open fun checkPrerequisites(callback: (Boolean) -> Unit) = callback(true)
 
+    /**
+     * Shows modal/inline template.
+     * @param activity: activity, which contains WebView for inline template or will host fragment for modal template.
+     * @param inlineWebViewProvider: custom WebView provider, controller uses it for inline templates only.
+     */
     @JvmOverloads
     @Suppress("unused") // Public API.
     @UiThread
@@ -42,6 +48,9 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
         }
     }
 
+    /**
+     * Close template.
+     */
     @Suppress("unused") // Public API.
     @UiThread
     abstract fun close(data: String? = null)
@@ -77,6 +86,7 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
     }
 
     companion object {
+        @SuppressLint("DiscouragedApi")
         @JvmStatic
         private val defaultWebViewProvider: (FragmentActivity, String) -> WebView? = { activity, webViewId ->
             activity.resources

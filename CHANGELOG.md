@@ -1,7 +1,28 @@
 # Piano SDK for Android
 
-## v2.8.0-SNAPSHOT
-* Behavior change: custom variable is simplified before sending, if it contains only one value  (similar to 2.5.0 and earlier)
+## v2.8.2
+* Fix nullability for first name / last name in Piano ID user profile
+* Add access to current browser id
+* Add support for backend changes
+* Updated dependencies:
+    - androidx.activity:activity [1.7.2 -> 1.8.0]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.8.0
+
+## v2.8.1
+* Fix bug with logout url
+* Fix bug with Javascript threads in Show Forms
+* Updated dependencies:
+    - androidx.annotation:annotation [1.6.0 -> 1.7.0]
+      https://developer.android.com/jetpack/androidx/releases/annotation#1.7.0
+    - androidx.lifecycle:lifecycle-common-java8 [2.6.1 -> 2.6.2]
+      https://developer.android.com/jetpack/androidx/releases/lifecycle#2.6.2
+    - com.google.android.gms:play-services-auth [20.6.0 -> 20.7.0]
+    - io.piano.android:cxense [2.4.0 -> 2.5.0]
+
+## v2.8.0
+* Add support for Piano Consents
+* Deprecated static methods of `PianoId` class, use instance methods
+* Behavior change: custom variable is simplified before sending, if it contains only one value (similar to 2.5.0 and earlier)
 * Add Kotlin coroutine suspend support for API
 * Update Piano ID default sandbox domain
 * Add Android 14 compatibility
@@ -11,11 +32,11 @@
       https://developer.android.com/jetpack/androidx/releases/activity#1.7.2
     - androidx.annotation:annotation [1.5.0 -> 1.6.0]
       https://developer.android.com/jetpack/androidx/releases/annotation#1.6.0
-    - androidx.fragment:fragment [1.5.5 -> 1.6.0]
-      https://developer.android.com/jetpack/androidx/releases/fragment#1.6.0
+    - androidx.fragment:fragment [1.5.5 -> 1.6.1]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.6.1
     - androidx.lifecycle:lifecycle-common-java8 [2.5.1 -> 2.6.1]
       https://developer.android.com/jetpack/androidx/releases/lifecycle#2.6.1
-    - com.facebook.android:facebook-login [16.0.0 -> 16.1.2]
+    - com.facebook.android:facebook-login [16.0.0 -> 16.2.0]
       https://github.com/facebook/facebook-android-sdk
     - com.google.android.gms:play-services-auth [20.4.1 -> 20.6.0]
     - com.squareup.moshi:moshi [1.14.0 -> 1.15.0]
@@ -46,6 +67,7 @@
       https://github.com/square/retrofit
     - com.squareup.moshi:moshi [1.13.0 -> 1.14.0]
       https://github.com/square/moshi/
+    - io.piano.android:cxense [2.3.1 -> 2.4.0]
 
 ## v2.6.2
 * Fix getUserInfo API parser

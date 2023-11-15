@@ -16,7 +16,7 @@ abstract class PianoOAuthActivity : AppCompatActivity() {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        client = PianoId.getClient()
+        client = PianoId.getInstance()
     }
 
     /**
