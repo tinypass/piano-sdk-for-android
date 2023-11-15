@@ -73,7 +73,7 @@ class PianoId {
                     .baseUrl(endpoint)
                     .addConverterFactory(MoshiConverterFactory.create(moshi))
                     .build()
-                PianoIdClient(retrofit.create(), moshi, aid, endpoint).also { client = it }
+                PianoIdClient(retrofit.create(), moshi, aid, endpoint, useCustomDeploymentHost).also { client = it }
             }
 
         /**
