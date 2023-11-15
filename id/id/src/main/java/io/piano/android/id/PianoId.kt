@@ -32,22 +32,24 @@ class PianoId {
          * @param endpoint Endpoint, which will be used. For example, {@link #ENDPOINT_PRODUCTION},
          *                 {@link #ENDPOINT_SANDBOX} or your custom endpoint
          * @param aid      Your AID
+         * @param useCustomDeploymentHost a flag if a custom deployment host should be used ([endpoint] will be used as is)
          * @return {@link PianoIdClient} instance.
          */
         @Suppress("unused") // Public API.
         @JvmStatic
-        fun init(endpoint: String, aid: String): PianoIdClient = init(endpoint.toHttpUrl(), aid)
+        fun init(endpoint: String, aid: String, useCustomDeploymentHost: Boolean = false): PianoIdClient = init(endpoint.toHttpUrl(), aid, useCustomDeploymentHost)
 
         /**
          * Initialize {@link PianoIdClient} singleton instance. It doesn't re-init it at next calls.
          *
          * @param endpoint Endpoint, which will be used.
          * @param aid      Your AID
+         * @param useCustomDeploymentHost If true [endpoint] will be used as deployment host else (default) the host gets overridden internally.
          * @return {@link PianoIdClient} instance.
          */
         @Suppress("unused") // Public API.
         @JvmStatic
-        fun init(endpoint: HttpUrl, aid: String): PianoIdClient =
+        fun init(endpoint: HttpUrl, aid: String, useCustomDeploymentHost: Boolean = false): PianoIdClient =
             client ?: run {
                 val userAgent = "Piano ID SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE})"
                 val okHttpClient = OkHttpClient.Builder()
