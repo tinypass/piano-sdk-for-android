@@ -33,7 +33,7 @@ class PianoIdClient internal constructor(
     private val moshi: Moshi,
     internal val aid: String,
     endpoint: HttpUrl,
-    useCustomDeploymentHost: Boolean
+    useCustomHost: Boolean
 ) {
     private val pianoIdTokenAdapter by lazy {
         moshi.adapter(PianoIdToken::class.java)
@@ -56,7 +56,7 @@ class PianoIdClient internal constructor(
     var javascriptInterface: PianoIdJs? = null
 
     init {
-        if (!useCustomDeploymentHost) {
+        if (!useCustomHost) {
             loadHostUrl()
         }
     }
