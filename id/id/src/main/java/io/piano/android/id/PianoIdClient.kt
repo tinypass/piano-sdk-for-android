@@ -58,7 +58,9 @@ class PianoIdClient internal constructor(
     var javascriptInterface: PianoIdJs? = null
 
     init {
-        loadHostUrl()
+        if (endpoint.topPrivateDomain() == "piano.io") {
+            loadHostUrl()
+        }
     }
 
     /**

@@ -4,12 +4,15 @@
 * Change `pageview_id`/`visit_id` format
 * Add support for Edge integration and deprecated `Composer.accessToken`
 * Fix missing browserID at loading templates
-* Clean up deprecated APIs 
+* Clean up deprecated APIs
+* Request ID deployment host only for default endpoints
 * Updated dependencies:
     - androidx.fragment:fragment [1.6.1 -> 1.6.2]
       https://developer.android.com/jetpack/androidx/releases/fragment#1.6.2
     - com.squareup.okhttp3:okhttp [4.11.0 -> 4.12.0]
       https://square.github.io/okhttp/
+    - androidx.activity:activity [1.8.0 -> 1.8.1]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.8.1
 
 ## v2.8.2
 * Fix nullability for first name / last name in Piano ID user profile

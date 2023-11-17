@@ -254,7 +254,7 @@ class PianoId {
          * Default production endpoint
          */
         @Suppress("unused") // Public API.
-        const val ENDPOINT_PRODUCTION = "https://buy.tinypass.com"
+        const val ENDPOINT_PRODUCTION = "https://buy.piano.io"
 
         /**
          * Australia production endpoint
