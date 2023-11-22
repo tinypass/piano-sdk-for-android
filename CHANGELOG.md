@@ -1,6 +1,6 @@
 # Piano SDK for Android
 
-## v2.9.0-SNAPSHOT
+## v2.9.0
 * Change `pageview_id`/`visit_id` format
 * Add support for Edge integration and deprecated `Composer.accessToken`
 * Fix missing browserID at loading templates
