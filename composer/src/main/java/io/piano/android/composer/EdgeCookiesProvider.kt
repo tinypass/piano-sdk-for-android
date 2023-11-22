@@ -2,6 +2,7 @@ package io.piano.android.composer
 
 import android.util.Base64
 import com.squareup.moshi.JsonAdapter
+import io.piano.android.composer.model.ConsentModeWrapper
 import io.piano.android.composer.model.EdgeCookies
 import io.piano.android.composer.model.PcusContainer
 import io.piano.android.composer.model.PprvContainer
@@ -34,7 +35,7 @@ internal class EdgeCookiesProvider(
             PprvContainer(
                 it.consents.values.flatMap { c ->
                     c.products.map {
-                        it.id to c.mode
+                        it.id to ConsentModeWrapper(c.mode)
                     }
                 }.toMap(),
                 it.productsToPurposesMapping.mapKeys { it.key.id }

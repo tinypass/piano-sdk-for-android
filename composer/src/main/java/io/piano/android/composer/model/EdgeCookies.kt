@@ -35,8 +35,11 @@ class EdgeCookies(
 }
 
 @JsonClass(generateAdapter = true)
+internal class ConsentModeWrapper(val mode: ConsentMode)
+
+@JsonClass(generateAdapter = true)
 internal class PprvContainer(
-    val consent: Map<Int, ConsentMode>,
+    val consent: Map<Int, ConsentModeWrapper>,
     val purposes: Map<Int, Purpose>,
 )
 
