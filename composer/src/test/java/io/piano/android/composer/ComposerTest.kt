@@ -18,6 +18,7 @@ import io.piano.android.composer.listeners.ExperienceExecuteListener
 import io.piano.android.composer.listeners.ShowTemplateListener
 import io.piano.android.composer.listeners.UserSegmentListener
 import io.piano.android.composer.model.Data
+import io.piano.android.composer.model.EdgeCookies
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.EventsContainer
 import io.piano.android.composer.model.ExperienceRequest
@@ -37,14 +38,14 @@ import kotlin.test.assertFailsWith
 
 class ComposerTest {
     private val experienceCall: Call<Data<ExperienceResponse>> = mock()
-    private val composerApi: ComposerApi = mock() {
+    private val composerApi: ComposerApi = mock {
         on { getExperience(any()) } doReturn experienceCall
     }
     private val generalApi: GeneralApi = mock()
-    private val prefsStorage: PrefsStorage = mock() {
+    private val prefsStorage: PrefsStorage = mock {
         on { tpAccessCookie } doReturn DUMMY_STRING
     }
-    private val httpHelper: HttpHelper = mock() {
+    private val httpHelper: HttpHelper = mock {
         on { convertExperienceRequest(any(), anyOrNull(), anyOrNull(), anyOrNull(), any(), any()) } doReturn mapOf()
         on { buildEventTracking(any(), any(), any(), any(), any()) } doReturn mapOf()
         on {
@@ -60,7 +61,10 @@ class ComposerTest {
             DUMMY_STRING to DUMMY_STRING2
         )
     }
-    private val pianoConsents: PianoConsents = mock() {
+    private val edgeCookiesProvider: EdgeCookiesProvider = mock {
+        on { edgeCookies } doReturn EdgeCookies(DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING)
+    }
+    private val pianoConsents: PianoConsents = mock {
         on { consents } doReturn emptyMap()
     }
     private val composer: Composer = spy(
@@ -71,6 +75,7 @@ class ComposerTest {
             prefsStorage,
             DUMMY_AID,
             Composer.Endpoint.SANDBOX,
+            edgeCookiesProvider,
             pianoConsents
         )
     )
@@ -110,6 +115,7 @@ class ComposerTest {
                 prefsStorage,
                 "",
                 Composer.Endpoint.SANDBOX,
+                edgeCookiesProvider,
                 pianoConsents
             )
         }
@@ -121,57 +127,53 @@ class ComposerTest {
     }
 
     @Test
-    fun getExperienceResponseException() =
-        getExperienceWithCallbackCheck {
-            val response = Response.success<Data<ExperienceResponse>>(null)
-            it.onResponse(experienceCall, response)
-            verifyExceptionListenerArgument(null)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
-        }
+    fun getExperienceResponseException() = getExperienceWithCallbackCheck {
+        val response = Response.success<Data<ExperienceResponse>>(null)
+        it.onResponse(experienceCall, response)
+        verifyExceptionListenerArgument(null)
+        verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
+    }
 
     @Test
-    fun getExperienceResponseContainsErrors() =
-        getExperienceWithCallbackCheck {
-            val response = Response.success(
-                Data<ExperienceResponse>(
+    fun getExperienceResponseContainsErrors() = getExperienceWithCallbackCheck {
+        val response = Response.success(
+            Data<ExperienceResponse>(
+                mock(),
+                listOf(
                     mock(),
-                    listOf(
-                        mock(),
-                        mock()
-                    )
+                    mock()
                 )
             )
-            it.onResponse(experienceCall, response)
-            verifyExceptionListenerArgument(null)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
-        }
+        )
+        it.onResponse(experienceCall, response)
+        verifyExceptionListenerArgument(null)
+        verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
+    }
 
     @Test
-    fun getExperienceResponseSuccess() =
-        getExperienceWithCallbackCheck {
-            val experienceResponse: ExperienceResponse = mock()
-            val response = Response.success(
-                Data(experienceResponse, emptyList())
-            )
-            it.onResponse(experienceCall, response)
-            verify(composer).processExperienceResponse(
-                experienceRequest,
-                experienceResponse,
-                resultListeners,
-                null,
-                exceptionListener
-            )
-            verify(exceptionListener, never()).onException(any())
-        }
+    fun getExperienceResponseSuccess() = getExperienceWithCallbackCheck {
+        val experienceResponse: ExperienceResponse = mock()
+        val response = Response.success(
+            Data(experienceResponse, emptyList())
+        )
+        it.onResponse(experienceCall, response)
+        verify(composer).processExperienceResponse(
+            experienceRequest,
+            experienceResponse,
+            resultListeners,
+            null,
+            exceptionListener
+        )
+        verify(exceptionListener, never()).onException(any())
+    }
 
     @Test
-    fun getExperienceFailure() =
-        getExperienceWithCallbackCheck {
-            val exc = RuntimeException()
-            it.onFailure(experienceCall, exc)
-            verifyExceptionListenerArgument(exc)
-            verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
-        }
+    fun getExperienceFailure() = getExperienceWithCallbackCheck {
+        val exc = RuntimeException()
+        it.onFailure(experienceCall, exc)
+        verifyExceptionListenerArgument(exc)
+        verify(composer, never()).processExperienceResponse(any(), any(), any(), anyOrNull(), any())
+    }
 
     @Test
     fun processExperienceResponse() {
@@ -198,13 +200,13 @@ class ComposerTest {
         val iterations = eventTypes.size
 
         val exc = RuntimeException()
-        val showTemplateListener = mock<ShowTemplateListener>() {
+        val showTemplateListener = mock<ShowTemplateListener> {
             on { canProcess(any()) } doReturn true
         }
-        val experienceExecuteListener = mock<ExperienceExecuteListener>() {
+        val experienceExecuteListener = mock<ExperienceExecuteListener> {
             on { canProcess(any()) } doReturn false
         }
-        val userSegmentListener = mock<UserSegmentListener>() {
+        val userSegmentListener = mock<UserSegmentListener> {
             on { canProcess(any()) } doReturn true
             on { onExecuted(any()) } doThrow exc
         }

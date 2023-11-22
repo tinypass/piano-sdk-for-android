@@ -10,7 +10,5 @@ import retrofit2.http.POST
 internal interface ComposerApi {
     @POST("/xbuilder/experience/executeMobile")
     @FormUrlEncoded
-    fun getExperience(
-        @FieldMap fields: Map<String, String>,
-    ): Call<Data<ExperienceResponse>>
+    fun getExperience(@FieldMap fields: Map<String, String>): Call<Data<ExperienceResponse>>
 }

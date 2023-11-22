@@ -3,7 +3,6 @@ package io.piano.android.id.models
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -30,10 +29,7 @@ internal interface PianoIdApi {
 
     @FormUrlEncoded
     @POST
-    fun refreshToken(
-        @Url url: String,
-        @FieldMap tokenParams: Map<String, String>,
-    ): Call<PianoIdToken>
+    fun refreshToken(@Url url: String, @FieldMap tokenParams: Map<String, String>): Call<PianoIdToken>
 
     @GET
     fun getUserInfo(
@@ -51,7 +47,6 @@ internal interface PianoIdApi {
         @Body updateRequest: ProfileUpdateRequest,
     ): Call<PianoUserProfile>
 
-    @FormUrlEncoded
-    @POST("api/v3/anon/mobile/sdk/id/deployment/host")
-    fun getDeploymentHost(@Field("aid") aid: String): Call<HostResponse>
+    @GET("api/v3/anon/mobile/sdk/id/deployment/host")
+    fun getDeploymentHost(@Query("aid") aid: String): Call<HostResponse>
 }

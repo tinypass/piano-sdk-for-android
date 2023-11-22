@@ -58,7 +58,9 @@ class PianoIdClient internal constructor(
     var javascriptInterface: PianoIdJs? = null
 
     init {
-        loadHostUrl()
+        if (endpoint.topPrivateDomain() == "piano.io") {
+            loadHostUrl()
+        }
     }
 
     /**
@@ -220,11 +222,7 @@ class PianoIdClient internal constructor(
      * @param callback callback, which will receive result.
      */
     @Suppress("unused") // Public API.
-    fun putUserInfo(
-        accessToken: String,
-        newUserInfo: PianoUserInfo,
-        callback: PianoIdFuncCallback<PianoUserProfile>,
-    ) {
+    fun putUserInfo(accessToken: String, newUserInfo: PianoUserInfo, callback: PianoIdFuncCallback<PianoUserProfile>) {
         api.putUserInfo(
             hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
             aid,
@@ -277,11 +275,7 @@ class PianoIdClient internal constructor(
         ).enqueue(callback.asRetrofitCallback())
     }
 
-    internal fun getSignInUrl(
-        disableSignUp: Boolean,
-        widget: String?,
-        stage: String?,
-    ): String = hostUrl.newBuilder()
+    internal fun getSignInUrl(disableSignUp: Boolean, widget: String?, stage: String?): String = hostUrl.newBuilder()
         .encodedPath(AUTH_PATH)
         .addQueryParameter(PARAM_RESPONSE_TYPE, VALUE_RESPONSE_TYPE_TOKEN)
         .addQueryParameter(PARAM_CLIENT_ID, aid)
@@ -306,21 +300,19 @@ class PianoIdClient internal constructor(
         .build()
         .toString()
 
-    internal fun getFormUrl(formName: String?, hideCompletedFields: Boolean, trackingId: String) =
-        hostUrl.newBuilder()
-            .encodedPath(FORM_PATH)
-            .addQueryParameter(PARAM_CLIENT_ID, aid)
-            .addQueryParameter(PARAM_FORM_NAME, formName ?: "")
-            .addQueryParameter(PARAM_HIDE_COMPLETE, hideCompletedFields.toString())
-            .addQueryParameter(PARAM_TRACKING_ID, trackingId)
-            .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
-            .build()
-            .toString()
+    internal fun getFormUrl(formName: String?, hideCompletedFields: Boolean, trackingId: String) = hostUrl.newBuilder()
+        .encodedPath(FORM_PATH)
+        .addQueryParameter(PARAM_CLIENT_ID, aid)
+        .addQueryParameter(PARAM_FORM_NAME, formName ?: "")
+        .addQueryParameter(PARAM_HIDE_COMPLETE, hideCompletedFields.toString())
+        .addQueryParameter(PARAM_TRACKING_ID, trackingId)
+        .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
+        .build()
+        .toString()
 
-    internal fun saveException(exc: PianoIdException): Int =
-        exc.hashCode().also {
-            exceptions.append(it, exc)
-        }
+    internal fun saveException(exc: PianoIdException): Int = exc.hashCode().also {
+        exceptions.append(it, exc)
+    }
 
     internal fun getStoredException(code: Int): PianoIdException? = exceptions.get(code)
 

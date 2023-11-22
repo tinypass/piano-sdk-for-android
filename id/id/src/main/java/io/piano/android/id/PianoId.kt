@@ -34,11 +34,7 @@ class PianoId {
         private var client: PianoIdClient? = null
 
         @JvmStatic
-        private fun buildClient(
-            endpoint: HttpUrl,
-            aid: String,
-            pianoConsents: PianoConsents?,
-        ): PianoIdClient {
+        private fun buildClient(endpoint: HttpUrl, aid: String, pianoConsents: PianoConsents?): PianoIdClient {
             val userAgent = "Piano ID SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE})"
             val moshi = Moshi.Builder()
                 .add(PianoIdJsonAdapterFactory())
@@ -258,7 +254,7 @@ class PianoId {
          * Default production endpoint
          */
         @Suppress("unused") // Public API.
-        const val ENDPOINT_PRODUCTION = "https://buy.tinypass.com"
+        const val ENDPOINT_PRODUCTION = "https://buy.piano.io"
 
         /**
          * Australia production endpoint

@@ -23,6 +23,7 @@ import java.util.Locale
  * @property contentSection Content section value
  * @property contentIsNative Content is native flag
  * @property customParameters Custom parameters
+ * @property edgeResult Edge result
  */
 class ExperienceRequest private constructor(
     val isDebug: Boolean,
@@ -41,6 +42,7 @@ class ExperienceRequest private constructor(
     val contentSection: String?,
     val contentIsNative: Boolean?,
     val customParameters: CustomParameters?,
+    val edgeResult: EdgeResult?,
 ) {
 
     data class Builder @JvmOverloads constructor(
@@ -60,13 +62,14 @@ class ExperienceRequest private constructor(
         var contentSection: String? = null,
         var contentIsNative: Boolean? = null,
         var customParameters: CustomParameters? = null,
+        var edgeResult: EdgeResult? = null,
     ) {
         /**
          * Sets "debug" flag for request
          * @param debug Debug value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun debug(debug: Boolean) = apply { this.debug = debug }
 
         /**
@@ -75,11 +78,8 @@ class ExperienceRequest private constructor(
          * @param value Custom variable value
          * @return Builder instance
          */
-        // Public API.
-        fun customVariable(
-            key: String,
-            value: String?,
-        ) = apply {
+        @Suppress("unused") // Public API.
+        fun customVariable(key: String, value: String?) = apply {
             customVariables[key] = value?.let { v ->
                 (customVariables[key]?.toMutableList() ?: mutableListOf()).apply { add(v) }
             }
@@ -91,11 +91,8 @@ class ExperienceRequest private constructor(
          * @param value Custom variable value
          * @return Builder instance
          */
-        // Public API.
-        fun customVariable(
-            key: String,
-            value: List<String>?,
-        ) = apply {
+        @Suppress("unused") // Public API.
+        fun customVariable(key: String, value: List<String>?) = apply {
             customVariables[key] = value
         }
 
@@ -104,7 +101,7 @@ class ExperienceRequest private constructor(
          * @param customVariables Map of custom variables' values by their keys
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun customVariables(customVariables: Map<String, List<String>?>) =
             apply { this.customVariables.putAll(customVariables) }
 
@@ -112,7 +109,7 @@ class ExperienceRequest private constructor(
          * Clears added to request custom variables
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun clearCustomVariables() = apply { customVariables.clear() }
 
         /**
@@ -120,7 +117,7 @@ class ExperienceRequest private constructor(
          * @param url Url value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun url(url: String) = apply { this.url = url }
 
         /**
@@ -128,7 +125,7 @@ class ExperienceRequest private constructor(
          * @param referer Referrer value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun referer(referer: String?) = apply { this.referer = referer }
 
         /**
@@ -136,7 +133,7 @@ class ExperienceRequest private constructor(
          * @param tag Tag value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun tag(tag: String) = apply { tags.add(tag) }
 
         /**
@@ -144,7 +141,7 @@ class ExperienceRequest private constructor(
          * @param tags Collection of tag values
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun tags(tags: Collection<String>) = apply { this.tags.addAll(tags) }
 
         /**
@@ -152,7 +149,7 @@ class ExperienceRequest private constructor(
          * @param keyword Keyword value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun keyword(keyword: String) = apply { keywords.add(keyword) }
 
         /**
@@ -160,7 +157,7 @@ class ExperienceRequest private constructor(
          * @param keywords Collection of keyword values
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun keywords(keywords: Collection<String>) = apply { this.keywords.addAll(keywords) }
 
         /**
@@ -168,7 +165,7 @@ class ExperienceRequest private constructor(
          * @param zone Zone value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun zone(zone: String?) = apply { this.zone = zone }
 
         /**
@@ -176,7 +173,7 @@ class ExperienceRequest private constructor(
          * @param title Title value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun title(title: String?) = apply { this.title = title }
 
         /**
@@ -184,7 +181,7 @@ class ExperienceRequest private constructor(
          * @param description Description value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun description(description: String?) = apply { this.description = description }
 
         /**
@@ -192,7 +189,7 @@ class ExperienceRequest private constructor(
          * @param contentId Content Id
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun contentId(contentId: String?) = apply { this.contentId = contentId }
 
         /**
@@ -200,7 +197,7 @@ class ExperienceRequest private constructor(
          * @param contentType Content Type
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun contentType(contentType: String?) = apply { this.contentType = contentType }
 
         /**
@@ -208,7 +205,7 @@ class ExperienceRequest private constructor(
          * @param contentCreated ISO 8601-formatted string that includes the published date and time of the content
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun contentCreated(contentCreated: String?) = apply { this.contentCreated = contentCreated }
 
         /**
@@ -216,7 +213,7 @@ class ExperienceRequest private constructor(
          * @param contentCreated Content created date value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun contentCreated(contentCreated: Date) = apply { this.contentCreated = DATE_FORMAT.format(contentCreated) }
 
         /**
@@ -224,7 +221,7 @@ class ExperienceRequest private constructor(
          * @param contentAuthor Content author value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun contentAuthor(contentAuthor: String?) = apply { this.contentAuthor = contentAuthor }
 
         /**
@@ -232,7 +229,7 @@ class ExperienceRequest private constructor(
          * @param contentSection Content section value
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun contentSection(contentSection: String?) = apply { this.contentSection = contentSection }
 
         /**
@@ -240,7 +237,7 @@ class ExperienceRequest private constructor(
          * @param contentIsNative True, if content is native, otherwise False
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun contentIsNative(contentIsNative: Boolean?) = apply { this.contentIsNative = contentIsNative }
 
         /**
@@ -248,14 +245,22 @@ class ExperienceRequest private constructor(
          * @param customParameters Custom parameters object
          * @return Builder instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun customParams(customParameters: CustomParameters?) = apply { this.customParameters = customParameters }
+
+        /**
+         * Sets result from Edge CDN
+         * @param edgeResult Edge result object
+         * @return Builder instance
+         */
+        @Suppress("unused") // Public API.
+        fun edgeResult(edgeResult: EdgeResult?) = apply { this.edgeResult = edgeResult }
 
         /**
          * Builds request
          * @return ExperienceRequest instance
          */
-        // Public API.
+        @Suppress("unused") // Public API.
         fun build(): ExperienceRequest {
             return ExperienceRequest(
                 debug,
@@ -273,7 +278,8 @@ class ExperienceRequest private constructor(
                 contentAuthor,
                 contentSection,
                 contentIsNative,
-                customParameters
+                customParameters,
+                edgeResult
             )
         }
     }

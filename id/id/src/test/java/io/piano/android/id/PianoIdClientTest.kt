@@ -91,48 +91,44 @@ class PianoIdClientTest {
     }
 
     @Test
-    fun getAuthEndpointResponseException() =
-        getAuthEndpoint { retrofitCallback ->
-            val response = Response.success<HostResponse>(null)
-            retrofitCallback.onResponse(hostResponseCall, response)
-            assertEquals(endpoint, pianoIdClient.hostUrl)
-        }
+    fun getAuthEndpointResponseException() = getAuthEndpoint { retrofitCallback ->
+        val response = Response.success<HostResponse>(null)
+        retrofitCallback.onResponse(hostResponseCall, response)
+        assertEquals(endpoint, pianoIdClient.hostUrl)
+    }
 
     @Test
-    fun getAuthEndpointContainsErrors() =
-        getAuthEndpoint { retrofitCallback ->
-            val data: HostResponse = mock {
-                on { hasError } doReturn true
-            }
-            val response = Response.success<HostResponse>(data)
-            retrofitCallback.onResponse(hostResponseCall, response)
-            verify(data).hasError
-            assertEquals(endpoint, pianoIdClient.hostUrl)
+    fun getAuthEndpointContainsErrors() = getAuthEndpoint { retrofitCallback ->
+        val data: HostResponse = mock {
+            on { hasError } doReturn true
         }
+        val response = Response.success<HostResponse>(data)
+        retrofitCallback.onResponse(hostResponseCall, response)
+        verify(data).hasError
+        assertEquals(endpoint, pianoIdClient.hostUrl)
+    }
 
     @Test
-    fun getAuthEndpointResponseSuccess() =
-        getAuthEndpoint { retrofitCallback ->
-            val data: HostResponse = spy(
-                HostResponse(url.toString(), 0, null, null)
-            ) {
-                on { hasError } doReturn false
-                on { error } doReturn DUMMY
-            }
-            val response = Response.success<HostResponse>(data)
-            retrofitCallback.onResponse(hostResponseCall, response)
-            verify(data).hasError
-            verify(data, never()).error
-            assertNotEquals(endpoint, pianoIdClient.hostUrl)
+    fun getAuthEndpointResponseSuccess() = getAuthEndpoint { retrofitCallback ->
+        val data: HostResponse = spy(
+            HostResponse(url.toString(), 0, null, null)
+        ) {
+            on { hasError } doReturn false
+            on { error } doReturn DUMMY
         }
+        val response = Response.success<HostResponse>(data)
+        retrofitCallback.onResponse(hostResponseCall, response)
+        verify(data).hasError
+        verify(data, never()).error
+        assertNotEquals(endpoint, pianoIdClient.hostUrl)
+    }
 
     @Test
-    fun getAuthEndpointFailure() =
-        getAuthEndpoint { retrofitCallback ->
-            val exc = RuntimeException()
-            retrofitCallback.onFailure(hostResponseCall, exc)
-            assertEquals(endpoint, pianoIdClient.hostUrl)
-        }
+    fun getAuthEndpointFailure() = getAuthEndpoint { retrofitCallback ->
+        val exc = RuntimeException()
+        retrofitCallback.onFailure(hostResponseCall, exc)
+        assertEquals(endpoint, pianoIdClient.hostUrl)
+    }
 
     private fun signOut(callbackTest: (PianoIdFuncCallback<Any>, Callback<ResponseBody>) -> Unit) {
         val callback: PianoIdFuncCallback<Any> = mock()
@@ -144,39 +140,33 @@ class PianoIdClientTest {
     }
 
     @Test
-    fun signOutResponseException() =
-        signOut { signOutCallback, retrofitCallback ->
-            val response = Response.success<ResponseBody>(null)
-            retrofitCallback.onResponse(signOutResponseCall, response)
-            val valueCaptor = argumentCaptor<Result<Any>>()
-            verify(signOutCallback).invoke(valueCaptor.capture())
-            assertTrue { valueCaptor.lastValue.isFailure }
-        }
+    fun signOutResponseException() = signOut { signOutCallback, retrofitCallback ->
+        val response = Response.success<ResponseBody>(null)
+        retrofitCallback.onResponse(signOutResponseCall, response)
+        val valueCaptor = argumentCaptor<Result<Any>>()
+        verify(signOutCallback).invoke(valueCaptor.capture())
+        assertTrue { valueCaptor.lastValue.isFailure }
+    }
 
     @Test
-    fun signOutResponseSuccess() =
-        signOut { signOutCallback, retrofitCallback ->
-            val response = Response.success<ResponseBody>(DUMMY.toResponseBody(null))
-            retrofitCallback.onResponse(signOutResponseCall, response)
-            val valueCaptor = argumentCaptor<Result<Any>>()
-            verify(signOutCallback).invoke(valueCaptor.capture())
-            assertTrue { valueCaptor.lastValue.isSuccess }
-        }
+    fun signOutResponseSuccess() = signOut { signOutCallback, retrofitCallback ->
+        val response = Response.success<ResponseBody>(DUMMY.toResponseBody(null))
+        retrofitCallback.onResponse(signOutResponseCall, response)
+        val valueCaptor = argumentCaptor<Result<Any>>()
+        verify(signOutCallback).invoke(valueCaptor.capture())
+        assertTrue { valueCaptor.lastValue.isSuccess }
+    }
 
     @Test
-    fun signOutResponseFailure() =
-        signOut { signOutCallback, retrofitCallback ->
-            val exc = RuntimeException()
-            retrofitCallback.onFailure(signOutResponseCall, exc)
-            val valueCaptor = argumentCaptor<Result<Any>>()
-            verify(signOutCallback).invoke(valueCaptor.capture())
-            assertTrue { valueCaptor.lastValue.isFailure }
-        }
+    fun signOutResponseFailure() = signOut { signOutCallback, retrofitCallback ->
+        val exc = RuntimeException()
+        retrofitCallback.onFailure(signOutResponseCall, exc)
+        val valueCaptor = argumentCaptor<Result<Any>>()
+        verify(signOutCallback).invoke(valueCaptor.capture())
+        assertTrue { valueCaptor.lastValue.isFailure }
+    }
 
-    private fun getUserInfo(
-        response: Response<PianoUserProfile>,
-        check: (Result<PianoUserProfile>) -> Unit,
-    ) {
+    private fun getUserInfo(response: Response<PianoUserProfile>, check: (Result<PianoUserProfile>) -> Unit) {
         val callback: PianoIdFuncCallback<PianoUserProfile> = mock()
         pianoIdClient.getUserInfo(DUMMY, null, callback)
         verify(api).getUserInfo(any(), any(), any(), anyOrNull())
@@ -189,21 +179,16 @@ class PianoIdClientTest {
     }
 
     @Test
-    fun getUserInfoSuccess() =
-        getUserInfo(Response.success<PianoUserProfile>(mock())) { value ->
-            assertTrue { value.isSuccess }
-        }
+    fun getUserInfoSuccess() = getUserInfo(Response.success(mock())) { value ->
+        assertTrue { value.isSuccess }
+    }
 
     @Test
-    fun getUserInfoFailure() =
-        getUserInfo(Response.error(400, mock())) { value ->
-            assertTrue { value.isFailure }
-        }
+    fun getUserInfoFailure() = getUserInfo(Response.error(400, mock())) { value ->
+        assertTrue { value.isFailure }
+    }
 
-    private fun putUserInfoFields(
-        response: Response<PianoUserProfile>,
-        check: (Result<PianoUserProfile>) -> Unit,
-    ) {
+    private fun putUserInfoFields(response: Response<PianoUserProfile>, check: (Result<PianoUserProfile>) -> Unit) {
         val callback: PianoIdFuncCallback<PianoUserProfile> = mock()
         pianoIdClient.putUserInfo(DUMMY, PianoUserInfo(DUMMY), callback)
         verify(api).putUserInfo(any(), any(), any(), any())
@@ -216,16 +201,14 @@ class PianoIdClientTest {
     }
 
     @Test
-    fun putUserInfoFieldsSuccess() =
-        putUserInfoFields(Response.success<PianoUserProfile>(mock())) { value ->
-            assertTrue { value.isSuccess }
-        }
+    fun putUserInfoFieldsSuccess() = putUserInfoFields(Response.success(mock())) { value ->
+        assertTrue { value.isSuccess }
+    }
 
     @Test
-    fun putUserInfoFailure() =
-        putUserInfoFields(Response.error(400, mock())) { value ->
-            assertTrue { value.isFailure }
-        }
+    fun putUserInfoFailure() = putUserInfoFields(Response.error(400, mock())) { value ->
+        assertTrue { value.isFailure }
+    }
 
     @Test
     fun saveException() {

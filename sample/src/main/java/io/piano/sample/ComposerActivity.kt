@@ -82,7 +82,12 @@ class ComposerActivity : AppCompatActivity() {
 
         val listeners: Collection<EventTypeListener<out EventType>> = listOf(
             ExperienceExecuteListener { (_, eventExecutionContext, eventData) ->
-                Timber.d("Composer's user access token for Edge CDN ${Composer.getInstance().accessToken}")
+                val edgeCookiesString = Composer.getInstance()
+                    .edgeCookies
+                    .toMap()
+                    .entries
+                    .joinToString(prefix = "[", postfix = "]") { "${it.key}=${it.value}" }
+                Timber.d("Composer's cookies for Edge CDN $edgeCookiesString")
                 Timber.d("Composer's browser id ${Composer.getInstance().browserId}")
                 eventExecutionContext.userSegments.standard?.let {
                     Timber.d(

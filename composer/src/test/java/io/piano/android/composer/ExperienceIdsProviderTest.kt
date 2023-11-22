@@ -17,7 +17,7 @@ import kotlin.test.assertTrue
 
 class ExperienceIdsProviderTest {
     private val prefsStorage: PrefsStorage = mock()
-    private val pageViewIdProvider: PageViewIdProvider = mock() {
+    private val pageViewIdProvider: PageViewIdProvider = mock {
         on { getPageViewId(any()) } doReturn DUMMY_STRING
     }
 

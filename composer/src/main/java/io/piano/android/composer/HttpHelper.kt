@@ -98,67 +98,66 @@ internal class HttpHelper(
         userToken: String?,
         consents: Map<Purpose, Consent>,
         productsToPurposesMapping: Map<Product, Purpose>,
-    ): Map<String, String> =
-        with(request) {
-            val calendar = Calendar.getInstance()
-            val offset = TimeUnit.MILLISECONDS.toMinutes(calendar.timeZone.getOffset(calendar.timeInMillis).toLong())
-            val date = calendar.time
-            toMinimalSequence() + sequenceOf(
-                PARAM_AID to aid,
-                PARAM_USER_AGENT to userAgent,
-                PARAM_PROTOCOL_VERSION to VALUE_PROTOCOL_VERSION.toString(),
-                PARAM_TIMEZONE_OFFSET to offset.toString(),
-                PARAM_PAGEVIEW_ID to experienceIdsProvider.getPageViewId(date),
-                PARAM_VISIT_ID to experienceIdsProvider.getVisitId(date),
-                PARAM_NEW_VISIT to experienceIdsProvider.isVisitIdGenerated.toString(),
-                PARAM_SUBMIT_TYPE to VALUE_MANUAL_SUBMIT_TYPE,
-                PARAM_SDK_VERSION to BuildConfig.SDK_VERSION,
-                PARAM_XBUILDER_BROWSER_COOKIE to prefsStorage.xbuilderBrowserCookie,
-                PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie,
-                PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie,
-                PARAM_USER_TOKEN to userToken.orEmpty(),
-                PARAM_NEW_BID to browserIdProvider().orEmpty(),
-                PARAM_REFERRER to referer.orEmpty(),
-                PARAM_TITLE to title.orEmpty(),
-                PARAM_DESCRIPTION to description.orEmpty(),
-                PARAM_CONTENT_ID to contentId.orEmpty(),
-                PARAM_CONTENT_TYPE to contentType.orEmpty(),
-                PARAM_CONTENT_AUTHOR to contentAuthor.orEmpty(),
-                PARAM_CONTENT_SECTION to contentSection.orEmpty(),
-                PARAM_CONTENT_CREATED to contentCreated.orEmpty(),
-                PARAM_CONTENT_NATIVE to (contentIsNative?.toString() ?: ""),
-                PARAM_KEYWORDS to keywords.takeUnless { it.isEmpty() }
-                    ?.joinToString(separator = ",")
-                    .orEmpty(),
-                PARAM_CUSTOM_VARIABLES to customVariables.takeUnless { it.isEmpty() }
-                    ?.let { customVariablesAdapter.toJson(it) }
-                    .orEmpty(),
-                PARAM_CUSTOM_PARAMS to customParameters?.takeUnless { it.isEmpty() }
-                    ?.let { customParametersAdapter.toJson(it) }
-                    .orEmpty(),
-                PARAM_CONSENT_MODES to consents.values
-                    .flatMap { c ->
-                        c.products.map {
-                            it.id to c.mode.id
-                        }
-                    }.toMap()
-                    .takeUnless { it.isEmpty() }
-                    ?.let { consentModesAdapter.toJson(it) }
-                    .orEmpty(),
-                PARAM_CONSENT_PURPOSES to productsToPurposesMapping.mapKeys { it.key.id }.takeUnless { it.isEmpty() }
-                    ?.let { consentPurposesAdapter.toJson(it) }
-                    .orEmpty()
-            ).filterNotEmptyValues()
-        }.toMap()
+    ): Map<String, String> = with(request) {
+        val calendar = Calendar.getInstance()
+        val offset = TimeUnit.MILLISECONDS.toMinutes(calendar.timeZone.getOffset(calendar.timeInMillis).toLong())
+        val date = calendar.time
+        toMinimalSequence() + sequenceOf(
+            PARAM_AID to aid,
+            PARAM_USER_AGENT to userAgent,
+            PARAM_PROTOCOL_VERSION to VALUE_PROTOCOL_VERSION.toString(),
+            PARAM_TIMEZONE_OFFSET to offset.toString(),
+            PARAM_PAGEVIEW_ID to experienceIdsProvider.getPageViewId(date),
+            PARAM_VISIT_ID to experienceIdsProvider.getVisitId(date),
+            PARAM_NEW_VISIT to experienceIdsProvider.isVisitIdGenerated.toString(),
+            PARAM_SUBMIT_TYPE to VALUE_MANUAL_SUBMIT_TYPE,
+            PARAM_SDK_VERSION to BuildConfig.SDK_VERSION,
+            PARAM_EDGE_RESULT_COOKIE to edgeResult?.pcer.orEmpty(),
+            PARAM_XBUILDER_BROWSER_COOKIE to edgeResult?.xbc.ifNullOrEmpty { prefsStorage.xbuilderBrowserCookie },
+            PARAM_TP_BROWSER_COOKIE to edgeResult?.tbc.ifNullOrEmpty { prefsStorage.tpBrowserCookie },
+            PARAM_TP_ACCESS_COOKIE to prefsStorage.tpAccessCookie,
+            PARAM_USER_TOKEN to userToken.orEmpty(),
+            PARAM_NEW_BID to browserIdProvider().orEmpty(),
+            PARAM_REFERRER to referer.orEmpty(),
+            PARAM_TITLE to title.orEmpty(),
+            PARAM_DESCRIPTION to description.orEmpty(),
+            PARAM_CONTENT_ID to contentId.orEmpty(),
+            PARAM_CONTENT_TYPE to contentType.orEmpty(),
+            PARAM_CONTENT_AUTHOR to contentAuthor.orEmpty(),
+            PARAM_CONTENT_SECTION to contentSection.orEmpty(),
+            PARAM_CONTENT_CREATED to contentCreated.orEmpty(),
+            PARAM_CONTENT_NATIVE to (contentIsNative?.toString() ?: ""),
+            PARAM_KEYWORDS to keywords.takeUnless { it.isEmpty() }
+                ?.joinToString(separator = ",")
+                .orEmpty(),
+            PARAM_CUSTOM_VARIABLES to customVariables.takeUnless { it.isEmpty() }
+                ?.let { customVariablesAdapter.toJson(it) }
+                .orEmpty(),
+            PARAM_CUSTOM_PARAMS to customParameters?.takeUnless { it.isEmpty() }
+                ?.let { customParametersAdapter.toJson(it) }
+                .orEmpty(),
+            PARAM_CONSENT_MODES to consents.values
+                .flatMap { c ->
+                    c.products.map {
+                        it.id to c.mode.id
+                    }
+                }.toMap()
+                .takeUnless { it.isEmpty() }
+                ?.let { consentModesAdapter.toJson(it) }
+                .orEmpty(),
+            PARAM_CONSENT_PURPOSES to productsToPurposesMapping.mapKeys { it.key.id }.takeUnless { it.isEmpty() }
+                ?.let { consentPurposesAdapter.toJson(it) }
+                .orEmpty()
+        ).filterNotEmptyValues()
+    }.toMap()
 
-    override fun afterExecute(request: ExperienceRequest, response: ExperienceResponse) =
-        with(response) {
-            prefsStorage.xbuilderBrowserCookie = xbCookie?.value.orEmpty()
-            prefsStorage.tpBrowserCookie = tbCookie?.value.orEmpty()
-            prefsStorage.tpAccessCookie = taCookie?.value.orEmpty()
-            visitTimeoutMinutes?.let { prefsStorage.visitTimeout = TimeUnit.MILLISECONDS.convert(it, TimeUnit.MINUTES) }
-            prefsStorage.serverTimezoneOffset = timeZoneOffsetMillis
-        }
+    override fun afterExecute(request: ExperienceRequest, response: ExperienceResponse) = with(response) {
+        prefsStorage.xbuilderBrowserCookie = xbCookie?.value.orEmpty()
+        prefsStorage.tpBrowserCookie = tbCookie?.value.orEmpty()
+        taCookie?.value.takeUnless { it.isNullOrEmpty() }?.also { prefsStorage.tpAccessCookie = it }
+        visitTimeoutMinutes?.let { prefsStorage.visitTimeout = TimeUnit.MILLISECONDS.convert(it, TimeUnit.MINUTES) }
+        prefsStorage.serverTimezoneOffset = timeZoneOffsetMillis
+    }
 
     internal fun buildEventTracking(
         trackingId: String,
@@ -166,16 +165,15 @@ internal class HttpHelper(
         eventGroup: String,
         consents: Map<Purpose, Consent>,
         customParameters: Map<String, String> = emptyMap(),
-    ): Map<String, String> =
-        mapOf(
-            PARAM_EVENT_TRACKING_ID to trackingId,
-            PARAM_EVENT_TYPE to eventType,
-            PARAM_EVENT_GROUP_ID to eventGroup,
-            PARAM_EVENT_CUSTOM_PARAMS to customParameters.takeUnless { it.isEmpty() }
-                ?.let { mapAdapter.toJson(it) }.orEmpty(),
-            PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-                ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
-        )
+    ): Map<String, String> = mapOf(
+        PARAM_EVENT_TRACKING_ID to trackingId,
+        PARAM_EVENT_TYPE to eventType,
+        PARAM_EVENT_GROUP_ID to eventGroup,
+        PARAM_EVENT_CUSTOM_PARAMS to customParameters.takeUnless { it.isEmpty() }
+            ?.let { mapAdapter.toJson(it) }.orEmpty(),
+        PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
+            ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
+    )
 
     internal fun buildCustomFormTracking(
         aid: String,
@@ -183,16 +181,15 @@ internal class HttpHelper(
         trackingId: String,
         userToken: String?,
         consents: Map<Purpose, Consent>,
-    ): Map<String, String> =
-        sequenceOf(
-            PARAM_AID to aid,
-            PARAM_USER_TOKEN to userToken.orEmpty(),
-            PARAM_PAGEVIEW_ID to experienceIdsProvider.getPageViewId(Date()),
-            PARAM_EVENT_TRACKING_ID to trackingId,
-            PARAM_CUSTOM_FORM_NAME to customFormName,
-            PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-                ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
-        ).filterNotEmptyValues().toMap()
+    ): Map<String, String> = sequenceOf(
+        PARAM_AID to aid,
+        PARAM_USER_TOKEN to userToken.orEmpty(),
+        PARAM_PAGEVIEW_ID to experienceIdsProvider.getPageViewId(Date()),
+        PARAM_EVENT_TRACKING_ID to trackingId,
+        PARAM_CUSTOM_FORM_NAME to customFormName,
+        PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
+            ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
+    ).filterNotEmptyValues().toMap()
 
     internal fun buildShowTemplateParameters(
         showTemplateEvent: Event<ShowTemplate>,
@@ -201,43 +198,45 @@ internal class HttpHelper(
         userToken: String?,
         gaClientId: String?,
         consents: Map<Purpose, Consent>,
-    ): Map<String, String> =
-        with(showTemplateEvent) {
-            experienceRequest.toMinimalSequence() + sequenceOf(
-                PARAM_AID to aid,
-                PARAM_SHOW_TEMPLATE_USER_TOKEN to userToken.orEmpty(),
-                PARAM_GA_CLIENT_ID to gaClientId.orEmpty(),
-                PARAM_OS to VALUE_ANDROID_OS,
-                PARAM_DISPLAY_MODE to DisplayMode.INLINE.mode,
-                PARAM_SHOW_CLOSE_BUTTON to eventData.showCloseButton.toString(),
-                PARAM_SHOW_TEMPLATE_TRACKING_ID to eventExecutionContext.trackingId,
-                PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),
-                PARAM_SHOW_TEMPLATE_CONTENT_SECTION to experienceRequest.contentSection.orEmpty(),
-                PARAM_SHOW_TEMPLATE_CUSTOM_VARIABLES to experienceRequest.customVariables.takeUnless { it.isEmpty() }
-                    ?.let { customVariablesAdapter.toJson(it) }
-                    .orEmpty(),
-                PARAM_TEMPLATE_ID to eventData.templateId,
-                PARAM_TEMPLATE_VARIANT_ID to eventData.templateVariantId.orEmpty(),
-                PARAM_ACTIVE_METERS to eventExecutionContext.activeMeters.takeUnless { it.isNullOrEmpty() }
-                    ?.let { activeMetersAdapter.toJson(it) }.orEmpty(),
-                PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-                    ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
-            ).filterNotEmptyValues()
-        }.toMap()
-
-    private fun ExperienceRequest.toMinimalSequence(): Sequence<Pair<String, String>> =
-        sequenceOf(
-            PARAM_DEBUG to isDebug.toString(),
-            PARAM_URL to url.orEmpty(),
-            PARAM_ZONE to zone.orEmpty(),
-            PARAM_TAGS to tags.takeUnless { it.isEmpty() }
-                ?.joinToString(separator = ",")
-                .orEmpty()
+    ): Map<String, String> = with(showTemplateEvent) {
+        experienceRequest.toMinimalSequence() + sequenceOf(
+            PARAM_AID to aid,
+            PARAM_SHOW_TEMPLATE_USER_TOKEN to userToken.orEmpty(),
+            PARAM_GA_CLIENT_ID to gaClientId.orEmpty(),
+            PARAM_OS to VALUE_ANDROID_OS,
+            PARAM_DISPLAY_MODE to DisplayMode.INLINE.mode,
+            PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie.orEmpty(),
+            PARAM_SHOW_CLOSE_BUTTON to eventData.showCloseButton.toString(),
+            PARAM_SHOW_TEMPLATE_TRACKING_ID to eventExecutionContext.trackingId,
+            PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),
+            PARAM_SHOW_TEMPLATE_CONTENT_SECTION to experienceRequest.contentSection.orEmpty(),
+            PARAM_SHOW_TEMPLATE_CUSTOM_VARIABLES to experienceRequest.customVariables.takeUnless { it.isEmpty() }
+                ?.let { customVariablesAdapter.toJson(it) }
+                .orEmpty(),
+            PARAM_TEMPLATE_ID to eventData.templateId,
+            PARAM_TEMPLATE_VARIANT_ID to eventData.templateVariantId.orEmpty(),
+            PARAM_ACTIVE_METERS to eventExecutionContext.activeMeters.takeUnless { it.isNullOrEmpty() }
+                ?.let { activeMetersAdapter.toJson(it) }.orEmpty(),
+            PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
+                ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
         ).filterNotEmptyValues()
+    }.toMap()
+
+    private fun ExperienceRequest.toMinimalSequence(): Sequence<Pair<String, String>> = sequenceOf(
+        PARAM_DEBUG to isDebug.toString(),
+        PARAM_URL to url.orEmpty(),
+        PARAM_ZONE to zone.orEmpty(),
+        PARAM_TAGS to tags.takeUnless { it.isEmpty() }
+            ?.joinToString(separator = ",")
+            .orEmpty()
+    ).filterNotEmptyValues()
 
     @Suppress("NOTHING_TO_INLINE")
     private inline fun Sequence<Pair<String, String>>.filterNotEmptyValues(): Sequence<Pair<String, String>> =
         filter { it.second.isNotEmpty() }
+
+    private inline fun String?.ifNullOrEmpty(defaultValue: () -> String): String =
+        if (isNullOrEmpty()) defaultValue() else this
 
     companion object {
         // Experience request constants
@@ -252,6 +251,7 @@ internal class HttpHelper(
         internal const val PARAM_NEW_VISIT = "new_visit"
         internal const val PARAM_SUBMIT_TYPE = "submit_type"
         internal const val PARAM_SDK_VERSION = "sdk_version"
+        internal const val PARAM_EDGE_RESULT_COOKIE = "edge_result"
         internal const val PARAM_XBUILDER_BROWSER_COOKIE = "xbc"
         internal const val PARAM_TP_BROWSER_COOKIE = "tbc"
         internal const val PARAM_TP_ACCESS_COOKIE = "tac"

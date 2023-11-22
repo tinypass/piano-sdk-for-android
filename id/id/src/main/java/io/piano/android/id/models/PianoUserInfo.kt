@@ -13,10 +13,9 @@ class PianoUserInfo(
     }
 }
 
-internal fun PianoUserInfo.toProfileUpdateRequest() =
-    ProfileUpdateRequest(
-        formName,
-        customFields.map {
-            CustomField(fieldName = it.key, value = it.value)
-        }
-    )
+internal fun PianoUserInfo.toProfileUpdateRequest() = ProfileUpdateRequest(
+    formName,
+    customFields.map {
+        CustomField(fieldName = it.key, value = it.value)
+    }
+)

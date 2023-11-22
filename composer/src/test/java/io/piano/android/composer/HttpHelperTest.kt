@@ -28,11 +28,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HttpHelperTest {
-    private val experienceIdsProvider: ExperienceIdsProvider = mock() {
+    private val experienceIdsProvider: ExperienceIdsProvider = mock {
         on { getPageViewId(any()) } doReturn DUMMY_STRING
         on { getVisitId(any()) } doReturn DUMMY_STRING2
     }
-    private val prefsStorage: PrefsStorage = mock() {
+    private val prefsStorage: PrefsStorage = mock {
         on { tpAccessCookie } doReturn ComposerTest.DUMMY_STRING
         on { tpBrowserCookie } doReturn ComposerTest.DUMMY_STRING
         on { xbuilderBrowserCookie } doReturn ComposerTest.DUMMY_STRING
@@ -44,10 +44,10 @@ class HttpHelperTest {
         .add(UnixTimeDateAdapter)
         .add(ConsentJsonAdapterFactory)
         .build()
-    private val customParameters: CustomParameters = mock() {
+    private val customParameters: CustomParameters = mock {
         on { isEmpty() } doReturn false
     }
-    private val experienceRequest: ExperienceRequest = mock() {
+    private val experienceRequest: ExperienceRequest = mock {
         on { customVariables } doReturn mapOf("1" to listOf("2"))
         on { tags } doReturn listOf(DUMMY_STRING, DUMMY_STRING)
         on { customParameters } doReturn customParameters
@@ -184,7 +184,7 @@ class HttpHelperTest {
                 )
             )
         ) {
-            assertEquals(11, size)
+            assertEquals(12, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
     }
