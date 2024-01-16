@@ -13,6 +13,7 @@ android {
         unitTests.isIncludeAndroidResources = true
     }
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
     namespace = "io.piano.android.id"

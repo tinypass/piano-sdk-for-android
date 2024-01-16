@@ -73,7 +73,7 @@ class ComposerActivity : AppCompatActivity() {
             .request("requestKey", "requstValue3")
 
         val request = ExperienceRequest.Builder()
-            .url("https://example.com")
+            .url(BuildConfig.SITE_URL)
             .referer("https://google.com")
             .tag("tag")
             .debug(true)

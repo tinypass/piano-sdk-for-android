@@ -16,18 +16,24 @@ internal class EdgeCookiesProvider(
     private val pcusAdapter: JsonAdapter<PcusContainer>,
 ) {
     private var lastUserSegmentsContainer: UserSegmentsContainer? = null
+    private var lastUserToken: String? = null
 
     val edgeCookies: EdgeCookies
         get() = EdgeCookies(
             prefsStorage.tpAccessCookie,
             prefsStorage.tpBrowserCookie,
             prefsStorage.xbuilderBrowserCookie,
+            lastUserToken.orEmpty(),
             buildPprvValue(),
             lastUserSegmentsContainer?.let { pcusAdapter.toJson(PcusContainer(it)) }?.toBase64String().orEmpty()
         )
 
     internal fun userSegments(userSegmentsContainer: UserSegmentsContainer?) {
         lastUserSegmentsContainer = userSegmentsContainer
+    }
+
+    internal fun userToken(userToken: String?) {
+        lastUserToken = userToken
     }
 
     private fun buildPprvValue() = pianoConsents?.let {

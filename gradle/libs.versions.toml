@@ -1,25 +1,25 @@
 [versions]
 # Plugins
 kotlin = "1.8.22"
-android = "8.1.4"
+android = "8.2.1"
 dokka = "1.8.20"
-versionUpdater = "0.49.0"
-ktlint = "11.6.1"
-mavenRelease = "0.25.3"
+versionUpdater = "0.50.0"
+ktlint = "12.1.0"
+mavenRelease = "0.27.0"
 moshiIR = "0.22.1"
 
 # AndroidX libraries
 compatLibrary = "1.6.1"
-androidxActivity = "1.8.1"
-annotationsLibrary = "1.7.0"
+androidxActivity = "1.8.2"
+annotationsLibrary = "1.7.1"
 fragmentLibrary = "1.6.2"
-materialLibrary = "1.10.0"
-lifecycleLibrary = "2.6.2"
+materialLibrary = "1.11.0"
+lifecycleLibrary = "2.7.0"
 prefsLibrary = "1.2.1"
 multidex = "2.0.1"
 
 # Third party Libraries
-facebookLogin = "16.2.0"
+facebookLogin = "16.3.0"
 googlePlayServices = "20.7.0"
 retrofit = "2.9.0"
 okhttp = "4.12.0"

@@ -9,6 +9,9 @@ android {
         buildConfigField("String", "SDK_VERSION", """"$version"""")
     }
     namespace = "io.piano.android.composer"
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {

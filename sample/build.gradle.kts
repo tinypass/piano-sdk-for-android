@@ -15,6 +15,8 @@ val aid: String = pianoProperties.getProperty("io.piano.aid")
     ?: throw IllegalArgumentException("You missed 'io.piano.aid' in piano.properties")
 val endpoint: String = pianoProperties.getProperty("io.piano.endpoint", "")
 val qaPrefix: String = pianoProperties.getProperty("io.piano.qaPrefix", "")
+val siteUrl: String = pianoProperties.getProperty("siteUrl", "https://example.com/")
+val edgeUrl: String = pianoProperties.getProperty("edgeUrl", "https://example.com/")
 val siteId: String = pianoProperties.getProperty("cxenseSiteid", "1111111111111111111")
 val fbAppId: String = pianoProperties.getProperty("facebookAppId", "1111111111111111")
 val fbAppToken: String = pianoProperties.getProperty("facebookClientToken", "00000000000000000000000000000000")
@@ -28,6 +30,8 @@ android {
         buildConfigField("String", "CX_SITE_ID", """"$siteId"""")
         buildConfigField("String", "PIANO_ENDPOINT", """"$endpoint"""")
         buildConfigField("String", "PIANO_QA_PREFIX", """"$qaPrefix"""")
+        buildConfigField("String", "SITE_URL", """"$siteUrl"""")
+        buildConfigField("String", "EDGE_URL", """"$edgeUrl"""")
         multiDexEnabled = true
 
         manifestPlaceholders += mapOf(
@@ -52,6 +56,7 @@ android {
         }
     }
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
     lint {

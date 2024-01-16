@@ -115,7 +115,10 @@ class Composer internal constructor(
      * @return The instance of [Composer].
      */
     @Suppress("unused") // Public API.
-    fun userToken(userToken: String?) = apply { this.userToken = userToken }
+    fun userToken(userToken: String?) = apply {
+        this.userToken = userToken
+        edgeCookiesProvider.userToken(userToken)
+    }
 
     /**
      * Sets the Google Analytics client ID.

@@ -6,6 +6,9 @@ import android.webkit.CookieManager
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import io.piano.android.composer.Composer
+import io.piano.android.composer.listeners.EventsListener
+import io.piano.android.composer.model.EdgeResult
+import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.id.PianoId
 import io.piano.android.id.PianoId.Companion.isPianoIdUri
 import io.piano.android.id.PianoId.Companion.parsePianoIdToken
@@ -15,11 +18,21 @@ import io.piano.android.id.models.PianoIdAuthSuccessResult
 import io.piano.android.id.models.PianoIdToken
 import io.piano.android.id.models.PianoUserInfo
 import io.piano.sample.databinding.ActivityMainBinding
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Cookie
+import okhttp3.FormBody
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import timber.log.Timber
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefsStorage: PrefsStorage
+    private lateinit var okHttpClient: OkHttpClient
 
     private val isDeepLink: Boolean
         get() {
@@ -47,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                 Timber.d("Is this a new user registered? %b", r.isNewUser)
                 setAccessToken(r.token)
             }
+
             is PianoIdAuthFailureResult -> showError(r.exception)
         }
     }
@@ -54,7 +68,9 @@ class MainActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefsStorage = SimpleDependenciesProvider.getInstance(this).prefsStorage
+        val dependenciesProvider = SimpleDependenciesProvider.getInstance(this)
+        prefsStorage = dependenciesProvider.prefsStorage
+        okHttpClient = dependenciesProvider.okHttpClient
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if (isDeepLink) {
@@ -92,6 +108,57 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
+            buttonComposerEdge.setOnClickListener {
+                val edgeCookies = Composer.getInstance().edgeCookies.toMap().map { "${it.key}=${it.value}" }
+                val edgeBody = FormBody.Builder()
+                    .add("url", BuildConfig.SITE_URL)
+                    .add("inflate", "true")
+                    .add("debug", "true")
+                    .add("customVariables", "{\"variable1\":\"value1\"}")
+                    .add("contentAuthor", "JohnDoe")
+                    .add("contentSection", "sport")
+                    .add("contentCreated", "2024-01-12T08:00:00")
+                    .add("tags", "premium")
+                    .build()
+                val edgeRequest = Request.Builder()
+                    .url(BuildConfig.EDGE_URL)
+                    .apply {
+                        edgeCookies.forEach { addHeader("Cookie", it) }
+                    }
+                    .post(edgeBody)
+                    .build()
+                okHttpClient.newCall(edgeRequest).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        showError(e)
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val cookies = Cookie.parseAll(BuildConfig.SITE_URL.toHttpUrl(), response.headers)
+                        val request = ExperienceRequest.Builder()
+                            .url(BuildConfig.SITE_URL)
+                            .edgeResult(
+                                EdgeResult(
+                                    cookies.getCookieValue("__tbc"),
+                                    cookies.getCookieValue("xbc"),
+                                    cookies.getCookieValue("_pcer")
+                                )
+                            )
+                            .debug(true)
+                            .build()
+                        val eventsListener: EventsListener = {
+                            val eventTypes = it.joinToString(prefix = "[", postfix = "]") { event ->
+                                event.eventData.toString()
+                            }
+                            val message = "Got events: $eventTypes"
+                            Timber.d(message)
+                            showMessage(message)
+                        }
+                        Composer.getInstance().getExperience(request, eventsListener) {
+                            showError(it)
+                        }
+                    }
+                })
+            }
             buttonComposerClearStorage.setOnClickListener {
                 Composer.getInstance().clearStoredData()
             }
@@ -102,6 +169,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun List<Cookie>.getCookieValue(name: String): String = firstOrNull { it.name == name }?.value.orEmpty()
 
     private fun signOut() {
         val token = prefsStorage.pianoIdToken
