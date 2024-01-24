@@ -1,6 +1,6 @@
 # Piano SDK for Android
 
-## v2.9.1-SNAPSHOT
+## v2.9.1
 * Fix nullability for custom field value in Piano ID user profile
 * Updated dependencies
     - androidx.activity:activity [1.8.1 -> 1.8.2]

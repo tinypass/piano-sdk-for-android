@@ -1,7 +1,7 @@
 [versions]
 # Plugins
 kotlin = "1.8.22"
-android = "8.2.1"
+android = "8.2.2"
 dokka = "1.8.20"
 versionUpdater = "0.50.0"
 ktlint = "12.1.0"
