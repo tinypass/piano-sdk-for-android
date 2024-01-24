@@ -8,7 +8,7 @@ import java.util.Date
 class CustomField(
     @Json(name = "field_name")
     val fieldName: String,
-    val value: String,
+    val value: String?,
     val created: Date? = null,
     @Json(name = "email_creator")
     val emailCreator: String? = null,

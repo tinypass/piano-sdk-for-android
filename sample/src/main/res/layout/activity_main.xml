@@ -51,6 +51,12 @@
             android:text="Composer screen with scroll depth" />
 
     <Button
+            android:id="@+id/button_composer_edge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Composer with Edge" />
+
+    <Button
             android:id="@+id/button_composer_clear_storage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

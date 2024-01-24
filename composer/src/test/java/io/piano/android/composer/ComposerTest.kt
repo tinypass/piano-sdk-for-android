@@ -62,7 +62,14 @@ class ComposerTest {
         )
     }
     private val edgeCookiesProvider: EdgeCookiesProvider = mock {
-        on { edgeCookies } doReturn EdgeCookies(DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING, DUMMY_STRING2, DUMMY_STRING)
+        on { edgeCookies } doReturn EdgeCookies(
+            DUMMY_STRING,
+            DUMMY_STRING2,
+            DUMMY_STRING,
+            DUMMY_STRING2,
+            DUMMY_STRING,
+            DUMMY_STRING2
+        )
     }
     private val pianoConsents: PianoConsents = mock {
         on { consents } doReturn emptyMap()

@@ -17,6 +17,7 @@ class EdgeCookies(
     val tac: String,
     val tbc: String,
     val xbc: String,
+    val userToken: String,
     val pprv: String,
     val pcus: String,
 ) {
@@ -28,6 +29,7 @@ class EdgeCookies(
             "__tac" to tac,
             "__tbc" to tbc,
             "xbc" to xbc,
+            "__utp" to userToken,
             "_pprv" to pprv,
             "_pcus" to pcus
         ).filterValues { it.isNotEmpty() }

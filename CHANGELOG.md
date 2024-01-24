@@ -1,5 +1,17 @@
 # Piano SDK for Android
 
+## v2.9.1
+* Fix nullability for custom field value in Piano ID user profile
+* Updated dependencies
+    - androidx.activity:activity [1.8.1 -> 1.8.2]
+      https://developer.android.com/jetpack/androidx/releases/activity#1.8.2
+    - androidx.annotation:annotation [1.7.0 -> 1.7.1]
+      https://developer.android.com/jetpack/androidx/releases/annotation#1.7.1
+    - androidx.lifecycle:lifecycle-common-java8 [2.6.2 -> 2.7.0]
+      https://developer.android.com/jetpack/androidx/releases/lifecycle#2.7.0
+    - com.facebook.android:facebook-login [16.2.0 -> 16.3.0]
+      https://github.com/facebook/facebook-android-sdk
+
 ## v2.9.0
 * Change `pageview_id`/`visit_id` format
 * Add support for Edge integration and deprecated `Composer.accessToken`
