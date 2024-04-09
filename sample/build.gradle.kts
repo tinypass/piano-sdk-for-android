@@ -82,4 +82,5 @@ dependencies {
     implementation(project(":id:id-oauth-google"))
     implementation(project(":id:id-oauth-facebook"))
     implementation(project(":show-custom-form"))
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
 }

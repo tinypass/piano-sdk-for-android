@@ -1,11 +1,11 @@
 [versions]
 # Plugins
 kotlin = "1.8.22"
-android = "8.2.2"
+android = "8.3.1"
 dokka = "1.8.20"
 versionUpdater = "0.50.0"
 ktlint = "12.1.0"
-mavenRelease = "0.27.0"
+mavenRelease = "0.28.0"
 moshiIR = "0.22.1"
 
 # AndroidX libraries

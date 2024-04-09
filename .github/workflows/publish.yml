@@ -27,7 +27,5 @@ jobs:
         run: echo "io.piano.aid=$AID" > sample/piano.properties
     -   name: Generate Javadoc
         run: ./gradlew javaDocReleaseGeneration --no-parallel
-    -   name: Upload artifacts
-        run: ./gradlew publish --no-configuration-cache
-    -   name: Close repository
-        run: ./gradlew closeAndReleaseRepository --no-configuration-cache
+    -   name: Release artifacts
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
