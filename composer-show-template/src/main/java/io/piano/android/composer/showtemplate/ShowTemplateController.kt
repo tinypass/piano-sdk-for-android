@@ -25,7 +25,7 @@ import timber.log.Timber
  *                    displayed template. If not provided, a default instance of [ComposerJs] will
  *                    be used.
  */
-class ShowTemplateController constructor(
+public class ShowTemplateController constructor(
     event: Event<ShowTemplate>,
     jsInterface: ComposerJs? = null,
 ) : BaseShowController<ShowTemplate, ComposerJs>(event.eventData, jsInterface ?: ComposerJs()) {
@@ -33,13 +33,13 @@ class ShowTemplateController constructor(
     private val trackingId = event.eventExecutionContext.trackingId
 
     // Overrides from BaseShowController
-    override val url = event.eventData.url ?: "about:blank"
-    override val fragmentTag = FRAGMENT_TAG
-    override val fragmentProvider = {
+    override val url: String = event.eventData.url ?: "about:blank"
+    override val fragmentTag: String = FRAGMENT_TAG
+    override val fragmentProvider: () -> ShowTemplateDialogFragment = {
         ShowTemplateDialogFragment(url, trackingId)
     }
 
-    override fun WebView.configure() = prepare(null, jsInterface, trackingId)
+    override fun WebView.configure(): Unit = prepare(null, jsInterface, trackingId)
 
     override fun processDelay(activity: FragmentActivity, showFunction: () -> Unit) {
         val func: () -> Unit = {
@@ -71,7 +71,7 @@ class ShowTemplateController constructor(
      */
     @Suppress("unused") // Public API.
     @UiThread
-    override fun close(data: String?) = jsInterface.close(data)
+    override fun close(data: String?): Unit = jsInterface.close(data)
 
     /**
      * Sends a reload command to the template. This should be called when the user token has changed.
@@ -79,9 +79,9 @@ class ShowTemplateController constructor(
      * @param userToken The updated user token to be sent to the JavaScript interface.
      */
     @Suppress("unused") // Public API.
-    fun reloadWithToken(userToken: String) = jsInterface.updateToken(userToken)
+    public fun reloadWithToken(userToken: String): Unit = jsInterface.updateToken(userToken)
 
-    companion object {
+    internal companion object {
         private const val FRAGMENT_TAG = "ShowTemplateDialogFragment"
         private const val JAVASCRIPT_INTERFACE = "PianoAndroid"
 

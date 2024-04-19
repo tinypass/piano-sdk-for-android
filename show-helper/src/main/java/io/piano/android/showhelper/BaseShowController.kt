@@ -9,19 +9,19 @@ import io.piano.android.composer.model.DisplayMode
 import io.piano.android.composer.model.events.BaseShowType
 import timber.log.Timber
 
-abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constructor(
+public abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constructor(
     protected val eventData: T,
     protected val jsInterface: V,
 ) {
 
-    abstract val url: String
-    abstract val fragmentTag: String
-    abstract val fragmentProvider: () -> BaseShowDialogFragment
+    protected abstract val url: String
+    protected abstract val fragmentTag: String
+    protected abstract val fragmentProvider: () -> BaseShowDialogFragment
 
     protected abstract fun WebView.configure()
-    protected open fun processDelay(activity: FragmentActivity, showFunction: () -> Unit) = showFunction()
+    protected open fun processDelay(activity: FragmentActivity, showFunction: () -> Unit): Unit = showFunction()
 
-    protected open fun checkPrerequisites(callback: (Boolean) -> Unit) = callback(true)
+    protected open fun checkPrerequisites(callback: (Boolean) -> Unit): Unit = callback(true)
 
     /**
      * Shows modal/inline template.
@@ -31,7 +31,7 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
     @JvmOverloads
     @Suppress("unused") // Public API.
     @UiThread
-    fun show(
+    public fun show(
         activity: FragmentActivity,
         inlineWebViewProvider: (FragmentActivity, String) -> WebView? = defaultWebViewProvider,
     ) {
@@ -53,7 +53,7 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
      */
     @Suppress("unused") // Public API.
     @UiThread
-    abstract fun close(data: String? = null)
+    public abstract fun close(data: String? = null)
 
     private fun showInline(activity: FragmentActivity, webViewProvider: (FragmentActivity, String) -> WebView?) =
         eventData.containerSelector
@@ -81,7 +81,7 @@ abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> constru
         }
     }
 
-    companion object {
+    private companion object {
         @SuppressLint("DiscouragedApi")
         @JvmStatic
         private val defaultWebViewProvider: (FragmentActivity, String) -> WebView? = { activity, webViewId ->

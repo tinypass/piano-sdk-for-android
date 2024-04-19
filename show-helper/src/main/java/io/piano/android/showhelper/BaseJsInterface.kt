@@ -3,7 +3,7 @@ package io.piano.android.showhelper
 import android.webkit.WebView
 import timber.log.Timber
 
-abstract class BaseJsInterface {
+public abstract class BaseJsInterface {
     protected var fragment: BaseShowDialogFragment? = null
     protected var webView: WebView? = null
 

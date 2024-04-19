@@ -5,13 +5,13 @@ import com.squareup.moshi.JsonClass
 import java.util.Date
 
 @JsonClass(generateAdapter = true)
-class CustomField(
+public class CustomField(
     @Json(name = "field_name")
-    val fieldName: String,
-    val value: String?,
-    val created: Date? = null,
+    public val fieldName: String,
+    public val value: String?,
+    public val created: Date? = null,
     @Json(name = "email_creator")
-    val emailCreator: String? = null,
+    public val emailCreator: String? = null,
     @Json(name = "sort_order")
-    val sortOrder: Long? = null,
+    public val sortOrder: Long? = null,
 )

@@ -4,6 +4,7 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import com.vanniktech.maven.publish.MavenPublishPlugin
 import io.piano.android.ktlint.KtlintConfigPlugin
+import kotlinx.validation.BinaryCompatibilityValidatorPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -51,13 +52,14 @@ class CommonAndroidConfigurationPlugin : Plugin<Project> {
     private fun Project.configureLibraryPublishing() {
         apply<DokkaPlugin>()
         apply<MavenPublishPlugin>()
+        apply<BinaryCompatibilityValidatorPlugin>()
+        extensions.configure(KotlinAndroidProjectExtension::class.java) {
+            explicitApi()
+        }
     }
 
     private fun Project.configureKotlin() {
         apply<KotlinAndroidPluginWrapper>()
         apply<KtlintConfigPlugin>()
-        extensions.configure(KotlinAndroidProjectExtension::class.java) {
-            explicitApi()
-        }
     }
 }

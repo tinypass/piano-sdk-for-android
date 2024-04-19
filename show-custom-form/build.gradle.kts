@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
-    alias(libs.plugins.moshiIR)
     id("common-android-config")
+    alias(libs.plugins.moshiIR)
 }
 
 dependencies {

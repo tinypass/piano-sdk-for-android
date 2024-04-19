@@ -24,7 +24,7 @@ import io.piano.android.id.models.OAuthSuccessResult
 import io.piano.android.id.models.PianoIdAuthResult
 import io.piano.android.id.models.PianoIdToken
 
-class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
+public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     @VisibleForTesting
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     private lateinit var binding: ActivityPianoIdBinding
@@ -55,7 +55,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
 
     init {
         addOnNewIntentListener {
-            it?.process()
+            it.process()
         }
     }
 
@@ -149,11 +149,11 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         }
     }
 
-    override fun registerSuccess(payload: String?) = parsePayload(payload, true)
+    override fun registerSuccess(payload: String?): Unit = parsePayload(payload, true)
 
-    override fun loginSuccess(payload: String?) = parsePayload(payload, false)
+    override fun loginSuccess(payload: String?): Unit = parsePayload(payload, false)
 
-    override fun error(payload: String?) = setFailureResultData(client.parseJsError(payload))
+    override fun error(payload: String?): Unit = setFailureResultData(client.parseJsError(payload))
 
     override fun cancel() {
         setResult(Activity.RESULT_CANCELED)
@@ -190,7 +190,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         stage = getStringExtra(KEY_STAGE)
     }
 
-    companion object {
+    internal companion object {
         internal const val KEY_WIDGET = "io.piano.android.id.PianoIdActivity.WIDGET"
         internal const val KEY_DISABLE_SIGN_UP = "io.piano.android.id.PianoIdActivity.DISABLE_SIGN_UP"
         internal const val KEY_STAGE = "io.piano.android.id.PianoIdActivity.STAGE"

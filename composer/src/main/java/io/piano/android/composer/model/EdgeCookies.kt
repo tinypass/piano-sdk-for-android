@@ -13,18 +13,18 @@ import java.util.Collections
  * @property pprv Consent cookie
  * @property pcus User segment information cookie
  */
-class EdgeCookies(
-    val tac: String,
-    val tbc: String,
-    val xbc: String,
-    val userToken: String,
-    val pprv: String,
-    val pcus: String,
+public class EdgeCookies(
+    public val tac: String,
+    public val tbc: String,
+    public val xbc: String,
+    public val userToken: String,
+    public val pprv: String,
+    public val pcus: String,
 ) {
     /**
      * Return all cookies as map, where key is cookie name
      */
-    fun toMap(): Map<String, String> = Collections.unmodifiableMap(
+    public fun toMap(): Map<String, String> = Collections.unmodifiableMap(
         mapOf(
             "__tac" to tac,
             "__tbc" to tbc,

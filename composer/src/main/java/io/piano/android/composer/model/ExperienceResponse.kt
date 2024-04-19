@@ -4,28 +4,28 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class ExperienceResponse(
+public class ExperienceResponse(
     @JvmField
     @Json(name = "tbc")
-    val tbCookie: CookieObject?,
+    public val tbCookie: CookieObject?,
     @JvmField
     @Json(name = "xbc")
-    val xbCookie: CookieObject?,
+    public val xbCookie: CookieObject?,
     @JvmField
     @Json(name = "tac")
-    val taCookie: CookieObject?,
+    public val taCookie: CookieObject?,
     @JvmField
     @Json(name = "timezone_offset")
-    val timeZoneOffsetMillis: Int,
+    public val timeZoneOffsetMillis: Int,
     @JvmField
     @Json(name = "visit_timeout")
-    val visitTimeoutMinutes: Long?,
+    public val visitTimeoutMinutes: Long?,
     @JvmField
     @Json(name = "bid")
-    val browserId: String?,
+    public val browserId: String?,
     @JvmField
     @Json(name = "uid")
-    val userId: String?,
-    @JvmField val cxenseCustomerPrefix: String?,
-    @JvmField val result: EventsContainer,
+    public val userId: String?,
+    @JvmField public val cxenseCustomerPrefix: String?,
+    @JvmField public val result: EventsContainer,
 )

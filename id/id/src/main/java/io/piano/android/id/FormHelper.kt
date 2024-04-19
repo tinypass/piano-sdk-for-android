@@ -1,12 +1,12 @@
 package io.piano.android.id
 
-object FormHelper {
+public object FormHelper {
     @JvmStatic
-    fun buildUrl(formName: String?, hideCompletedFields: Boolean, trackingId: String) =
+    public fun buildUrl(formName: String?, hideCompletedFields: Boolean, trackingId: String): String =
         PianoId.getInstance().getFormUrl(formName, hideCompletedFields, trackingId)
 
     @JvmStatic
-    fun buildConsentsCode() =
+    public fun buildConsentsCode(): String =
         @Suppress("ktlint:standard:max-line-length")
         """PianoIDMobileSDK.messageCallback('{"event":"consentWithModes","params":"${PianoId.getInstance().consentsDataProvider.consents}"}')"""
 }

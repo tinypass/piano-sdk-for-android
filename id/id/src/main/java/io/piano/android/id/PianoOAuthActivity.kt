@@ -8,7 +8,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import io.piano.android.id.PianoIdClient.Companion.toPianoIdException
 
-abstract class PianoOAuthActivity : AppCompatActivity() {
+public abstract class PianoOAuthActivity : AppCompatActivity() {
     @VisibleForTesting
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     internal lateinit var client: PianoIdClient
@@ -25,7 +25,7 @@ abstract class PianoOAuthActivity : AppCompatActivity() {
      * @param providerName Provider name
      * @param token        Provider token
      */
-    protected open fun setSuccessResult(providerName: String, token: String?) = setResult(
+    protected open fun setSuccessResult(providerName: String, token: String?): Unit = setResult(
         RESULT_OK,
         Intent()
             .putExtra(PianoId.KEY_OAUTH_PROVIDER_NAME, providerName)
@@ -37,7 +37,7 @@ abstract class PianoOAuthActivity : AppCompatActivity() {
      *
      * @param throwable Throwable, that will be processed
      */
-    protected open fun setFailureResult(throwable: Throwable) = setResult(
+    protected open fun setFailureResult(throwable: Throwable): Unit = setResult(
         PianoId.RESULT_ERROR,
         Intent().putExtra(PianoId.KEY_ERROR, client.saveException(throwable.toPianoIdException()))
     )

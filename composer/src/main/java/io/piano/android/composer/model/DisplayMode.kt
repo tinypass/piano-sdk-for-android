@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = false)
-enum class DisplayMode(val mode: String) {
+public enum class DisplayMode(public val mode: String) {
     @Json(name = "modal")
     MODAL("modal"),
 

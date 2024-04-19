@@ -3,16 +3,16 @@ package io.piano.android.composer.model
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class EventExecutionContext(
-    @JvmField val experienceId: String,
-    @JvmField val executionId: String,
-    @JvmField val trackingId: String,
-    @JvmField val splitTests: List<SplitTest>?,
-    @JvmField val currentMeterName: String?,
-    @JvmField val user: User?,
-    @JvmField val region: String?,
-    @JvmField val countryCode: String,
-    @JvmField val userSegments: UserSegmentsContainer,
-    @JvmField val accessList: List<Access>?,
-    @JvmField val activeMeters: List<ActiveMeter>?,
+public class EventExecutionContext(
+    @JvmField public val experienceId: String,
+    @JvmField public val executionId: String,
+    @JvmField public val trackingId: String,
+    @JvmField public val splitTests: List<SplitTest>?,
+    @JvmField public val currentMeterName: String?,
+    @JvmField public val user: User?,
+    @JvmField public val region: String?,
+    @JvmField public val countryCode: String,
+    @JvmField public val userSegments: UserSegmentsContainer,
+    @JvmField public val accessList: List<Access>?,
+    @JvmField public val activeMeters: List<ActiveMeter>?,
 )

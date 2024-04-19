@@ -3,7 +3,7 @@ package io.piano.android.composer
 import com.squareup.moshi.JsonWriter
 import com.squareup.moshi.ToJson
 
-object CustomValuesJsonAdapter {
+internal object CustomValuesJsonAdapter {
     @ToJson
     fun toJson(writer: JsonWriter, value: Map<String, @JvmSuppressWildcards List<String>?>?) {
         requireNotNull(value)

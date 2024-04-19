@@ -24,9 +24,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import java.util.Locale
 
-class PianoId {
+public class PianoId {
 
-    companion object {
+    public companion object {
         @VisibleForTesting
         @RestrictTo(RestrictTo.Scope.LIBRARY)
         @JvmStatic
@@ -91,7 +91,7 @@ class PianoId {
          */
         @Suppress("unused") // Public API.
         @JvmStatic
-        fun init(
+        public fun init(
             endpoint: String,
             aid: String,
             pianoConsents: PianoConsents? = null,
@@ -107,7 +107,7 @@ class PianoId {
          */
         @Suppress("unused") // Public API.
         @JvmStatic
-        fun init(
+        public fun init(
             endpoint: HttpUrl,
             aid: String,
             pianoConsents: PianoConsents? = null,
@@ -124,7 +124,7 @@ class PianoId {
 
         @JvmStatic
         @Suppress("unused") // Public API.
-        fun getInstance(): PianoIdClient = checkNotNull(client) {
+        public fun getInstance(): PianoIdClient = checkNotNull(client) {
             NOT_INITIALIZED_MSG
         }
 
@@ -141,7 +141,7 @@ class PianoId {
             "Use method directly from PianoIdClient instance, will be removed in future versions",
             ReplaceWith("PianoId.getInstance().signIn()")
         )
-        fun signIn(): PianoIdClient.SignInContext = getInstance().signIn()
+        public fun signIn(): PianoIdClient.SignInContext = getInstance().signIn()
 
         /**
          * Sign out user by it's token
@@ -156,7 +156,7 @@ class PianoId {
             "Use method directly from PianoIdClient instance, will be removed in future versions",
             ReplaceWith("PianoId.getInstance().signOut(accessToken, callback)")
         )
-        fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>? = null) {
+        public fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>? = null) {
             val signOutCallback = callback ?: {}
             client?.signOut(accessToken, signOutCallback)
                 ?: signOutCallback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
@@ -175,7 +175,7 @@ class PianoId {
             "Use method directly from PianoIdClient instance, will be removed in future versions",
             ReplaceWith("PianoId.getInstance().refreshToken(refreshToken, callback)")
         )
-        fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
+        public fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
             client?.refreshToken(refreshToken, callback)
                 ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
         }
@@ -194,7 +194,7 @@ class PianoId {
             "Use method directly from PianoIdClient instance, will be removed in future versions",
             ReplaceWith("PianoId.getInstance().getUserInfo(accessToken, formName, callback)")
         )
-        fun getUserInfo(
+        public fun getUserInfo(
             accessToken: String,
             formName: String? = null,
             callback: PianoIdFuncCallback<PianoUserProfile>,
@@ -216,7 +216,7 @@ class PianoId {
             "Use method directly from PianoIdClient instance, will be removed in future versions",
             ReplaceWith("PianoId.getInstance().putUserInfo(accessToken, newUserInfo, callback)")
         )
-        fun putUserInfo(
+        public fun putUserInfo(
             accessToken: String,
             newUserInfo: PianoUserInfo,
             callback: PianoIdFuncCallback<PianoUserProfile>,
@@ -227,7 +227,7 @@ class PianoId {
 
         @Suppress("unused") // Public API.
         @JvmStatic
-        fun Uri?.parsePianoIdToken(callback: PianoIdFuncCallback<PianoIdToken>) =
+        public fun Uri?.parsePianoIdToken(callback: PianoIdFuncCallback<PianoIdToken>): Unit =
             if (isPianoIdUri()) {
                 getInstance().parseToken(this!!, callback)
             } else {
@@ -236,7 +236,7 @@ class PianoId {
 
         @Suppress("unused") // Public API.
         @JvmStatic
-        suspend fun Uri?.parsePianoIdToken() = suspendCancellableCoroutine { continuation ->
+        public suspend fun Uri?.parsePianoIdToken(): PianoIdToken = suspendCancellableCoroutine { continuation ->
             parsePianoIdToken { result ->
                 continuation.resumeWith(result)
             }
@@ -244,7 +244,7 @@ class PianoId {
 
         @Suppress("unused") // Public API.
         @JvmStatic
-        fun Uri?.isPianoIdUri(): Boolean =
+        public fun Uri?.isPianoIdUri(): Boolean =
             this?.run {
                 scheme?.lowercase(Locale.ENGLISH)?.startsWith(PianoIdClient.LINK_SCHEME_PREFIX) == true &&
                     PianoIdClient.LINK_AUTHORITY.equals(authority, ignoreCase = true)
@@ -254,55 +254,55 @@ class PianoId {
          * Default production endpoint
          */
         @Suppress("unused") // Public API.
-        const val ENDPOINT_PRODUCTION = "https://buy.piano.io"
+        public const val ENDPOINT_PRODUCTION: String = "https://buy.piano.io"
 
         /**
          * Australia production endpoint
          */
         @Suppress("unused") // Public API.
-        const val ENDPOINT_PRODUCTION_AUSTRALIA = "https://buy-au.piano.io"
+        public const val ENDPOINT_PRODUCTION_AUSTRALIA: String = "https://buy-au.piano.io"
 
         /**
          * Asia/Pacific production endpoint
          */
         @Suppress("unused") // Public API.
-        const val ENDPOINT_PRODUCTION_ASIA_PACIFIC = "https://buy-ap.piano.io"
+        public const val ENDPOINT_PRODUCTION_ASIA_PACIFIC: String = "https://buy-ap.piano.io"
 
         /**
          * Europe production endpoint
          */
         @Suppress("unused") // Public API.
-        const val ENDPOINT_PRODUCTION_EUROPE = "https://buy-eu.piano.io"
+        public const val ENDPOINT_PRODUCTION_EUROPE: String = "https://buy-eu.piano.io"
 
         /**
          * Sandbox endpoint
          */
         @Suppress("unused") // Public API.
-        const val ENDPOINT_SANDBOX = "https://sandbox.piano.io"
+        public const val ENDPOINT_SANDBOX: String = "https://sandbox.piano.io"
 
         /**
          * Widget for login screen
          */
         @Suppress("unused") // Public API.
-        const val WIDGET_LOGIN = "login"
+        public const val WIDGET_LOGIN: String = "login"
 
         /**
          * Widget for registration screen
          */
         @Suppress("unused") // Public API.
-        const val WIDGET_REGISTER = "register"
+        public const val WIDGET_REGISTER: String = "register"
 
         /**
          * Client ID key for OAuth providers
          */
         @Suppress("unused") // Public API.
-        const val KEY_CLIENT_ID = "io.piano.android.id.CLIENT_ID"
+        public const val KEY_CLIENT_ID: String = "io.piano.android.id.CLIENT_ID"
 
         /**
          * Activity result code for error
          */
         @Suppress("unused") // Public API.
-        const val RESULT_ERROR = 1
+        public const val RESULT_ERROR: Int = 1
 
         internal const val KEY_OAUTH_PROVIDER_NAME = "io.piano.android.id.OAUTH_PROVIDER_NAME"
         internal const val KEY_OAUTH_PROVIDER_TOKEN = "io.piano.android.id.OAUTH_PROVIDER_TOKEN"

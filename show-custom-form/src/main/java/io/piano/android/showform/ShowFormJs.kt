@@ -18,7 +18,7 @@ import kotlin.properties.Delegates
  * interfaces. It allows executing custom JavaScript functions and handling various events from
  * the form.
  */
-class ShowFormJs(
+public class ShowFormJs(
     private val formName: String,
     private val trackingId: String,
     internal var loginCallback: () -> Unit = {},
@@ -60,7 +60,7 @@ class ShowFormJs(
      * @param data Data passed from the form to the function.
      */
     @JavascriptInterface
-    fun postMessage(data: String) {
+    public fun postMessage(data: String) {
         ShowFormController.eventAdapter.fromJson(data)?.apply {
             when (event) {
                 "formSend" -> {
@@ -88,7 +88,7 @@ class ShowFormJs(
      * @param eventData Optional data passed from the template to the close function.
      */
     @UiThread
-    fun close() {
+    public fun close() {
         Composer.getInstance().trackCloseEvent(trackingId)
         fragment?.dismissAllowingStateLoss()
             ?: webView?.apply {

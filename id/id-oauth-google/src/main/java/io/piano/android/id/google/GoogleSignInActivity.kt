@@ -9,7 +9,7 @@ import com.google.android.gms.common.api.ApiException
 import io.piano.android.id.PianoId
 import io.piano.android.id.PianoOAuthActivity
 
-class GoogleSignInActivity : PianoOAuthActivity() {
+public class GoogleSignInActivity : PianoOAuthActivity() {
     private val signInResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         try {
             val idToken = GoogleSignIn

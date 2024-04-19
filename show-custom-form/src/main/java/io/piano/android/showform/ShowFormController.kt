@@ -20,11 +20,14 @@ import timber.log.Timber
  * @param initialToken Initial value for user access token.
  * @param loginCallback Callback, which be called if current user access token is invalid.
  */
-class ShowFormController(event: Event<ShowForm>, initialToken: String = "", private val loginCallback: () -> Unit) :
-    BaseShowController<ShowForm, ShowFormJs>(
-        event.eventData,
-        ShowFormJs(event.eventData.formName, event.eventExecutionContext.trackingId, loginCallback)
-    ) {
+public class ShowFormController(
+    event: Event<ShowForm>,
+    initialToken: String = "",
+    private val loginCallback: () -> Unit,
+) : BaseShowController<ShowForm, ShowFormJs>(
+    event.eventData,
+    ShowFormJs(event.eventData.formName, event.eventExecutionContext.trackingId, loginCallback)
+) {
     private var checkProfileAtTokenChange: Boolean = false
     private val trackingId = event.eventExecutionContext.trackingId
     override val url: String by lazy {
@@ -32,8 +35,10 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
             FormHelper.buildUrl(formName, hideCompletedFields, trackingId)
         }
     }
-    override val fragmentTag = FRAGMENT_TAG
-    override val fragmentProvider = { ShowFormDialogFragment(url, eventData.formName, trackingId) }
+    override val fragmentTag: String = FRAGMENT_TAG
+    override val fragmentProvider: () -> ShowFormDialogFragment = {
+        ShowFormDialogFragment(url, eventData.formName, trackingId)
+    }
 
     init {
         updateToken(initialToken)
@@ -59,16 +64,16 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
         }
     }
 
-    override fun close(data: String?) = jsInterface.close()
+    override fun close(data: String?): Unit = jsInterface.close()
 
-    override fun WebView.configure() = prepare(jsInterface, loginCallback = loginCallback)
+    override fun WebView.configure(): Unit = prepare(jsInterface, loginCallback = loginCallback)
 
     /**
      * Updates user token for form.
      *
      * @param userToken The updated user token
      */
-    fun updateToken(userToken: String) {
+    public fun updateToken(userToken: String) {
         jsInterface.token = userToken
         if (checkProfileAtTokenChange) {
             checkFormNotFilled(userToken) { formNotFilled ->
@@ -79,7 +84,7 @@ class ShowFormController(event: Event<ShowForm>, initialToken: String = "", priv
         }
     }
 
-    companion object {
+    internal companion object {
         private const val FRAGMENT_TAG = "ShowFormDialogFragment"
         private const val JAVASCRIPT_INTERFACE = "PianoIDMobileSDK"
         internal val eventAdapter = Moshi.Builder().build().adapter(EventData::class.java)

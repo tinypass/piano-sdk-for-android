@@ -3,6 +3,6 @@ package io.piano.android.id.models
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class PianoIdError(
-    val message: String,
+public class PianoIdError(
+    public val message: String,
 )

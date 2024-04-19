@@ -15,7 +15,7 @@ import io.piano.android.showhelper.BaseJsInterface
  * interfaces. It allows executing custom JavaScript functions and handling various events from
  * the templates.
  */
-open class ComposerJs : BaseJsInterface() {
+public open class ComposerJs : BaseJsInterface() {
     private var trackId: String = ""
 
     /**
@@ -43,7 +43,7 @@ open class ComposerJs : BaseJsInterface() {
      */
     @JavascriptInterface
     @UiThread
-    open fun close(eventData: String?) {
+    public open fun close(eventData: String?) {
         Composer.getInstance().trackCloseEvent(trackId)
         closeOverridden(eventData)
     }
@@ -59,7 +59,7 @@ open class ComposerJs : BaseJsInterface() {
      */
     @JavascriptInterface
     @UiThread
-    open fun closeAndRefresh(eventData: String?) {
+    public open fun closeAndRefresh(eventData: String?) {
         // Perform basic close action without any additional event tracking
         closeOverridden(eventData)
     }
@@ -73,7 +73,7 @@ open class ComposerJs : BaseJsInterface() {
      * @param eventData Data passed from the template to the custom event function.
      */
     @JavascriptInterface
-    open fun customEvent(eventData: String) {
+    public open fun customEvent(eventData: String) {
         // Implementation details of handling custom events go here...
     }
 
@@ -87,7 +87,7 @@ open class ComposerJs : BaseJsInterface() {
      * @param eventData Data passed from the template to the register function.
      */
     @JavascriptInterface
-    open fun register(eventData: String) {
+    public open fun register(eventData: String) {
         // Implementation details of handling user registration go here...
     }
 
@@ -101,7 +101,7 @@ open class ComposerJs : BaseJsInterface() {
      * @param eventData Data passed from the template to the login function.
      */
     @JavascriptInterface
-    open fun login(eventData: String) {
+    public open fun login(eventData: String) {
         // Implementation details of handling user login go here...
     }
 
@@ -115,7 +115,7 @@ open class ComposerJs : BaseJsInterface() {
      * @param eventData Data passed from the template to the logout function.
      */
     @JavascriptInterface
-    open fun logout(eventData: String) {
+    public open fun logout(eventData: String) {
         // Implementation details of handling user logout go here...
     }
 
@@ -129,7 +129,7 @@ open class ComposerJs : BaseJsInterface() {
      * @param eventData Optional data passed from the template to the close function.
      */
     @UiThread
-    fun closeOverridden(eventData: String? = null) {
+    public fun closeOverridden(eventData: String? = null) {
         fragment?.dismissAllowingStateLoss()
             ?: webView?.apply {
                 visibility = View.GONE

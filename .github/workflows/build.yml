@@ -28,5 +28,7 @@ jobs:
         run: echo "io.piano.aid=$AID" > sample/piano.properties
     -   name: Check codestyle
         run: ./gradlew ktlintCheck --continue
+    -   name: Check API binary compatibility
+        run: ./gradlew apiCheck
     -   name: Build project
         run: ./gradlew testDebug sample:asDeb

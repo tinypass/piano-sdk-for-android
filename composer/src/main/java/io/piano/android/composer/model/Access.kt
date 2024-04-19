@@ -4,11 +4,11 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class Access(
+public class Access(
     @JvmField
     @Json(name = "rid")
-    val resourceId: String = "",
-    @JvmField val resourceName: String = "",
-    @JvmField val expireDate: Int,
-    @JvmField val daysUntilExpiration: Int,
+    public val resourceId: String = "",
+    @JvmField public val resourceName: String = "",
+    @JvmField public val expireDate: Int,
+    @JvmField public val daysUntilExpiration: Int,
 )

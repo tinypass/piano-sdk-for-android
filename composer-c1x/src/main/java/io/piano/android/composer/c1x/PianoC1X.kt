@@ -9,7 +9,7 @@ import io.piano.android.cxense.CxenseSdk
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-object PianoC1X {
+public object PianoC1X {
     /**
      * Initialize Composer C1X Integration.
      * @param context The Activity or Application context.
@@ -21,7 +21,7 @@ object PianoC1X {
     @JvmStatic
     @JvmOverloads
     @Suppress("unused") // Public API.
-    fun init(
+    public fun init(
         context: Context,
         siteId: String,
         aid: String,

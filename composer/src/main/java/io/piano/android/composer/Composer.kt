@@ -36,7 +36,7 @@ import retrofit2.Response
  * @param endpoint The custom API endpoint. It should be one of the predefined endpoints in [Endpoint].
  * @property pianoConsents [PianoConsents] instance for managing user consent.
  */
-class Composer internal constructor(
+public class Composer internal constructor(
     private val composerApi: ComposerApi,
     private val generalApi: GeneralApi,
     private val httpHelper: HttpHelper,
@@ -46,7 +46,7 @@ class Composer internal constructor(
     private val edgeCookiesProvider: EdgeCookiesProvider,
     // Public API.
     @Suppress("unused")
-    val pianoConsents: PianoConsents?,
+    public val pianoConsents: PianoConsents?,
 ) {
     // Private properties
     private val templateUrl by lazy {
@@ -63,7 +63,7 @@ class Composer internal constructor(
         }
     }
 
-    var browserId: String? = null
+    public var browserId: String? = null
         private set
 
     /**
@@ -72,7 +72,7 @@ class Composer internal constructor(
      * @return Access token for Edge CDN.
      */
     @Deprecated("Use `edgeCookies.tac`", ReplaceWith("edgeCookies.tac"))
-    val accessToken: String
+    public val accessToken: String
         get() = prefsStorage.tpAccessCookie
 
     /**
@@ -80,7 +80,7 @@ class Composer internal constructor(
      *
      * @return cookies for Edge CDN
      */
-    val edgeCookies: EdgeCookies
+    public val edgeCookies: EdgeCookies
         get() = edgeCookiesProvider.edgeCookies
 
     /**
@@ -91,7 +91,8 @@ class Composer internal constructor(
      *
      * @param interceptor The custom [ExperienceInterceptor] to be added.
      */
-    fun addExperienceInterceptor(interceptor: ExperienceInterceptor) = experienceInterceptors.add(interceptor)
+    public fun addExperienceInterceptor(interceptor: ExperienceInterceptor): Boolean =
+        experienceInterceptors.add(interceptor)
 
     /**
      * Sets the browser ID provider for the Composer.
@@ -103,7 +104,9 @@ class Composer internal constructor(
      * @param browserIdProvider The custom browser ID provider function.
      * @return The instance of [Composer].
      */
-    fun browserIdProvider(browserIdProvider: () -> String?) = apply { this.browserIdProvider = browserIdProvider }
+    public fun browserIdProvider(browserIdProvider: () -> String?): Composer = apply {
+        this.browserIdProvider = browserIdProvider
+    }
 
     /**
      * Sets the user token to be sent with each experience request.
@@ -115,7 +118,7 @@ class Composer internal constructor(
      * @return The instance of [Composer].
      */
     @Suppress("unused") // Public API.
-    fun userToken(userToken: String?) = apply {
+    public fun userToken(userToken: String?): Composer = apply {
         this.userToken = userToken
         edgeCookiesProvider.userToken(userToken)
     }
@@ -130,7 +133,7 @@ class Composer internal constructor(
      * @return The instance of [Composer].
      */
     @Suppress("unused") // Public API.
-    fun gaClientId(gaClientId: String?) = apply { this.gaClientId = gaClientId }
+    public fun gaClientId(gaClientId: String?): Composer = apply { this.gaClientId = gaClientId }
 
     /**
      * Gets an experience from the server.
@@ -145,11 +148,11 @@ class Composer internal constructor(
      * @param exceptionListener Listener for handling exceptions that may occur during the request.
      */
     @Suppress("unused") // Public API.
-    fun getExperience(
+    public fun getExperience(
         request: ExperienceRequest,
         eventTypeListeners: Collection<EventTypeListener<out EventType>>,
         exceptionListener: ExceptionListener,
-    ) = getExperience(
+    ): Unit = getExperience(
         request,
         exceptionListener
     ) { response ->
@@ -174,11 +177,11 @@ class Composer internal constructor(
      * @param eventsListener Listener for handling received list of events.
      * @param exceptionListener Listener for handling exceptions that may occur during the request.
      */
-    fun getExperience(
+    public fun getExperience(
         request: ExperienceRequest,
         eventsListener: EventsListener,
         exceptionListener: ExceptionListener,
-    ) = getExperience(
+    ): Unit = getExperience(
         request,
         exceptionListener
     ) { response ->
@@ -197,7 +200,7 @@ class Composer internal constructor(
      * @param trackingId The tracking ID of the close event.
      */
     @Suppress("unused") // Public API.
-    fun trackCloseEvent(trackingId: String) {
+    public fun trackCloseEvent(trackingId: String) {
         generalApi.trackExternalEvent(
             httpHelper.buildEventTracking(
                 trackingId,
@@ -214,7 +217,7 @@ class Composer internal constructor(
      * @param trackingId The tracking ID of the recommendations display event.
      */
     @Suppress("unused") // Public API.
-    fun trackRecommendationsDisplay(trackingId: String) {
+    public fun trackRecommendationsDisplay(trackingId: String) {
         generalApi.trackExternalEvent(
             httpHelper.buildEventTracking(
                 trackingId,
@@ -233,7 +236,7 @@ class Composer internal constructor(
      * @param url The URL of the clicked recommendation.
      */
     @Suppress("unused") // Public API.
-    fun trackRecommendationsClick(trackingId: String, url: String? = null) {
+    public fun trackRecommendationsClick(trackingId: String, url: String? = null) {
         val params = url?.let { CX_CUSTOM_PARAMS + Pair("href", it) } ?: CX_CUSTOM_PARAMS
         generalApi.trackExternalEvent(
             httpHelper.buildEventTracking(
@@ -253,7 +256,10 @@ class Composer internal constructor(
      * @param trackingId The tracking ID of the custom form impression.
      */
     @Suppress("unused") // Public API.
-    fun trackCustomFormImpression(customFormName: String, trackingId: String) = generalApi.customFormImpression(
+    public fun trackCustomFormImpression(
+        customFormName: String,
+        trackingId: String,
+    ): Unit = generalApi.customFormImpression(
         httpHelper.buildCustomFormTracking(
             aid,
             customFormName,
@@ -270,7 +276,10 @@ class Composer internal constructor(
      * @param trackingId The tracking ID of the custom form submission.
      */
     @Suppress("unused") // Public API.
-    fun trackCustomFormSubmission(customFormName: String, trackingId: String) = generalApi.customFormSubmission(
+    public fun trackCustomFormSubmission(
+        customFormName: String,
+        trackingId: String,
+    ): Unit = generalApi.customFormSubmission(
         httpHelper.buildCustomFormTracking(
             aid,
             customFormName,
@@ -284,7 +293,7 @@ class Composer internal constructor(
      * Clears stored data, like cookies and visit data.
      */
     @Suppress("unused") // Public API.
-    fun clearStoredData() = prefsStorage.clear()
+    public fun clearStoredData(): Unit = prefsStorage.clear()
 
     internal fun getExperience(
         request: ExperienceRequest,
@@ -416,14 +425,14 @@ class Composer internal constructor(
      * @param composerHost The URL of the Composer host.
      * @param apiHost The URL of the API host.
      */
-    class Endpoint(
+    public class Endpoint(
         composerHost: String,
         apiHost: String,
     ) {
         internal val composerHost: HttpUrl = composerHost.toHttpUrl()
         internal val apiHost: HttpUrl = apiHost.toHttpUrl()
 
-        companion object {
+        public companion object {
             // Predefined endpoints
             private const val COMPOSER_SANDBOX_URL = "https://c2-sandbox.piano.io"
             private const val API_SANDBOX_URL = "https://sandbox.piano.io"
@@ -439,41 +448,41 @@ class Composer internal constructor(
             /**
              * Sandbox endpoint.
              */
-            @JvmField
+            @JvmStatic
             @Suppress("unused") // Public API.
-            val SANDBOX = Endpoint(COMPOSER_SANDBOX_URL, API_SANDBOX_URL)
+            public val SANDBOX: Endpoint = Endpoint(COMPOSER_SANDBOX_URL, API_SANDBOX_URL)
 
             /**
              * Default production endpoint.
              */
-            @JvmField
+            @JvmStatic
             @Suppress("unused") // Public API.
-            val PRODUCTION = Endpoint(COMPOSER_DEFAULT_URL, API_DEFAULT_URL)
+            public val PRODUCTION: Endpoint = Endpoint(COMPOSER_DEFAULT_URL, API_DEFAULT_URL)
 
             /**
              * Australia production endpoint.
              */
-            @JvmField
+            @JvmStatic
             @Suppress("unused") // Public API.
-            val PRODUCTION_AUSTRALIA = Endpoint(COMPOSER_AU_URL, API_AU_URL)
+            public val PRODUCTION_AUSTRALIA: Endpoint = Endpoint(COMPOSER_AU_URL, API_AU_URL)
 
             /**
              * Asia/Pacific production endpoint.
              */
-            @JvmField
+            @JvmStatic
             @Suppress("unused") // Public API.
-            val PRODUCTION_ASIA_PACIFIC = Endpoint(COMPOSER_AP_URL, API_AP_URL)
+            public val PRODUCTION_ASIA_PACIFIC: Endpoint = Endpoint(COMPOSER_AP_URL, API_AP_URL)
 
             /**
              * Europe production endpoint.
              */
-            @JvmField
+            @JvmStatic
             @Suppress("unused") // Public API.
-            val PRODUCTION_EUROPE = Endpoint(COMPOSER_EU_URL, API_EU_URL)
+            public val PRODUCTION_EUROPE: Endpoint = Endpoint(COMPOSER_EU_URL, API_EU_URL)
         }
     }
 
-    companion object {
+    public companion object {
         /**
          * Initializes the Composer SDK.
          *
@@ -490,12 +499,12 @@ class Composer internal constructor(
         @JvmStatic
         @JvmOverloads
         @Suppress("unused") // Public API.
-        fun init(
+        public fun init(
             context: Context,
             aid: String,
             endpoint: Endpoint = Endpoint.PRODUCTION,
             pianoConsents: PianoConsents? = null,
-        ) = DependenciesProvider.init(
+        ): Unit = DependenciesProvider.init(
             context.applicationContext,
             aid,
             endpoint,
@@ -512,25 +521,25 @@ class Composer internal constructor(
          */
         @JvmStatic
         @Suppress("unused") // Public API.
-        fun getInstance(): Composer = DependenciesProvider.getInstance().composer
+        public fun getInstance(): Composer = DependenciesProvider.getInstance().composer
 
         /**
          * Constant for the user provider "tinypass_accounts".
          */
         @Suppress("unused") // Public API.
-        const val USER_PROVIDER_TINYPASS_ACCOUNTS = "tinypass_accounts"
+        public const val USER_PROVIDER_TINYPASS_ACCOUNTS: String = "tinypass_accounts"
 
         /**
          * Constant for the user provider "piano_id".
          */
         @Suppress("unused") // Public API.
-        const val USER_PROVIDER_PIANO_ID = "piano_id"
+        public const val USER_PROVIDER_PIANO_ID: String = "piano_id"
 
         /**
          * Constant for the user provider "janrain".
          */
         @Suppress("unused") // Public API.
-        const val USER_PROVIDER_JANRAIN = "janrain"
+        public const val USER_PROVIDER_JANRAIN: String = "janrain"
 
         /**
          * Internal constant for the event type "EXTERNAL_EVENT".

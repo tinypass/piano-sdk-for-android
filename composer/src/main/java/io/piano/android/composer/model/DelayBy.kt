@@ -4,12 +4,12 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class DelayBy(
-    @JvmField val type: DelayType?,
-    @JvmField val value: Int,
+public class DelayBy(
+    @JvmField public val type: DelayType?,
+    @JvmField public val value: Int,
 ) {
     @JsonClass(generateAdapter = false)
-    enum class DelayType {
+    public enum class DelayType {
         @Json(name = "time")
         TIME,
 
@@ -17,9 +17,9 @@ class DelayBy(
         SCROLL,
     }
 
-    val isDelayedByTime: Boolean
+    public val isDelayedByTime: Boolean
         get() = type == DelayType.TIME && value > 0
 
-    val isDelayedByScroll: Boolean
+    public val isDelayedByScroll: Boolean
         get() = type == DelayType.SCROLL && value > 0
 }

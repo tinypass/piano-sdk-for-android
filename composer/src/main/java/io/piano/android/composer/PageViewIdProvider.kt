@@ -3,8 +3,8 @@ package io.piano.android.composer
 import java.util.Date
 import kotlin.random.Random
 
-object PageViewIdProvider {
-    fun getPageViewId(date: Date): String = buildString {
+public object PageViewIdProvider {
+    public fun getPageViewId(date: Date): String = buildString {
         append(formatDate(date))
         while (length < MAX_LENGTH) {
             append(generateRandomString())

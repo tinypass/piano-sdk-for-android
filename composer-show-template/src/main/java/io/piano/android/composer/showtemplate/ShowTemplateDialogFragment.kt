@@ -20,8 +20,8 @@ import io.piano.android.showhelper.BaseShowDialogFragment
  * @property url The URL of the Piano Composer template to be displayed.
  * @property trackingId The tracking ID associated with the template.
  */
-class ShowTemplateDialogFragment : BaseShowDialogFragment {
-    constructor() : super()
+public class ShowTemplateDialogFragment : BaseShowDialogFragment {
+    public constructor() : super()
 
     /**
      * Creates a new instance of [ShowTemplateDialogFragment] with the provided URL and tracking ID.
@@ -29,7 +29,7 @@ class ShowTemplateDialogFragment : BaseShowDialogFragment {
      * @param url The URL of the Piano Composer template to be displayed.
      * @param trackingId The tracking ID associated with the template.
      */
-    constructor(url: String, trackingId: String) : super(url) {
+    public constructor(url: String, trackingId: String) : super(url) {
         val args = arguments ?: Bundle()
         arguments = args.apply {
             putString(KEY_TRACKING_ID, trackingId)
@@ -49,7 +49,7 @@ class ShowTemplateDialogFragment : BaseShowDialogFragment {
      *
      * @param jsInterface The JavaScript interface used for communication with the template.
      */
-    override fun WebView.configure(jsInterface: BaseJsInterface?) =
+    override fun WebView.configure(jsInterface: BaseJsInterface?): Unit =
         prepare(this@ShowTemplateDialogFragment, jsInterface as? ComposerJs, trackingId)
 
     /**
@@ -69,7 +69,7 @@ class ShowTemplateDialogFragment : BaseShowDialogFragment {
     /**
      * Companion object holding constant values for the [ShowTemplateDialogFragment].
      */
-    companion object {
+    private companion object {
         private const val KEY_TRACKING_ID = "trackingId"
     }
 }

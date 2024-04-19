@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class ProfileUpdateRequest(
+internal class ProfileUpdateRequest(
     @Json(name = "form_name")
     val formName: String,
     @Json(name = "custom_field_values")

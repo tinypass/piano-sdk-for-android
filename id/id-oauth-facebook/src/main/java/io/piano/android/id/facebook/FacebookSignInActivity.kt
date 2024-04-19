@@ -8,7 +8,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import io.piano.android.id.PianoOAuthActivity
 
-class FacebookSignInActivity : PianoOAuthActivity() {
+public class FacebookSignInActivity : PianoOAuthActivity() {
     private val fbCallbackManager = CallbackManager.Factory.create()
     private val callback = object : FacebookCallback<LoginResult> {
         override fun onCancel() {

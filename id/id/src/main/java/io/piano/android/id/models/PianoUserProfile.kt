@@ -5,27 +5,27 @@ import com.squareup.moshi.JsonClass
 import java.util.Date
 
 @JsonClass(generateAdapter = true)
-class PianoUserProfile(
-    val email: String,
-    val uid: String,
+public class PianoUserProfile(
+    public val email: String,
+    public val uid: String,
     @Json(name = "first_name")
-    val firstName: String?,
+    public val firstName: String?,
     @Json(name = "last_name")
-    val lastName: String?,
-    val aid: String,
-    val updated: Date,
-    val token: String?,
+    public val lastName: String?,
+    public val aid: String,
+    public val updated: Date,
+    public val token: String?,
     @Json(name = "linked_social_accounts")
-    val linkedSocialAccounts: List<String>?,
+    public val linkedSocialAccounts: List<String>?,
     @Json(name = "password_available")
-    val passwordAvailable: Boolean,
+    public val passwordAvailable: Boolean,
     @Json(name = "custom_field_values")
-    val customFields: List<CustomField>?,
+    public val customFields: List<CustomField>?,
     @Json(name = "has_all_custom_field_values_filled")
-    val allCustomFieldsFilled: Boolean?,
+    public val allCustomFieldsFilled: Boolean?,
     @Json(name = "need_resend_confirmation_email")
-    val needResendConfirmationEmail: Boolean,
+    public val needResendConfirmationEmail: Boolean,
     @Json(name = "changed_email")
-    val changedEmail: Boolean,
-    val passwordless: Boolean,
+    public val changedEmail: Boolean,
+    public val passwordless: Boolean,
 )

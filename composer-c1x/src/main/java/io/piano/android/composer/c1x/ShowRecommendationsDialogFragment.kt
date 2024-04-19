@@ -8,9 +8,13 @@ import io.piano.android.composer.c1x.ShowRecommendationsController.Companion.pre
 import io.piano.android.showhelper.BaseJsInterface
 import io.piano.android.showhelper.BaseShowDialogFragment
 
-class ShowRecommendationsDialogFragment : BaseShowDialogFragment {
-    constructor() : super()
-    constructor(widgetId: String, siteId: String, trackingId: String) : super(ShowRecommendationsController.URL) {
+public class ShowRecommendationsDialogFragment : BaseShowDialogFragment {
+    public constructor() : super()
+    public constructor(
+        widgetId: String,
+        siteId: String,
+        trackingId: String,
+    ) : super(ShowRecommendationsController.URL) {
         val args = arguments ?: Bundle()
         arguments = args.apply {
             putString(KEY_WIDGET_ID, widgetId)
@@ -41,7 +45,7 @@ class ShowRecommendationsDialogFragment : BaseShowDialogFragment {
         Composer.getInstance().trackCloseEvent(trackingId)
     }
 
-    companion object {
+    private companion object {
         private const val KEY_WIDGET_ID = "widgetId"
         private const val KEY_SITE_ID = "siteId"
         private const val KEY_TRACKING_ID = "trackingId"
