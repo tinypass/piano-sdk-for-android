@@ -14,7 +14,7 @@ public class WidgetJs(
     public val widgetId: String,
     @get:JavascriptInterface
     public val siteId: String,
-    @get:JavascriptInterface
+    @Deprecated("Will be removed in next releases")
     public val renderTemplateUrl: String = "auto",
 ) : BaseJsInterface() {
 

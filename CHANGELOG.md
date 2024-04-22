@@ -2,6 +2,8 @@
 
 ## v2.10.0-SNAPSHOT
 * Updated to Kotlin 1.9
+* Deprecated `renderTemplateUrl` for show recommendations 
+* Fix dom storage for Piano ID
 * Updated dependencies:
     - Kotlin [1.8.22 -> 1.9.23]
     - com.facebook.android:facebook-login [16.3.0 -> 17.0.0]

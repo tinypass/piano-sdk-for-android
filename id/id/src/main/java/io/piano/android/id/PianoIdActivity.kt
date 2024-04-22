@@ -69,8 +69,11 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         with(binding) {
             webview.apply {
                 savedInstanceState?.let { restoreState(it) }
-                settings.javaScriptEnabled = true
-                settings.setSupportMultipleWindows(true)
+                settings.apply {
+                    javaScriptEnabled = true
+                    domStorageEnabled = true
+                    setSupportMultipleWindows(true)
+                }
                 webChromeClient = object : WebChromeClient() {
                     override fun onProgressChanged(view: WebView, newProgress: Int) {
                         super.onProgressChanged(view, newProgress)
