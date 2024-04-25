@@ -16,13 +16,16 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import io.piano.android.id.PianoId.Companion.isPianoIdUri
 import io.piano.android.id.PianoIdClient.Companion.toPianoIdException
 import io.piano.android.id.databinding.ActivityPianoIdBinding
-import io.piano.android.id.models.OAuthFailureResult
+import io.piano.android.id.models.OAuthCancelledResult
 import io.piano.android.id.models.OAuthSuccessResult
 import io.piano.android.id.models.PianoIdAuthResult
 import io.piano.android.id.models.PianoIdToken
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     @VisibleForTesting
@@ -34,18 +37,6 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     private var widget: String? = null
     private var disableSignUp: Boolean = false
     private var stage: String? = null
-
-    private val oauthResult = registerForActivityResult(OAuthResultContract()) {
-        when (it) {
-            null -> {
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-
-            is OAuthSuccessResult -> binding.webview.evaluateJavascript(it.jsCommand, null)
-            is OAuthFailureResult -> setFailureResultData(it.exception)
-        }
-    }
 
     private val webviewBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -145,10 +136,20 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     }
 
     override fun socialLogin(payload: String?) {
-        runCatching {
-            oauthResult.launch(requireNotNull(payload))
-        }.onFailure {
-            setFailureResultData(it)
+        lifecycleScope.launch {
+            runCatching {
+                when (val result = client.oauthLogin(this@PianoIdActivity, requireNotNull(payload))) {
+                    is OAuthCancelledResult -> {
+                        Timber.w("User cancelled social auth")
+                    }
+                    is OAuthSuccessResult -> {
+                        val jsCommand = client.buildResultJsCommand(result.provider, result.token)
+                        binding.webview.evaluateJavascript(jsCommand, null)
+                    }
+                }
+            }.onFailure {
+                setFailureResultData(it)
+            }
         }
     }
 

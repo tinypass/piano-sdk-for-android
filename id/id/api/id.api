@@ -136,8 +136,8 @@ public final class io/piano/android/id/PianoIdJsonAdapterFactory : com/squareup/
 }
 
 public abstract interface class io/piano/android/id/PianoIdOAuthProvider {
-	public abstract fun buildIntent (Landroid/content/Context;Landroid/os/Bundle;)Landroid/content/Intent;
 	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun login (Landroidx/activity/ComponentActivity;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class io/piano/android/id/PianoIdTokenJsonAdapter : com/squareup/moshi/JsonAdapter {
@@ -146,13 +146,6 @@ public final class io/piano/android/id/PianoIdTokenJsonAdapter : com/squareup/mo
 	public synthetic fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
 	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lio/piano/android/id/models/PianoIdToken;)V
 	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
-}
-
-public abstract class io/piano/android/id/PianoOAuthActivity : androidx/appcompat/app/AppCompatActivity {
-	public fun <init> ()V
-	protected fun onCreate (Landroid/os/Bundle;)V
-	protected fun setFailureResult (Ljava/lang/Throwable;)V
-	protected fun setSuccessResult (Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public final class io/piano/android/id/databinding/ActivityPianoIdBinding : androidx/viewbinding/ViewBinding {
@@ -201,6 +194,22 @@ public final class io/piano/android/id/models/HostResponseJsonAdapter : com/squa
 	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
 	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/OAuthCancelledResult : io/piano/android/id/models/OAuthResult {
+	public static final field INSTANCE Lio/piano/android/id/models/OAuthCancelledResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class io/piano/android/id/models/OAuthResult {
+}
+
+public final class io/piano/android/id/models/OAuthSuccessResult : io/piano/android/id/models/OAuthResult {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getProvider ()Ljava/lang/String;
+	public final fun getToken ()Ljava/lang/String;
 }
 
 public final class io/piano/android/id/models/PianoIdAuthFailureResult : io/piano/android/id/models/PianoIdAuthResult {

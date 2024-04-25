@@ -1,13 +1,13 @@
 package io.piano.android.id
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
+import androidx.activity.ComponentActivity
 import com.squareup.moshi.Moshi
 import io.piano.android.consents.PianoConsents
 import io.piano.android.id.models.HostResponse
+import io.piano.android.id.models.OAuthResult
 import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdAuthFailureResult
 import io.piano.android.id.models.PianoIdAuthSuccessResult
@@ -339,10 +339,9 @@ public class PianoIdClient internal constructor(
     internal fun buildToken(jsPayload: String): PianoIdToken =
         pianoIdTokenAdapter.fromJson(jsPayload) ?: throw PianoIdException("Invalid payload '$jsPayload'")
 
-    internal fun buildSocialAuthIntent(context: Context, jsPayload: String): Intent =
+    internal suspend fun oauthLogin(activity: ComponentActivity, jsPayload: String): OAuthResult =
         socialTokenResponseAdapter.fromJson(jsPayload)?.let { r ->
-            val bundle = r.toBundle()
-            oauthProviders[r.oauthProvider.lowercase(Locale.US)]?.buildIntent(context, bundle)?.putExtras(bundle)
+            oauthProviders[r.oauthProvider.lowercase(Locale.US)]?.login(activity, r.clientId)
                 ?: throw PianoIdException("OAuth provider '${r.oauthProvider}' is not registered")
         } ?: throw PianoIdException("Invalid payload '$jsPayload'")
 

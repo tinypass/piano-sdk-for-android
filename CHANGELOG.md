@@ -4,6 +4,9 @@
 * Updated to Kotlin 1.9
 * Deprecated `renderTemplateUrl` for show recommendations 
 * Fix dom storage for Piano ID
+* Replace deprecated Google Auth library with Androidx CredentialManager 
+* Refactor OAuthProviders with removing extra Activity classes
+* Behavior change: cancelling FB/Google auth just returns to Piano ID login form instead of canceling whole login process
 * Updated dependencies:
     - Kotlin [1.8.22 -> 1.9.23]
     - com.facebook.android:facebook-login [16.3.0 -> 17.0.0]

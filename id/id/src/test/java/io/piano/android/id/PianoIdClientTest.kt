@@ -1,8 +1,6 @@
 package io.piano.android.id
 
-import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -49,12 +47,8 @@ class PianoIdClientTest {
         .build()
     private val url = HttpUrl.Builder().scheme("http").host("localhost").build()
     private val endpoint = PianoId.ENDPOINT_SANDBOX.toHttpUrl()
-    private val oauthIntent: Intent = mock {
-        on { putExtras(any<Bundle>()) } doReturn mock
-    }
     private val oAuthProvider: PianoIdOAuthProvider = mock {
         on { name } doReturn NAME
-        on { buildIntent(any(), any()) } doReturn oauthIntent
     }
     private val consentsDataProvider: ConsentsDataProvider = mock()
     private lateinit var pianoIdClient: PianoIdClient
