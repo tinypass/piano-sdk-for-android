@@ -1,7 +1,7 @@
 [versions]
 # Plugins
 kotlin = "1.9.23"
-android = "8.3.2"
+android = "8.4.0"
 dokka = "1.9.20"
 binaryCompatibility = "0.14.0"
 versionUpdater = "0.51.0"
@@ -15,7 +15,7 @@ compatLibrary = "1.6.1"
 androidxCredentials = "1.2.2"
 androidxActivity = "1.9.0"
 annotationsLibrary = "1.7.1"
-fragmentLibrary = "1.6.2"
+fragmentLibrary = "1.7.0"
 materialLibrary = "1.11.0"
 lifecycleLibrary = "2.7.0"
 prefsLibrary = "1.2.1"
@@ -30,7 +30,7 @@ okhttp = "4.12.0"
 moshi = "1.15.1"
 timber = "5.0.1"
 pianoConsents = "1.0.0"
-cxense = "2.5.1"
+cxense = "2.6.0"
 coroutines = "1.8.0"
 
 # Test Libraries

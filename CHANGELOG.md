@@ -1,6 +1,6 @@
 # Piano SDK for Android
 
-## v2.10.0-SNAPSHOT
+## v2.10.0
 * Updated to Kotlin 1.9
 * Deprecated `renderTemplateUrl` for show recommendations 
 * Fix dom storage for Piano ID
@@ -16,9 +16,11 @@
       https://github.com/square/retrofit
     - com.squareup.moshi:moshi [1.15.0 -> 1.15.1]
       https://github.com/square/moshi/
+    - androidx.fragment:fragment [1.6.2 -> 1.7.0]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.7.0
     - org.jetbrains.kotlinx:kotlinx-coroutines-core [1.7.3 -> 1.8.0]
       https://github.com/Kotlin/kotlinx.coroutines
-    - io.piano.android:cxense [2.5.0 -> 2.5.1]
+    - io.piano.android:cxense [2.5.0 -> 2.6.0]
       https://docs.piano.io/product/dmp
 
 ## v2.9.1
