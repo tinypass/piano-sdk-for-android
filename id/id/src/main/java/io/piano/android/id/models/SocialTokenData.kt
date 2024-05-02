@@ -3,7 +3,7 @@ package io.piano.android.id.models
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class SocialTokenData(
+internal class SocialTokenData(
     val oauthProvider: String,
     val socialToken: String,
     val clientId: String,

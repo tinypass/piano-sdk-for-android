@@ -6,23 +6,23 @@ import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.events.ShowRecommendations
 import io.piano.android.showhelper.BaseShowController
 
-class ShowRecommendationsController(event: Event<ShowRecommendations>) :
+public class ShowRecommendationsController(event: Event<ShowRecommendations>) :
     BaseShowController<ShowRecommendations, WidgetJs>(
         event.eventData,
         with(event.eventData) { WidgetJs(widgetId, siteId) }
     ) {
     private val trackingId = event.eventExecutionContext.trackingId
-    override val url = URL
-    override val fragmentTag = FRAGMENT_TAG
-    override val fragmentProvider = {
+    override val url: String = URL
+    override val fragmentTag: String = FRAGMENT_TAG
+    override val fragmentProvider: () -> ShowRecommendationsDialogFragment = {
         with(eventData) { ShowRecommendationsDialogFragment(widgetId, siteId, trackingId) }
     }
 
-    override fun close(data: String?) = jsInterface.close()
+    override fun close(data: String?): Unit = jsInterface.close()
 
-    override fun WebView.configure() = prepare(jsInterface)
+    override fun WebView.configure(): Unit = prepare(jsInterface)
 
-    companion object {
+    internal companion object {
         private const val FRAGMENT_TAG = "ShowRecommendationsDialogFragment"
         private const val JAVASCRIPT_INTERFACE = "cXNative"
         internal const val URL = "https://cdn.cxense.com/recommendations.html"

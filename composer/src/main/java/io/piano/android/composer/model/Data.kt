@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class Data<T>(
+internal class Data<T>(
     @Json(name = "models") val data: T,
     val errors: List<ErrorMessage>,
 )

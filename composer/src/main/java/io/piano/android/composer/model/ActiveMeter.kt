@@ -3,10 +3,10 @@ package io.piano.android.composer.model
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class ActiveMeter(
-    @JvmField val meterName: String,
-    @JvmField val views: Int,
-    @JvmField val viewsLeft: Int,
-    @JvmField val maxViews: Int,
-    @JvmField val totalViews: Int,
+public class ActiveMeter(
+    @JvmField public val meterName: String,
+    @JvmField public val views: Int,
+    @JvmField public val viewsLeft: Int,
+    @JvmField public val maxViews: Int,
+    @JvmField public val totalViews: Int,
 )

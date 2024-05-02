@@ -69,7 +69,7 @@ dependencies {
     implementation(libs.multidex)
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(libs.googleAuth)
+    implementation(libs.playServicesBasement)
     implementation(libs.timber)
     implementation(libs.moshi)
     implementation(libs.prefsKtx)

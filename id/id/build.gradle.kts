@@ -1,7 +1,8 @@
 plugins {
     id("com.android.library")
-    alias(libs.plugins.moshiIR)
     id("common-android-config")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.moshiIR)
     id("kotlin-parcelize")
 }
 
@@ -22,7 +23,7 @@ android {
 dependencies {
     api(libs.pianoConsents)
     implementation(libs.appcompat)
-    api(libs.androidxActivity)
+    api(libs.androidx.activity)
     implementation(libs.okhttp)
     implementation(libs.okhttpLogging)
     implementation(libs.retrofit)
@@ -36,6 +37,6 @@ dependencies {
     testImplementation(libs.mockitoCore)
     testImplementation(libs.junit)
     testImplementation(libs.okhttpMockServer)
-    testImplementation(libs.androidxTestCore)
-    testImplementation(libs.androidxTestExtJunit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.extJunit)
 }

@@ -1,0 +1,25 @@
+public class io/piano/android/composer/showtemplate/ComposerJs : io/piano/android/showhelper/BaseJsInterface {
+	public fun <init> ()V
+	public fun close (Ljava/lang/String;)V
+	public fun closeAndRefresh (Ljava/lang/String;)V
+	public final fun closeOverridden (Ljava/lang/String;)V
+	public static synthetic fun closeOverridden$default (Lio/piano/android/composer/showtemplate/ComposerJs;Ljava/lang/String;ILjava/lang/Object;)V
+	public fun customEvent (Ljava/lang/String;)V
+	public fun login (Ljava/lang/String;)V
+	public fun logout (Ljava/lang/String;)V
+	public fun register (Ljava/lang/String;)V
+}
+
+public final class io/piano/android/composer/showtemplate/ShowTemplateController : io/piano/android/showhelper/BaseShowController {
+	public fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/composer/showtemplate/ComposerJs;)V
+	public synthetic fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/composer/showtemplate/ComposerJs;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close (Ljava/lang/String;)V
+	public final fun reloadWithToken (Ljava/lang/String;)V
+}
+
+public final class io/piano/android/composer/showtemplate/ShowTemplateDialogFragment : io/piano/android/showhelper/BaseShowDialogFragment {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun onCancel (Landroid/content/DialogInterface;)V
+}
+

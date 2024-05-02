@@ -9,13 +9,13 @@ import io.piano.android.cxense.CxenseSdk
 import io.piano.android.showhelper.BaseJsInterface
 import java.util.Date
 
-class WidgetJs(
+public class WidgetJs(
     @get:JavascriptInterface
-    val widgetId: String,
+    public val widgetId: String,
     @get:JavascriptInterface
-    val siteId: String,
-    @get:JavascriptInterface
-    val renderTemplateUrl: String = "auto",
+    public val siteId: String,
+    @Deprecated("Will be removed in next releases")
+    public val renderTemplateUrl: String = "auto",
 ) : BaseJsInterface() {
 
     internal fun init(dialogFragment: ShowRecommendationsDialogFragment?, webView: WebView?) {
@@ -23,15 +23,15 @@ class WidgetJs(
     }
 
     @get:JavascriptInterface
-    val randomId: String
+    public val randomId: String
         get() = PageViewIdProvider.getPageViewId(Date())
 
     @get:JavascriptInterface
-    val userId: String
+    public val userId: String
         get() = CxenseSdk.getInstance().run { defaultUserId ?: userId }
 
     @UiThread
-    fun close() {
+    public fun close() {
         fragment?.dismissAllowingStateLoss()
             ?: webView?.apply {
                 visibility = View.GONE

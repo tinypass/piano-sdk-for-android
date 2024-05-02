@@ -5,7 +5,9 @@ plugins {
 
 dependencies {
     implementation(libs.appcompat)
-    implementation(libs.googleAuth)
+    implementation(libs.androidx.credentials.base)
+    implementation(libs.androidx.credentials.playServices)
+    implementation(libs.googleId)
     api(project(":id:id"))
 }
 android {

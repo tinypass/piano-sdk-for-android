@@ -1,0 +1,38 @@
+public abstract class io/piano/android/showhelper/BaseJsInterface {
+	public fun <init> ()V
+	protected final fun executeJavascript (Ljava/lang/String;J)V
+	public static synthetic fun executeJavascript$default (Lio/piano/android/showhelper/BaseJsInterface;Ljava/lang/String;JILjava/lang/Object;)V
+	protected final fun getFragment ()Lio/piano/android/showhelper/BaseShowDialogFragment;
+	protected final fun getWebView ()Landroid/webkit/WebView;
+	protected final fun init (Lio/piano/android/showhelper/BaseShowDialogFragment;Landroid/webkit/WebView;)V
+	protected final fun setFragment (Lio/piano/android/showhelper/BaseShowDialogFragment;)V
+	protected final fun setWebView (Landroid/webkit/WebView;)V
+}
+
+public abstract class io/piano/android/showhelper/BaseShowController {
+	public fun <init> (Lio/piano/android/composer/model/events/BaseShowType;Lio/piano/android/showhelper/BaseJsInterface;)V
+	protected fun checkPrerequisites (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun close (Ljava/lang/String;)V
+	public static synthetic fun close$default (Lio/piano/android/showhelper/BaseShowController;Ljava/lang/String;ILjava/lang/Object;)V
+	protected abstract fun configure (Landroid/webkit/WebView;)V
+	protected final fun getEventData ()Lio/piano/android/composer/model/events/BaseShowType;
+	protected abstract fun getFragmentProvider ()Lkotlin/jvm/functions/Function0;
+	protected abstract fun getFragmentTag ()Ljava/lang/String;
+	protected final fun getJsInterface ()Lio/piano/android/showhelper/BaseJsInterface;
+	protected abstract fun getUrl ()Ljava/lang/String;
+	protected fun processDelay (Landroidx/fragment/app/FragmentActivity;Lkotlin/jvm/functions/Function0;)V
+	public final fun show (Landroidx/fragment/app/FragmentActivity;)V
+	public final fun show (Landroidx/fragment/app/FragmentActivity;Lkotlin/jvm/functions/Function2;)V
+	public static synthetic fun show$default (Lio/piano/android/showhelper/BaseShowController;Landroidx/fragment/app/FragmentActivity;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+}
+
+public abstract class io/piano/android/showhelper/BaseShowDialogFragment : androidx/appcompat/app/AppCompatDialogFragment {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	protected abstract fun configure (Landroid/webkit/WebView;Lio/piano/android/showhelper/BaseJsInterface;)V
+	protected final fun getJsInterface ()Lio/piano/android/showhelper/BaseJsInterface;
+	public fun onCreate (Landroid/os/Bundle;)V
+	public fun onCreateDialog (Landroid/os/Bundle;)Landroid/app/Dialog;
+	public fun onStart ()V
+}
+

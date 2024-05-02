@@ -3,14 +3,14 @@ package io.piano.android.id.models
 import io.piano.android.id.PianoIdClient.Companion.toPianoIdException
 import io.piano.android.id.PianoIdException
 
-sealed class PianoIdAuthResult {
-    val isSuccess: Boolean
+public sealed class PianoIdAuthResult {
+    public val isSuccess: Boolean
         get() = this is PianoIdAuthSuccessResult
-    val isFailure: Boolean
+    public val isFailure: Boolean
         get() = this is PianoIdAuthFailureResult
 
     @Suppress("NOTHING_TO_INLINE")
-    companion object {
+    internal companion object {
         internal inline fun success(token: PianoIdToken?, isNewUser: Boolean): PianoIdAuthResult =
             PianoIdAuthSuccessResult(token, isNewUser)
         internal inline fun failure(throwable: Throwable): PianoIdAuthResult =
@@ -18,11 +18,11 @@ sealed class PianoIdAuthResult {
     }
 }
 
-class PianoIdAuthSuccessResult internal constructor(
-    val token: PianoIdToken?,
-    val isNewUser: Boolean,
+public class PianoIdAuthSuccessResult internal constructor(
+    public val token: PianoIdToken?,
+    public val isNewUser: Boolean,
 ) : PianoIdAuthResult()
 
-class PianoIdAuthFailureResult internal constructor(
-    val exception: PianoIdException,
+public class PianoIdAuthFailureResult internal constructor(
+    public val exception: PianoIdException,
 ) : PianoIdAuthResult()

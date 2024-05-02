@@ -1,0 +1,753 @@
+public final class io/piano/android/composer/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public static final field SDK_VERSION Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public final class io/piano/android/composer/Composer {
+	public static final field Companion Lio/piano/android/composer/Composer$Companion;
+	public static final field USER_PROVIDER_JANRAIN Ljava/lang/String;
+	public static final field USER_PROVIDER_PIANO_ID Ljava/lang/String;
+	public static final field USER_PROVIDER_TINYPASS_ACCOUNTS Ljava/lang/String;
+	public final fun addExperienceInterceptor (Lio/piano/android/composer/ExperienceInterceptor;)Z
+	public final fun browserIdProvider (Lkotlin/jvm/functions/Function0;)Lio/piano/android/composer/Composer;
+	public final fun clearStoredData ()V
+	public final fun gaClientId (Ljava/lang/String;)Lio/piano/android/composer/Composer;
+	public final fun getAccessToken ()Ljava/lang/String;
+	public final fun getBrowserId ()Ljava/lang/String;
+	public final fun getEdgeCookies ()Lio/piano/android/composer/model/EdgeCookies;
+	public final fun getExperience (Lio/piano/android/composer/model/ExperienceRequest;Ljava/util/Collection;Lio/piano/android/composer/listeners/ExceptionListener;)V
+	public final fun getExperience (Lio/piano/android/composer/model/ExperienceRequest;Lkotlin/jvm/functions/Function1;Lio/piano/android/composer/listeners/ExceptionListener;)V
+	public static final fun getInstance ()Lio/piano/android/composer/Composer;
+	public final fun getPianoConsents ()Lio/piano/android/consents/PianoConsents;
+	public static final fun init (Landroid/content/Context;Ljava/lang/String;)V
+	public static final fun init (Landroid/content/Context;Ljava/lang/String;Lio/piano/android/composer/Composer$Endpoint;)V
+	public static final fun init (Landroid/content/Context;Ljava/lang/String;Lio/piano/android/composer/Composer$Endpoint;Lio/piano/android/consents/PianoConsents;)V
+	public final fun trackCloseEvent (Ljava/lang/String;)V
+	public final fun trackCustomFormImpression (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun trackCustomFormSubmission (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun trackRecommendationsClick (Ljava/lang/String;Ljava/lang/String;)V
+	public static synthetic fun trackRecommendationsClick$default (Lio/piano/android/composer/Composer;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun trackRecommendationsDisplay (Ljava/lang/String;)V
+	public final fun userToken (Ljava/lang/String;)Lio/piano/android/composer/Composer;
+}
+
+public final class io/piano/android/composer/Composer$Companion {
+	public final fun getInstance ()Lio/piano/android/composer/Composer;
+	public final fun init (Landroid/content/Context;Ljava/lang/String;)V
+	public final fun init (Landroid/content/Context;Ljava/lang/String;Lio/piano/android/composer/Composer$Endpoint;)V
+	public final fun init (Landroid/content/Context;Ljava/lang/String;Lio/piano/android/composer/Composer$Endpoint;Lio/piano/android/consents/PianoConsents;)V
+	public static synthetic fun init$default (Lio/piano/android/composer/Composer$Companion;Landroid/content/Context;Ljava/lang/String;Lio/piano/android/composer/Composer$Endpoint;Lio/piano/android/consents/PianoConsents;ILjava/lang/Object;)V
+}
+
+public final class io/piano/android/composer/Composer$Endpoint {
+	public static final field Companion Lio/piano/android/composer/Composer$Endpoint$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public static final fun getPRODUCTION ()Lio/piano/android/composer/Composer$Endpoint;
+	public static final fun getPRODUCTION_ASIA_PACIFIC ()Lio/piano/android/composer/Composer$Endpoint;
+	public static final fun getPRODUCTION_AUSTRALIA ()Lio/piano/android/composer/Composer$Endpoint;
+	public static final fun getPRODUCTION_EUROPE ()Lio/piano/android/composer/Composer$Endpoint;
+	public static final fun getSANDBOX ()Lio/piano/android/composer/Composer$Endpoint;
+}
+
+public final class io/piano/android/composer/Composer$Endpoint$Companion {
+	public final fun getPRODUCTION ()Lio/piano/android/composer/Composer$Endpoint;
+	public final fun getPRODUCTION_ASIA_PACIFIC ()Lio/piano/android/composer/Composer$Endpoint;
+	public final fun getPRODUCTION_AUSTRALIA ()Lio/piano/android/composer/Composer$Endpoint;
+	public final fun getPRODUCTION_EUROPE ()Lio/piano/android/composer/Composer$Endpoint;
+	public final fun getSANDBOX ()Lio/piano/android/composer/Composer$Endpoint;
+}
+
+public final class io/piano/android/composer/ComposerException : java/lang/RuntimeException {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
+public final class io/piano/android/composer/ComposerPolicyException : java/io/IOException {
+	public fun <init> (Ljava/util/Date;)V
+	public fun <init> (Ljava/util/Date;Ljava/lang/Throwable;)V
+	public final fun getPolicyActiveUntilDate ()Ljava/util/Date;
+}
+
+public abstract interface class io/piano/android/composer/ExperienceInterceptor {
+	public fun afterExecute (Lio/piano/android/composer/model/ExperienceRequest;Lio/piano/android/composer/model/ExperienceResponse;)V
+	public fun beforeExecute (Lio/piano/android/composer/model/ExperienceRequest;)V
+}
+
+public final class io/piano/android/composer/KotlinExtensions {
+	public static final fun getExperience (Lio/piano/android/composer/Composer;Lio/piano/android/composer/model/ExperienceRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/piano/android/composer/PageViewIdProvider {
+	public static final field INSTANCE Lio/piano/android/composer/PageViewIdProvider;
+	public final fun getPageViewId (Ljava/util/Date;)Ljava/lang/String;
+}
+
+public abstract interface class io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+	public abstract fun onExecuted (Lio/piano/android/composer/model/Event;)V
+}
+
+public abstract interface class io/piano/android/composer/listeners/ExceptionListener {
+	public abstract fun onException (Lio/piano/android/composer/ComposerException;)V
+}
+
+public abstract interface class io/piano/android/composer/listeners/ExperienceExecuteListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public abstract interface class io/piano/android/composer/listeners/MeterListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public abstract interface class io/piano/android/composer/listeners/NonSiteListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public abstract interface class io/piano/android/composer/listeners/SetResponseVariableListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public abstract interface class io/piano/android/composer/listeners/ShowFormListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public abstract interface class io/piano/android/composer/listeners/ShowLoginListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public abstract interface class io/piano/android/composer/listeners/ShowRecommendationsListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public abstract interface class io/piano/android/composer/listeners/ShowTemplateListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public abstract interface class io/piano/android/composer/listeners/UserSegmentListener : io/piano/android/composer/listeners/EventTypeListener {
+	public fun canProcess (Lio/piano/android/composer/model/Event;)Z
+}
+
+public final class io/piano/android/composer/model/Access {
+	public final field daysUntilExpiration I
+	public final field expireDate I
+	public final field resourceId Ljava/lang/String;
+	public final field resourceName Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;II)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class io/piano/android/composer/model/AccessJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/ActiveMeter {
+	public final field maxViews I
+	public final field meterName Ljava/lang/String;
+	public final field totalViews I
+	public final field views I
+	public final field viewsLeft I
+	public fun <init> (Ljava/lang/String;IIII)V
+}
+
+public final class io/piano/android/composer/model/ActiveMeterJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/ConsentModeWrapperJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/CookieObject {
+	public final field value Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class io/piano/android/composer/model/CookieObjectJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/CustomParameters {
+	public fun <init> ()V
+	public final fun content (Ljava/lang/String;Ljava/lang/String;)Lio/piano/android/composer/model/CustomParameters;
+	public final fun isEmpty ()Z
+	public final fun request (Ljava/lang/String;Ljava/lang/String;)Lio/piano/android/composer/model/CustomParameters;
+	public final fun user (Ljava/lang/String;Ljava/lang/String;)Lio/piano/android/composer/model/CustomParameters;
+}
+
+public final class io/piano/android/composer/model/DataJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;[Ljava/lang/reflect/Type;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/DelayBy {
+	public final field type Lio/piano/android/composer/model/DelayBy$DelayType;
+	public final field value I
+	public fun <init> (Lio/piano/android/composer/model/DelayBy$DelayType;I)V
+	public final fun isDelayedByScroll ()Z
+	public final fun isDelayedByTime ()Z
+}
+
+public final class io/piano/android/composer/model/DelayBy$DelayType : java/lang/Enum {
+	public static final field SCROLL Lio/piano/android/composer/model/DelayBy$DelayType;
+	public static final field TIME Lio/piano/android/composer/model/DelayBy$DelayType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/piano/android/composer/model/DelayBy$DelayType;
+	public static fun values ()[Lio/piano/android/composer/model/DelayBy$DelayType;
+}
+
+public final class io/piano/android/composer/model/DelayByJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/DisplayMode : java/lang/Enum {
+	public static final field INLINE Lio/piano/android/composer/model/DisplayMode;
+	public static final field MODAL Lio/piano/android/composer/model/DisplayMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getMode ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lio/piano/android/composer/model/DisplayMode;
+	public static fun values ()[Lio/piano/android/composer/model/DisplayMode;
+}
+
+public final class io/piano/android/composer/model/EdgeCookies {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getPcus ()Ljava/lang/String;
+	public final fun getPprv ()Ljava/lang/String;
+	public final fun getTac ()Ljava/lang/String;
+	public final fun getTbc ()Ljava/lang/String;
+	public final fun getUserToken ()Ljava/lang/String;
+	public final fun getXbc ()Ljava/lang/String;
+	public final fun toMap ()Ljava/util/Map;
+}
+
+public final class io/piano/android/composer/model/EdgeResult {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getPcer ()Ljava/lang/String;
+	public final fun getTbc ()Ljava/lang/String;
+	public final fun getXbc ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/ErrorMessageJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/Event {
+	public final field eventData Lio/piano/android/composer/model/events/EventType;
+	public final field eventExecutionContext Lio/piano/android/composer/model/EventExecutionContext;
+	public final field eventModuleParams Lio/piano/android/composer/model/EventModuleParams;
+	public fun <init> (Lio/piano/android/composer/model/EventModuleParams;Lio/piano/android/composer/model/EventExecutionContext;Lio/piano/android/composer/model/events/EventType;)V
+	public final fun component1 ()Lio/piano/android/composer/model/EventModuleParams;
+	public final fun component2 ()Lio/piano/android/composer/model/EventExecutionContext;
+	public final fun component3 ()Lio/piano/android/composer/model/events/EventType;
+	public final fun copy (Lio/piano/android/composer/model/EventModuleParams;Lio/piano/android/composer/model/EventExecutionContext;Lio/piano/android/composer/model/events/EventType;)Lio/piano/android/composer/model/Event;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/Event;Lio/piano/android/composer/model/EventModuleParams;Lio/piano/android/composer/model/EventExecutionContext;Lio/piano/android/composer/model/events/EventType;ILjava/lang/Object;)Lio/piano/android/composer/model/Event;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/EventExecutionContext {
+	public final field accessList Ljava/util/List;
+	public final field activeMeters Ljava/util/List;
+	public final field countryCode Ljava/lang/String;
+	public final field currentMeterName Ljava/lang/String;
+	public final field executionId Ljava/lang/String;
+	public final field experienceId Ljava/lang/String;
+	public final field region Ljava/lang/String;
+	public final field splitTests Ljava/util/List;
+	public final field trackingId Ljava/lang/String;
+	public final field user Lio/piano/android/composer/model/User;
+	public final field userSegments Lio/piano/android/composer/model/UserSegmentsContainer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lio/piano/android/composer/model/User;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/UserSegmentsContainer;Ljava/util/List;Ljava/util/List;)V
+}
+
+public final class io/piano/android/composer/model/EventExecutionContextJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/EventModuleParams {
+	public final field moduleId Ljava/lang/String;
+	public final field moduleName Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class io/piano/android/composer/model/EventModuleParamsJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/EventsContainer {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getEvents ()Ljava/util/List;
+}
+
+public final class io/piano/android/composer/model/EventsContainerJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/ExperienceRequest {
+	public static final field Companion Lio/piano/android/composer/model/ExperienceRequest$Companion;
+	public synthetic fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lio/piano/android/composer/model/CustomParameters;Lio/piano/android/composer/model/EdgeResult;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getContentAuthor ()Ljava/lang/String;
+	public final fun getContentCreated ()Ljava/lang/String;
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getContentIsNative ()Ljava/lang/Boolean;
+	public final fun getContentSection ()Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getCustomParameters ()Lio/piano/android/composer/model/CustomParameters;
+	public final fun getCustomVariables ()Ljava/util/Map;
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEdgeResult ()Lio/piano/android/composer/model/EdgeResult;
+	public final fun getKeywords ()Ljava/util/List;
+	public final fun getReferer ()Ljava/lang/String;
+	public final fun getTags ()Ljava/util/List;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public final fun getZone ()Ljava/lang/String;
+	public final fun isDebug ()Z
+}
+
+public final class io/piano/android/composer/model/ExperienceRequest$Builder {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public fun <init> (ZLjava/util/Map;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lio/piano/android/composer/model/CustomParameters;)V
+	public fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lio/piano/android/composer/model/CustomParameters;Lio/piano/android/composer/model/EdgeResult;)V
+	public synthetic fun <init> (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lio/piano/android/composer/model/CustomParameters;Lio/piano/android/composer/model/EdgeResult;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun build ()Lio/piano/android/composer/model/ExperienceRequest;
+	public final fun clearCustomVariables ()Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun component1 ()Z
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component12 ()Ljava/lang/String;
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component14 ()Ljava/lang/String;
+	public final fun component15 ()Ljava/lang/Boolean;
+	public final fun component16 ()Lio/piano/android/composer/model/CustomParameters;
+	public final fun component17 ()Lio/piano/android/composer/model/EdgeResult;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/util/List;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun contentAuthor (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun contentCreated (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun contentCreated (Ljava/util/Date;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun contentId (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun contentIsNative (Ljava/lang/Boolean;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun contentSection (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun contentType (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun copy (ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lio/piano/android/composer/model/CustomParameters;Lio/piano/android/composer/model/EdgeResult;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/ExperienceRequest$Builder;ZLjava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Lio/piano/android/composer/model/CustomParameters;Lio/piano/android/composer/model/EdgeResult;ILjava/lang/Object;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun customParams (Lio/piano/android/composer/model/CustomParameters;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun customVariable (Ljava/lang/String;Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun customVariable (Ljava/lang/String;Ljava/util/List;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun customVariables (Ljava/util/Map;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun debug (Z)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun description (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun edgeResult (Lio/piano/android/composer/model/EdgeResult;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContentAuthor ()Ljava/lang/String;
+	public final fun getContentCreated ()Ljava/lang/String;
+	public final fun getContentId ()Ljava/lang/String;
+	public final fun getContentIsNative ()Ljava/lang/Boolean;
+	public final fun getContentSection ()Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getCustomParameters ()Lio/piano/android/composer/model/CustomParameters;
+	public final fun getCustomVariables ()Ljava/util/Map;
+	public final fun getDebug ()Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getEdgeResult ()Lio/piano/android/composer/model/EdgeResult;
+	public final fun getKeywords ()Ljava/util/List;
+	public final fun getReferer ()Ljava/lang/String;
+	public final fun getTags ()Ljava/util/List;
+	public final fun getTitle ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public final fun getZone ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun keyword (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun keywords (Ljava/util/Collection;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun referer (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun setContentAuthor (Ljava/lang/String;)V
+	public final fun setContentCreated (Ljava/lang/String;)V
+	public final fun setContentId (Ljava/lang/String;)V
+	public final fun setContentIsNative (Ljava/lang/Boolean;)V
+	public final fun setContentSection (Ljava/lang/String;)V
+	public final fun setContentType (Ljava/lang/String;)V
+	public final fun setCustomParameters (Lio/piano/android/composer/model/CustomParameters;)V
+	public final fun setCustomVariables (Ljava/util/Map;)V
+	public final fun setDebug (Z)V
+	public final fun setDescription (Ljava/lang/String;)V
+	public final fun setEdgeResult (Lio/piano/android/composer/model/EdgeResult;)V
+	public final fun setKeywords (Ljava/util/List;)V
+	public final fun setReferer (Ljava/lang/String;)V
+	public final fun setTags (Ljava/util/List;)V
+	public final fun setTitle (Ljava/lang/String;)V
+	public final fun setUrl (Ljava/lang/String;)V
+	public final fun setZone (Ljava/lang/String;)V
+	public final fun tag (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun tags (Ljava/util/Collection;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun title (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public fun toString ()Ljava/lang/String;
+	public final fun url (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+	public final fun zone (Ljava/lang/String;)Lio/piano/android/composer/model/ExperienceRequest$Builder;
+}
+
+public final class io/piano/android/composer/model/ExperienceRequest$Companion {
+	public final fun getDATE_FORMAT ()Ljava/text/DateFormat;
+}
+
+public final class io/piano/android/composer/model/ExperienceResponse {
+	public final field browserId Ljava/lang/String;
+	public final field cxenseCustomerPrefix Ljava/lang/String;
+	public final field result Lio/piano/android/composer/model/EventsContainer;
+	public final field taCookie Lio/piano/android/composer/model/CookieObject;
+	public final field tbCookie Lio/piano/android/composer/model/CookieObject;
+	public final field timeZoneOffsetMillis I
+	public final field userId Ljava/lang/String;
+	public final field visitTimeoutMinutes Ljava/lang/Long;
+	public final field xbCookie Lio/piano/android/composer/model/CookieObject;
+	public fun <init> (Lio/piano/android/composer/model/CookieObject;Lio/piano/android/composer/model/CookieObject;Lio/piano/android/composer/model/CookieObject;ILjava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/EventsContainer;)V
+}
+
+public final class io/piano/android/composer/model/ExperienceResponseJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/PcusContainerJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/PprvContainerJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/SplitTest {
+	public final field variantId Ljava/lang/String;
+	public final field variantName Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class io/piano/android/composer/model/SplitTestJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/User {
+	public final field email Ljava/lang/String;
+	public final field firstName Ljava/lang/String;
+	public final field lastName Ljava/lang/String;
+	public final field userId Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lio/piano/android/composer/model/User;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/User;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/piano/android/composer/model/User;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/UserJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/UserSegmentsContainer {
+	public final field composer1x Lio/piano/android/composer/model/UserSegmentsInfo;
+	public final field standard Lio/piano/android/composer/model/UserSegmentsInfo;
+	public fun <init> (Lio/piano/android/composer/model/UserSegmentsInfo;Lio/piano/android/composer/model/UserSegmentsInfo;)V
+}
+
+public final class io/piano/android/composer/model/UserSegmentsContainerJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/UserSegmentsInfo {
+	public final field expiresAt Ljava/util/Date;
+	public final field segments Ljava/util/List;
+	public fun <init> (Ljava/util/List;Ljava/util/Date;)V
+}
+
+public final class io/piano/android/composer/model/UserSegmentsInfoJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class io/piano/android/composer/model/events/BaseShowType {
+	public abstract fun getContainerSelector ()Ljava/lang/String;
+	public abstract fun getDisplayMode ()Lio/piano/android/composer/model/DisplayMode;
+	public abstract fun getShowCloseButton ()Z
+}
+
+public abstract class io/piano/android/composer/model/events/EventType {
+}
+
+public final class io/piano/android/composer/model/events/ExperienceExecute : io/piano/android/composer/model/events/EventType {
+	public fun <init> (Lio/piano/android/composer/model/User;)V
+	public final fun component1 ()Lio/piano/android/composer/model/User;
+	public final fun copy (Lio/piano/android/composer/model/User;)Lio/piano/android/composer/model/events/ExperienceExecute;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/events/ExperienceExecute;Lio/piano/android/composer/model/User;ILjava/lang/Object;)Lio/piano/android/composer/model/events/ExperienceExecute;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getUser ()Lio/piano/android/composer/model/User;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ExperienceExecuteJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/Meter : io/piano/android/composer/model/events/EventType {
+	public fun <init> (Ljava/lang/String;IIIIZLio/piano/android/composer/model/events/Meter$MeterState;)V
+	public synthetic fun <init> (Ljava/lang/String;IIIIZLio/piano/android/composer/model/events/Meter$MeterState;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()Z
+	public final fun component7 ()Lio/piano/android/composer/model/events/Meter$MeterState;
+	public final fun copy (Ljava/lang/String;IIIIZLio/piano/android/composer/model/events/Meter$MeterState;)Lio/piano/android/composer/model/events/Meter;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/events/Meter;Ljava/lang/String;IIIIZLio/piano/android/composer/model/events/Meter$MeterState;ILjava/lang/Object;)Lio/piano/android/composer/model/events/Meter;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getIncremented ()Z
+	public final fun getMaxViews ()I
+	public final fun getMeterName ()Ljava/lang/String;
+	public final fun getState ()Lio/piano/android/composer/model/events/Meter$MeterState;
+	public final fun getTotalViews ()I
+	public final fun getViews ()I
+	public final fun getViewsLeft ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/Meter$MeterState : java/lang/Enum {
+	public static final field ACTIVE Lio/piano/android/composer/model/events/Meter$MeterState;
+	public static final field EXPIRED Lio/piano/android/composer/model/events/Meter$MeterState;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lio/piano/android/composer/model/events/Meter$MeterState;
+	public static fun values ()[Lio/piano/android/composer/model/events/Meter$MeterState;
+}
+
+public final class io/piano/android/composer/model/events/MeterJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/NonSite : io/piano/android/composer/model/events/EventType {
+	public static final field INSTANCE Lio/piano/android/composer/model/events/NonSite;
+}
+
+public final class io/piano/android/composer/model/events/SetResponseVariable : io/piano/android/composer/model/events/EventType {
+	public fun <init> (Ljava/util/Map;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;)Lio/piano/android/composer/model/events/SetResponseVariable;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/events/SetResponseVariable;Ljava/util/Map;ILjava/lang/Object;)Lio/piano/android/composer/model/events/SetResponseVariable;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getResponseVariables ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/SetResponseVariableJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ShowForm : io/piano/android/composer/model/events/EventType, io/piano/android/composer/model/events/BaseShowType {
+	public fun <init> (Ljava/lang/String;ZLjava/lang/String;Lio/piano/android/composer/model/DisplayMode;Z)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lio/piano/android/composer/model/DisplayMode;
+	public final fun component5 ()Z
+	public final fun copy (Ljava/lang/String;ZLjava/lang/String;Lio/piano/android/composer/model/DisplayMode;Z)Lio/piano/android/composer/model/events/ShowForm;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/events/ShowForm;Ljava/lang/String;ZLjava/lang/String;Lio/piano/android/composer/model/DisplayMode;ZILjava/lang/Object;)Lio/piano/android/composer/model/events/ShowForm;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getContainerSelector ()Ljava/lang/String;
+	public fun getDisplayMode ()Lio/piano/android/composer/model/DisplayMode;
+	public final fun getFormName ()Ljava/lang/String;
+	public final fun getHideCompletedFields ()Z
+	public fun getShowCloseButton ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ShowFormJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ShowLogin : io/piano/android/composer/model/events/EventType {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lio/piano/android/composer/model/events/ShowLogin;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/events/ShowLogin;Ljava/lang/String;ILjava/lang/Object;)Lio/piano/android/composer/model/events/ShowLogin;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getUserProvider ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ShowLoginJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ShowRecommendations : io/piano/android/composer/model/events/EventType, io/piano/android/composer/model/events/BaseShowType {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/DisplayMode;ZLjava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lio/piano/android/composer/model/DisplayMode;
+	public final fun component5 ()Z
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/DisplayMode;ZLjava/lang/String;Ljava/lang/String;)Lio/piano/android/composer/model/events/ShowRecommendations;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/events/ShowRecommendations;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/DisplayMode;ZLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lio/piano/android/composer/model/events/ShowRecommendations;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getContainerSelector ()Ljava/lang/String;
+	public fun getDisplayMode ()Lio/piano/android/composer/model/DisplayMode;
+	public final fun getPlaceholder ()Ljava/lang/String;
+	public fun getShowCloseButton ()Z
+	public final fun getSiteId ()Ljava/lang/String;
+	public final fun getType ()Ljava/lang/String;
+	public final fun getWidgetId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ShowRecommendationsJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ShowTemplate : io/piano/android/composer/model/events/EventType, io/piano/android/composer/model/events/BaseShowType {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/DisplayMode;Ljava/lang/String;Lio/piano/android/composer/model/DelayBy;ZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/DisplayMode;Ljava/lang/String;Lio/piano/android/composer/model/DelayBy;ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lio/piano/android/composer/model/DisplayMode;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lio/piano/android/composer/model/DelayBy;
+	public final fun component6 ()Z
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/DisplayMode;Ljava/lang/String;Lio/piano/android/composer/model/DelayBy;ZLjava/lang/String;)Lio/piano/android/composer/model/events/ShowTemplate;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/events/ShowTemplate;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/DisplayMode;Ljava/lang/String;Lio/piano/android/composer/model/DelayBy;ZLjava/lang/String;ILjava/lang/Object;)Lio/piano/android/composer/model/events/ShowTemplate;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getContainerSelector ()Ljava/lang/String;
+	public final fun getDelayBy ()Lio/piano/android/composer/model/DelayBy;
+	public fun getDisplayMode ()Lio/piano/android/composer/model/DisplayMode;
+	public fun getShowCloseButton ()Z
+	public final fun getTemplateId ()Ljava/lang/String;
+	public final fun getTemplateVariantId ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/ShowTemplateJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/events/UserSegment : io/piano/android/composer/model/events/EventType {
+	public fun <init> (Z)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lio/piano/android/composer/model/events/UserSegment;
+	public static synthetic fun copy$default (Lio/piano/android/composer/model/events/UserSegment;ZILjava/lang/Object;)Lio/piano/android/composer/model/events/UserSegment;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getState ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

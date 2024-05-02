@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
 import io.piano.android.composer.model.CustomParameters
 
-class CustomParametersJsonAdapter(
+internal class CustomParametersJsonAdapter(
     private val mapAdapter: JsonAdapter<Map<String, List<String>>>,
 ) : JsonAdapter<CustomParameters>() {
     override fun fromJson(reader: JsonReader): CustomParameters {

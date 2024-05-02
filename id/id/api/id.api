@@ -1,0 +1,319 @@
+public final class io/piano/android/id/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public static final field SDK_VERSION Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public final class io/piano/android/id/FormHelper {
+	public static final field INSTANCE Lio/piano/android/id/FormHelper;
+	public static final fun buildConsentsCode ()Ljava/lang/String;
+	public static final fun buildUrl (Ljava/lang/String;ZLjava/lang/String;)Ljava/lang/String;
+}
+
+public final class io/piano/android/id/PianoId {
+	public static final field Companion Lio/piano/android/id/PianoId$Companion;
+	public static final field ENDPOINT_PRODUCTION Ljava/lang/String;
+	public static final field ENDPOINT_PRODUCTION_ASIA_PACIFIC Ljava/lang/String;
+	public static final field ENDPOINT_PRODUCTION_AUSTRALIA Ljava/lang/String;
+	public static final field ENDPOINT_PRODUCTION_EUROPE Ljava/lang/String;
+	public static final field ENDPOINT_SANDBOX Ljava/lang/String;
+	public static final field KEY_CLIENT_ID Ljava/lang/String;
+	public static final field RESULT_ERROR I
+	public static final field WIDGET_LOGIN Ljava/lang/String;
+	public static final field WIDGET_REGISTER Ljava/lang/String;
+	public fun <init> ()V
+	public static final fun getInstance ()Lio/piano/android/id/PianoIdClient;
+	public static final fun getUserInfo (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static final fun getUserInfo (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static final fun init (Ljava/lang/String;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;)Lio/piano/android/id/PianoIdClient;
+	public static final fun init (Lokhttp3/HttpUrl;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;)Lio/piano/android/id/PianoIdClient;
+	public static final fun isPianoIdUri (Landroid/net/Uri;)Z
+	public static final fun parsePianoIdToken (Landroid/net/Uri;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun parsePianoIdToken (Landroid/net/Uri;Lkotlin/jvm/functions/Function1;)V
+	public static final fun putUserInfo (Ljava/lang/String;Lio/piano/android/id/models/PianoUserInfo;Lkotlin/jvm/functions/Function1;)V
+	public static final fun refreshToken (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static final fun signIn ()Lio/piano/android/id/PianoIdClient$SignInContext;
+	public static final fun signOut (Ljava/lang/String;)V
+	public static final fun signOut (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class io/piano/android/id/PianoId$Companion {
+	public final fun getInstance ()Lio/piano/android/id/PianoIdClient;
+	public final fun getUserInfo (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun getUserInfo (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun getUserInfo$default (Lio/piano/android/id/PianoId$Companion;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public final fun init (Ljava/lang/String;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;)Lio/piano/android/id/PianoIdClient;
+	public final fun init (Lokhttp3/HttpUrl;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;)Lio/piano/android/id/PianoIdClient;
+	public static synthetic fun init$default (Lio/piano/android/id/PianoId$Companion;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;ILjava/lang/Object;)Lio/piano/android/id/PianoIdClient;
+	public static synthetic fun init$default (Lio/piano/android/id/PianoId$Companion;Lokhttp3/HttpUrl;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;ILjava/lang/Object;)Lio/piano/android/id/PianoIdClient;
+	public final fun isPianoIdUri (Landroid/net/Uri;)Z
+	public final fun parsePianoIdToken (Landroid/net/Uri;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun parsePianoIdToken (Landroid/net/Uri;Lkotlin/jvm/functions/Function1;)V
+	public final fun putUserInfo (Ljava/lang/String;Lio/piano/android/id/models/PianoUserInfo;Lkotlin/jvm/functions/Function1;)V
+	public final fun refreshToken (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun signIn ()Lio/piano/android/id/PianoIdClient$SignInContext;
+	public final fun signOut (Ljava/lang/String;)V
+	public final fun signOut (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun signOut$default (Lio/piano/android/id/PianoId$Companion;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class io/piano/android/id/PianoIdActivity : androidx/appcompat/app/AppCompatActivity, io/piano/android/id/PianoIdJsInterface {
+	public fun <init> ()V
+	public static final fun buildIntent$id_release (Landroid/content/Context;ZLjava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
+	public fun cancel ()V
+	public fun error (Ljava/lang/String;)V
+	public fun loginSuccess (Ljava/lang/String;)V
+	public fun registerSuccess (Ljava/lang/String;)V
+	public fun socialLogin (Ljava/lang/String;)V
+}
+
+public final class io/piano/android/id/PianoIdAuthResultContract : androidx/activity/result/contract/ActivityResultContract {
+	public fun <init> ()V
+	public fun createIntent (Landroid/content/Context;Lio/piano/android/id/PianoIdClient$SignInContext;)Landroid/content/Intent;
+	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
+	public fun parseResult (ILandroid/content/Intent;)Lio/piano/android/id/models/PianoIdAuthResult;
+	public synthetic fun parseResult (ILandroid/content/Intent;)Ljava/lang/Object;
+}
+
+public abstract interface class io/piano/android/id/PianoIdCallback {
+	public static final field Companion Lio/piano/android/id/PianoIdCallback$Companion;
+	public static fun asResultCallback (Lio/piano/android/id/PianoIdCallback;)Lkotlin/jvm/functions/Function1;
+	public fun onFailure (Lio/piano/android/id/PianoIdException;)V
+	public fun onSuccess (Ljava/lang/Object;)V
+}
+
+public final class io/piano/android/id/PianoIdCallback$Companion {
+	public final fun asResultCallback (Lio/piano/android/id/PianoIdCallback;)Lkotlin/jvm/functions/Function1;
+}
+
+public final class io/piano/android/id/PianoIdClient {
+	public final fun getAuthCallback ()Lkotlin/jvm/functions/Function1;
+	public final fun getJavascriptInterface ()Lio/piano/android/id/PianoIdJs;
+	public final fun getPianoConsents ()Lio/piano/android/consents/PianoConsents;
+	public final fun getUserInfo (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getUserInfo (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun getUserInfo (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun getUserInfo (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun getUserInfo$default (Lio/piano/android/id/PianoIdClient;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun getUserInfo$default (Lio/piano/android/id/PianoIdClient;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public final fun putUserInfo (Ljava/lang/String;Lio/piano/android/id/models/PianoUserInfo;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun putUserInfo (Ljava/lang/String;Lio/piano/android/id/models/PianoUserInfo;Lkotlin/jvm/functions/Function1;)V
+	public final fun refreshToken (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun refreshToken (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun setJavascriptInterface (Lio/piano/android/id/PianoIdJs;)V
+	public final fun signIn ()Lio/piano/android/id/PianoIdClient$SignInContext;
+	public final fun signOut (Ljava/lang/String;)V
+	public final fun signOut (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun signOut (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun signOut$default (Lio/piano/android/id/PianoIdClient;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public final fun with (Lio/piano/android/id/PianoIdCallback;)Lio/piano/android/id/PianoIdClient;
+	public final fun with (Lio/piano/android/id/PianoIdJs;)Lio/piano/android/id/PianoIdClient;
+	public final fun with (Lio/piano/android/id/PianoIdOAuthProvider;)Lio/piano/android/id/PianoIdClient;
+	public final fun with (Lkotlin/jvm/functions/Function1;)Lio/piano/android/id/PianoIdClient;
+}
+
+public final class io/piano/android/id/PianoIdClient$SignInContext {
+	public final fun disableSignUp ()Lio/piano/android/id/PianoIdClient$SignInContext;
+	public final fun stage (Ljava/lang/String;)Lio/piano/android/id/PianoIdClient$SignInContext;
+	public final fun widget (Ljava/lang/String;)Lio/piano/android/id/PianoIdClient$SignInContext;
+}
+
+public final class io/piano/android/id/PianoIdException : java/lang/RuntimeException {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/Throwable;)V
+}
+
+public abstract interface class io/piano/android/id/PianoIdJs {
+	public abstract fun customEvent (Ljava/lang/String;)V
+}
+
+public final class io/piano/android/id/PianoIdJsonAdapterFactory : com/squareup/moshi/JsonAdapter$Factory {
+	public fun <init> ()V
+	public fun create (Ljava/lang/reflect/Type;Ljava/util/Set;Lcom/squareup/moshi/Moshi;)Lcom/squareup/moshi/JsonAdapter;
+}
+
+public abstract interface class io/piano/android/id/PianoIdOAuthProvider {
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun login (Landroidx/activity/ComponentActivity;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class io/piano/android/id/PianoIdTokenJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Lio/piano/android/id/models/PianoIdToken;
+	public synthetic fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Lio/piano/android/id/models/PianoIdToken;)V
+	public synthetic fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+}
+
+public final class io/piano/android/id/databinding/ActivityPianoIdBinding : androidx/viewbinding/ViewBinding {
+	public final field progressBar Landroidx/core/widget/ContentLoadingProgressBar;
+	public final field webview Landroid/webkit/WebView;
+	public static fun bind (Landroid/view/View;)Lio/piano/android/id/databinding/ActivityPianoIdBinding;
+	public synthetic fun getRoot ()Landroid/view/View;
+	public fun getRoot ()Landroid/widget/FrameLayout;
+	public static fun inflate (Landroid/view/LayoutInflater;)Lio/piano/android/id/databinding/ActivityPianoIdBinding;
+	public static fun inflate (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Z)Lio/piano/android/id/databinding/ActivityPianoIdBinding;
+}
+
+public final class io/piano/android/id/models/BaseResponseJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/ConsentDataJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/CustomField {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;Ljava/lang/Long;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;Ljava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getCreated ()Ljava/util/Date;
+	public final fun getEmailCreator ()Ljava/lang/String;
+	public final fun getFieldName ()Ljava/lang/String;
+	public final fun getSortOrder ()Ljava/lang/Long;
+	public final fun getValue ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/CustomFieldJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/HostResponseJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/OAuthCancelledResult : io/piano/android/id/models/OAuthResult {
+	public static final field INSTANCE Lio/piano/android/id/models/OAuthCancelledResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class io/piano/android/id/models/OAuthResult {
+}
+
+public final class io/piano/android/id/models/OAuthSuccessResult : io/piano/android/id/models/OAuthResult {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getProvider ()Ljava/lang/String;
+	public final fun getToken ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/PianoIdAuthFailureResult : io/piano/android/id/models/PianoIdAuthResult {
+	public final fun getException ()Lio/piano/android/id/PianoIdException;
+}
+
+public abstract class io/piano/android/id/models/PianoIdAuthResult {
+	public final fun isFailure ()Z
+	public final fun isSuccess ()Z
+}
+
+public final class io/piano/android/id/models/PianoIdAuthSuccessResult : io/piano/android/id/models/PianoIdAuthResult {
+	public final fun getToken ()Lio/piano/android/id/models/PianoIdToken;
+	public final fun isNewUser ()Z
+}
+
+public final class io/piano/android/id/models/PianoIdError {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getMessage ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/PianoIdErrorJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/PianoIdToken : android/os/Parcelable {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public final field accessToken Ljava/lang/String;
+	public final field emailConfirmationRequired Z
+	public final field expiresIn Ljava/util/Date;
+	public final field expiresInTimestamp J
+	public final field info Ljava/util/Map;
+	public final field refreshToken Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun describeContents ()I
+	public final fun getInfoField (Ljava/lang/String;)Ljava/lang/Object;
+	public fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class io/piano/android/id/models/PianoIdToken$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lio/piano/android/id/models/PianoIdToken;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lio/piano/android/id/models/PianoIdToken;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class io/piano/android/id/models/PianoUserInfo {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun customField (Ljava/lang/String;D)Lio/piano/android/id/models/PianoUserInfo;
+	public final fun customField (Ljava/lang/String;I)Lio/piano/android/id/models/PianoUserInfo;
+	public final fun customField (Ljava/lang/String;Ljava/lang/String;)Lio/piano/android/id/models/PianoUserInfo;
+	public final fun customField (Ljava/lang/String;Ljava/util/Collection;)Lio/piano/android/id/models/PianoUserInfo;
+	public final fun customField (Ljava/lang/String;Z)Lio/piano/android/id/models/PianoUserInfo;
+	public final fun getFormName ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/PianoUserProfile {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;Ljava/util/List;ZLjava/util/List;Ljava/lang/Boolean;ZZZ)V
+	public final fun getAid ()Ljava/lang/String;
+	public final fun getAllCustomFieldsFilled ()Ljava/lang/Boolean;
+	public final fun getChangedEmail ()Z
+	public final fun getCustomFields ()Ljava/util/List;
+	public final fun getEmail ()Ljava/lang/String;
+	public final fun getFirstName ()Ljava/lang/String;
+	public final fun getLastName ()Ljava/lang/String;
+	public final fun getLinkedSocialAccounts ()Ljava/util/List;
+	public final fun getNeedResendConfirmationEmail ()Z
+	public final fun getPasswordAvailable ()Z
+	public final fun getPasswordless ()Z
+	public final fun getToken ()Ljava/lang/String;
+	public final fun getUid ()Ljava/lang/String;
+	public final fun getUpdated ()Ljava/util/Date;
+}
+
+public final class io/piano/android/id/models/PianoUserProfileJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/ProfileUpdateRequestJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/SocialTokenDataJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/id/models/SocialTokenResponseJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+

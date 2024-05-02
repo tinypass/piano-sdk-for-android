@@ -1,13 +1,13 @@
 package io.piano.android.id
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.SparseArray
+import androidx.activity.ComponentActivity
 import com.squareup.moshi.Moshi
 import io.piano.android.consents.PianoConsents
 import io.piano.android.id.models.HostResponse
+import io.piano.android.id.models.OAuthResult
 import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdAuthFailureResult
 import io.piano.android.id.models.PianoIdAuthSuccessResult
@@ -30,7 +30,7 @@ import java.util.Locale
 /**
  * Piano ID client for authorization.
  */
-class PianoIdClient internal constructor(
+public class PianoIdClient internal constructor(
     private val api: PianoIdApi,
     private val moshi: Moshi,
     internal val aid: String,
@@ -53,9 +53,9 @@ class PianoIdClient internal constructor(
     private val exceptions = SparseArray<PianoIdException>()
     internal val oauthProviders: MutableMap<String, PianoIdOAuthProvider> = mutableMapOf()
 
-    var authCallback: PianoIdAuthCallback? = null
+    public var authCallback: PianoIdAuthCallback? = null
         private set
-    var javascriptInterface: PianoIdJs? = null
+    public var javascriptInterface: PianoIdJs? = null
 
     init {
         if (endpoint.topPrivateDomain() == "piano.io") {
@@ -67,7 +67,7 @@ class PianoIdClient internal constructor(
      * [PianoConsents] instance for managing user consent.
      */
     @Suppress("unused") // Public API.
-    val pianoConsents: PianoConsents? = consentsDataProvider.pianoConsents
+    public val pianoConsents: PianoConsents? = consentsDataProvider.pianoConsents
 
     /**
      * Sets callback for {@link PianoIdAuthSuccessResult} data.
@@ -76,7 +76,7 @@ class PianoIdClient internal constructor(
      * @return {@link PianoIdClient} instance.
      */
     @Suppress("unused") // Public API.
-    fun with(callback: PianoIdCallback<PianoIdAuthSuccessResult>?) = apply {
+    public fun with(callback: PianoIdCallback<PianoIdAuthSuccessResult>?): PianoIdClient = apply {
         authCallback = callback?.run {
             {
                 when (it) {
@@ -94,7 +94,7 @@ class PianoIdClient internal constructor(
      * @return {@link PianoIdClient} instance.
      */
     @Suppress("unused") // Public API.
-    fun with(callback: PianoIdAuthCallback?) = apply { authCallback = callback }
+    public fun with(callback: PianoIdAuthCallback?): PianoIdClient = apply { authCallback = callback }
 
     /**
      * Sets javascript interface for processing custom events.
@@ -102,7 +102,7 @@ class PianoIdClient internal constructor(
      * @param jsInterface {@link PianoIdJs} instance for processing events.
      * @return {@link PianoIdClient} instance.
      */
-    fun with(jsInterface: PianoIdJs?) = apply { javascriptInterface = jsInterface }
+    public fun with(jsInterface: PianoIdJs?): PianoIdClient = apply { javascriptInterface = jsInterface }
 
     /**
      * Adds OAuth provider.
@@ -111,7 +111,7 @@ class PianoIdClient internal constructor(
      * @return {@link PianoIdClient} instance.
      */
     @Suppress("unused") // Public API.
-    fun with(provider: PianoIdOAuthProvider) = apply {
+    public fun with(provider: PianoIdOAuthProvider): PianoIdClient = apply {
         oauthProviders[provider.name.lowercase(Locale.US)] = provider
     }
 
@@ -121,7 +121,7 @@ class PianoIdClient internal constructor(
      * @return {@link PianoIdClient.SignInContext} instance.
      */
     @Suppress("unused") // Public API.
-    fun signIn(): SignInContext = SignInContext(this)
+    public fun signIn(): SignInContext = SignInContext(this)
 
     /**
      * Sign out user by it's token.
@@ -131,7 +131,7 @@ class PianoIdClient internal constructor(
      */
     @Suppress("unused") // Public API.
     @JvmOverloads
-    fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>? = null) {
+    public fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>? = null) {
         val signOutCallback = callback ?: {}
         api.signOut(hostUrl.resolve(SIGN_OUT_PATH).toString(), aid, accessToken)
             .enqueue(signOutCallback.asRetrofitCallback())
@@ -143,7 +143,7 @@ class PianoIdClient internal constructor(
      * @param accessToken User access token.
      */
     @Suppress("unused") // Public API.
-    suspend fun signOut(accessToken: String) = suspendCancellableCoroutine { continuation ->
+    public suspend fun signOut(accessToken: String): Any = suspendCancellableCoroutine { continuation ->
         signOut(accessToken) { result ->
             continuation.resumeWith(result)
         }
@@ -156,7 +156,7 @@ class PianoIdClient internal constructor(
      * @param callback callback, which will receive result.
      */
     @Suppress("unused") // Public API.
-    fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
+    public fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
         api.refreshToken(
             hostUrl.newBuilder().encodedPath(REFRESH_TOKEN_PATH).build().toString(),
             mapOf(
@@ -173,7 +173,7 @@ class PianoIdClient internal constructor(
      * @param refreshToken User refresh token.
      */
     @Suppress("unused") // Public API.
-    suspend fun refreshToken(refreshToken: String) = suspendCancellableCoroutine { continuation ->
+    public suspend fun refreshToken(refreshToken: String): PianoIdToken = suspendCancellableCoroutine { continuation ->
         refreshToken(refreshToken) { result ->
             continuation.resumeWith(result)
         }
@@ -188,7 +188,11 @@ class PianoIdClient internal constructor(
      */
     @Suppress("unused") // Public API.
     @JvmOverloads
-    fun getUserInfo(accessToken: String, formName: String? = null, callback: PianoIdFuncCallback<PianoUserProfile>) {
+    public fun getUserInfo(
+        accessToken: String,
+        formName: String? = null,
+        callback: PianoIdFuncCallback<PianoUserProfile>,
+    ) {
         api.getUserInfo(
             hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
             aid,
@@ -205,10 +209,10 @@ class PianoIdClient internal constructor(
      */
     @Suppress("unused") // Public API.
     @JvmOverloads
-    suspend fun getUserInfo(
+    public suspend fun getUserInfo(
         accessToken: String,
         formName: String? = null,
-    ) = suspendCancellableCoroutine { continuation ->
+    ): PianoUserProfile = suspendCancellableCoroutine { continuation ->
         getUserInfo(accessToken, formName) { result ->
             continuation.resumeWith(result)
         }
@@ -222,7 +226,11 @@ class PianoIdClient internal constructor(
      * @param callback callback, which will receive result.
      */
     @Suppress("unused") // Public API.
-    fun putUserInfo(accessToken: String, newUserInfo: PianoUserInfo, callback: PianoIdFuncCallback<PianoUserProfile>) {
+    public fun putUserInfo(
+        accessToken: String,
+        newUserInfo: PianoUserInfo,
+        callback: PianoIdFuncCallback<PianoUserProfile>,
+    ) {
         api.putUserInfo(
             hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
             aid,
@@ -238,10 +246,10 @@ class PianoIdClient internal constructor(
      * @param newUserInfo New user info.
      */
     @Suppress("unused") // Public API.
-    suspend fun putUserInfo(
+    public suspend fun putUserInfo(
         accessToken: String,
         newUserInfo: PianoUserInfo,
-    ) = suspendCancellableCoroutine { continuation ->
+    ): PianoUserProfile = suspendCancellableCoroutine { continuation ->
         putUserInfo(accessToken, newUserInfo) { result ->
             continuation.resumeWith(result)
         }
@@ -331,10 +339,9 @@ class PianoIdClient internal constructor(
     internal fun buildToken(jsPayload: String): PianoIdToken =
         pianoIdTokenAdapter.fromJson(jsPayload) ?: throw PianoIdException("Invalid payload '$jsPayload'")
 
-    internal fun buildSocialAuthIntent(context: Context, jsPayload: String): Intent =
+    internal suspend fun oauthLogin(activity: ComponentActivity, jsPayload: String): OAuthResult =
         socialTokenResponseAdapter.fromJson(jsPayload)?.let { r ->
-            val bundle = r.toBundle()
-            oauthProviders[r.oauthProvider.lowercase(Locale.US)]?.buildIntent(context, bundle)?.putExtras(bundle)
+            oauthProviders[r.oauthProvider.lowercase(Locale.US)]?.login(activity, r.clientId)
                 ?: throw PianoIdException("OAuth provider '${r.oauthProvider}' is not registered")
         } ?: throw PianoIdException("Invalid payload '$jsPayload'")
 
@@ -370,7 +377,7 @@ class PianoIdClient internal constructor(
         }
     }
 
-    class SignInContext internal constructor(
+    public class SignInContext internal constructor(
         internal val client: PianoIdClient,
     ) {
         internal var disableSignUp: Boolean = false
@@ -383,7 +390,7 @@ class PianoIdClient internal constructor(
          * @return {@link SignInContext} instance.
          */
         @Suppress("unused") // Public API.
-        fun disableSignUp() = apply { disableSignUp = true }
+        public fun disableSignUp(): SignInContext = apply { disableSignUp = true }
 
         /**
          * Sets the screen when opening Piano ID. Use {@link PianoId#WIDGET_LOGIN} to open the login screen
@@ -393,7 +400,7 @@ class PianoIdClient internal constructor(
          * @return {@link SignInContext} instance.
          */
         @Suppress("unused") // Public API.
-        fun widget(widget: String?) = apply { this.widget = widget }
+        public fun widget(widget: String?): SignInContext = apply { this.widget = widget }
 
         /**
          * Sets the stage directive element value, which can be used for show or hide parts of template.
@@ -402,10 +409,10 @@ class PianoIdClient internal constructor(
          * @return {@link SignInContext} instance.
          */
         @Suppress("unused") // Public API.
-        fun stage(stage: String?) = apply { this.stage = stage }
+        public fun stage(stage: String?): SignInContext = apply { this.stage = stage }
     }
 
-    companion object {
+    internal companion object {
         private const val AUTH_PATH = "/id/api/v1/identity/vxauth/authorize"
         private const val SIGN_OUT_PATH = "/id/api/v1/identity/logout?response_type=code"
         private const val EXCHANGE_AUTH_CODE_PATH = "/id/api/v1/identity/passwordless/authorization/code"

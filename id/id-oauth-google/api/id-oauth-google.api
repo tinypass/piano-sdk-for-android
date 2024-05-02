@@ -1,0 +1,6 @@
+public final class io/piano/android/id/google/GoogleOAuthProvider : io/piano/android/id/PianoIdOAuthProvider {
+	public fun <init> ()V
+	public fun getName ()Ljava/lang/String;
+	public fun login (Landroidx/activity/ComponentActivity;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+

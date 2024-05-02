@@ -22,7 +22,7 @@ import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.model.events.UserSegment
 import java.lang.reflect.Type
 
-class EventJsonAdapterFactory : JsonAdapter.Factory {
+internal class EventJsonAdapterFactory : JsonAdapter.Factory {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? =
         takeIf { Event::class.java.isAssignableFrom(Types.getRawType(type)) }?.run {
             EventJsonAdapter(

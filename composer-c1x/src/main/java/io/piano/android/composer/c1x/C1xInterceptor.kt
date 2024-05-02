@@ -10,7 +10,7 @@ import io.piano.android.cxense.model.ExternalUserId
 import io.piano.android.cxense.model.PageViewEvent
 import timber.log.Timber
 
-class C1xInterceptor(
+internal class C1xInterceptor(
     private val siteId: String,
 ) : ExperienceInterceptor {
 

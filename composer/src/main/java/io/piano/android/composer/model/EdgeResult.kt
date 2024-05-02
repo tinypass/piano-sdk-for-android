@@ -6,8 +6,8 @@ package io.piano.android.composer.model
  * @property xbc The Experience Cookie
  * @property pcer The Experience Result Cookie
  */
-class EdgeResult @JvmOverloads constructor(
-    val tbc: String = "",
-    val xbc: String = "",
-    val pcer: String = "",
+public class EdgeResult @JvmOverloads constructor(
+    public val tbc: String = "",
+    public val xbc: String = "",
+    public val pcer: String = "",
 )

@@ -16,15 +16,18 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import io.piano.android.id.PianoId.Companion.isPianoIdUri
 import io.piano.android.id.PianoIdClient.Companion.toPianoIdException
 import io.piano.android.id.databinding.ActivityPianoIdBinding
-import io.piano.android.id.models.OAuthFailureResult
+import io.piano.android.id.models.OAuthCancelledResult
 import io.piano.android.id.models.OAuthSuccessResult
 import io.piano.android.id.models.PianoIdAuthResult
 import io.piano.android.id.models.PianoIdToken
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
+public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     @VisibleForTesting
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     private lateinit var binding: ActivityPianoIdBinding
@@ -35,18 +38,6 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     private var disableSignUp: Boolean = false
     private var stage: String? = null
 
-    private val oauthResult = registerForActivityResult(OAuthResultContract()) {
-        when (it) {
-            null -> {
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-
-            is OAuthSuccessResult -> binding.webview.evaluateJavascript(it.jsCommand, null)
-            is OAuthFailureResult -> setFailureResultData(it.exception)
-        }
-    }
-
     private val webviewBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             binding.webview.goBack()
@@ -55,7 +46,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
 
     init {
         addOnNewIntentListener {
-            it?.process()
+            it.process()
         }
     }
 
@@ -69,8 +60,11 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         with(binding) {
             webview.apply {
                 savedInstanceState?.let { restoreState(it) }
-                settings.javaScriptEnabled = true
-                settings.setSupportMultipleWindows(true)
+                settings.apply {
+                    javaScriptEnabled = true
+                    domStorageEnabled = true
+                    setSupportMultipleWindows(true)
+                }
                 webChromeClient = object : WebChromeClient() {
                     override fun onProgressChanged(view: WebView, newProgress: Int) {
                         super.onProgressChanged(view, newProgress)
@@ -142,18 +136,28 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     }
 
     override fun socialLogin(payload: String?) {
-        runCatching {
-            oauthResult.launch(requireNotNull(payload))
-        }.onFailure {
-            setFailureResultData(it)
+        lifecycleScope.launch {
+            runCatching {
+                when (val result = client.oauthLogin(this@PianoIdActivity, requireNotNull(payload))) {
+                    is OAuthCancelledResult -> {
+                        Timber.w("User cancelled social auth")
+                    }
+                    is OAuthSuccessResult -> {
+                        val jsCommand = client.buildResultJsCommand(result.provider, result.token)
+                        binding.webview.evaluateJavascript(jsCommand, null)
+                    }
+                }
+            }.onFailure {
+                setFailureResultData(it)
+            }
         }
     }
 
-    override fun registerSuccess(payload: String?) = parsePayload(payload, true)
+    override fun registerSuccess(payload: String?): Unit = parsePayload(payload, true)
 
-    override fun loginSuccess(payload: String?) = parsePayload(payload, false)
+    override fun loginSuccess(payload: String?): Unit = parsePayload(payload, false)
 
-    override fun error(payload: String?) = setFailureResultData(client.parseJsError(payload))
+    override fun error(payload: String?): Unit = setFailureResultData(client.parseJsError(payload))
 
     override fun cancel() {
         setResult(Activity.RESULT_CANCELED)
@@ -190,7 +194,7 @@ class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         stage = getStringExtra(KEY_STAGE)
     }
 
-    companion object {
+    internal companion object {
         internal const val KEY_WIDGET = "io.piano.android.id.PianoIdActivity.WIDGET"
         internal const val KEY_DISABLE_SIGN_UP = "io.piano.android.id.PianoIdActivity.DISABLE_SIGN_UP"
         internal const val KEY_STAGE = "io.piano.android.id.PianoIdActivity.STAGE"

@@ -1,23 +1,25 @@
 package io.piano.android.id
 
 import android.content.Context
-import android.content.Intent
-import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultRegistryOwner
+import io.piano.android.id.models.OAuthResult
 
-interface PianoIdOAuthProvider {
+public interface PianoIdOAuthProvider {
     /**
      * Get OAuth-provider name
      *
      * @return OAuth-provider name
      */
-    val name: String
+    public val name: String
 
     /**
-     * Gets intent for starting sign in process
+     * Starts login process
      *
-     * @param context Context for building instance
-     * @param extras  Bundle, which will be added to intent before start. You can modify, if you want
-     * @return `Intent` instance for starting
+     * @param activity Activity, that started login process. You can use it as [Context] or [ActivityResultRegistryOwner]
+     * @param clientId ClientId for OAuth provider, supplied by backend
+     * @return successful result with token or cancelled result
+     * @throws [Exception] if something goes wrong in login process
      */
-    fun buildIntent(context: Context, extras: Bundle): Intent
+    public suspend fun login(activity: ComponentActivity, clientId: String): OAuthResult
 }

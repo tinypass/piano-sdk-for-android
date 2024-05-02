@@ -2,7 +2,7 @@ package io.piano.android.id
 
 import android.webkit.JavascriptInterface
 
-interface PianoIdJs {
+public interface PianoIdJs {
     @JavascriptInterface
-    fun customEvent(eventData: String)
+    public fun customEvent(eventData: String)
 }

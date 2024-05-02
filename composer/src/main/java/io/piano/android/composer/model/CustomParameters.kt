@@ -11,10 +11,10 @@ package io.piano.android.composer.model
  * @property user A mutable map of custom parameters specific to the user.
  * @property request A mutable map of custom parameters specific to the request.
  */
-class CustomParameters {
-    val content = mutableMapOf<String, MutableList<String>>()
-    val user = mutableMapOf<String, MutableList<String>>()
-    val request = mutableMapOf<String, MutableList<String>>()
+public class CustomParameters {
+    internal val content = mutableMapOf<String, MutableList<String>>()
+    internal val user = mutableMapOf<String, MutableList<String>>()
+    internal val request = mutableMapOf<String, MutableList<String>>()
 
     /**
      * Checks whether the custom parameters are empty.
@@ -22,7 +22,7 @@ class CustomParameters {
      * @return `true` if all custom parameter categories (content, user, and request) are empty,
      *         `false` otherwise.
      */
-    fun isEmpty(): Boolean = content.isEmpty() && user.isEmpty() && request.isEmpty()
+    public fun isEmpty(): Boolean = content.isEmpty() && user.isEmpty() && request.isEmpty()
 
     /**
      * Adds a custom parameter to the content category.
@@ -31,7 +31,7 @@ class CustomParameters {
      * @param value The value of the custom parameter.
      * @return The updated `CustomParameters` instance.
      */
-    fun content(key: String, value: String): CustomParameters = apply { content.putValueForKey(key, value) }
+    public fun content(key: String, value: String): CustomParameters = apply { content.putValueForKey(key, value) }
 
     /**
      * Adds a custom parameter to the user category.
@@ -40,7 +40,7 @@ class CustomParameters {
      * @param value The value of the custom parameter.
      * @return The updated `CustomParameters` instance.
      */
-    fun user(key: String, value: String): CustomParameters = apply { user.putValueForKey(key, value) }
+    public fun user(key: String, value: String): CustomParameters = apply { user.putValueForKey(key, value) }
 
     /**
      * Adds a custom parameter to the request category.
@@ -49,7 +49,7 @@ class CustomParameters {
      * @param value The value of the custom parameter.
      * @return The updated `CustomParameters` instance.
      */
-    fun request(key: String, value: String): CustomParameters = apply { request.putValueForKey(key, value) }
+    public fun request(key: String, value: String): CustomParameters = apply { request.putValueForKey(key, value) }
 
     /**
      * Internal function to add a key-value pair to a mutable map of strings to mutable lists of strings.

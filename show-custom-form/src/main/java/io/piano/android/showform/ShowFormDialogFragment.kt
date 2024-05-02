@@ -19,8 +19,8 @@ import io.piano.android.showhelper.BaseShowDialogFragment
  * @property formName The name of the form.
  * @property trackingId The tracking ID associated with the form.
  */
-class ShowFormDialogFragment : BaseShowDialogFragment {
-    constructor() : super()
+public class ShowFormDialogFragment : BaseShowDialogFragment {
+    public constructor() : super()
 
     /**
      * Creates a new instance of [ShowFormDialogFragment] with the provided URL and tracking ID.
@@ -29,7 +29,7 @@ class ShowFormDialogFragment : BaseShowDialogFragment {
      * @param formName The name of the Piano ID custom form.
      * @param trackingId The tracking ID associated with the template.
      */
-    constructor(url: String, formName: String, trackingId: String) : super(url) {
+    internal constructor(url: String, formName: String, trackingId: String) : super(url) {
         val args = arguments ?: Bundle()
         arguments = args.apply {
             putString(KEY_FORM_NAME, formName)
@@ -63,7 +63,7 @@ class ShowFormDialogFragment : BaseShowDialogFragment {
         )
     }
 
-    companion object {
+    private companion object {
         private const val KEY_FORM_NAME = "formName"
         private const val KEY_TRACKING_ID = "trackingId"
     }

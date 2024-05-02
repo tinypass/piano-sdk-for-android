@@ -6,7 +6,7 @@ import com.squareup.moshi.Types
 import io.piano.android.composer.model.CustomParameters
 import java.lang.reflect.Type
 
-class ComposerJsonAdapterFactory : JsonAdapter.Factory {
+internal class ComposerJsonAdapterFactory : JsonAdapter.Factory {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? =
         when (type) {
             CustomParameters::class.java -> CustomParametersJsonAdapter(

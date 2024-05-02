@@ -7,8 +7,8 @@ import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 
-abstract class BaseShowDialogFragment() : AppCompatDialogFragment() {
-    constructor(url: String) : this() {
+public abstract class BaseShowDialogFragment() : AppCompatDialogFragment() {
+    public constructor(url: String) : this() {
         arguments = Bundle().apply {
             putString(KEY_URL, url)
         }
@@ -48,7 +48,7 @@ abstract class BaseShowDialogFragment() : AppCompatDialogFragment() {
         }
     }
 
-    companion object {
+    private companion object {
         private const val KEY_URL = "url"
     }
 }

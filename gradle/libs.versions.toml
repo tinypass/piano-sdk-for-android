@@ -1,33 +1,37 @@
 [versions]
 # Plugins
-kotlin = "1.8.22"
-android = "8.2.2"
-dokka = "1.8.20"
-versionUpdater = "0.50.0"
+kotlin = "1.9.23"
+android = "8.4.0"
+dokka = "1.9.20"
+binaryCompatibility = "0.14.0"
+versionUpdater = "0.51.0"
 ktlint = "12.1.0"
-mavenRelease = "0.27.0"
-moshiIR = "0.22.1"
+mavenRelease = "0.28.0"
+moshiIR = "0.25.1"
+ksp = "1.9.23-1.0.20"
 
 # AndroidX libraries
 compatLibrary = "1.6.1"
-androidxActivity = "1.8.2"
+androidxCredentials = "1.2.2"
+androidxActivity = "1.9.0"
 annotationsLibrary = "1.7.1"
-fragmentLibrary = "1.6.2"
+fragmentLibrary = "1.7.0"
 materialLibrary = "1.11.0"
 lifecycleLibrary = "2.7.0"
 prefsLibrary = "1.2.1"
 multidex = "2.0.1"
 
 # Third party Libraries
-facebookLogin = "16.3.0"
-googlePlayServices = "20.7.0"
-retrofit = "2.9.0"
+facebookLogin = "17.0.0"
+googleId = "1.1.0"
+googlePlayServicesBase = "18.3.0"
+retrofit = "2.11.0"
 okhttp = "4.12.0"
-moshi = "1.15.0"
+moshi = "1.15.1"
 timber = "5.0.1"
 pianoConsents = "1.0.0"
-cxense = "2.5.0"
-coroutines = "1.7.3"
+cxense = "2.6.0"
+coroutines = "1.8.0"
 
 # Test Libraries
 junit = "4.13.2"
@@ -37,19 +41,23 @@ mockitoKotlin = "2.2.0"
 mockitoCore = "3.12.1"
 
 [plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 mavenRelease = { id = "com.vanniktech.maven.publish", version.ref = "mavenRelease" }
 moshiIR = { id = "dev.zacsweers.moshix", version.ref = "moshiIR"}
 
 [libraries]
 annotations = { module = "androidx.annotation:annotation", version.ref = "annotationsLibrary" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "compatLibrary" }
-androidxActivity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
+androidx-credentials-base = { module = "androidx.credentials:credentials", version.ref = "androidxCredentials" }
+androidx-credentials-playServices = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidxCredentials" }
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
 fragments = { module = "androidx.fragment:fragment", version.ref = "fragmentLibrary" }
 material = { module = "com.google.android.material:material", version.ref = "materialLibrary" }
 lifecycleCommon = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "lifecycleLibrary" }
 multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 facebookLogin = { module = "com.facebook.android:facebook-login", version.ref = "facebookLogin" }
-googleAuth = { module = "com.google.android.gms:play-services-auth", version.ref = "googlePlayServices" }
+googleId = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleId" }
+playServicesBasement = { module = "com.google.android.gms:play-services-basement", version.ref = "googlePlayServicesBase" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofitConverter = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
@@ -66,6 +74,6 @@ kotlinJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref =
 mockitoKotlin = { module = "com.nhaarman.mockitokotlin2:mockito-kotlin", version.ref = "mockitoKotlin" }
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 junit = { module = "junit:junit", version.ref = "junit" }
-androidxTestCore = { module = "androidx.test:core-ktx", version.ref = "androidxTestCore" }
-androidxTestExtJunit = { module = "androidx.test.ext:junit-ktx", version.ref = "androidxTestExtJunit" }
+androidx-test-core = { module = "androidx.test:core-ktx", version.ref = "androidxTestCore" }
+androidx-test-extJunit = { module = "androidx.test.ext:junit-ktx", version.ref = "androidxTestExtJunit" }
 okhttpMockServer = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }

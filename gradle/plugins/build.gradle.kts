@@ -20,6 +20,7 @@ dependencies {
     implementation(libs.ktlint)
     implementation(libs.dokka)
     implementation(libs.mavenRelease)
+    implementation(libs.binaryCompatibility)
 }
 
 gradlePlugin {

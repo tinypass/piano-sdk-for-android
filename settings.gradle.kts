@@ -15,7 +15,13 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.16.1"
+    id("com.gradle.develocity") version "3.17.1"
+}
+
+develocity {
+    buildScan {
+        publishing.onlyIf { false }
+    }
 }
 
 includeBuild("gradle/plugins")

@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class HostResponse(
+internal class HostResponse(
     @Json(name = "data") val host: String,
     code: Int,
     message: String?,

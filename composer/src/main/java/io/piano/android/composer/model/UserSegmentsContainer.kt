@@ -4,11 +4,11 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class UserSegmentsContainer(
+public class UserSegmentsContainer(
     @JvmField
     @Json(name = "STANDARD")
-    val standard: UserSegmentsInfo?,
+    public val standard: UserSegmentsInfo?,
     @JvmField
     @Json(name = "COMPOSER1X")
-    val composer1x: UserSegmentsInfo?,
+    public val composer1x: UserSegmentsInfo?,
 )

@@ -1,7 +1,8 @@
 plugins {
     id("com.android.library")
-    alias(libs.plugins.moshiIR)
     id("common-android-config")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.moshiIR)
 }
 
 android {

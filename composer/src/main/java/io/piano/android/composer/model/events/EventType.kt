@@ -13,15 +13,15 @@ import io.piano.android.composer.model.User
  * Composer SDK. Each event type is represented by a specific subclass of `EventType`, and additional data
  * may be associated with each event type.
  */
-sealed class EventType
+public sealed class EventType
 
 /**
  * Interface representing common properties of events that involve showing content.
  */
-interface BaseShowType {
-    val containerSelector: String?
-    val displayMode: DisplayMode
-    val showCloseButton: Boolean
+public interface BaseShowType {
+    public val containerSelector: String?
+    public val displayMode: DisplayMode
+    public val showCloseButton: Boolean
 }
 
 /**
@@ -30,7 +30,7 @@ interface BaseShowType {
  * @property user The user associated with the experience execution.
  */
 @JsonClass(generateAdapter = true)
-data class ExperienceExecute(
+public data class ExperienceExecute(
     val user: User?,
 ) : EventType()
 
@@ -46,7 +46,7 @@ data class ExperienceExecute(
  * @property state The state of the meter, either [MeterState.ACTIVE] or [MeterState.EXPIRED].
  */
 @JsonClass(generateAdapter = true)
-data class Meter(
+public data class Meter(
     val meterName: String,
     val views: Int,
     val viewsLeft: Int,
@@ -59,7 +59,7 @@ data class Meter(
      * Enumeration representing the state of the meter.
      */
     @JsonClass(generateAdapter = false)
-    enum class MeterState {
+    public enum class MeterState {
         @Json(name = "active")
         ACTIVE,
 
@@ -71,7 +71,7 @@ data class Meter(
 /**
  * Represents an event type for non-site related events.
  */
-object NonSite : EventType()
+public object NonSite : EventType()
 
 /**
  * Represents an event type to set response variables.
@@ -79,7 +79,7 @@ object NonSite : EventType()
  * @property responseVariables The map of response variables to be set.
  */
 @JsonClass(generateAdapter = true)
-data class SetResponseVariable(
+public data class SetResponseVariable(
     val responseVariables: Map<String, Any>,
 ) : EventType()
 
@@ -93,7 +93,7 @@ data class SetResponseVariable(
  * @property showCloseButton A boolean flag indicating whether to show a close button for the form.
  */
 @JsonClass(generateAdapter = true)
-data class ShowForm(
+public data class ShowForm(
     val formName: String,
     val hideCompletedFields: Boolean,
     override val containerSelector: String,
@@ -107,7 +107,7 @@ data class ShowForm(
  * @property userProvider The user provider for login.
  */
 @JsonClass(generateAdapter = true)
-data class ShowLogin(
+public data class ShowLogin(
     val userProvider: String,
 ) : EventType()
 
@@ -123,7 +123,7 @@ data class ShowLogin(
  * @property type The type of recommendations.
  */
 @JsonClass(generateAdapter = true)
-data class ShowRecommendations(
+public data class ShowRecommendations(
     val widgetId: String,
     val placeholder: String?,
     override val containerSelector: String,
@@ -145,7 +145,7 @@ data class ShowRecommendations(
  * @property url The URL associated with the template, if applicable.
  */
 @JsonClass(generateAdapter = true)
-data class ShowTemplate(
+public data class ShowTemplate(
     val templateId: String,
     val templateVariantId: String?,
     override val displayMode: DisplayMode,
@@ -160,6 +160,6 @@ data class ShowTemplate(
  *
  * @property state A boolean flag indicating the state of the user segmentation.
  */
-data class UserSegment(
+public data class UserSegment(
     val state: Boolean,
 ) : EventType()

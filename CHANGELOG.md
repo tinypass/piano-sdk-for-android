@@ -1,5 +1,28 @@
 # Piano SDK for Android
 
+## v2.10.0
+* Updated to Kotlin 1.9
+* Deprecated `renderTemplateUrl` for show recommendations 
+* Fix dom storage for Piano ID
+* Replace deprecated Google Auth library with Androidx CredentialManager 
+* Refactor OAuthProviders with removing extra Activity classes
+* Behavior change: cancelling FB/Google auth just returns to Piano ID login form instead of canceling whole login process
+* Updated dependencies:
+    - Kotlin [1.8.22 -> 1.9.23]
+    - com.facebook.android:facebook-login [16.3.0 -> 17.0.0]
+      https://github.com/facebook/facebook-android-sdk
+    - com.google.android.gms:play-services-auth [20.7.0 -> 21.1.0]
+    - com.squareup.retrofit2:retrofit [2.10.0 -> 2.11.0]
+      https://github.com/square/retrofit
+    - com.squareup.moshi:moshi [1.15.0 -> 1.15.1]
+      https://github.com/square/moshi/
+    - androidx.fragment:fragment [1.6.2 -> 1.7.0]
+      https://developer.android.com/jetpack/androidx/releases/fragment#1.7.0
+    - org.jetbrains.kotlinx:kotlinx-coroutines-core [1.7.3 -> 1.8.0]
+      https://github.com/Kotlin/kotlinx.coroutines
+    - io.piano.android:cxense [2.5.0 -> 2.6.0]
+      https://docs.piano.io/product/dmp
+
 ## v2.9.1
 * Fix nullability for custom field value in Piano ID user profile
 * Updated dependencies

@@ -9,7 +9,7 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.internal.Util
 import io.piano.android.id.models.PianoIdToken
 
-class PianoIdTokenJsonAdapter(
+public class PianoIdTokenJsonAdapter(
     moshi: Moshi,
 ) : JsonAdapter<PianoIdToken>() {
     private val options: JsonReader.Options = JsonReader.Options.of(
@@ -87,7 +87,7 @@ class PianoIdTokenJsonAdapter(
         }
     }
 
-    companion object {
+    private companion object {
         private const val ACCESS_TOKEN = "access_token"
         private const val ACCESS_TOKEN_CAMEL = "accessToken"
         private const val REFRESH_TOKEN = "refresh_token"

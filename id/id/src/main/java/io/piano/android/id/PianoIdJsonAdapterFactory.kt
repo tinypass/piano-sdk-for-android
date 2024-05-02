@@ -5,7 +5,7 @@ import com.squareup.moshi.Moshi
 import io.piano.android.id.models.PianoIdToken
 import java.lang.reflect.Type
 
-class PianoIdJsonAdapterFactory : JsonAdapter.Factory {
+public class PianoIdJsonAdapterFactory : JsonAdapter.Factory {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? =
         when (type) {
             PianoIdToken::class.java -> PianoIdTokenJsonAdapter(moshi)
