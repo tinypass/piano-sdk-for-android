@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
             Timber.d("We processed deep link")
         }
         binding.apply {
+            root.handleEdgeToEdge()
             buttonPianoIdLogin.setOnClickListener {
                 authResult.launch(PianoId.signIn())
             }

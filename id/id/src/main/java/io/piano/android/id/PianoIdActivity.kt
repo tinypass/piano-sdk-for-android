@@ -58,6 +58,7 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         intent?.process()
         onBackPressedDispatcher.addCallback(webviewBackPressedCallback)
         with(binding) {
+            root.handleEdgeToEdge()
             webview.apply {
                 savedInstanceState?.let { restoreState(it) }
                 settings.apply {
