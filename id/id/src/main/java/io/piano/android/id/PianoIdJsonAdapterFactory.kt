@@ -11,8 +11,9 @@ public class PianoIdJsonAdapterFactory : JsonAdapter.Factory {
             PianoIdToken::class.java -> PianoIdTokenJsonAdapter(moshi)
             Any::class.java -> ObjectJsonAdapter(
                 moshi.nextAdapter(this, Any::class.java, annotations),
-                moshi.adapter(Long::class.java)
+                moshi.adapter(Long::class.java),
             )
+
             else -> null
         }
 }

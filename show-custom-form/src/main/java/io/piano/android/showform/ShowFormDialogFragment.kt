@@ -59,7 +59,7 @@ public class ShowFormDialogFragment : BaseShowDialogFragment {
         val javascriptInterface = jsInterface as? ShowFormJs ?: ShowFormJs(formName, trackingId)
         prepare(
             javascriptInterface,
-            this@ShowFormDialogFragment
+            this@ShowFormDialogFragment,
         )
     }
 

@@ -26,7 +26,7 @@ public class ShowFormController(
     private val loginCallback: () -> Unit,
 ) : BaseShowController<ShowForm, ShowFormJs>(
     event.eventData,
-    ShowFormJs(event.eventData.formName, event.eventExecutionContext.trackingId, loginCallback)
+    ShowFormJs(event.eventData.formName, event.eventExecutionContext.trackingId, loginCallback),
 ) {
     private var checkProfileAtTokenChange: Boolean = false
     private val trackingId = event.eventExecutionContext.trackingId

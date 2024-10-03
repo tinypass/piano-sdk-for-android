@@ -5,7 +5,9 @@ import okhttp3.Response
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-internal class RequestPolicyInterceptor(private val prefsStorage: PrefsStorage) : Interceptor {
+internal class RequestPolicyInterceptor(
+    private val prefsStorage: PrefsStorage,
+) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val currentPolicyTime = prefsStorage.requestPolicyTime
         if (currentPolicyTime > System.currentTimeMillis()) {

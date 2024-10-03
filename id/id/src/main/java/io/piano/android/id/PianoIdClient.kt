@@ -162,8 +162,8 @@ public class PianoIdClient internal constructor(
             mapOf(
                 PARAM_CLIENT_ID to aid,
                 PARAM_GRANT_TYPE to VALUE_GRANT_TYPE,
-                PARAM_REFRESH_TOKEN to refreshToken
-            )
+                PARAM_REFRESH_TOKEN to refreshToken,
+            ),
         ).enqueue(callback.asRetrofitCallback())
     }
 
@@ -197,7 +197,7 @@ public class PianoIdClient internal constructor(
             hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
             aid,
             accessToken,
-            formName
+            formName,
         ).enqueue(callback.asRetrofitCallback())
     }
 
@@ -235,7 +235,7 @@ public class PianoIdClient internal constructor(
             hostUrl.newBuilder().encodedPath(USERINFO_PATH).build().toString(),
             aid,
             accessToken,
-            newUserInfo.toProfileUpdateRequest()
+            newUserInfo.toProfileUpdateRequest(),
         ).enqueue(callback.asRetrofitCallback())
     }
 
@@ -271,7 +271,7 @@ public class PianoIdClient internal constructor(
                 override fun onFailure(call: Call<HostResponse>, t: Throwable) {
                     // don't change predefined
                 }
-            }
+            },
         )
     }
 
@@ -279,7 +279,7 @@ public class PianoIdClient internal constructor(
         api.exchangeAuthCode(
             hostUrl.newBuilder().encodedPath(EXCHANGE_AUTH_CODE_PATH).build().toString(),
             aid,
-            authCode
+            authCode,
         ).enqueue(callback.asRetrofitCallback())
     }
 
@@ -301,7 +301,7 @@ public class PianoIdClient internal constructor(
             if (oauthProviders.isNotEmpty()) {
                 addQueryParameter(
                     PARAM_OAUTH_PROVIDERS,
-                    oauthProviders.keys.joinToString(separator = ",")
+                    oauthProviders.keys.joinToString(separator = ","),
                 )
             }
         }
@@ -347,7 +347,7 @@ public class PianoIdClient internal constructor(
 
     internal fun buildResultJsCommand(provider: String, token: String): String {
         val socialTokenData = socialTokenDataAdapter.toJson(
-            SocialTokenData(provider.uppercase(Locale.US), token, aid)
+            SocialTokenData(provider.uppercase(Locale.US), token, aid),
         )
         return "(function(){window.PianoIDMobileSDK.socialLoginCallback('$socialTokenData')})()"
     }
@@ -368,7 +368,7 @@ public class PianoIdClient internal constructor(
             invoke(
                 runCatching {
                     response.bodyOrThrow()
-                }
+                },
             )
         }
 

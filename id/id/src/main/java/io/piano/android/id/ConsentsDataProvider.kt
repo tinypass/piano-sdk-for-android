@@ -27,7 +27,7 @@ internal class ConsentsDataProvider(
         }?.let {
             Base64.encode(
                 packedConsentAdapter.toJson(it).encodeToByteArray(),
-                Base64.URL_SAFE or Base64.NO_WRAP
+                Base64.URL_SAFE or Base64.NO_WRAP,
             ).decodeToString()
         }
 }

@@ -9,7 +9,10 @@ import com.squareup.moshi.Moshi
 import io.piano.android.id.models.PianoIdToken
 import timber.log.Timber
 
-class PrefsStorage(context: Context, moshi: Moshi) {
+class PrefsStorage(
+    context: Context,
+    moshi: Moshi,
+) {
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val pianoIdTokenJsonAdapter: JsonAdapter<PianoIdToken> = moshi.adapter(PianoIdToken::class.java).nullSafe()
 

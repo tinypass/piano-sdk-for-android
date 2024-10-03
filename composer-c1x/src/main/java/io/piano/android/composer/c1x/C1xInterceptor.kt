@@ -42,7 +42,7 @@ internal class C1xInterceptor(
                     location = request.url,
                     contentId = request.contentId,
                     referrer = request.referer,
-                    customParameters = mutableListOf(CustomParameter(PARAM_USERSTATE, userState))
+                    customParameters = mutableListOf(CustomParameter(PARAM_USERSTATE, userState)),
                 ).apply {
                     if (externalUserId != null) {
                         addExternalUserIds(externalUserId)

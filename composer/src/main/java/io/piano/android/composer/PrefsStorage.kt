@@ -7,16 +7,16 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
-internal class PrefsStorage(context: Context) {
+internal class PrefsStorage(
+    context: Context,
+) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     internal fun clear() {
         prefs.edit().clear().apply()
     }
 
-    internal fun getValueForKey(key: String): String? {
-        return prefs.getString(key, null)
-    }
+    internal fun getValueForKey(key: String): String? = prefs.getString(key, null)
 
     internal fun setValueForKey(key: String, value: String?) {
         prefs.edit().putString(key, value).apply()
@@ -66,7 +66,7 @@ internal class PrefsStorage(context: Context) {
     var visitTimeout: Long
         get() = prefs.getLong(
             KEY_VISIT_TIMEOUT,
-            VISIT_TIMEOUT_FALLBACK
+            VISIT_TIMEOUT_FALLBACK,
         )
         set(milliseconds) {
             prefs.edit().putLong(KEY_VISIT_TIMEOUT, milliseconds).apply()

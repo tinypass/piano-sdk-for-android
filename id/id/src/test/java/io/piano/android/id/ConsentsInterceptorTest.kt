@@ -39,7 +39,7 @@ class ConsentsInterceptorTest {
             .newCall(
                 Request.Builder()
                     .url(mockWebServer.url("/"))
-                    .build()
+                    .build(),
             ).execute()
         assertEquals(CONSENTS_VALUE, mockWebServer.takeRequest().getHeader(ConsentsInterceptor.CONSENTS_HEADER))
     }

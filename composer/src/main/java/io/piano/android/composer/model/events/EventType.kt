@@ -99,7 +99,8 @@ public data class ShowForm(
     override val containerSelector: String,
     override val displayMode: DisplayMode,
     override val showCloseButton: Boolean,
-) : EventType(), BaseShowType
+) : EventType(),
+    BaseShowType
 
 /**
  * Represents an event type to show a login prompt.
@@ -131,7 +132,8 @@ public data class ShowRecommendations(
     override val showCloseButton: Boolean,
     val siteId: String,
     val type: String,
-) : EventType(), BaseShowType
+) : EventType(),
+    BaseShowType
 
 /**
  * Represents an event type to show a template.
@@ -153,7 +155,8 @@ public data class ShowTemplate(
     val delayBy: DelayBy,
     override val showCloseButton: Boolean,
     val url: String? = null,
-) : EventType(), BaseShowType
+) : EventType(),
+    BaseShowType
 
 /**
  * Represents an event type for user segmentation.

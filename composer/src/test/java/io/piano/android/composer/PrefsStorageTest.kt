@@ -143,7 +143,7 @@ class PrefsStorageTest {
     @Test
     fun getVisitTimeout() {
         whenever(prefs.getLong(PrefsStorage.KEY_VISIT_TIMEOUT, PrefsStorage.VISIT_TIMEOUT_FALLBACK)).thenReturn(
-            DUMMY_LONG
+            DUMMY_LONG,
         )
         assertEquals(DUMMY_LONG, prefsStorage.visitTimeout)
         verify(prefs).getLong(PrefsStorage.KEY_VISIT_TIMEOUT, PrefsStorage.VISIT_TIMEOUT_FALLBACK)

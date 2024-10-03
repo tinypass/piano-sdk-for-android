@@ -18,7 +18,7 @@ class UserAgentInterceptorTest : BaseInterceptorTest() {
             .newCall(
                 Request.Builder()
                     .url(mockWebServer.url("/"))
-                    .build()
+                    .build(),
             ).execute()
         assertEquals(USER_AGENT_VALUE, mockWebServer.takeRequest().getHeader("User-Agent"))
     }

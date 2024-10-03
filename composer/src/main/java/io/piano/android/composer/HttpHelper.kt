@@ -30,8 +30,8 @@ internal class HttpHelper(
             Types.newParameterizedType(
                 Map::class.java,
                 String::class.java,
-                String::class.java
-            )
+                String::class.java,
+            ),
         )
     }
 
@@ -42,9 +42,9 @@ internal class HttpHelper(
                 String::class.java,
                 Types.newParameterizedType(
                     List::class.java,
-                    String::class.java
-                )
-            )
+                    String::class.java,
+                ),
+            ),
         )
     }
 
@@ -52,8 +52,8 @@ internal class HttpHelper(
         moshi.adapter<List<ActiveMeter>>(
             Types.newParameterizedType(
                 List::class.java,
-                ActiveMeter::class.java
-            )
+                ActiveMeter::class.java,
+            ),
         )
     }
 
@@ -66,8 +66,8 @@ internal class HttpHelper(
             Types.newParameterizedType(
                 Map::class.java,
                 Int::class.javaObjectType,
-                Int::class.javaObjectType
-            )
+                Int::class.javaObjectType,
+            ),
         )
     }
 
@@ -76,8 +76,8 @@ internal class HttpHelper(
             Types.newParameterizedType(
                 Map::class.java,
                 Int::class.javaObjectType,
-                Purpose::class.java
-            )
+                Purpose::class.java,
+            ),
         )
     }
 
@@ -86,8 +86,8 @@ internal class HttpHelper(
             Types.newParameterizedType(
                 Map::class.java,
                 Purpose::class.java,
-                Consent::class.java
-            )
+                Consent::class.java,
+            ),
         )
     }
 
@@ -147,7 +147,7 @@ internal class HttpHelper(
                 .orEmpty(),
             PARAM_CONSENT_PURPOSES to productsToPurposesMapping.mapKeys { it.key.id }.takeUnless { it.isEmpty() }
                 ?.let { consentPurposesAdapter.toJson(it) }
-                .orEmpty()
+                .orEmpty(),
         ).filterNotEmptyValues()
     }.toMap()
 
@@ -172,7 +172,7 @@ internal class HttpHelper(
         PARAM_EVENT_CUSTOM_PARAMS to customParameters.takeUnless { it.isEmpty() }
             ?.let { mapAdapter.toJson(it) }.orEmpty(),
         PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-            ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
+            ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
     )
 
     internal fun buildCustomFormTracking(
@@ -188,7 +188,7 @@ internal class HttpHelper(
         PARAM_EVENT_TRACKING_ID to trackingId,
         PARAM_CUSTOM_FORM_NAME to customFormName,
         PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-            ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
+            ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
     ).filterNotEmptyValues().toMap()
 
     internal fun buildShowTemplateParameters(
@@ -218,7 +218,7 @@ internal class HttpHelper(
             PARAM_ACTIVE_METERS to eventExecutionContext.activeMeters.takeUnless { it.isNullOrEmpty() }
                 ?.let { activeMetersAdapter.toJson(it) }.orEmpty(),
             PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-                ?.let { vxConsentAdapter.toJson(it) }.orEmpty()
+                ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
         ).filterNotEmptyValues()
     }.toMap()
 
@@ -228,7 +228,7 @@ internal class HttpHelper(
         PARAM_ZONE to zone.orEmpty(),
         PARAM_TAGS to tags.takeUnless { it.isEmpty() }
             ?.joinToString(separator = ",")
-            .orEmpty()
+            .orEmpty(),
     ).filterNotEmptyValues()
 
     @Suppress("NOTHING_TO_INLINE")

@@ -6,11 +6,12 @@ import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.events.ShowRecommendations
 import io.piano.android.showhelper.BaseShowController
 
-public class ShowRecommendationsController(event: Event<ShowRecommendations>) :
-    BaseShowController<ShowRecommendations, WidgetJs>(
-        event.eventData,
-        with(event.eventData) { WidgetJs(widgetId, siteId) }
-    ) {
+public class ShowRecommendationsController(
+    event: Event<ShowRecommendations>,
+) : BaseShowController<ShowRecommendations, WidgetJs>(
+    event.eventData,
+    with(event.eventData) { WidgetJs(widgetId, siteId) },
+) {
     private val trackingId = event.eventExecutionContext.trackingId
     override val url: String = URL
     override val fragmentTag: String = FRAGMENT_TAG

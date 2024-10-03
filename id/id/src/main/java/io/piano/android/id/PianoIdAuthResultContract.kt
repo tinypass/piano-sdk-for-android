@@ -24,7 +24,7 @@ public class PianoIdAuthResultContract : ActivityResultContract<PianoIdClient.Si
                         @Suppress("DEPRECATION") // deprecated since Android 13
                         PianoIdAuthResult.success(
                             getParcelableExtra(PianoId.KEY_TOKEN),
-                            getBooleanExtra(PianoId.KEY_IS_NEW_USER, false)
+                            getBooleanExtra(PianoId.KEY_IS_NEW_USER, false),
                         )
                     } else {
                         PianoIdAuthResult.failure(requireNotNull(client.getStoredException(code)))

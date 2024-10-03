@@ -105,7 +105,7 @@ class PianoIdClientTest {
     @Test
     fun getAuthEndpointResponseSuccess() = getAuthEndpoint { retrofitCallback ->
         val data: HostResponse = spy(
-            HostResponse(url.toString(), 0, null, null)
+            HostResponse(url.toString(), 0, null, null),
         ) {
             on { hasError } doReturn false
             on { error } doReturn DUMMY

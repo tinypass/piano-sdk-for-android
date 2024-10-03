@@ -14,14 +14,16 @@ internal class ComposerJsonAdapterFactory : JsonAdapter.Factory {
                     Types.newParameterizedType(
                         Map::class.java,
                         String::class.java,
-                        Types.newParameterizedType(List::class.java, String::class.java)
-                    )
-                )
+                        Types.newParameterizedType(List::class.java, String::class.java),
+                    ),
+                ),
             )
+
             Any::class.java -> ObjectJsonAdapter(
                 moshi.nextAdapter(this, Any::class.java, annotations),
-                moshi.adapter(Long::class.java)
+                moshi.adapter(Long::class.java),
             )
+
             else -> null
         }
 }
