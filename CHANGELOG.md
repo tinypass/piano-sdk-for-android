@@ -3,6 +3,7 @@
 ## v2.11.0-SNAPSHOT
 * Increased minSdkVersion from 21 to 23
 * Android 15 compatibility
+* Remove code deprecated about year ago
 * Updated dependencies:
     - Kotlin [1.9.23 -> 1.9.24]
     - org.jetbrains.kotlinx:kotlinx-coroutines-core [1.8.0 -> 1.9.0]

@@ -25,25 +25,15 @@ public final class io/piano/android/id/PianoId {
 	public static final field WIDGET_REGISTER Ljava/lang/String;
 	public fun <init> ()V
 	public static final fun getInstance ()Lio/piano/android/id/PianoIdClient;
-	public static final fun getUserInfo (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public static final fun getUserInfo (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public static final fun init (Ljava/lang/String;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;)Lio/piano/android/id/PianoIdClient;
 	public static final fun init (Lokhttp3/HttpUrl;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;)Lio/piano/android/id/PianoIdClient;
 	public static final fun isPianoIdUri (Landroid/net/Uri;)Z
 	public static final fun parsePianoIdToken (Landroid/net/Uri;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun parsePianoIdToken (Landroid/net/Uri;Lkotlin/jvm/functions/Function1;)V
-	public static final fun putUserInfo (Ljava/lang/String;Lio/piano/android/id/models/PianoUserInfo;Lkotlin/jvm/functions/Function1;)V
-	public static final fun refreshToken (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public static final fun signIn ()Lio/piano/android/id/PianoIdClient$SignInContext;
-	public static final fun signOut (Ljava/lang/String;)V
-	public static final fun signOut (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 }
 
 public final class io/piano/android/id/PianoId$Companion {
 	public final fun getInstance ()Lio/piano/android/id/PianoIdClient;
-	public final fun getUserInfo (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public final fun getUserInfo (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun getUserInfo$default (Lio/piano/android/id/PianoId$Companion;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	public final fun init (Ljava/lang/String;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;)Lio/piano/android/id/PianoIdClient;
 	public final fun init (Lokhttp3/HttpUrl;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;)Lio/piano/android/id/PianoIdClient;
 	public static synthetic fun init$default (Lio/piano/android/id/PianoId$Companion;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/consents/PianoConsents;ILjava/lang/Object;)Lio/piano/android/id/PianoIdClient;
@@ -51,12 +41,6 @@ public final class io/piano/android/id/PianoId$Companion {
 	public final fun isPianoIdUri (Landroid/net/Uri;)Z
 	public final fun parsePianoIdToken (Landroid/net/Uri;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun parsePianoIdToken (Landroid/net/Uri;Lkotlin/jvm/functions/Function1;)V
-	public final fun putUserInfo (Ljava/lang/String;Lio/piano/android/id/models/PianoUserInfo;Lkotlin/jvm/functions/Function1;)V
-	public final fun refreshToken (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public final fun signIn ()Lio/piano/android/id/PianoIdClient$SignInContext;
-	public final fun signOut (Ljava/lang/String;)V
-	public final fun signOut (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun signOut$default (Lio/piano/android/id/PianoId$Companion;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 }
 
 public final class io/piano/android/id/PianoIdActivity : androidx/appcompat/app/AppCompatActivity, io/piano/android/id/PianoIdJsInterface {

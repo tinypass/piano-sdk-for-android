@@ -12,8 +12,6 @@ import io.piano.android.consents.models.Consent
 import io.piano.android.consents.models.Purpose
 import io.piano.android.id.models.ConsentData
 import io.piano.android.id.models.PianoIdToken
-import io.piano.android.id.models.PianoUserInfo
-import io.piano.android.id.models.PianoUserProfile
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -48,15 +46,15 @@ public class PianoId {
                     Types.newParameterizedType(
                         Map::class.java,
                         Purpose::class.java,
-                        Consent::class.java
-                    )
+                        Consent::class.java,
+                    ),
                 ),
                 moshi.adapter(
                     Types.newParameterizedType(
                         List::class.java,
-                        ConsentData::class.java
-                    )
-                )
+                        ConsentData::class.java,
+                    ),
+                ),
             )
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(ConsentsInterceptor(consentsDataProvider))
@@ -68,8 +66,8 @@ public class PianoId {
                             HttpLoggingInterceptor.Level.BODY
                         } else {
                             HttpLoggingInterceptor.Level.NONE
-                        }
-                    )
+                        },
+                    ),
                 )
                 .build()
             val retrofit = Retrofit.Builder()
@@ -126,103 +124,6 @@ public class PianoId {
         @Suppress("unused") // Public API.
         public fun getInstance(): PianoIdClient = checkNotNull(client) {
             NOT_INITIALIZED_MSG
-        }
-
-        /**
-         * Gets preferences for authorization process
-         *
-         * @return {@link PianoIdClient.SignInContext} instance
-         * @throws IllegalStateException If you call it before {@link #init(String, String)}
-         */
-        @Suppress("unused") // Public API.
-        @Throws(IllegalStateException::class)
-        @JvmStatic
-        @Deprecated(
-            "Use method directly from PianoIdClient instance, will be removed in future versions",
-            ReplaceWith("PianoId.getInstance().signIn()")
-        )
-        public fun signIn(): PianoIdClient.SignInContext = getInstance().signIn()
-
-        /**
-         * Sign out user by it's token
-         *
-         * @param accessToken User access token
-         * @param callback    callback, which will receive sign-out result
-         */
-        @Suppress("unused") // Public API.
-        @JvmStatic
-        @JvmOverloads
-        @Deprecated(
-            "Use method directly from PianoIdClient instance, will be removed in future versions",
-            ReplaceWith("PianoId.getInstance().signOut(accessToken, callback)")
-        )
-        public fun signOut(accessToken: String, callback: PianoIdFuncCallback<Any>? = null) {
-            val signOutCallback = callback ?: {}
-            client?.signOut(accessToken, signOutCallback)
-                ?: signOutCallback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
-        }
-
-        /**
-         * Refresh user access token
-         *
-         * @param refreshToken User refresh token
-         * @param callback callback, which will receive result
-         */
-        @Suppress("unused") // Public API.
-        @Throws(IllegalStateException::class)
-        @JvmStatic
-        @Deprecated(
-            "Use method directly from PianoIdClient instance, will be removed in future versions",
-            ReplaceWith("PianoId.getInstance().refreshToken(refreshToken, callback)")
-        )
-        public fun refreshToken(refreshToken: String, callback: PianoIdFuncCallback<PianoIdToken>) {
-            client?.refreshToken(refreshToken, callback)
-                ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
-        }
-
-        /**
-         * Gets user info
-         *
-         * @param accessToken User access token
-         * @param formName Form name, which stores data. Use null for default
-         * @param callback callback, which will receive result
-         */
-        @Suppress("unused") // Public API.
-        @JvmStatic
-        @JvmOverloads
-        @Deprecated(
-            "Use method directly from PianoIdClient instance, will be removed in future versions",
-            ReplaceWith("PianoId.getInstance().getUserInfo(accessToken, formName, callback)")
-        )
-        public fun getUserInfo(
-            accessToken: String,
-            formName: String? = null,
-            callback: PianoIdFuncCallback<PianoUserProfile>,
-        ) {
-            client?.getUserInfo(accessToken, formName, callback)
-                ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
-        }
-
-        /**
-         * Stores user info
-         *
-         * @param accessToken User access token
-         * @param newUserInfo New user info
-         * @param callback callback, which will receive result
-         */
-        @Suppress("unused") // Public API.
-        @JvmStatic
-        @Deprecated(
-            "Use method directly from PianoIdClient instance, will be removed in future versions",
-            ReplaceWith("PianoId.getInstance().putUserInfo(accessToken, newUserInfo, callback)")
-        )
-        public fun putUserInfo(
-            accessToken: String,
-            newUserInfo: PianoUserInfo,
-            callback: PianoIdFuncCallback<PianoUserProfile>,
-        ) {
-            client?.putUserInfo(accessToken, newUserInfo, callback)
-                ?: callback(Result.failure(IllegalStateException(NOT_INITIALIZED_MSG)))
         }
 
         @Suppress("unused") // Public API.

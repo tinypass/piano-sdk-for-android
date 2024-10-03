@@ -1,6 +1,7 @@
 package io.piano.android.composer
 
 import android.content.Context
+import io.piano.android.composer.Composer.Endpoint
 import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.EventsListener
 import io.piano.android.composer.listeners.ExceptionListener
@@ -65,15 +66,6 @@ public class Composer internal constructor(
 
     public var browserId: String? = null
         private set
-
-    /**
-     * Gets Composer's user access token for Edge CDN.
-     *
-     * @return Access token for Edge CDN.
-     */
-    @Deprecated("Use `edgeCookies.tac`", ReplaceWith("edgeCookies.tac"))
-    public val accessToken: String
-        get() = prefsStorage.tpAccessCookie
 
     /**
      * Gets all required cookies for Edge CDN
@@ -154,14 +146,14 @@ public class Composer internal constructor(
         exceptionListener: ExceptionListener,
     ): Unit = getExperience(
         request,
-        exceptionListener
+        exceptionListener,
     ) { response ->
         processExperienceResponse(
             request,
             response,
             eventTypeListeners,
             null,
-            exceptionListener
+            exceptionListener,
         )
     }
 
@@ -183,14 +175,14 @@ public class Composer internal constructor(
         exceptionListener: ExceptionListener,
     ): Unit = getExperience(
         request,
-        exceptionListener
+        exceptionListener,
     ) { response ->
         processExperienceResponse(
             request,
             response,
             emptyList(),
             eventsListener,
-            exceptionListener
+            exceptionListener,
         )
     }
 
@@ -206,8 +198,8 @@ public class Composer internal constructor(
                 trackingId,
                 EVENT_TYPE_EXTERNAL_EVENT,
                 EVENT_GROUP_CLOSE,
-                pianoConsents?.consents.orEmpty()
-            )
+                pianoConsents?.consents.orEmpty(),
+            ),
         ).enqueue(emptyCallback)
     }
 
@@ -224,8 +216,8 @@ public class Composer internal constructor(
                 EVENT_TYPE_EXTERNAL_EVENT,
                 EVENT_GROUP_INIT,
                 pianoConsents?.consents.orEmpty(),
-                CX_CUSTOM_PARAMS
-            )
+                CX_CUSTOM_PARAMS,
+            ),
         ).enqueue(emptyCallback)
     }
 
@@ -244,8 +236,8 @@ public class Composer internal constructor(
                 EVENT_TYPE_EXTERNAL_LINK,
                 EVENT_GROUP_CLICK,
                 pianoConsents?.consents.orEmpty(),
-                params
-            )
+                params,
+            ),
         ).enqueue(emptyCallback)
     }
 
@@ -265,8 +257,8 @@ public class Composer internal constructor(
             customFormName,
             trackingId,
             userToken,
-            pianoConsents?.consents.orEmpty()
-        )
+            pianoConsents?.consents.orEmpty(),
+        ),
     ).enqueue(emptyCallback)
 
     /**
@@ -285,8 +277,8 @@ public class Composer internal constructor(
             customFormName,
             trackingId,
             userToken,
-            pianoConsents?.consents.orEmpty()
-        )
+            pianoConsents?.consents.orEmpty(),
+        ),
     ).enqueue(emptyCallback)
 
     /**
@@ -308,8 +300,8 @@ public class Composer internal constructor(
                 browserIdProvider,
                 userToken,
                 pianoConsents?.consents.orEmpty(),
-                pianoConsents?.productsToPurposesMapping.orEmpty()
-            )
+                pianoConsents?.productsToPurposesMapping.orEmpty(),
+            ),
         ).enqueue(
             object : Callback<Data<ExperienceResponse>> {
                 override fun onResponse(
@@ -331,7 +323,7 @@ public class Composer internal constructor(
 
                 override fun onFailure(call: Call<Data<ExperienceResponse>>, t: Throwable) =
                     exceptionListener.onException(t.toComposerException())
-            }
+            },
         )
     }
 
@@ -391,7 +383,7 @@ public class Composer internal constructor(
                 aid,
                 userToken,
                 gaClientId,
-                pianoConsents?.consents.orEmpty()
+                pianoConsents?.consents.orEmpty(),
             ).forEach { (key, value) ->
                 builder.addQueryParameter(key, value)
             }
@@ -400,7 +392,7 @@ public class Composer internal constructor(
             eventData
         }
         return copy(
-            eventData = data
+            eventData = data,
         )
     }
 
@@ -508,7 +500,7 @@ public class Composer internal constructor(
             context.applicationContext,
             aid,
             endpoint,
-            pianoConsents ?: runCatching { PianoConsents.getInstance() }.getOrNull()
+            pianoConsents ?: runCatching { PianoConsents.getInstance() }.getOrNull(),
         )
 
         /**
