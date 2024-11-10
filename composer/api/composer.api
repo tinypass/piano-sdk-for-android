@@ -20,6 +20,7 @@ public final class io/piano/android/composer/Composer {
 	public final fun getExperience (Lio/piano/android/composer/model/ExperienceRequest;Ljava/util/Collection;Lio/piano/android/composer/listeners/ExceptionListener;)V
 	public final fun getExperience (Lio/piano/android/composer/model/ExperienceRequest;Lkotlin/jvm/functions/Function1;Lio/piano/android/composer/listeners/ExceptionListener;)V
 	public static final fun getInstance ()Lio/piano/android/composer/Composer;
+	public final fun getPageViewId ()Ljava/lang/String;
 	public final fun getPianoConsents ()Lio/piano/android/consents/PianoConsents;
 	public static final fun init (Landroid/content/Context;Ljava/lang/String;)V
 	public static final fun init (Landroid/content/Context;Ljava/lang/String;Lio/piano/android/composer/Composer$Endpoint;)V

@@ -76,6 +76,12 @@ public class Composer internal constructor(
         get() = edgeCookiesProvider.edgeCookies
 
     /**
+     * Gets pageViewId for the latest Composer execution
+     */
+    public var pageViewId: String? = null
+        private set
+
+    /**
      * Adds an experience interceptor to the Composer.
      *
      * This function adds a custom [ExperienceInterceptor] to the list of interceptors. Interceptors
@@ -293,16 +299,16 @@ public class Composer internal constructor(
         processResponse: (ExperienceResponse) -> Unit,
     ) {
         experienceInterceptors.forEach { it.beforeExecute(request) }
-        composerApi.getExperience(
-            httpHelper.convertExperienceRequest(
-                request,
-                aid,
-                browserIdProvider,
-                userToken,
-                pianoConsents?.consents.orEmpty(),
-                pianoConsents?.productsToPurposesMapping.orEmpty(),
-            ),
-        ).enqueue(
+        val fields = httpHelper.convertExperienceRequest(
+            request,
+            aid,
+            browserIdProvider,
+            userToken,
+            pianoConsents?.consents.orEmpty(),
+            pianoConsents?.productsToPurposesMapping.orEmpty(),
+        )
+        pageViewId = fields[HttpHelper.PARAM_PAGEVIEW_ID]
+        composerApi.getExperience(fields).enqueue(
             object : Callback<Data<ExperienceResponse>> {
                 override fun onResponse(
                     call: Call<Data<ExperienceResponse>>,
