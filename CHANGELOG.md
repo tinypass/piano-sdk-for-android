@@ -1,6 +1,6 @@
 # Piano SDK for Android
 
-## v2.11.0-SNAPSHOT
+## v2.11.0
 * Increased minSdkVersion from 21 to 23
 * Android 15 compatibility
 * Add access for lat pageViewId from Composer execution
@@ -21,7 +21,7 @@
       https://developer.android.com/jetpack/androidx/releases/appcompat#1.7.0
     - androidx.fragment:fragment [1.7.0 -> 1.8.5]
       https://developer.android.com/jetpack/androidx/releases/fragment#1.8.5
-    - com.google.android.gms:play-services-basement [18.3.0 -> 18.4.0]
+    - com.google.android.gms:play-services-basement [18.3.0 -> 18.5.0]
     - com.google.android.libraries.identity.googleid:googleid [1.1.0 -> 1.1.1]
     - com.facebook.android:facebook-login [17.0.0 -> 17.0.2]
       https://github.com/facebook/facebook-android-sdk

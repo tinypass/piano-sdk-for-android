@@ -11,7 +11,7 @@ class KtlintConfigPlugin : Plugin<Project> {
         apply<KtlintPlugin>()
         if (this != rootProject) {
             extensions.configure(KtlintExtension::class.java) {
-                version.set("1.3.1")
+                version.set("1.4.1")
                 android.set(true)
             }
         }
