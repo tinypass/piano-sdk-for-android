@@ -21,7 +21,7 @@ public suspend fun Composer.getExperience(
 ): List<Event<EventType>> = suspendCancellableCoroutine { continuation ->
     getExperience(
         request,
-        { events: List<Event<EventType>> -> continuation.resume(events) }
+        { events: List<Event<EventType>> -> continuation.resume(events) },
     ) {
         continuation.resumeWithException(it)
     }

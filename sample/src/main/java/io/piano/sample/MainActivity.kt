@@ -77,13 +77,14 @@ class MainActivity : AppCompatActivity() {
             Timber.d("We processed deep link")
         }
         binding.apply {
+            root.handleEdgeToEdge()
             buttonPianoIdLogin.setOnClickListener {
-                authResult.launch(PianoId.signIn())
+                authResult.launch(PianoId.getInstance().signIn())
             }
             buttonPianoIdLogout.setOnClickListener { signOut() }
             buttonPianoIdRefreshToken.setOnClickListener {
                 prefsStorage.pianoIdToken?.run {
-                    PianoId.refreshToken(refreshToken) { r ->
+                    PianoId.getInstance().refreshToken(refreshToken) { r ->
                         r.onSuccess {
                             setAccessToken(it)
                         }.onFailure {
@@ -96,16 +97,16 @@ class MainActivity : AppCompatActivity() {
                 startActivity(
                     Intent(
                         this@MainActivity,
-                        ComposerActivity::class.java
-                    )
+                        ComposerActivity::class.java,
+                    ),
                 )
             }
             buttonComposerScrollDepth.setOnClickListener {
                 startActivity(
                     Intent(
                         this@MainActivity,
-                        ComposerScrollDepthActivity::class.java
-                    )
+                        ComposerScrollDepthActivity::class.java,
+                    ),
                 )
             }
             buttonComposerEdge.setOnClickListener {
@@ -127,37 +128,39 @@ class MainActivity : AppCompatActivity() {
                     }
                     .post(edgeBody)
                     .build()
-                okHttpClient.newCall(edgeRequest).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        showError(e)
-                    }
+                okHttpClient.newCall(edgeRequest).enqueue(
+                    object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            showError(e)
+                        }
 
-                    override fun onResponse(call: Call, response: Response) {
-                        val cookies = Cookie.parseAll(BuildConfig.SITE_URL.toHttpUrl(), response.headers)
-                        val request = ExperienceRequest.Builder()
-                            .url(BuildConfig.SITE_URL)
-                            .edgeResult(
-                                EdgeResult(
-                                    cookies.getCookieValue("__tbc"),
-                                    cookies.getCookieValue("xbc"),
-                                    cookies.getCookieValue("_pcer")
+                        override fun onResponse(call: Call, response: Response) {
+                            val cookies = Cookie.parseAll(BuildConfig.SITE_URL.toHttpUrl(), response.headers)
+                            val request = ExperienceRequest.Builder()
+                                .url(BuildConfig.SITE_URL)
+                                .edgeResult(
+                                    EdgeResult(
+                                        cookies.getCookieValue("__tbc"),
+                                        cookies.getCookieValue("xbc"),
+                                        cookies.getCookieValue("_pcer"),
+                                    ),
                                 )
-                            )
-                            .debug(true)
-                            .build()
-                        val eventsListener: EventsListener = {
-                            val eventTypes = it.joinToString(prefix = "[", postfix = "]") { event ->
-                                event.eventData.toString()
+                                .debug(true)
+                                .build()
+                            val eventsListener: EventsListener = {
+                                val eventTypes = it.joinToString(prefix = "[", postfix = "]") { event ->
+                                    event.eventData.toString()
+                                }
+                                val message = "Got events: $eventTypes"
+                                Timber.d(message)
+                                showMessage(message)
                             }
-                            val message = "Got events: $eventTypes"
-                            Timber.d(message)
-                            showMessage(message)
+                            Composer.getInstance().getExperience(request, eventsListener) {
+                                showError(it)
+                            }
                         }
-                        Composer.getInstance().getExperience(request, eventsListener) {
-                            showError(it)
-                        }
-                    }
-                })
+                    },
+                )
             }
             buttonComposerClearStorage.setOnClickListener {
                 Composer.getInstance().clearStoredData()
@@ -191,21 +194,23 @@ class MainActivity : AppCompatActivity() {
         }
         val userFields = token.info.map { (key, value) -> "$key = $value" }.joinToString(prefix = "[", postfix = "]")
         Timber.d("Token has these fields: %s", userFields)
-        PianoId.getInstance().getUserInfo(token.accessToken) { r ->
-            val customFields = r.getOrNull()
-                ?.customFields
-                ?.joinToString(prefix = "[", postfix = "]") { "${it.fieldName} = ${it.value}" }
-            Timber.d("User custom fields = $customFields")
-            val newUserInfo = PianoUserInfo("new_form")
-                .customField("test0", listOf("value"))
-                .customField("test1", "test")
-                .customField("test2", true)
-                .customField("test3", 5)
-            PianoId.getInstance().putUserInfo(token.accessToken, newUserInfo) { r2 ->
-                val newCustomFields = r2.getOrNull()
+        with(PianoId.getInstance()) {
+            getUserInfo(token.accessToken) { r ->
+                val customFields = r.getOrNull()
                     ?.customFields
                     ?.joinToString(prefix = "[", postfix = "]") { "${it.fieldName} = ${it.value}" }
-                Timber.d("Updated user custom fields = $newCustomFields")
+                Timber.d("User custom fields = $customFields")
+                val newUserInfo = PianoUserInfo("new_form")
+                    .customField("test0", listOf("value"))
+                    .customField("test1", "test")
+                    .customField("test2", true)
+                    .customField("test3", 5)
+                putUserInfo(token.accessToken, newUserInfo) { r2 ->
+                    val newCustomFields = r2.getOrNull()
+                        ?.customFields
+                        ?.joinToString(prefix = "[", postfix = "]") { "${it.fieldName} = ${it.value}" }
+                    Timber.d("Updated user custom fields = $newCustomFields")
+                }
             }
         }
         Composer.getInstance().userToken(token.accessToken)

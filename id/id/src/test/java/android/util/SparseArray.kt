@@ -17,11 +17,7 @@ open class SparseArray<E> {
         map[key] = value
     }
 
-    operator fun get(key: Int): E? {
-        return map[key]
-    }
+    operator fun get(key: Int): E? = map[key]
 
-    fun get(key: Int, defaultValue: E): E {
-        return get(key) ?: defaultValue
-    }
+    fun get(key: Int, defaultValue: E): E = get(key) ?: defaultValue
 }

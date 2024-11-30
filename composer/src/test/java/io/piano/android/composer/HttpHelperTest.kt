@@ -58,8 +58,8 @@ class HttpHelperTest {
             experienceIdsProvider,
             prefsStorage,
             moshi,
-            DUMMY_STRING
-        )
+            DUMMY_STRING,
+        ),
     )
 
     @Test
@@ -70,7 +70,7 @@ class HttpHelperTest {
             { null },
             null,
             emptyMap(),
-            emptyMap()
+            emptyMap(),
         )
         requestMap.apply {
             assertEquals(17, size)
@@ -95,7 +95,7 @@ class HttpHelperTest {
             null,
             null,
             null,
-            EventsContainer(emptyList())
+            EventsContainer(emptyList()),
         )
         httpHelper.afterExecute(mock(), experienceResponse)
         verify(prefsStorage).xbuilderBrowserCookie = DUMMY_STRING
@@ -126,16 +126,16 @@ class HttpHelperTest {
                 DUMMY_STRING,
                 DUMMY_STRING2,
                 mapOf(
-                    Purpose.CONTENT_PERSONALISATION to Consent(ConsentMode.OPT_OUT, listOf(Product.COMPOSER))
-                )
-            )
+                    Purpose.CONTENT_PERSONALISATION to Consent(ConsentMode.OPT_OUT, listOf(Product.COMPOSER)),
+                ),
+            ),
         ) {
             assertEquals(6, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_EVENT_TRACKING_ID])
             assertEquals(DUMMY_STRING2, this[HttpHelper.PARAM_USER_TOKEN])
             assertEquals(
                 """{"CP":{"mode":"opt-out","products":["COMPOSER"]}}""",
-                this[HttpHelper.PARAM_EVENT_COOKIE_CONSENTS]
+                this[HttpHelper.PARAM_EVENT_COOKIE_CONSENTS],
             )
             verify(experienceIdsProvider).getPageViewId(any<Date>())
         }
@@ -157,7 +157,7 @@ class HttpHelperTest {
                 DUMMY_STRING2,
                 UserSegmentsContainer(null, null),
                 null,
-                meters
+                meters,
             ),
             ShowTemplate(
                 DUMMY_STRING2,
@@ -166,11 +166,11 @@ class HttpHelperTest {
                 DUMMY_STRING,
                 DelayBy(
                     DelayBy.DelayType.TIME,
-                    0
+                    0,
                 ),
                 false,
-                null
-            )
+                null,
+            ),
         )
         with(
             httpHelper.buildShowTemplateParameters(
@@ -180,9 +180,9 @@ class HttpHelperTest {
                 null,
                 null,
                 mapOf(
-                    Purpose.CONTENT_PERSONALISATION to Consent(ConsentMode.OPT_OUT, listOf(Product.COMPOSER))
-                )
-            )
+                    Purpose.CONTENT_PERSONALISATION to Consent(ConsentMode.OPT_OUT, listOf(Product.COMPOSER)),
+                ),
+            ),
         ) {
             assertEquals(12, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])

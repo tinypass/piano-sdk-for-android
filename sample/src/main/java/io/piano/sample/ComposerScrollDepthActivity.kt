@@ -43,7 +43,7 @@ class ComposerScrollDepthActivity : AppCompatActivity() {
                                     }
                                 }
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -53,12 +53,12 @@ class ComposerScrollDepthActivity : AppCompatActivity() {
             .build()
         Composer.getInstance().getExperience(
             request,
-            listOf(showTemplateListener)
+            listOf(showTemplateListener),
         ) { exception: ComposerException ->
             Toast.makeText(
                 this@ComposerScrollDepthActivity,
                 "[${Thread.currentThread().name}] ${exception.cause?.message ?: exception.message}",
-                Toast.LENGTH_LONG
+                Toast.LENGTH_LONG,
             ).show()
         }
     }

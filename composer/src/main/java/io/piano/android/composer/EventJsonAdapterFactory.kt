@@ -39,12 +39,14 @@ internal class EventJsonAdapterFactory : JsonAdapter.Factory {
                     moshi.adapter(ShowRecommendations::class.java),
                     moshi.adapter(ShowTemplate::class.java),
                     StubAdapter { UserSegment(true) },
-                    StubAdapter { UserSegment(false) }
-                )
+                    StubAdapter { UserSegment(false) },
+                ),
             ).nullSafe()
         }
 
-    private class StubAdapter<T>(private val stubFunction: () -> T) : JsonAdapter<T>() {
+    private class StubAdapter<T>(
+        private val stubFunction: () -> T,
+    ) : JsonAdapter<T>() {
         override fun fromJson(reader: JsonReader): T = stubFunction().also { reader.skipValue() }
         override fun toJson(writer: JsonWriter, value: T?) {
             TODO("Not supported")
@@ -68,7 +70,7 @@ internal class EventJsonAdapterFactory : JsonAdapter.Factory {
         private val options = JsonReader.Options.of(
             EVENT_MODULE_PARAMS,
             EVENT_EXECUTION_CONTEXT,
-            EVENT_PARAMS
+            EVENT_PARAMS,
         )
         private val eventTypeKeyOptions = JsonReader.Options.of(EVENT_TYPE)
         private val eventSubtypesOptions = JsonReader.Options.of(
@@ -82,7 +84,7 @@ internal class EventJsonAdapterFactory : JsonAdapter.Factory {
             EVENT_TYPE_SHOW_RECOMMENDATIONS,
             EVENT_TYPE_SHOW_TEMPLATE,
             EVENT_TYPE_USER_SEGMENT_TRUE,
-            EVENT_TYPE_USER_SEGMENT_FALSE
+            EVENT_TYPE_USER_SEGMENT_FALSE,
         )
 
         override fun fromJson(reader: JsonReader): Event<*>? {
@@ -102,22 +104,25 @@ internal class EventJsonAdapterFactory : JsonAdapter.Factory {
                                 ?: throw Util.unexpectedNull(
                                     EVENT_MODULE_PARAMS,
                                     EVENT_MODULE_PARAMS,
-                                    this
+                                    this,
                                 )
+
                         1 ->
                             eventExecutionContext = eventExecutionContextAdapter.fromJson(this)
                                 ?: throw Util.unexpectedNull(
                                     EVENT_EXECUTION_CONTEXT,
                                     EVENT_EXECUTION_CONTEXT,
-                                    this
+                                    this,
                                 )
+
                         2 ->
                             eventData = eventDataAdapters[eventType].fromJson(this)
                                 ?: throw Util.unexpectedNull(
                                     EVENT_PARAMS,
                                     EVENT_PARAMS,
-                                    this
+                                    this,
                                 )
+
                         -1 -> {
                             skipName()
                             skipValue()
@@ -129,18 +134,18 @@ internal class EventJsonAdapterFactory : JsonAdapter.Factory {
                     eventModuleParams ?: throw Util.missingProperty(
                         EVENT_MODULE_PARAMS,
                         EVENT_MODULE_PARAMS,
-                        this
+                        this,
                     ),
                     eventExecutionContext ?: throw Util.missingProperty(
                         EVENT_EXECUTION_CONTEXT,
                         EVENT_EXECUTION_CONTEXT,
-                        this
+                        this,
                     ),
                     eventData ?: throw Util.missingProperty(
                         EVENT_PARAMS,
                         EVENT_PARAMS,
-                        this
-                    )
+                        this,
+                    ),
                 )
             }
         }
@@ -154,7 +159,7 @@ internal class EventJsonAdapterFactory : JsonAdapter.Factory {
                     continue
                 }
                 return selectString(eventSubtypesOptions).takeIf { it != -1 } ?: throw JsonDataException(
-                    "Unknown event type '${nextString()}', expected one of $eventSubtypesOptions"
+                    "Unknown event type '${nextString()}', expected one of $eventSubtypesOptions",
                 )
             }
             throw JsonDataException("Can't find key $EVENT_TYPE in json")

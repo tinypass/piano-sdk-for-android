@@ -46,13 +46,14 @@ class ComposerActivity : AppCompatActivity() {
             null -> Snackbar.make(
                 findViewById(R.id.app_bar),
                 "OAuth cancelled",
-                Snackbar.LENGTH_SHORT
+                Snackbar.LENGTH_SHORT,
             ).show()
+
             is PianoIdAuthSuccessResult -> setAccessToken(r.token)
             is PianoIdAuthFailureResult -> Snackbar.make(
                 findViewById(R.id.app_bar),
                 r.exception.message ?: "Unknown error",
-                Snackbar.LENGTH_SHORT
+                Snackbar.LENGTH_SHORT,
             ).show()
         }
     }
@@ -92,27 +93,27 @@ class ComposerActivity : AppCompatActivity() {
                 eventExecutionContext.userSegments.standard?.let {
                     Timber.d(
                         "Standard user segments are ${it.segments.joinToString(prefix = "[", postfix = "]")}," +
-                            " expires at ${it.expiresAt}"
+                            " expires at ${it.expiresAt}",
                     )
                 }
                 Toast.makeText(
                     this,
                     "[${Thread.currentThread().name}] User = ${eventData.user}",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
             },
             UserSegmentListener { (_, _, eventData) ->
                 Toast.makeText(
                     this,
                     "[${Thread.currentThread().name}] User state = ${eventData.state}",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
             },
             ShowLoginListener { (_, _, eventData) ->
                 Toast.makeText(
                     this,
                     "[${Thread.currentThread().name}] ${eventData.userProvider}",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
                 signIn()
             },
@@ -133,7 +134,7 @@ class ComposerActivity : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     "[${Thread.currentThread().name}] ${event.eventData}",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
                 showTemplateController = ShowTemplateController(
                     event,
@@ -148,7 +149,7 @@ class ComposerActivity : AppCompatActivity() {
                         override fun login(eventData: String) {
                             signIn()
                         }
-                    }
+                    },
                 )
                 showTemplateController?.show(this)
             },
@@ -161,7 +162,7 @@ class ComposerActivity : AppCompatActivity() {
                         widgetId = $widgetId,
                         siteId = $siteId
                         """.trimIndent(),
-                        Toast.LENGTH_LONG
+                        Toast.LENGTH_LONG,
                     ).show()
                 }
                 ShowRecommendationsController(event).show(this)
@@ -170,14 +171,14 @@ class ComposerActivity : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     "[${Thread.currentThread().name}] ${event.eventData}",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
                 showFormControllers.add(
                     ShowFormController(event, prefsStorage.pianoIdToken?.accessToken ?: "") {
                         signIn()
                     }.also {
                         it.show(this)
-                    }
+                    },
                 )
             },
             SetResponseVariableListener { (_, _, eventData) ->
@@ -187,7 +188,7 @@ class ComposerActivity : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     "[${Thread.currentThread().name}] $message",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_LONG,
                 ).show()
             },
             NonSiteListener { (_, eventExecutionContext) ->
@@ -202,13 +203,13 @@ class ComposerActivity : AppCompatActivity() {
                     """.trimIndent()
                 } ?: "[${Thread.currentThread().name}] Active meters are null or empty!"
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-            }
+            },
         )
         Composer.getInstance().getExperience(request, listeners) { exception: ComposerException ->
             Toast.makeText(
                 this,
                 "[${Thread.currentThread().name}] ${exception.cause?.message ?: exception.message}",
-                Toast.LENGTH_LONG
+                Toast.LENGTH_LONG,
             ).show()
         }
     }

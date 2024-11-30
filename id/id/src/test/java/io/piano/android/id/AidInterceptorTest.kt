@@ -34,7 +34,7 @@ class AidInterceptorTest {
             .newCall(
                 Request.Builder()
                     .url(mockWebServer.url("/"))
-                    .build()
+                    .build(),
             ).execute()
         assertEquals(AID_VALUE, mockWebServer.takeRequest().getHeader(AidInterceptor.AID_HEADER))
     }

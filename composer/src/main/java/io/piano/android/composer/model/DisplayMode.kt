@@ -4,7 +4,9 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = false)
-public enum class DisplayMode(public val mode: String) {
+public enum class DisplayMode(
+    public val mode: String,
+) {
     @Json(name = "modal")
     MODAL("modal"),
 
@@ -12,7 +14,5 @@ public enum class DisplayMode(public val mode: String) {
     INLINE("inline"),
     ;
 
-    override fun toString(): String {
-        return mode
-    }
+    override fun toString(): String = mode
 }

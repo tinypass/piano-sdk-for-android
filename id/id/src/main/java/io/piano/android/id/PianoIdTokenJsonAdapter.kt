@@ -16,7 +16,7 @@ public class PianoIdTokenJsonAdapter(
         ACCESS_TOKEN,
         ACCESS_TOKEN_CAMEL,
         REFRESH_TOKEN,
-        REFRESH_TOKEN_CAMEL
+        REFRESH_TOKEN_CAMEL,
     )
 
     private val stringAdapter: JsonAdapter<String> = moshi.adapter(String::class.java)
@@ -28,8 +28,8 @@ public class PianoIdTokenJsonAdapter(
             Types.newParameterizedType(
                 Map::class.java,
                 String::class.java,
-                Any::class.java
-            )
+                Any::class.java,
+            ),
         )
     }
 
@@ -44,13 +44,13 @@ public class PianoIdTokenJsonAdapter(
                         accessToken = stringAdapter.fromJson(reader) ?: throw Util.unexpectedNull(
                             ACCESS_TOKEN_CAMEL,
                             ACCESS_TOKEN,
-                            reader
+                            reader,
                         )
                     2, 3 ->
                         refreshToken = stringAdapter.fromJson(reader) ?: throw Util.unexpectedNull(
                             REFRESH_TOKEN_CAMEL,
                             REFRESH_TOKEN,
-                            reader
+                            reader,
                         )
                     -1 -> {
                         // Unknown name, skip it.
@@ -61,12 +61,12 @@ public class PianoIdTokenJsonAdapter(
             }
             endObject()
             val jwtFields = jwtAdapter.fromJson(
-                Base64.decode(accessToken!!.split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString()
+                Base64.decode(accessToken!!.split("\\.".toRegex())[1], Base64.URL_SAFE).decodeToString(),
             )
             PianoIdToken(
                 accessToken ?: throw Util.missingProperty(ACCESS_TOKEN_CAMEL, ACCESS_TOKEN, reader),
                 refreshToken ?: "",
-                jwtFields ?: emptyMap()
+                jwtFields ?: emptyMap(),
             )
         }
     }

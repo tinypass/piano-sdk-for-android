@@ -55,7 +55,7 @@ public class ShowTemplateController constructor(
                         override fun onPause(owner: LifecycleOwner) {
                             handler.removeCallbacksAndMessages(null)
                         }
-                    }
+                    },
                 )
                 handler.postDelayed(func, value * 1000L)
             } else {

@@ -20,8 +20,8 @@ class ExecuteMobileResponseTest {
         val adapter = moshi.adapter<Data<ExperienceResponse>>(
             Types.newParameterizedType(
                 Data::class.java,
-                ExperienceResponse::class.java
-            )
+                ExperienceResponse::class.java,
+            ),
         )
         val response = adapter.fromJson(RAW_JSON)
         assertNotNull(response)

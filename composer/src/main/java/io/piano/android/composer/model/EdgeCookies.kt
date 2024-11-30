@@ -31,13 +31,15 @@ public class EdgeCookies(
             "xbc" to xbc,
             "__utp" to userToken,
             "_pprv" to pprv,
-            "_pcus" to pcus
-        ).filterValues { it.isNotEmpty() }
+            "_pcus" to pcus,
+        ).filterValues { it.isNotEmpty() },
     )
 }
 
 @JsonClass(generateAdapter = true)
-internal class ConsentModeWrapper(val mode: ConsentMode)
+internal class ConsentModeWrapper(
+    val mode: ConsentMode,
+)
 
 @JsonClass(generateAdapter = true)
 internal class PprvContainer(
@@ -46,4 +48,6 @@ internal class PprvContainer(
 )
 
 @JsonClass(generateAdapter = true)
-internal class PcusContainer(val userSegments: UserSegmentsContainer)
+internal class PcusContainer(
+    val userSegments: UserSegmentsContainer,
+)

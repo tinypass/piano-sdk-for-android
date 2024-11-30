@@ -25,7 +25,7 @@ internal class EdgeCookiesProvider(
             prefsStorage.xbuilderBrowserCookie,
             lastUserToken.orEmpty(),
             buildPprvValue(),
-            lastUserSegmentsContainer?.let { pcusAdapter.toJson(PcusContainer(it)) }?.toBase64String().orEmpty()
+            lastUserSegmentsContainer?.let { pcusAdapter.toJson(PcusContainer(it)) }?.toBase64String().orEmpty(),
         )
 
     internal fun userSegments(userSegmentsContainer: UserSegmentsContainer?) {
@@ -44,8 +44,8 @@ internal class EdgeCookiesProvider(
                         it.id to ConsentModeWrapper(c.mode)
                     }
                 }.toMap(),
-                it.productsToPurposesMapping.mapKeys { it.key.id }
-            )
+                it.productsToPurposesMapping.mapKeys { it.key.id },
+            ),
         )
     }?.toBase64String().orEmpty()
 

@@ -36,8 +36,8 @@ class PianoSampleApplication : MultiDexApplication() {
         val pianoConsents = PianoConsents.init(
             this,
             ConsentConfiguration(
-                requireConsent = true
-            )
+                requireConsent = true,
+            ),
         )
         PianoId.init(PIANO_ID_ENDPOINT, BuildConfig.PIANO_AID, pianoConsents)
             .with { r ->
@@ -51,11 +51,13 @@ class PianoSampleApplication : MultiDexApplication() {
                     is PianoIdAuthFailureResult -> Timber.e(r.exception)
                 }
             }
-            .with(object : PianoIdJs {
-                override fun customEvent(eventData: String) {
-                    Timber.d("Custom event: %s", eventData)
-                }
-            })
+            .with(
+                object : PianoIdJs {
+                    override fun customEvent(eventData: String) {
+                        Timber.d("Custom event: %s", eventData)
+                    }
+                },
+            )
             .with(GoogleOAuthProvider())
             .with(FacebookOAuthProvider())
         // Use this one if you want Piano C1X integration
@@ -77,12 +79,12 @@ class PianoSampleApplication : MultiDexApplication() {
         val COMPOSER_ENDPOINT = when {
             BuildConfig.PIANO_ENDPOINT.isNotEmpty() -> Endpoint(
                 BuildConfig.PIANO_ENDPOINT,
-                BuildConfig.PIANO_ENDPOINT
+                BuildConfig.PIANO_ENDPOINT,
             )
 
             BuildConfig.PIANO_QA_PREFIX.isNotEmpty() -> Endpoint(
                 "https://c2-${BuildConfig.PIANO_QA_PREFIX}.qa.piano.dev/",
-                "https://${BuildConfig.PIANO_QA_PREFIX}.qa.piano.dev/"
+                "https://${BuildConfig.PIANO_QA_PREFIX}.qa.piano.dev/",
             )
 
             else -> Endpoint.SANDBOX

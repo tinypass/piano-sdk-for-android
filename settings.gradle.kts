@@ -35,5 +35,5 @@ include(
     ":id:id-oauth-google",
     ":show-helper",
     ":show-custom-form",
-    ":sample"
+    ":sample",
 )

@@ -27,6 +27,7 @@ import io.piano.android.id.models.PianoIdToken
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@Suppress("ktlint:standard:class-signature")
 public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     @VisibleForTesting
     @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -58,6 +59,7 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
         intent?.process()
         onBackPressedDispatcher.addCallback(webviewBackPressedCallback)
         with(binding) {
+            root.handleEdgeToEdge()
             webview.apply {
                 savedInstanceState?.let { restoreState(it) }
                 settings.apply {
@@ -105,7 +107,7 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                         val isPianoIdRedirectUrl = Uri.parse(url).isPianoIdUri()
                         if (isPianoIdRedirectUrl) {
                             setFailureResultData(
-                                IllegalStateException("User already authorized, call signOut before login")
+                                IllegalStateException("User already authorized, call signOut before login"),
                             )
                         }
                         progressBar.show()
@@ -175,7 +177,7 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
     private fun setSuccessResultData(token: PianoIdToken, isNewUser: Boolean) {
         setResult(
             Activity.RESULT_OK,
-            Intent().putExtra(PianoId.KEY_TOKEN, token).putExtra(PianoId.KEY_IS_NEW_USER, isNewUser)
+            Intent().putExtra(PianoId.KEY_TOKEN, token).putExtra(PianoId.KEY_IS_NEW_USER, isNewUser),
         )
         client.authCallback?.invoke(PianoIdAuthResult.success(token, isNewUser))
         finish()

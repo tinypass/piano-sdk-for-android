@@ -36,7 +36,7 @@ public class ShowRecommendationsDialogFragment : BaseShowDialogFragment {
     override fun WebView.configure(jsInterface: BaseJsInterface?) {
         prepare(
             jsInterface as? WidgetJs ?: WidgetJs(widgetId, siteId),
-            this@ShowRecommendationsDialogFragment
+            this@ShowRecommendationsDialogFragment,
         )
     }
 

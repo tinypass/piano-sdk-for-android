@@ -38,7 +38,7 @@ android {
             "PIANO_AID" to aid.lowercase(Locale.getDefault()),
             "FB_APP_ID" to "fb$fbAppId",
             "FB_APP_SCHEME" to "fb$fbAppId",
-            "FB_APP_TOKEN" to fbAppToken
+            "FB_APP_TOKEN" to fbAppToken,
         )
     }
     signingConfigs {

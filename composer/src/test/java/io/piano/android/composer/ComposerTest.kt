@@ -55,10 +55,10 @@ class ComposerTest {
                 any(),
                 anyOrNull(),
                 anyOrNull(),
-                any()
+                any(),
             )
         } doReturn mapOf(
-            DUMMY_STRING to DUMMY_STRING2
+            DUMMY_STRING to DUMMY_STRING2,
         )
     }
     private val edgeCookiesProvider: EdgeCookiesProvider = mock {
@@ -68,7 +68,7 @@ class ComposerTest {
             DUMMY_STRING,
             DUMMY_STRING2,
             DUMMY_STRING,
-            DUMMY_STRING2
+            DUMMY_STRING2,
         )
     }
     private val pianoConsents: PianoConsents = mock {
@@ -83,14 +83,14 @@ class ComposerTest {
             DUMMY_AID,
             Composer.Endpoint.SANDBOX,
             edgeCookiesProvider,
-            pianoConsents
-        )
+            pianoConsents,
+        ),
     )
 
     private val experienceRequest: ExperienceRequest = mock()
     private val resultListeners = listOf(
         mock<ShowTemplateListener>(),
-        mock<UserSegmentListener>()
+        mock<UserSegmentListener>(),
     )
     private val exceptionListener: ExceptionListener = mock()
 
@@ -123,14 +123,9 @@ class ComposerTest {
                 "",
                 Composer.Endpoint.SANDBOX,
                 edgeCookiesProvider,
-                pianoConsents
+                pianoConsents,
             )
         }
-    }
-
-    @Test
-    fun accessToken() {
-        assertEquals(DUMMY_STRING, composer.accessToken)
     }
 
     @Test
@@ -148,9 +143,9 @@ class ComposerTest {
                 mock(),
                 listOf(
                     mock(),
-                    mock()
-                )
-            )
+                    mock(),
+                ),
+            ),
         )
         it.onResponse(experienceCall, response)
         verifyExceptionListenerArgument(null)
@@ -161,7 +156,7 @@ class ComposerTest {
     fun getExperienceResponseSuccess() = getExperienceWithCallbackCheck {
         val experienceResponse: ExperienceResponse = mock()
         val response = Response.success(
-            Data(experienceResponse, emptyList())
+            Data(experienceResponse, emptyList()),
         )
         it.onResponse(experienceCall, response)
         verify(composer).processExperienceResponse(
@@ -169,7 +164,7 @@ class ComposerTest {
             experienceResponse,
             resultListeners,
             null,
-            exceptionListener
+            exceptionListener,
         )
         verify(exceptionListener, never()).onException(any())
     }
@@ -187,7 +182,7 @@ class ComposerTest {
         val eventTypes = listOf(
             ShowTemplate("", "", mock(), null, mock(), true),
             mock<ExperienceExecute>(),
-            mock<UserSegment>()
+            mock<UserSegment>(),
         )
         val response = ExperienceResponse(
             null,
@@ -201,8 +196,8 @@ class ComposerTest {
             EventsContainer(
                 eventTypes.map {
                     Event(mock(), mock(), it)
-                }
-            )
+                },
+            ),
         )
         val iterations = eventTypes.size
 
@@ -220,7 +215,7 @@ class ComposerTest {
         val listeners = listOf(
             showTemplateListener,
             experienceExecuteListener,
-            userSegmentListener
+            userSegmentListener,
         )
 
         composer.processExperienceResponse(
@@ -228,7 +223,7 @@ class ComposerTest {
             response,
             listeners,
             null,
-            exceptionListener
+            exceptionListener,
         )
         verify(httpHelper).afterExecute(experienceRequest, response)
         verify(showTemplateListener, times(iterations)).canProcess(any())
@@ -251,14 +246,14 @@ class ComposerTest {
             null,
             null,
             null,
-            EventsContainer(listOf(Event(mock(), mock(), mock())))
+            EventsContainer(listOf(Event(mock(), mock(), mock()))),
         )
         composer.processExperienceResponse(
             experienceRequest,
             experienceResponse,
             listOf(),
             null,
-            exceptionListener
+            exceptionListener,
         )
         verify(httpHelper).afterExecute(experienceRequest, experienceResponse)
         verify(exceptionListener, never()).onException(any())
@@ -275,14 +270,14 @@ class ComposerTest {
             null,
             null,
             null,
-            EventsContainer(emptyList())
+            EventsContainer(emptyList()),
         )
         composer.processExperienceResponse(
             experienceRequest,
             response,
             resultListeners,
             null,
-            exceptionListener
+            exceptionListener,
         )
         verify(httpHelper).afterExecute(experienceRequest, response)
         for (listener in resultListeners) {
@@ -302,7 +297,7 @@ class ComposerTest {
             DUMMY_STRING,
             Composer.EVENT_TYPE_EXTERNAL_EVENT,
             Composer.EVENT_GROUP_CLOSE,
-            emptyMap()
+            emptyMap(),
         )
         composer.trackRecommendationsDisplay(DUMMY_STRING)
         verify(httpHelper).buildEventTracking(
@@ -310,7 +305,7 @@ class ComposerTest {
             Composer.EVENT_TYPE_EXTERNAL_EVENT,
             Composer.EVENT_GROUP_INIT,
             emptyMap(),
-            Composer.CX_CUSTOM_PARAMS
+            Composer.CX_CUSTOM_PARAMS,
         )
         composer.trackRecommendationsClick(DUMMY_STRING)
         verify(httpHelper).buildEventTracking(
@@ -318,7 +313,7 @@ class ComposerTest {
             Composer.EVENT_TYPE_EXTERNAL_LINK,
             Composer.EVENT_GROUP_CLICK,
             emptyMap(),
-            Composer.CX_CUSTOM_PARAMS
+            Composer.CX_CUSTOM_PARAMS,
         )
         verify(generalApi, times(3)).trackExternalEvent(any())
         verify(call, times(3)).enqueue(any())

@@ -48,7 +48,7 @@ public class ShowFormJs(
     private fun updateToken() {
         executeJavascript(
             """PianoIDMobileSDK.messageCallback('{"event":"setToken","params":"$token"}')""",
-            200
+            200,
         )
     }
 

@@ -28,7 +28,7 @@ public class GoogleOAuthProvider : PianoIdOAuthProvider {
 
             return OAuthSuccessResult(
                 name,
-                GoogleIdTokenCredential.createFrom(credential.data).idToken
+                GoogleIdTokenCredential.createFrom(credential.data).idToken,
             )
         } catch (e: GetCredentialCancellationException) {
             return OAuthCancelledResult

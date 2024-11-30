@@ -38,8 +38,8 @@ internal class DependenciesProvider private constructor(
                     HttpLoggingInterceptor.Level.BODY
                 } else {
                     HttpLoggingInterceptor.Level.NONE
-                }
-            )
+                },
+            ),
         )
         .build()
     private val moshi = Moshi.Builder()
@@ -70,7 +70,7 @@ internal class DependenciesProvider private constructor(
         prefsStorage,
         pianoConsents,
         moshi.adapter(PprvContainer::class.java),
-        moshi.adapter(PcusContainer::class.java)
+        moshi.adapter(PcusContainer::class.java),
     )
 
     internal val composer: Composer = Composer(
@@ -81,7 +81,7 @@ internal class DependenciesProvider private constructor(
         aid,
         endpoint,
         edgeCookiesProvider,
-        pianoConsents
+        pianoConsents,
     )
 
     @Suppress("NOTHING_TO_INLINE")

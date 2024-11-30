@@ -33,9 +33,7 @@ public interface EventTypeListener<T : EventType> {
      * @param event event
      * @return True, if this listener can process this type of events, otherwise False. Default answer is False.
      */
-    public fun canProcess(event: Event<EventType>): Boolean {
-        return false
-    }
+    public fun canProcess(event: Event<EventType>): Boolean = false
 }
 
 /**

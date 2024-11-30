@@ -267,27 +267,25 @@ public class ExperienceRequest private constructor(
          * @return ExperienceRequest instance
          */
         @Suppress("unused") // Public API.
-        public fun build(): ExperienceRequest {
-            return ExperienceRequest(
-                debug,
-                Collections.unmodifiableMap(customVariables),
-                url,
-                referer,
-                Collections.unmodifiableList(tags),
-                Collections.unmodifiableList(keywords),
-                zone,
-                title,
-                description,
-                contentId,
-                contentType,
-                contentCreated,
-                contentAuthor,
-                contentSection,
-                contentIsNative,
-                customParameters,
-                edgeResult
-            )
-        }
+        public fun build(): ExperienceRequest = ExperienceRequest(
+            debug,
+            Collections.unmodifiableMap(customVariables),
+            url,
+            referer,
+            Collections.unmodifiableList(tags),
+            Collections.unmodifiableList(keywords),
+            zone,
+            title,
+            description,
+            contentId,
+            contentType,
+            contentCreated,
+            contentAuthor,
+            contentSection,
+            contentIsNative,
+            customParameters,
+            edgeResult,
+        )
     }
 
     public companion object {
