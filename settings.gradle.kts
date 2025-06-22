@@ -15,7 +15,7 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.develocity") version "3.17.1"
+    id("com.gradle.develocity") version "4.0.2"
 }
 
 develocity {
@@ -27,6 +27,7 @@ develocity {
 includeBuild("gradle/plugins")
 
 include(
+    ":common",
     ":composer",
     ":composer-c1x",
     ":composer-show-template",

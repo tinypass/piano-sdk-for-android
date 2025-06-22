@@ -15,6 +15,7 @@ public abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> 
 ) {
 
     protected abstract val url: String
+    protected open val additionalHttpHeaders: Map<String, String> = emptyMap()
     protected abstract val fragmentTag: String
     protected abstract val fragmentProvider: () -> BaseShowDialogFragment
 
@@ -65,7 +66,11 @@ public abstract class BaseShowController<T : BaseShowType, V : BaseJsInterface> 
                     }
                     webView.configure()
                     processDelay(activity) {
-                        webView.loadUrl(url)
+                        if (additionalHttpHeaders.isEmpty()) {
+                            webView.loadUrl(url)
+                        } else {
+                            webView.loadUrl(url, additionalHttpHeaders)
+                        }
                         webView.visibility = View.VISIBLE
                     }
                 }.onFailure {

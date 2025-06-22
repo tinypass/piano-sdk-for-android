@@ -1,9 +1,11 @@
-package io.piano.android.composer
+package io.piano.android.common
 
 import android.annotation.SuppressLint
+import androidx.annotation.RestrictTo
 import timber.log.Timber
 
-internal fun isLogHttpSet(): Boolean = getProperty(LOG_HTTP_KEY) == "true"
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+public fun isLogHttpSet(): Boolean = getProperty(LOG_HTTP_KEY) == "true"
 
 @SuppressLint("PrivateApi")
 @Suppress("SameParameterValue")

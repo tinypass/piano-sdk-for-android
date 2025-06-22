@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
 import com.squareup.moshi.Moshi
+import io.piano.android.common.UnixTimeDateAdapter
 import io.piano.android.composer.model.ActiveMeter
 import io.piano.android.composer.model.CookieObject
 import io.piano.android.composer.model.CustomParameters
@@ -158,6 +159,7 @@ class HttpHelperTest {
                 UserSegmentsContainer(null, null),
                 null,
                 meters,
+                emptyList(),
             ),
             ShowTemplate(
                 DUMMY_STRING2,

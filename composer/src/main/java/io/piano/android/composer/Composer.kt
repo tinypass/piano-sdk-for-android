@@ -1,6 +1,7 @@
 package io.piano.android.composer
 
 import android.content.Context
+import io.piano.android.common.DeviceIdProvider
 import io.piano.android.composer.Composer.Endpoint
 import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.EventsListener
@@ -35,6 +36,7 @@ import retrofit2.Response
  * @param prefsStorage The instance of [PrefsStorage] for handling shared preferences.
  * @param aid Your Application ID (AID).
  * @param endpoint The custom API endpoint. It should be one of the predefined endpoints in [Endpoint].
+ * @property deviceIdProvider [DeviceIdProvider] instance for getting current device id
  * @property pianoConsents [PianoConsents] instance for managing user consent.
  */
 public class Composer internal constructor(
@@ -48,6 +50,7 @@ public class Composer internal constructor(
     // Public API.
     @Suppress("unused")
     public val pianoConsents: PianoConsents?,
+    public val deviceIdProvider: DeviceIdProvider,
 ) {
     // Private properties
     private val templateUrl by lazy {

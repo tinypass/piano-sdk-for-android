@@ -1,6 +1,9 @@
 # Piano SDK for Android
 
 ## v2.12.0-SNAPSHOT
+* Add device restriction support
+* BREAKING CHANGE: PianoId initialization requires Context now
+* BREAKING CHANGE: ShowTemplateController requires DeviceIdProvider now
 * Updated to Kotlin 2.0.21
 * Updated dependencies:
   - Kotlin [1.9.24 -> 2.0.21]

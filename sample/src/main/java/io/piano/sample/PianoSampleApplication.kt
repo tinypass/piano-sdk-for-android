@@ -39,7 +39,7 @@ class PianoSampleApplication : MultiDexApplication() {
                 requireConsent = true,
             ),
         )
-        PianoId.init(PIANO_ID_ENDPOINT, BuildConfig.PIANO_AID, pianoConsents)
+        PianoId.init(this, PIANO_ID_ENDPOINT, BuildConfig.PIANO_AID, pianoConsents)
             .with { r ->
                 when (r) {
                     is PianoIdAuthSuccessResult -> {

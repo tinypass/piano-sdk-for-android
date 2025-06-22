@@ -5,7 +5,7 @@ android = "8.10.1"
 binaryCompatibility = "0.17.0"
 versionUpdater = "0.52.0"
 ktlint = "12.2.0"
-mavenRelease = "0.32.0"
+mavenRelease = "0.33.0"
 moshiIR = "0.28.0"
 ksp = "2.0.21-1.0.28"
 

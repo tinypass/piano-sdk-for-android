@@ -6,6 +6,7 @@ plugins {
 dependencies {
     api(project(":composer"))
     api(project(":show-helper"))
+    implementation(project(":common"))
     implementation(libs.lifecycleCommon)
     implementation(libs.timber)
 }

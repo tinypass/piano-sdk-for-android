@@ -138,6 +138,7 @@ class ComposerActivity : AppCompatActivity() {
                 ).show()
                 showTemplateController = ShowTemplateController(
                     event,
+                    Composer.getInstance().deviceIdProvider,
                     object : ComposerJs() {
                         @JavascriptInterface
                         override fun customEvent(eventData: String) {
@@ -148,6 +149,21 @@ class ComposerActivity : AppCompatActivity() {
                         @JavascriptInterface
                         override fun login(eventData: String) {
                             signIn()
+                        }
+
+                        @JavascriptInterface
+                        override fun terminateSessionCompleted(eventData: String) {
+                            val data = PianoId.getInstance().parseTerminateSession(eventData)
+                            val oldToken = prefsStorage.pianoIdToken
+                            if (data == null || oldToken == null) {
+                                Timber.d("Can't update stored token")
+                                setAccessToken(null)
+                                return
+                            }
+                            val newToken = with(oldToken) {
+                                PianoIdToken(accessToken = data.newToken, refreshToken = refreshToken, info = info)
+                            }
+                            setAccessToken(newToken)
                         }
                     },
                 )

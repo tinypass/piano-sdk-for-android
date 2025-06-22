@@ -1,11 +1,18 @@
 package io.piano.android.id
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import io.piano.android.common.AidInterceptor
+import io.piano.android.common.CommonPrefsStorage
+import io.piano.android.common.DeviceIdInterceptor
+import io.piano.android.common.DeviceIdProvider
+import io.piano.android.common.UserAgentInterceptor
+import io.piano.android.common.isLogHttpSet
 import io.piano.android.consents.ConsentJsonAdapterFactory
 import io.piano.android.consents.PianoConsents
 import io.piano.android.consents.models.Consent
@@ -32,7 +39,12 @@ public class PianoId {
         private var client: PianoIdClient? = null
 
         @JvmStatic
-        private fun buildClient(endpoint: HttpUrl, aid: String, pianoConsents: PianoConsents?): PianoIdClient {
+        private fun buildClient(
+            context: Context,
+            endpoint: HttpUrl,
+            aid: String,
+            pianoConsents: PianoConsents?,
+        ): PianoIdClient {
             val userAgent = "Piano ID SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE})"
             val moshi = Moshi.Builder()
                 .add(PianoIdJsonAdapterFactory())
@@ -56,10 +68,14 @@ public class PianoId {
                     ),
                 ),
             )
+            val deviceIdProvider = DeviceIdProvider(
+                CommonPrefsStorage(context),
+            )
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(ConsentsInterceptor(consentsDataProvider))
                 .addInterceptor(UserAgentInterceptor(userAgent))
                 .addInterceptor(AidInterceptor(aid))
+                .addInterceptor(DeviceIdInterceptor(deviceIdProvider))
                 .addInterceptor(
                     HttpLoggingInterceptor().setLevel(
                         if (BuildConfig.DEBUG || isLogHttpSet()) {
@@ -75,12 +91,13 @@ public class PianoId {
                 .baseUrl(endpoint)
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .build()
-            return PianoIdClient(retrofit.create(), moshi, aid, consentsDataProvider, endpoint)
+            return PianoIdClient(retrofit.create(), moshi, aid, consentsDataProvider, deviceIdProvider, endpoint)
         }
 
         /**
          * Initialize {@link PianoIdClient} singleton instance. It doesn't re-init it at next calls.
          *
+         * @param context  The Activity or Application context.
          * @param endpoint Endpoint, which will be used. For example, {@link #ENDPOINT_PRODUCTION},
          *                 {@link #ENDPOINT_SANDBOX} or your custom endpoint
          * @param aid      Your AID
@@ -90,14 +107,16 @@ public class PianoId {
         @Suppress("unused") // Public API.
         @JvmStatic
         public fun init(
+            context: Context,
             endpoint: String,
             aid: String,
             pianoConsents: PianoConsents? = null,
-        ): PianoIdClient = init(endpoint.toHttpUrl(), aid, pianoConsents)
+        ): PianoIdClient = init(context, endpoint.toHttpUrl(), aid, pianoConsents)
 
         /**
          * Initialize {@link PianoIdClient} singleton instance. It doesn't re-init it at next calls.
          *
+         * @param context  The Activity or Application context.
          * @param endpoint Endpoint, which will be used.
          * @param aid      Your AID
          * @param pianoConsents [PianoConsents] instance for managing user consent
@@ -106,6 +125,7 @@ public class PianoId {
         @Suppress("unused") // Public API.
         @JvmStatic
         public fun init(
+            context: Context,
             endpoint: HttpUrl,
             aid: String,
             pianoConsents: PianoConsents? = null,
@@ -113,7 +133,7 @@ public class PianoId {
             if (client == null) {
                 synchronized(this) {
                     if (client == null) {
-                        client = buildClient(endpoint, aid, pianoConsents)
+                        client = buildClient(context.applicationContext, endpoint, aid, pianoConsents)
                     }
                 }
             }

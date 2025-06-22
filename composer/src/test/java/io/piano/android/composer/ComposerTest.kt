@@ -12,6 +12,7 @@ import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import io.piano.android.common.DeviceIdProvider
 import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.ExceptionListener
 import io.piano.android.composer.listeners.ExperienceExecuteListener
@@ -74,6 +75,9 @@ class ComposerTest {
     private val pianoConsents: PianoConsents = mock {
         on { consents } doReturn emptyMap()
     }
+    private val deviceIdProvider: DeviceIdProvider = mock {
+        on { deviceId } doReturn DUMMY_STRING
+    }
     private val composer: Composer = spy(
         Composer(
             composerApi,
@@ -84,6 +88,7 @@ class ComposerTest {
             Composer.Endpoint.SANDBOX,
             edgeCookiesProvider,
             pianoConsents,
+            deviceIdProvider,
         ),
     )
 
@@ -124,6 +129,7 @@ class ComposerTest {
                 Composer.Endpoint.SANDBOX,
                 edgeCookiesProvider,
                 pianoConsents,
+                deviceIdProvider,
             )
         }
     }

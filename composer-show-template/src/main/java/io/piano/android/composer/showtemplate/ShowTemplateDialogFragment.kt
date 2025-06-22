@@ -28,8 +28,13 @@ public class ShowTemplateDialogFragment : BaseShowDialogFragment {
      *
      * @param url The URL of the Piano Composer template to be displayed.
      * @param trackingId The tracking ID associated with the template.
+     * @param additionalHttpHeaders Additional HTTP headers for loading the URL
      */
-    public constructor(url: String, trackingId: String) : super(url) {
+    public constructor(
+        url: String,
+        trackingId: String,
+        additionalHttpHeaders: Map<String, String>,
+    ) : super(url, additionalHttpHeaders) {
         val args = arguments ?: Bundle()
         arguments = args.apply {
             putString(KEY_TRACKING_ID, trackingId)

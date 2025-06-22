@@ -12,6 +12,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
 import com.squareup.moshi.Moshi
+import io.piano.android.common.DeviceIdProvider
 import io.piano.android.id.models.HostResponse
 import io.piano.android.id.models.PianoIdApi
 import io.piano.android.id.models.PianoIdToken
@@ -51,11 +52,12 @@ class PianoIdClientTest {
         on { name } doReturn NAME
     }
     private val consentsDataProvider: ConsentsDataProvider = mock()
+    private val deviceIdProvider: DeviceIdProvider = mock()
     private lateinit var pianoIdClient: PianoIdClient
 
     @BeforeTest
     fun setUp() {
-        pianoIdClient = spy(PianoIdClient(api, moshi, AID, consentsDataProvider, endpoint))
+        pianoIdClient = spy(PianoIdClient(api, moshi, AID, consentsDataProvider, deviceIdProvider, endpoint))
     }
 
     @Test
