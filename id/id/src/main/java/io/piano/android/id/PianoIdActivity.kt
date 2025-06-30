@@ -17,7 +17,6 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import io.piano.android.common.DeviceIdProvider
 import io.piano.android.id.PianoId.Companion.isPianoIdUri
 import io.piano.android.id.PianoIdClient.Companion.toPianoIdException
 import io.piano.android.id.databinding.ActivityPianoIdBinding
@@ -123,7 +122,7 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                 addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
                 clearCache(true)
                 clearHistory()
-                loadUrl(url, mapOf(DeviceIdProvider.DEVICE_ID_HEADER to client.deviceIdProvider.deviceId))
+                loadUrl(url)
             }
         }
     }
