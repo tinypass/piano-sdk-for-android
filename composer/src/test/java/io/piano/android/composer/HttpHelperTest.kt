@@ -17,6 +17,7 @@ import io.piano.android.composer.model.EventExecutionContext
 import io.piano.android.composer.model.EventsContainer
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
+import io.piano.android.composer.model.SessionStats
 import io.piano.android.composer.model.UserSegmentsContainer
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.consents.ConsentJsonAdapterFactory
@@ -159,7 +160,7 @@ class HttpHelperTest {
                 UserSegmentsContainer(null, null),
                 null,
                 meters,
-                emptyList(),
+                SessionStats(true, 2, 1),
             ),
             ShowTemplate(
                 DUMMY_STRING2,
@@ -186,7 +187,7 @@ class HttpHelperTest {
                 ),
             ),
         ) {
-            assertEquals(12, size)
+            assertEquals(13, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
     }

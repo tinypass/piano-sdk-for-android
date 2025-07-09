@@ -10,6 +10,7 @@ import io.piano.android.composer.model.DisplayMode
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
+import io.piano.android.composer.model.SessionStats
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.consents.models.Consent
 import io.piano.android.consents.models.Product
@@ -59,6 +60,10 @@ internal class HttpHelper(
 
     private val customParametersAdapter by lazy {
         moshi.adapter(CustomParameters::class.java)
+    }
+
+    private val sessionStateAdapter by lazy {
+        moshi.adapter(SessionStats::class.java)
     }
 
     private val consentModesAdapter: JsonAdapter<Map<Int, Int>> by lazy {
@@ -205,7 +210,7 @@ internal class HttpHelper(
             PARAM_GA_CLIENT_ID to gaClientId.orEmpty(),
             PARAM_OS to VALUE_ANDROID_OS,
             PARAM_DISPLAY_MODE to DisplayMode.INLINE.mode,
-            PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie.orEmpty(),
+            PARAM_TP_BROWSER_COOKIE to prefsStorage.tpBrowserCookie,
             PARAM_SHOW_CLOSE_BUTTON to eventData.showCloseButton.toString(),
             PARAM_SHOW_TEMPLATE_TRACKING_ID to eventExecutionContext.trackingId,
             PARAM_SHOW_TEMPLATE_CONTENT_AUTHOR to experienceRequest.contentAuthor.orEmpty(),
@@ -219,6 +224,7 @@ internal class HttpHelper(
                 ?.let { activeMetersAdapter.toJson(it) }.orEmpty(),
             PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
                 ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
+            PARAM_SESSIONS to eventExecutionContext.sessions?.let { sessionStateAdapter.toJson(it) }.orEmpty(),
         ).filterNotEmptyValues()
     }.toMap()
 
@@ -300,6 +306,7 @@ internal class HttpHelper(
         internal const val PARAM_GA_CLIENT_ID = "gaClientId"
         internal const val PARAM_OS = "os"
         internal const val PARAM_SHOW_CLOSE_BUTTON = "showCloseButton"
+        internal const val PARAM_SESSIONS = "sessions"
 
         internal const val VALUE_ANDROID_OS = "android"
     }

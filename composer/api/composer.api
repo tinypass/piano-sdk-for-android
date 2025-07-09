@@ -284,12 +284,12 @@ public final class io/piano/android/composer/model/EventExecutionContext {
 	public final field executionId Ljava/lang/String;
 	public final field experienceId Ljava/lang/String;
 	public final field region Ljava/lang/String;
-	public final field sessions Ljava/util/List;
+	public final field sessions Lio/piano/android/composer/model/SessionStats;
 	public final field splitTests Ljava/util/List;
 	public final field trackingId Ljava/lang/String;
 	public final field user Lio/piano/android/composer/model/User;
 	public final field userSegments Lio/piano/android/composer/model/UserSegmentsContainer;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lio/piano/android/composer/model/User;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/UserSegmentsContainer;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lio/piano/android/composer/model/User;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/UserSegmentsContainer;Ljava/util/List;Ljava/util/List;Lio/piano/android/composer/model/SessionStats;)V
 }
 
 public final class io/piano/android/composer/model/EventExecutionContextJsonAdapter : com/squareup/moshi/JsonAdapter {
