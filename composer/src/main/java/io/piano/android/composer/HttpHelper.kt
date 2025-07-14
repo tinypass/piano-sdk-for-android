@@ -11,7 +11,9 @@ import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
 import io.piano.android.composer.model.SessionStats
+import io.piano.android.composer.model.TemplateSessionStats
 import io.piano.android.composer.model.events.ShowTemplate
+import io.piano.android.composer.model.toTemplateSessionStats
 import io.piano.android.consents.models.Consent
 import io.piano.android.consents.models.Product
 import io.piano.android.consents.models.Purpose
@@ -63,7 +65,7 @@ internal class HttpHelper(
     }
 
     private val sessionStateAdapter by lazy {
-        moshi.adapter(SessionStats::class.java)
+        moshi.adapter(TemplateSessionStats::class.java)
     }
 
     private val consentModesAdapter: JsonAdapter<Map<Int, Int>> by lazy {
@@ -224,7 +226,9 @@ internal class HttpHelper(
                 ?.let { activeMetersAdapter.toJson(it) }.orEmpty(),
             PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
                 ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
-            PARAM_SESSIONS to eventExecutionContext.sessions?.let { sessionStateAdapter.toJson(it) }.orEmpty(),
+            PARAM_SESSIONS to eventExecutionContext.session?.let {
+                sessionStateAdapter.toJson(it.toTemplateSessionStats())
+            }.orEmpty(),
         ).filterNotEmptyValues()
     }.toMap()
 

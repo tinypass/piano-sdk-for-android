@@ -284,7 +284,7 @@ public final class io/piano/android/composer/model/EventExecutionContext {
 	public final field executionId Ljava/lang/String;
 	public final field experienceId Ljava/lang/String;
 	public final field region Ljava/lang/String;
-	public final field sessions Lio/piano/android/composer/model/SessionStats;
+	public final field session Lio/piano/android/composer/model/SessionStats;
 	public final field splitTests Ljava/util/List;
 	public final field trackingId Ljava/lang/String;
 	public final field user Lio/piano/android/composer/model/User;
@@ -507,6 +507,13 @@ public final class io/piano/android/composer/model/SplitTest {
 }
 
 public final class io/piano/android/composer/model/SplitTestJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/TemplateSessionStatsJsonAdapter : com/squareup/moshi/JsonAdapter {
 	public fun <init> (Lcom/squareup/moshi/Moshi;)V
 	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
 	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
