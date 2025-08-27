@@ -4,6 +4,13 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RestrictTo
 import com.squareup.moshi.Moshi
+import io.piano.android.common.AidInterceptor
+import io.piano.android.common.CommonPrefsStorage
+import io.piano.android.common.DeviceIdInterceptor
+import io.piano.android.common.DeviceIdProvider
+import io.piano.android.common.UnixTimeDateAdapter
+import io.piano.android.common.UserAgentInterceptor
+import io.piano.android.common.isLogHttpSet
 import io.piano.android.composer.model.PcusContainer
 import io.piano.android.composer.model.PprvContainer
 import io.piano.android.consents.ConsentJsonAdapterFactory
@@ -26,11 +33,16 @@ internal class DependenciesProvider private constructor(
     private val userAgent = "Piano composer SDK ${BuildConfig.SDK_VERSION} (Android ${Build.VERSION.RELEASE} " +
         "(Build ${Build.ID}); ${context.deviceType()} ${Build.MANUFACTURER}/${Build.MODEL})"
 
+    private val deviceIdProvider = DeviceIdProvider(
+        CommonPrefsStorage(context),
+    )
+
     private val okHttpClient = OkHttpClient.Builder()
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
         .addInterceptor(UserAgentInterceptor(userAgent))
         .addInterceptor(AidInterceptor(aid))
+        .addInterceptor(DeviceIdInterceptor(deviceIdProvider))
         .addInterceptor(RequestPolicyInterceptor(prefsStorage))
         .addInterceptor(
             HttpLoggingInterceptor().setLevel(
@@ -82,6 +94,7 @@ internal class DependenciesProvider private constructor(
         endpoint,
         edgeCookiesProvider,
         pianoConsents,
+        deviceIdProvider,
     )
 
     @Suppress("NOTHING_TO_INLINE")

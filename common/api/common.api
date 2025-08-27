@@ -1,0 +1,43 @@
+public final class io/piano/android/common/AidInterceptor : okhttp3/Interceptor {
+	public static final field AID_HEADER Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;)V
+	public fun intercept (Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;
+}
+
+public final class io/piano/android/common/CommonPrefsStorage {
+	public static final field KEY_DEVICE_ID Ljava/lang/String;
+	public static final field PREFS_NAME Ljava/lang/String;
+	public fun <init> (Landroid/content/Context;)V
+	public final fun getDeviceId ()Ljava/lang/String;
+}
+
+public final class io/piano/android/common/DebugUtilsKt {
+	public static final fun isLogHttpSet ()Z
+}
+
+public final class io/piano/android/common/DeviceIdInterceptor : okhttp3/Interceptor {
+	public fun <init> (Lio/piano/android/common/DeviceIdProvider;)V
+	public fun intercept (Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;
+}
+
+public final class io/piano/android/common/DeviceIdProvider {
+	public static final field Companion Lio/piano/android/common/DeviceIdProvider$Companion;
+	public static final field DEVICE_ID_HEADER Ljava/lang/String;
+	public fun <init> (Lio/piano/android/common/CommonPrefsStorage;)V
+	public final fun getDeviceId ()Ljava/lang/String;
+}
+
+public final class io/piano/android/common/DeviceIdProvider$Companion {
+}
+
+public final class io/piano/android/common/UnixTimeDateAdapter {
+	public static final field INSTANCE Lio/piano/android/common/UnixTimeDateAdapter;
+	public final fun fromJson (J)Ljava/util/Date;
+	public final fun toJson (Ljava/util/Date;)J
+}
+
+public final class io/piano/android/common/UserAgentInterceptor : okhttp3/Interceptor {
+	public fun <init> (Ljava/lang/String;)V
+	public fun intercept (Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;
+}
+

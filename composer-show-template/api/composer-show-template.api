@@ -8,18 +8,19 @@ public class io/piano/android/composer/showtemplate/ComposerJs : io/piano/androi
 	public fun login (Ljava/lang/String;)V
 	public fun logout (Ljava/lang/String;)V
 	public fun register (Ljava/lang/String;)V
+	public fun terminateSessionCompleted (Ljava/lang/String;)V
 }
 
 public final class io/piano/android/composer/showtemplate/ShowTemplateController : io/piano/android/showhelper/BaseShowController {
-	public fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/composer/showtemplate/ComposerJs;)V
-	public synthetic fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/composer/showtemplate/ComposerJs;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/common/DeviceIdProvider;Lio/piano/android/composer/showtemplate/ComposerJs;)V
+	public synthetic fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/common/DeviceIdProvider;Lio/piano/android/composer/showtemplate/ComposerJs;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun close (Ljava/lang/String;)V
 	public final fun reloadWithToken (Ljava/lang/String;)V
 }
 
 public final class io/piano/android/composer/showtemplate/ShowTemplateDialogFragment : io/piano/android/showhelper/BaseShowDialogFragment {
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
 	public fun onCancel (Landroid/content/DialogInterface;)V
 }
 

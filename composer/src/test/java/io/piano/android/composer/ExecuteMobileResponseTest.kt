@@ -2,6 +2,7 @@ package io.piano.android.composer
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import io.piano.android.common.UnixTimeDateAdapter
 import io.piano.android.composer.model.Data
 import io.piano.android.composer.model.ExperienceResponse
 import kotlin.test.Test

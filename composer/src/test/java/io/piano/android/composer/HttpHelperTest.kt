@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
 import com.squareup.moshi.Moshi
+import io.piano.android.common.UnixTimeDateAdapter
 import io.piano.android.composer.model.ActiveMeter
 import io.piano.android.composer.model.CookieObject
 import io.piano.android.composer.model.CustomParameters
@@ -16,6 +17,7 @@ import io.piano.android.composer.model.EventExecutionContext
 import io.piano.android.composer.model.EventsContainer
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
+import io.piano.android.composer.model.SessionStats
 import io.piano.android.composer.model.UserSegmentsContainer
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.consents.ConsentJsonAdapterFactory
@@ -158,6 +160,7 @@ class HttpHelperTest {
                 UserSegmentsContainer(null, null),
                 null,
                 meters,
+                SessionStats(true, 2, 1),
             ),
             ShowTemplate(
                 DUMMY_STRING2,
@@ -184,7 +187,7 @@ class HttpHelperTest {
                 ),
             ),
         ) {
-            assertEquals(12, size)
+            assertEquals(13, size)
             assertEquals(DUMMY_STRING, this[HttpHelper.PARAM_AID])
         }
     }

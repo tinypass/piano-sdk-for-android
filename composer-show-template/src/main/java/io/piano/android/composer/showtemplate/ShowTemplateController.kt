@@ -8,10 +8,10 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import io.piano.android.common.DeviceIdProvider
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.showhelper.BaseShowController
-import timber.log.Timber
 
 /**
  * A controller for displaying a template using the Piano Composer API.
@@ -21,12 +21,14 @@ import timber.log.Timber
  * interface. It handles the template display, delay, and interaction with the JavaScript interface.
  *
  * @param event The [Event] containing the [ShowTemplate] data to be displayed.
+ * @param deviceIdProvider The [DeviceIdProvider] instance
  * @param jsInterface The optional [ComposerJs] JavaScript interface for communication with the
  *                    displayed template. If not provided, a default instance of [ComposerJs] will
  *                    be used.
  */
-public class ShowTemplateController constructor(
+public class ShowTemplateController(
     event: Event<ShowTemplate>,
+    deviceIdProvider: DeviceIdProvider,
     jsInterface: ComposerJs? = null,
 ) : BaseShowController<ShowTemplate, ComposerJs>(event.eventData, jsInterface ?: ComposerJs()) {
     // Private properties
@@ -34,9 +36,11 @@ public class ShowTemplateController constructor(
 
     // Overrides from BaseShowController
     override val url: String = event.eventData.url ?: "about:blank"
+    override val additionalHttpHeaders: Map<String, String> =
+        mapOf(DeviceIdProvider.DEVICE_ID_HEADER to deviceIdProvider.deviceId)
     override val fragmentTag: String = FRAGMENT_TAG
     override val fragmentProvider: () -> ShowTemplateDialogFragment = {
-        ShowTemplateDialogFragment(url, trackingId)
+        ShowTemplateDialogFragment(url, trackingId, additionalHttpHeaders)
     }
 
     override fun WebView.configure(): Unit = prepare(null, jsInterface, trackingId)
@@ -96,21 +100,6 @@ public class ShowTemplateController constructor(
             val jsInterface = javascriptInterface ?: ComposerJs()
             jsInterface.init(dialogFragment, this, trackingId)
             addJavascriptInterface(jsInterface, JAVASCRIPT_INTERFACE)
-        }
-
-        // Default WebView provider function
-        @JvmStatic
-        private val defaultWebViewProvider: (FragmentActivity, String) -> WebView? = { activity, webViewId ->
-            activity.resources
-                .getIdentifier(webViewId, "id", activity.packageName)
-                .takeUnless { it == 0 }
-                ?.let { id ->
-                    runCatching {
-                        activity.findViewById<WebView>(id)
-                    }.onFailure {
-                        Timber.e(it)
-                    }.getOrNull()
-                }
         }
     }
 }

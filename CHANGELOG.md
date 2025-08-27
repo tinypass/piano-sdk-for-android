@@ -1,5 +1,34 @@
 # Piano SDK for Android
 
+## v2.12.0
+* Add device restriction support
+* BREAKING CHANGE: PianoId initialization requires Context now
+* BREAKING CHANGE: ShowTemplateController requires DeviceIdProvider now
+* Updated to Kotlin 2.0.21
+* Updated dependencies:
+  - Kotlin [1.9.24 -> 2.0.21]
+  - androidx.activity:activity [1.9.3 -> 1.10.1]
+    https://developer.android.com/jetpack/androidx/releases/activity#1.10.1
+  - androidx.credentials:credentials [1.3.0 -> 1.5.0]
+    https://developer.android.com/jetpack/androidx/releases/credentials#1.5.0
+  - androidx.fragment:fragment [1.8.5 -> 1.8.6]
+    https://developer.android.com/jetpack/androidx/releases/fragment#1.8.6
+  - androidx.lifecycle:lifecycle-common-java8 [2.8.7 -> 2.9.1]
+    https://developer.android.com/jetpack/androidx/releases/lifecycle#2.9.1
+  - androidx.appcompat:appcompat [1.7.0 -> 1.7.1]
+    https://developer.android.com/jetpack/androidx/releases/appcompat#1.7.1
+  - androidx.fragment:fragment [1.8.6 -> 1.8.8]
+    https://developer.android.com/jetpack/androidx/releases/fragment#1.8.8
+  - com.facebook.android:facebook-login [17.0.2 -> 18.0.3]
+    https://github.com/facebook/facebook-android-sdk
+  - com.google.android.gms:play-services-basement [18.5.0 -> 18.6.0]
+  - com.squareup.moshi:moshi [1.15.1 -> 1.15.2]
+    https://github.com/square/moshi/
+  - io.piano.android:cxense [2.6.1 -> 2.7.0]
+    https://docs.piano.io/product/dmp
+  - org.jetbrains.kotlinx:kotlinx-coroutines-core [1.9.0 -> 1.10.2]
+    https://github.com/Kotlin/kotlinx.coroutines
+
 ## v2.11.0
 * Increased minSdkVersion from 21 to 23
 * Android 15 compatibility

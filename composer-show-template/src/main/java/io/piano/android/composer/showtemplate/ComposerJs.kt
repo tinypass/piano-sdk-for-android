@@ -120,6 +120,19 @@ public open class ComposerJs : BaseJsInterface() {
     }
 
     /**
+     * Handles user session terminating.
+     *
+     * This function is called from the JavaScript code when the template's `terminateSessionCompleted` function
+     * is invoked. It should be overridden in subclasses to perform additional actions.
+     *
+     * @param eventData Data passed from the template to the terminateSessionCompleted function.
+     */
+    @JavascriptInterface
+    public open fun terminateSessionCompleted(eventData: String) {
+        // Implementation details of handling user session terminating go here...
+    }
+
+    /**
      * Closes the template or the associated dialog.
      *
      * This function is called to close the template or the associated dialog if it is displayed.

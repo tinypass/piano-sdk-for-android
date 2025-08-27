@@ -1,10 +1,12 @@
-package io.piano.android.id
+package io.piano.android.common
 
+import androidx.annotation.RestrictTo
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
 
-internal class UserAgentInterceptor(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+public class UserAgentInterceptor(
     private val userAgent: String,
 ) : Interceptor {
     @Throws(IOException::class)

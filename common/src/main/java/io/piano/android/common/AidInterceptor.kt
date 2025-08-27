@@ -1,10 +1,12 @@
-package io.piano.android.composer
+package io.piano.android.common
 
+import androidx.annotation.RestrictTo
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
 
-internal class AidInterceptor(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+public class AidInterceptor(
     private val aid: String,
 ) : Interceptor {
     @Throws(IOException::class)
@@ -14,7 +16,7 @@ internal class AidInterceptor(
             .header(AID_HEADER, aid)
             .build(),
     )
-    companion object {
-        internal const val AID_HEADER = "piano-app-id"
+    internal companion object {
+        const val AID_HEADER = "piano-app-id"
     }
 }

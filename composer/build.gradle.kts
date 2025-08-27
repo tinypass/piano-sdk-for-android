@@ -16,7 +16,9 @@ android {
 }
 
 dependencies {
+    api(project(":common"))
     api(libs.pianoConsents)
+
     implementation(libs.okhttpLogging)
     implementation(libs.retrofit)
     implementation(libs.retrofitConverter)
@@ -29,5 +31,4 @@ dependencies {
     testImplementation(libs.mockitoKotlin)
     testImplementation(libs.mockitoCore)
     testImplementation(libs.junit)
-    testImplementation(libs.okhttpMockServer)
 }

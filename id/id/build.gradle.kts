@@ -22,8 +22,10 @@ android {
 
 dependencies {
     api(libs.pianoConsents)
-    implementation(libs.appcompat)
     api(libs.androidx.activity)
+
+    implementation(project(":common"))
+    implementation(libs.appcompat)
     implementation(libs.okhttp)
     implementation(libs.okhttpLogging)
     implementation(libs.retrofit)

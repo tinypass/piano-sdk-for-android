@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.SparseArray
 import androidx.activity.ComponentActivity
 import com.squareup.moshi.Moshi
+import io.piano.android.common.DeviceIdProvider
 import io.piano.android.consents.PianoConsents
 import io.piano.android.id.models.HostResponse
 import io.piano.android.id.models.OAuthResult
@@ -17,6 +18,7 @@ import io.piano.android.id.models.PianoUserInfo
 import io.piano.android.id.models.PianoUserProfile
 import io.piano.android.id.models.SocialTokenData
 import io.piano.android.id.models.SocialTokenResponse
+import io.piano.android.id.models.TerminateSession
 import io.piano.android.id.models.toProfileUpdateRequest
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.HttpUrl
@@ -35,6 +37,7 @@ public class PianoIdClient internal constructor(
     private val moshi: Moshi,
     internal val aid: String,
     internal val consentsDataProvider: ConsentsDataProvider,
+    internal val deviceIdProvider: DeviceIdProvider,
     endpoint: HttpUrl,
 ) {
     private val pianoIdTokenAdapter by lazy {
@@ -48,6 +51,9 @@ public class PianoIdClient internal constructor(
     }
     private val errorAdapter by lazy {
         moshi.adapter(PianoIdError::class.java)
+    }
+    private val terminateSessionAdapter by lazy {
+        moshi.adapter(TerminateSession::class.java)
     }
     internal var hostUrl: HttpUrl = endpoint
     private val exceptions = SparseArray<PianoIdException>()
@@ -255,6 +261,13 @@ public class PianoIdClient internal constructor(
         }
     }
 
+    /**
+     * Parses provided JS event data as [TerminateSession] object.
+     *
+     * @param eventData Data provided by JS event
+     */
+    public fun parseTerminateSession(eventData: String): TerminateSession? = terminateSessionAdapter.fromJson(eventData)
+
     internal fun loadHostUrl() {
         api.getDeploymentHost(aid).enqueue(
             object : Callback<HostResponse> {
@@ -291,6 +304,7 @@ public class PianoIdClient internal constructor(
         .addQueryParameter(PARAM_DISABLE_SIGN_UP, disableSignUp.toString())
         .addQueryParameter(PARAM_REDIRECT_URI, "$LINK_SCHEME_PREFIX$aid://$LINK_AUTHORITY")
         .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
+        .addQueryParameter(PARAM_DEVICE_ID, deviceIdProvider.deviceId)
         .apply {
             if (!widget.isNullOrEmpty()) {
                 addQueryParameter(PARAM_SCREEN, widget)
@@ -315,6 +329,7 @@ public class PianoIdClient internal constructor(
         .addQueryParameter(PARAM_HIDE_COMPLETE, hideCompletedFields.toString())
         .addQueryParameter(PARAM_TRACKING_ID, trackingId)
         .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
+        .addQueryParameter(PARAM_DEVICE_ID, deviceIdProvider.deviceId)
         .build()
         .toString()
 
@@ -439,6 +454,7 @@ public class PianoIdClient internal constructor(
         internal const val PARAM_HIDE_COMPLETE = "hide_if_complete"
         internal const val PARAM_TRACKING_ID = "trackingId"
         internal const val PARAM_STAGE = "stage"
+        internal const val PARAM_DEVICE_ID = "device_id"
 
         internal const val VALUE_RESPONSE_TYPE_TOKEN = "token"
         internal const val VALUE_FORCE_REDIRECT = "1"

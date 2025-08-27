@@ -7,12 +7,10 @@ import io.piano.android.ktlint.KtlintConfigPlugin
 import kotlinx.validation.BinaryCompatibilityValidatorPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.provideDelegate
-import org.jetbrains.dokka.gradle.DokkaPlugin
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPluginWrapper
 
 class CommonAndroidConfigurationPlugin : Plugin<Project> {
@@ -39,23 +37,21 @@ class CommonAndroidConfigurationPlugin : Plugin<Project> {
                 sourceCompatibility = AndroidConfig.compileSourceVersion
                 targetCompatibility = AndroidConfig.compileTargetVersion
             }
-            (this as ExtensionAware).extensions.configure(KotlinJvmOptions::class.java) {
-                jvmTarget = "1.8"
-                freeCompilerArgs = listOf("-Xjvm-default=all")
-            }
             if (this is LibraryExtension) {
-                configureLibraryPublishing()
+                apply<MavenPublishPlugin>()
+                apply<BinaryCompatibilityValidatorPlugin>()
             }
-        } ?: logger.warn("Can't configure Android parameters")
-    }
+            extensions.configure(KotlinAndroidProjectExtension::class.java) {
+                compilerOptions {
+                    jvmTarget.set(JvmTarget.JVM_1_8)
+                    freeCompilerArgs.set(listOf("-Xjvm-default=all"))
+                }
+                if (this@apply is LibraryExtension) {
+                    explicitApi()
+                }
+            }
 
-    private fun Project.configureLibraryPublishing() {
-        apply<DokkaPlugin>()
-        apply<MavenPublishPlugin>()
-        apply<BinaryCompatibilityValidatorPlugin>()
-        extensions.configure(KotlinAndroidProjectExtension::class.java) {
-            explicitApi()
-        }
+        } ?: logger.warn("Can't configure Android parameters")
     }
 
     private fun Project.configureKotlin() {

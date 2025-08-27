@@ -16,6 +16,7 @@ public final class io/piano/android/composer/Composer {
 	public final fun clearStoredData ()V
 	public final fun gaClientId (Ljava/lang/String;)Lio/piano/android/composer/Composer;
 	public final fun getBrowserId ()Ljava/lang/String;
+	public final fun getDeviceIdProvider ()Lio/piano/android/common/DeviceIdProvider;
 	public final fun getEdgeCookies ()Lio/piano/android/composer/model/EdgeCookies;
 	public final fun getExperience (Lio/piano/android/composer/model/ExperienceRequest;Ljava/util/Collection;Lio/piano/android/composer/listeners/ExceptionListener;)V
 	public final fun getExperience (Lio/piano/android/composer/model/ExperienceRequest;Lkotlin/jvm/functions/Function1;Lio/piano/android/composer/listeners/ExceptionListener;)V
@@ -283,11 +284,12 @@ public final class io/piano/android/composer/model/EventExecutionContext {
 	public final field executionId Ljava/lang/String;
 	public final field experienceId Ljava/lang/String;
 	public final field region Ljava/lang/String;
+	public final field session Lio/piano/android/composer/model/SessionStats;
 	public final field splitTests Ljava/util/List;
 	public final field trackingId Ljava/lang/String;
 	public final field user Lio/piano/android/composer/model/User;
 	public final field userSegments Lio/piano/android/composer/model/UserSegmentsContainer;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lio/piano/android/composer/model/User;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/UserSegmentsContainer;Ljava/util/List;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lio/piano/android/composer/model/User;Ljava/lang/String;Ljava/lang/String;Lio/piano/android/composer/model/UserSegmentsContainer;Ljava/util/List;Ljava/util/List;Lio/piano/android/composer/model/SessionStats;)V
 }
 
 public final class io/piano/android/composer/model/EventExecutionContextJsonAdapter : com/squareup/moshi/JsonAdapter {
@@ -484,6 +486,20 @@ public final class io/piano/android/composer/model/PprvContainerJsonAdapter : co
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class io/piano/android/composer/model/SessionStats {
+	public fun <init> (ZII)V
+	public final fun getHitLimit ()Z
+	public final fun getSessionCount ()I
+	public final fun getSessionLimit ()I
+}
+
+public final class io/piano/android/composer/model/SessionStatsJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class io/piano/android/composer/model/SplitTest {
 	public final field variantId Ljava/lang/String;
 	public final field variantName Ljava/lang/String;
@@ -491,6 +507,13 @@ public final class io/piano/android/composer/model/SplitTest {
 }
 
 public final class io/piano/android/composer/model/SplitTestJsonAdapter : com/squareup/moshi/JsonAdapter {
+	public fun <init> (Lcom/squareup/moshi/Moshi;)V
+	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
+	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/piano/android/composer/model/TemplateSessionStatsJsonAdapter : com/squareup/moshi/JsonAdapter {
 	public fun <init> (Lcom/squareup/moshi/Moshi;)V
 	public fun fromJson (Lcom/squareup/moshi/JsonReader;)Ljava/lang/Object;
 	public fun toJson (Lcom/squareup/moshi/JsonWriter;Ljava/lang/Object;)V

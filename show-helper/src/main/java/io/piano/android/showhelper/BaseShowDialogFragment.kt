@@ -8,14 +8,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 
 public abstract class BaseShowDialogFragment() : AppCompatDialogFragment() {
-    public constructor(url: String) : this() {
+    public constructor(url: String, additionalHttpHeaders: Map<String, String> = emptyMap()) : this() {
         arguments = Bundle().apply {
             putString(KEY_URL, url)
+            if (additionalHttpHeaders.isNotEmpty()) {
+                putSerializable(KEY_HEADERS, HashMap(additionalHttpHeaders))
+            }
         }
     }
 
     private val url: String by lazy {
         arguments?.getString(KEY_URL) ?: "about:blank"
+    }
+    private val additionalHttpHeaders: Map<String, String> by lazy {
+        arguments?.getSerializable(KEY_HEADERS) as? Map<String, String> ?: emptyMap()
     }
     internal var webView: WebView? = null
     internal var javascriptInterface: BaseJsInterface? = null
@@ -44,11 +50,18 @@ public abstract class BaseShowDialogFragment() : AppCompatDialogFragment() {
         super.onStart()
         if (shouldLoadUrl) {
             shouldLoadUrl = false
-            webView?.loadUrl(url)
+            webView?.let {
+                if (additionalHttpHeaders.isEmpty()) {
+                    it.loadUrl(url)
+                } else {
+                    it.loadUrl(url, additionalHttpHeaders)
+                }
+            }
         }
     }
 
     private companion object {
         private const val KEY_URL = "url"
+        private const val KEY_HEADERS = "headers"
     }
 }
