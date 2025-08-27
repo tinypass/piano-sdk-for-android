@@ -1,5 +1,7 @@
 # Piano SDK for Android
 
+## v2.13.0-SNAPSHOT
+
 ## v2.12.0
 * Add device restriction support
 * BREAKING CHANGE: PianoId initialization requires Context now
