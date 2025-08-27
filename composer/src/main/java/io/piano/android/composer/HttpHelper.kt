@@ -10,7 +10,6 @@ import io.piano.android.composer.model.DisplayMode
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
-import io.piano.android.composer.model.SessionStats
 import io.piano.android.composer.model.TemplateSessionStats
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.model.toTemplateSessionStats
