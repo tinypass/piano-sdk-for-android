@@ -1,6 +1,14 @@
 # Piano SDK for Android
 
 ## v2.13.0-SNAPSHOT
+* Updated dependencies:
+  - androidx.fragment:fragment [1.8.6 -> 1.8.9]
+    https://developer.android.com/jetpack/androidx/releases/fragment#1.8.9
+  - androidx.lifecycle:lifecycle-common-java8 [2.9.1 -> 2.9.4]
+    https://developer.android.com/jetpack/androidx/releases/lifecycle#2.9.4
+  - com.facebook.android:facebook-login [18.0.3 -> 18.1.3]
+    https://github.com/facebook/facebook-android-sdk
+  - com.google.android.gms:play-services-basement [18.6.0 -> 18.9.0]
 
 ## v2.12.0
 * Add device restriction support
