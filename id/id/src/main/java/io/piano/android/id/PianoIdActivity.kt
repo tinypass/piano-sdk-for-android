@@ -144,6 +144,7 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
                     is OAuthCancelledResult -> {
                         Timber.w("User cancelled social auth")
                     }
+
                     is OAuthSuccessResult -> {
                         val jsCommand = client.buildResultJsCommand(result.provider, result.token)
                         binding.webview.evaluateJavascript(jsCommand, null)

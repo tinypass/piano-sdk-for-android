@@ -7,6 +7,6 @@ internal object AndroidConfig {
     const val androidMinSdk = 23
     const val androidTargetSdk = 35
     const val androidCompileSdk = 35
-    val compileSourceVersion = JavaVersion.VERSION_1_8
-    val compileTargetVersion = JavaVersion.VERSION_1_8
+    val compileSourceVersion = JavaVersion.VERSION_11
+    val compileTargetVersion = JavaVersion.VERSION_11
 }

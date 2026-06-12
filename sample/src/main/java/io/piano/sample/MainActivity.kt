@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private val authResult = registerForActivityResult(PianoIdAuthResultContract()) { r ->
         when (r) {
             null -> showMessage("OAuth cancelled")
+
             is PianoIdAuthSuccessResult -> {
                 Timber.d("Is Double opt-in enabled? %b", r.token?.emailConfirmationRequired)
                 Timber.d("Is this a new user registered? %b", r.isNewUser)

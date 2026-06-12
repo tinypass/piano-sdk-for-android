@@ -50,6 +50,7 @@ class ComposerActivity : AppCompatActivity() {
             ).show()
 
             is PianoIdAuthSuccessResult -> setAccessToken(r.token)
+
             is PianoIdAuthFailureResult -> Snackbar.make(
                 findViewById(R.id.app_bar),
                 r.exception.message ?: "Unknown error",

@@ -46,12 +46,14 @@ public class PianoIdTokenJsonAdapter(
                             ACCESS_TOKEN,
                             reader,
                         )
+
                     2, 3 ->
                         refreshToken = stringAdapter.fromJson(reader) ?: throw Util.unexpectedNull(
                             REFRESH_TOKEN_CAMEL,
                             REFRESH_TOKEN,
                             reader,
                         )
+
                     -1 -> {
                         // Unknown name, skip it.
                         reader.skipName()

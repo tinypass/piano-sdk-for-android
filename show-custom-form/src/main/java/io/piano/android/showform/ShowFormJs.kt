@@ -67,13 +67,16 @@ public class ShowFormJs(
                     Composer.getInstance().trackCustomFormSubmission(formName, trackingId)
                     close()
                 }
+
                 "formSkip" -> close()
+
                 "stateReady" -> {
                     isReady = true
                     Composer.getInstance().trackCustomFormImpression(formName, trackingId)
                     executeJavascript(FormHelper.buildConsentsCode())
                     updateToken()
                 }
+
                 "tokenRejected" -> loginCallback()
             }
         } ?: Timber.d("Can't parse $data")

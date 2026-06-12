@@ -43,7 +43,7 @@ class CommonAndroidConfigurationPlugin : Plugin<Project> {
             }
             extensions.configure(KotlinAndroidProjectExtension::class.java) {
                 compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_1_8)
+                    jvmTarget.set(JvmTarget.JVM_11)
                     freeCompilerArgs.set(listOf("-Xjvm-default=all"))
                 }
                 if (this@apply is LibraryExtension) {
