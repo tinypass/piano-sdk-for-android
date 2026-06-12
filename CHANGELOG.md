@@ -1,6 +1,6 @@
 # Piano SDK for Android
 
-## v2.13.0-SNAPSHOT
+## v2.13.0
 * Updated dependencies:
   - androidx.fragment:fragment [1.8.6 -> 1.8.9]
     https://developer.android.com/jetpack/androidx/releases/fragment#1.8.9
