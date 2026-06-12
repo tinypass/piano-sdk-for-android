@@ -2,7 +2,6 @@ package io.piano.android.composer
 
 import android.content.Context
 import io.piano.android.common.DeviceIdProvider
-import io.piano.android.composer.Composer.Endpoint
 import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.EventsListener
 import io.piano.android.composer.listeners.ExceptionListener
@@ -196,21 +195,43 @@ public class Composer internal constructor(
     }
 
     /**
+     * Tracks an external event
+     *
+     * @param trackingId The tracking ID of the event.
+     * @param eventType Type of the event
+     * @param eventGroup Group of the event
+     * @param customParameters Custom parameters of the event (will be serialized as custom_params)
+     * @param optionalParameters Optional parameters, that will be added to event
+     */
+    public fun trackExternalEvent(
+        trackingId: String,
+        eventType: String,
+        eventGroup: String,
+        customParameters: Map<String, String> = emptyMap(),
+        optionalParameters: Map<String, String> = emptyMap(),
+    ) {
+        generalApi.trackExternalEvent(
+            optionalParameters + httpHelper.buildEventTracking(
+                trackingId,
+                eventType,
+                eventGroup,
+                pianoConsents?.consents.orEmpty(),
+                customParameters,
+            ),
+        ).enqueue(emptyCallback)
+    }
+
+    /**
      * Tracks a close event by ID.
      *
      * @param trackingId The tracking ID of the close event.
      */
     @Suppress("unused") // Public API.
-    public fun trackCloseEvent(trackingId: String) {
-        generalApi.trackExternalEvent(
-            httpHelper.buildEventTracking(
-                trackingId,
-                EVENT_TYPE_EXTERNAL_EVENT,
-                EVENT_GROUP_CLOSE,
-                pianoConsents?.consents.orEmpty(),
-            ),
-        ).enqueue(emptyCallback)
-    }
+    public fun trackCloseEvent(trackingId: String): Unit = trackExternalEvent(
+        trackingId,
+        EVENT_TYPE_EXTERNAL_EVENT,
+        EVENT_GROUP_CLOSE,
+    )
 
     /**
      * Tracks the display of recommendations by ID.
@@ -218,17 +239,12 @@ public class Composer internal constructor(
      * @param trackingId The tracking ID of the recommendations display event.
      */
     @Suppress("unused") // Public API.
-    public fun trackRecommendationsDisplay(trackingId: String) {
-        generalApi.trackExternalEvent(
-            httpHelper.buildEventTracking(
-                trackingId,
-                EVENT_TYPE_EXTERNAL_EVENT,
-                EVENT_GROUP_INIT,
-                pianoConsents?.consents.orEmpty(),
-                CX_CUSTOM_PARAMS,
-            ),
-        ).enqueue(emptyCallback)
-    }
+    public fun trackRecommendationsDisplay(trackingId: String): Unit = trackExternalEvent(
+        trackingId,
+        EVENT_TYPE_EXTERNAL_EVENT,
+        EVENT_GROUP_INIT,
+        CX_CUSTOM_PARAMS,
+    )
 
     /**
      * Tracks a click on a recommendation event by ID.
@@ -237,18 +253,12 @@ public class Composer internal constructor(
      * @param url The URL of the clicked recommendation.
      */
     @Suppress("unused") // Public API.
-    public fun trackRecommendationsClick(trackingId: String, url: String? = null) {
-        val params = url?.let { CX_CUSTOM_PARAMS + Pair("href", it) } ?: CX_CUSTOM_PARAMS
-        generalApi.trackExternalEvent(
-            httpHelper.buildEventTracking(
-                trackingId,
-                EVENT_TYPE_EXTERNAL_LINK,
-                EVENT_GROUP_CLICK,
-                pianoConsents?.consents.orEmpty(),
-                params,
-            ),
-        ).enqueue(emptyCallback)
-    }
+    public fun trackRecommendationsClick(trackingId: String, url: String? = null): Unit = trackExternalEvent(
+        trackingId,
+        EVENT_TYPE_EXTERNAL_LINK,
+        EVENT_GROUP_CLICK,
+        url?.let { CX_CUSTOM_PARAMS + Pair("href", it) } ?: CX_CUSTOM_PARAMS,
+    )
 
     /**
      * Tracks a custom form impression by name.

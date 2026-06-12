@@ -16,6 +16,7 @@ public class PianoIdAuthResultContract : ActivityResultContract<PianoIdClient.Si
     override fun parseResult(resultCode: Int, intent: Intent?): PianoIdAuthResult? = runCatching {
         when (resultCode) {
             Activity.RESULT_CANCELED -> null
+
             else -> {
                 checkNotNull(intent) { "Result intent is null" }
                 with(intent) {
