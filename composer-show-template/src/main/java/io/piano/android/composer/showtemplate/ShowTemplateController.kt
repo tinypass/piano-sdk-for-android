@@ -43,7 +43,7 @@ public class ShowTemplateController(
         mapOf(DeviceIdProvider.DEVICE_ID_HEADER to deviceIdProvider.deviceId)
     override val fragmentTag: String = FRAGMENT_TAG
     override val fragmentProvider: () -> ShowTemplateDialogFragment = {
-        ShowTemplateDialogFragment(url, trackingId, additionalHttpHeaders)
+        ShowTemplateDialogFragment(url, trackingId, additionalHttpHeaders, jsInterfaceName)
     }
 
     override fun WebView.configure(): Unit = prepare(null, jsInterface, trackingId, jsInterfaceName)

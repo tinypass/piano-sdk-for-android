@@ -20,7 +20,8 @@ public final class io/piano/android/composer/showtemplate/ShowTemplateController
 
 public final class io/piano/android/composer/showtemplate/ShowTemplateDialogFragment : io/piano/android/showhelper/BaseShowDialogFragment {
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun onCancel (Landroid/content/DialogInterface;)V
 }
 

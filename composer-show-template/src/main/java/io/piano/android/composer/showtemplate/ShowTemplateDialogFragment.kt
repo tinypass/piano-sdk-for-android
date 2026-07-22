@@ -3,6 +3,7 @@ package io.piano.android.composer.showtemplate
 import android.content.DialogInterface
 import android.os.Bundle
 import android.webkit.WebView
+import io.piano.android.composer.showtemplate.ShowTemplateController.Companion.JAVASCRIPT_INTERFACE
 import io.piano.android.composer.showtemplate.ShowTemplateController.Companion.prepare
 import io.piano.android.showhelper.BaseJsInterface
 import io.piano.android.showhelper.BaseShowDialogFragment
@@ -29,21 +30,29 @@ public class ShowTemplateDialogFragment : BaseShowDialogFragment {
      * @param url The URL of the Piano Composer template to be displayed.
      * @param trackingId The tracking ID associated with the template.
      * @param additionalHttpHeaders Additional HTTP headers for loading the URL
+     * @param jsInterfaceName The name under which the JavaScript interface is exposed to the template.
      */
     public constructor(
         url: String,
         trackingId: String,
         additionalHttpHeaders: Map<String, String>,
+        jsInterfaceName: String = JAVASCRIPT_INTERFACE,
     ) : super(url, additionalHttpHeaders) {
         val args = arguments ?: Bundle()
         arguments = args.apply {
             putString(KEY_TRACKING_ID, trackingId)
+            putString(KEY_JS_INTERFACE_NAME, jsInterfaceName)
         }
     }
 
     /** The tracking ID associated with the template. */
     private val trackingId: String by lazy {
         arguments?.getString(KEY_TRACKING_ID) ?: ""
+    }
+
+    /** The name under which the JavaScript interface is exposed to the template. */
+    private val jsInterfaceName: String by lazy {
+        arguments?.getString(KEY_JS_INTERFACE_NAME) ?: JAVASCRIPT_INTERFACE
     }
 
     /**
@@ -55,7 +64,7 @@ public class ShowTemplateDialogFragment : BaseShowDialogFragment {
      * @param jsInterface The JavaScript interface used for communication with the template.
      */
     override fun WebView.configure(jsInterface: BaseJsInterface?): Unit =
-        prepare(this@ShowTemplateDialogFragment, jsInterface as? ComposerJs, trackingId)
+        prepare(this@ShowTemplateDialogFragment, jsInterface as? ComposerJs, trackingId, jsInterfaceName)
 
     /**
      * Called when the dialog is canceled.
@@ -76,5 +85,6 @@ public class ShowTemplateDialogFragment : BaseShowDialogFragment {
      */
     private companion object {
         private const val KEY_TRACKING_ID = "trackingId"
+        private const val KEY_JS_INTERFACE_NAME = "jsInterfaceName"
     }
 }
