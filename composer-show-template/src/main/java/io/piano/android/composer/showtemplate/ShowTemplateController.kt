@@ -25,11 +25,14 @@ import io.piano.android.showhelper.BaseShowController
  * @param jsInterface The optional [ComposerJs] JavaScript interface for communication with the
  *                    displayed template. If not provided, a default instance of [ComposerJs] will
  *                    be used.
+ * @param jsInterfaceName The optional name under which the JavaScript interface is exposed to the
+ *                        template. If not provided, defaults to [JAVASCRIPT_INTERFACE].
  */
 public class ShowTemplateController(
     event: Event<ShowTemplate>,
     deviceIdProvider: DeviceIdProvider,
     jsInterface: ComposerJs? = null,
+    private val jsInterfaceName: String = JAVASCRIPT_INTERFACE,
 ) : BaseShowController<ShowTemplate, ComposerJs>(event.eventData, jsInterface ?: ComposerJs()) {
     // Private properties
     private val trackingId = event.eventExecutionContext.trackingId
@@ -43,7 +46,7 @@ public class ShowTemplateController(
         ShowTemplateDialogFragment(url, trackingId, additionalHttpHeaders)
     }
 
-    override fun WebView.configure(): Unit = prepare(null, jsInterface, trackingId)
+    override fun WebView.configure(): Unit = prepare(null, jsInterface, trackingId, jsInterfaceName)
 
     override fun processDelay(activity: FragmentActivity, showFunction: () -> Unit) {
         val func: () -> Unit = {
@@ -87,7 +90,7 @@ public class ShowTemplateController(
 
     internal companion object {
         private const val FRAGMENT_TAG = "ShowTemplateDialogFragment"
-        private const val JAVASCRIPT_INTERFACE = "PianoAndroid"
+        internal const val JAVASCRIPT_INTERFACE = "PianoAndroid"
 
         // Internal function for WebView preparation
         @SuppressLint("SetJavaScriptEnabled")
@@ -95,11 +98,12 @@ public class ShowTemplateController(
             dialogFragment: ShowTemplateDialogFragment? = null,
             javascriptInterface: ComposerJs?,
             trackingId: String,
+            jsInterfaceName: String = JAVASCRIPT_INTERFACE,
         ) {
             settings.javaScriptEnabled = true
             val jsInterface = javascriptInterface ?: ComposerJs()
             jsInterface.init(dialogFragment, this, trackingId)
-            addJavascriptInterface(jsInterface, JAVASCRIPT_INTERFACE)
+            addJavascriptInterface(jsInterface, jsInterfaceName)
         }
     }
 }

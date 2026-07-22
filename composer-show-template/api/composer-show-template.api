@@ -12,8 +12,8 @@ public class io/piano/android/composer/showtemplate/ComposerJs : io/piano/androi
 }
 
 public final class io/piano/android/composer/showtemplate/ShowTemplateController : io/piano/android/showhelper/BaseShowController {
-	public fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/common/DeviceIdProvider;Lio/piano/android/composer/showtemplate/ComposerJs;)V
-	public synthetic fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/common/DeviceIdProvider;Lio/piano/android/composer/showtemplate/ComposerJs;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/common/DeviceIdProvider;Lio/piano/android/composer/showtemplate/ComposerJs;Ljava/lang/String;)V
+	public synthetic fun <init> (Lio/piano/android/composer/model/Event;Lio/piano/android/common/DeviceIdProvider;Lio/piano/android/composer/showtemplate/ComposerJs;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun close (Ljava/lang/String;)V
 	public final fun reloadWithToken (Ljava/lang/String;)V
 }

@@ -21,8 +21,24 @@ Add code into your show template listener
 Kotlin
 ```kotlin
 // Use one of these
-ShowTemplateController(showTemplateEvent, customJavascriptInterface).show(activity)
-ShowTemplateController(showTemplateEvent, customJavascriptInterface).show(activity, inlineWebViewProvider)
+ShowTemplateController(showTemplateEvent, deviceIdProvider, customJavascriptInterface).show(activity)
+ShowTemplateController(showTemplateEvent, deviceIdProvider, customJavascriptInterface).show(activity, inlineWebViewProvider)
+```
+
+`customJavascriptInterface` is optional; when omitted a default `ComposerJs` instance is used.
+
+#### Custom JavaScript interface name
+
+By default the JavaScript interface is exposed to the template under the name `PianoAndroid`.
+If you need a different name, pass an optional `jsInterfaceName` argument:
+
+```kotlin
+ShowTemplateController(
+    showTemplateEvent,
+    deviceIdProvider,
+    customJavascriptInterface,
+    jsInterfaceName = "MyCustomName",
+).show(activity)
 ```
 
 ## How to show templates inline
