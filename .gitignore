@@ -1,5 +1,7 @@
 .gradle
+gradle
 .idea
+.vscode
 build
 debug
 local.properties

@@ -334,6 +334,12 @@ public class PianoIdClient internal constructor(
         .addQueryParameter(PARAM_TRACKING_ID, trackingId)
         .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
         .addQueryParameter(PARAM_DEVICE_ID, deviceIdProvider.deviceId)
+        .apply {
+            consentsDataProvider.rawConsents?.let {
+                addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, true.toString())
+                addQueryParameter(PARAM_CONSENTS, it)
+            } ?: addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, false.toString())
+        }
         .build()
         .toString()
 
