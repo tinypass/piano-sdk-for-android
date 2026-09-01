@@ -1,9 +1,9 @@
 .gradle
-gradle
 .idea
 .vscode
 build
 debug
+bin
 local.properties
 *.iml
 piano.properties
