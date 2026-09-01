@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.13.1
+* Updated consent handling for Piano ID and form display.
+
 ## v2.13.0
 * Updated dependencies:
   - androidx.fragment:fragment [1.8.6 -> 1.8.9]

@@ -306,6 +306,10 @@ public class PianoIdClient internal constructor(
         .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
         .addQueryParameter(PARAM_DEVICE_ID, deviceIdProvider.deviceId)
         .apply {
+            consentsDataProvider.consents?.let {
+                addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, true.toString())
+                addQueryParameter(PARAM_CONSENTS, it)
+            } ?: addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, false.toString())
             if (!widget.isNullOrEmpty()) {
                 addQueryParameter(PARAM_SCREEN, widget)
             }
@@ -330,6 +334,12 @@ public class PianoIdClient internal constructor(
         .addQueryParameter(PARAM_TRACKING_ID, trackingId)
         .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
         .addQueryParameter(PARAM_DEVICE_ID, deviceIdProvider.deviceId)
+        .apply {
+            consentsDataProvider.consents?.let {
+                addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, true.toString())
+                addQueryParameter(PARAM_CONSENTS, it)
+            } ?: addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, false.toString())
+        }
         .build()
         .toString()
 
@@ -455,6 +465,8 @@ public class PianoIdClient internal constructor(
         internal const val PARAM_TRACKING_ID = "trackingId"
         internal const val PARAM_STAGE = "stage"
         internal const val PARAM_DEVICE_ID = "device_id"
+        internal const val PARAM_CONSENTS = "consent"
+        internal const val PARAM_IS_CONSENT_MANAGER_ENABLED = "is_consent_manager_enabled"
 
         internal const val VALUE_RESPONSE_TYPE_TOKEN = "token"
         internal const val VALUE_FORCE_REDIRECT = "1"

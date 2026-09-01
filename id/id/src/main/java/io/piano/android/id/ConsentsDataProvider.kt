@@ -12,12 +12,10 @@ internal class ConsentsDataProvider(
     private val consentAdapter: JsonAdapter<Map<Purpose, Consent>>,
     private val packedConsentAdapter: JsonAdapter<List<ConsentData>>,
 ) {
-    internal val consents: String
+    internal val consents: String?
         get() = pianoConsents?.consents
             ?.takeUnless { it.isEmpty() }
             ?.let { consentAdapter.toJson(it) }
-            .orEmpty()
-            .replace("\"", "\\\\\"")
 
     internal val packedConsents: String?
         get() = pianoConsents?.consents?.map {
