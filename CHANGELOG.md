@@ -1,7 +1,7 @@
 # Piano SDK for Android
 
 ## v2.13.1
-* Updated Piano ID consent handling and form showing
+* Updated consent handling for Piano ID and form display.
 
 ## v2.13.0
 * Updated dependencies:
