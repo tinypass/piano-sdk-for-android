@@ -306,7 +306,7 @@ public class PianoIdClient internal constructor(
         .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
         .addQueryParameter(PARAM_DEVICE_ID, deviceIdProvider.deviceId)
         .apply {
-            consentsDataProvider.rawConsents?.let {
+            consentsDataProvider.consents?.let {
                 addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, true.toString())
                 addQueryParameter(PARAM_CONSENTS, it)
             } ?: addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, false.toString())
@@ -335,7 +335,7 @@ public class PianoIdClient internal constructor(
         .addQueryParameter(PARAM_SDK_FLAG, VALUE_SDK_FLAG)
         .addQueryParameter(PARAM_DEVICE_ID, deviceIdProvider.deviceId)
         .apply {
-            consentsDataProvider.rawConsents?.let {
+            consentsDataProvider.consents?.let {
                 addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, true.toString())
                 addQueryParameter(PARAM_CONSENTS, it)
             } ?: addQueryParameter(PARAM_IS_CONSENT_MANAGER_ENABLED, false.toString())

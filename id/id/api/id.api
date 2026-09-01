@@ -8,7 +8,6 @@ public final class io/piano/android/id/BuildConfig {
 
 public final class io/piano/android/id/FormHelper {
 	public static final field INSTANCE Lio/piano/android/id/FormHelper;
-	public static final fun buildConsentsCode ()Ljava/lang/String;
 	public static final fun buildUrl (Ljava/lang/String;ZLjava/lang/String;)Ljava/lang/String;
 }
 
