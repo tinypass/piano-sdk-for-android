@@ -98,7 +98,6 @@ public class PianoIdActivity : AppCompatActivity(), PianoIdJsInterface {
 
                     override fun onPageFinished(view: WebView, url: String?) {
                         super.onPageFinished(view, url)
-                        evaluateJavascript(FormHelper.buildConsentsCode(), null)
                         progressBar.hide()
                     }
 
