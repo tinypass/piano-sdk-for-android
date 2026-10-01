@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 public class ActiveMeter(
     @JvmField public val meterName: String,
     @JvmField public val views: Int,
-    @JvmField public val viewsLeft: Int,
-    @JvmField public val maxViews: Int,
+    @JvmField public val viewsLeft: Int = 0,
+    @JvmField public val maxViews: Int = 0,
     @JvmField public val totalViews: Int,
 )
