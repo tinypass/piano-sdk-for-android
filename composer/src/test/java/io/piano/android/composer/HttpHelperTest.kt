@@ -160,6 +160,7 @@ class HttpHelperTest {
                 UserSegmentsContainer(null, null),
                 null,
                 meters,
+                null,
                 SessionStats(true, 2, 1),
             ),
             ShowTemplate(
