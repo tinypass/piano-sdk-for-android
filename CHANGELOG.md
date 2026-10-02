@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.13.2
+* Added `allMeters` to `EventExecutionContext`.
+
 ## v2.13.1
 * Updated consent handling for Piano ID and form display.
 

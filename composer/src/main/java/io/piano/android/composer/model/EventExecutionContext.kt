@@ -15,5 +15,6 @@ public class EventExecutionContext(
     @JvmField public val userSegments: UserSegmentsContainer,
     @JvmField public val accessList: List<Access>?,
     @JvmField public val activeMeters: List<ActiveMeter>?,
+    @JvmField public val allMeters: List<ActiveMeter>?,
     @JvmField public val session: SessionStats?,
 )

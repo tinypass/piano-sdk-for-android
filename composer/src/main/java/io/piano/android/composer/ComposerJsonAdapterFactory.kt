@@ -3,6 +3,7 @@ package io.piano.android.composer
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import io.piano.android.composer.model.ActiveMeter
 import io.piano.android.composer.model.CustomParameters
 import java.lang.reflect.Type
 
@@ -17,6 +18,10 @@ internal class ComposerJsonAdapterFactory : JsonAdapter.Factory {
                         Types.newParameterizedType(List::class.java, String::class.java),
                     ),
                 ),
+            )
+
+            ActiveMeter::class.java -> SkipNullsJsonAdapter(
+                moshi.nextAdapter<ActiveMeter>(this, type, annotations),
             )
 
             Any::class.java -> ObjectJsonAdapter(

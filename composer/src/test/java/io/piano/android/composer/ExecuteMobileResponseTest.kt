@@ -6,6 +6,7 @@ import io.piano.android.common.UnixTimeDateAdapter
 import io.piano.android.composer.model.Data
 import io.piano.android.composer.model.ExperienceResponse
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -29,6 +30,13 @@ class ExecuteMobileResponseTest {
         with(response) {
             assertTrue { errors.isEmpty() }
             assertTrue { data.result.events.size == 9 }
+            val meter = data.result.events[4].eventExecutionContext.allMeters?.single()
+            assertNotNull(meter)
+            assertEquals("DefaultMeter", meter.meterName)
+            assertEquals(1, meter.views)
+            assertEquals(0, meter.viewsLeft)
+            assertEquals(0, meter.maxViews)
+            assertEquals(1, meter.totalViews)
         }
     }
 
