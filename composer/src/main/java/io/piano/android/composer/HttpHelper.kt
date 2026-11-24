@@ -181,6 +181,12 @@ internal class HttpHelper(
             ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
     )
 
+    internal fun customParametersToJson(customParameters: Map<String, String>): String? =
+        customParameters.takeUnless { it.isEmpty() }?.let { mapAdapter.toJson(it) }
+
+    internal fun consentsToJson(consents: Map<Purpose, Consent>): String? =
+        consents.takeUnless { it.isEmpty() }?.let { vxConsentAdapter.toJson(it) }
+
     internal fun buildCustomFormTracking(
         aid: String,
         customFormName: String,

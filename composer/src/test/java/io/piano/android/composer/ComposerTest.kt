@@ -6,12 +6,15 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doNothing
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import io.piano.android.api.anon.api.ExposureApi
 import io.piano.android.common.DeviceIdProvider
 import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.ExceptionListener
@@ -43,6 +46,7 @@ class ComposerTest {
         on { getExperience(any()) } doReturn experienceCall
     }
     private val generalApi: GeneralApi = mock()
+    private val exposureApi: ExposureApi = mock()
     private val prefsStorage: PrefsStorage = mock {
         on { tpAccessCookie } doReturn DUMMY_STRING
     }
@@ -82,6 +86,7 @@ class ComposerTest {
         Composer(
             composerApi,
             generalApi,
+            exposureApi,
             httpHelper,
             prefsStorage,
             DUMMY_AID,
@@ -123,6 +128,7 @@ class ComposerTest {
             Composer(
                 composerApi,
                 generalApi,
+                exposureApi,
                 httpHelper,
                 prefsStorage,
                 "",
@@ -326,6 +332,71 @@ class ComposerTest {
     }
 
     @Test
+    fun logExposure() {
+        val call: Call<ResponseBody> = mock()
+        whenever(
+            exposureApi.log(
+                any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
+            ),
+        ).doReturn(call)
+
+        composer.logExposure(DUMMY_STRING)
+        verifyExposureLog(browserId = "")
+
+        val termIds = listOf(DUMMY_STRING, DUMMY_STRING2)
+        whenever(httpHelper.customParametersToJson(Composer.CX_CUSTOM_PARAMS)).doReturn(DUMMY_JSON)
+        whenever(httpHelper.consentsToJson(any())).doReturn(DUMMY_JSON2)
+        composer.userToken(DUMMY_STRING2)
+        composer.browserIdProvider { DUMMY_STRING2 }
+        composer.logExposure(DUMMY_STRING, Composer.CX_CUSTOM_PARAMS, DUMMY_STRING, DUMMY_STRING2, termIds)
+        verifyExposureLog(
+            browserId = DUMMY_STRING2,
+            userToken = DUMMY_STRING2,
+            cookieConsents = DUMMY_JSON2,
+            customParams = DUMMY_JSON,
+            externalOfferId = DUMMY_STRING,
+            externalTemplateId = DUMMY_STRING2,
+            externalTermIds = termIds,
+        )
+        verify(call, times(2)).enqueue(any())
+    }
+
+    private fun verifyExposureLog(
+        browserId: String,
+        userToken: String? = null,
+        cookieConsents: String? = null,
+        customParams: String? = null,
+        externalOfferId: String? = null,
+        externalTemplateId: String? = null,
+        externalTermIds: List<String>? = null,
+    ) = verify(exposureApi).log(
+        aid = eq(DUMMY_AID),
+        trackingId = eq(DUMMY_STRING),
+        browserId = eq(browserId),
+        userToken = eq(userToken),
+        externalAuthCookieName = isNull(),
+        pageTitle = isNull(),
+        url = isNull(),
+        referer = isNull(),
+        contentAuthor = isNull(),
+        contentCreated = isNull(),
+        contentSection = isNull(),
+        contentType = isNull(),
+        tags = isNull(),
+        previousUserSegments = isNull(),
+        userState = isNull(),
+        clientHints = isNull(),
+        cookieConsents = eq(cookieConsents),
+        previousUserSegments2 = isNull(),
+        customParams = eq(customParams),
+        externalOfferId = eq(externalOfferId),
+        externalTemplateId = eq(externalTemplateId),
+        externalTermIds = eq(externalTermIds),
+    )
+
+    @Test
     fun trackCustomFormImpression() {
         val call: Call<ResponseBody> = mock()
         whenever(generalApi.customFormImpression(any())).doReturn(call)
@@ -349,5 +420,7 @@ class ComposerTest {
         private const val DUMMY_AID = "AID"
         const val DUMMY_STRING = "DUMMY"
         const val DUMMY_STRING2 = "DUMMY2"
+        private const val DUMMY_JSON = """{"key":"value"}"""
+        private const val DUMMY_JSON2 = """{"key2":"value2"}"""
     }
 }

@@ -1,5 +1,9 @@
 # Piano SDK for Android
 
+## v2.13.3
+* Added `Composer.logExposure` for logging exposures of third-party templates and offers.
+* Added dependency on the Piano API client `io.piano:piano-android` 17.37.0 to `composer`.
+
 ## v2.13.2
 * Added `allMeters` to `EventExecutionContext`.
 
