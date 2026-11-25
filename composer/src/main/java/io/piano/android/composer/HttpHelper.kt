@@ -175,11 +175,15 @@ internal class HttpHelper(
         PARAM_EVENT_TRACKING_ID to trackingId,
         PARAM_EVENT_TYPE to eventType,
         PARAM_EVENT_GROUP_ID to eventGroup,
-        PARAM_EVENT_CUSTOM_PARAMS to customParameters.takeUnless { it.isEmpty() }
-            ?.let { mapAdapter.toJson(it) }.orEmpty(),
-        PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-            ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
+        PARAM_EVENT_CUSTOM_PARAMS to customParametersToJson(customParameters).orEmpty(),
+        PARAM_EVENT_COOKIE_CONSENTS to consentsToJson(consents).orEmpty(),
     )
+
+    internal fun customParametersToJson(customParameters: Map<String, String>): String? =
+        customParameters.takeUnless { it.isEmpty() }?.let { mapAdapter.toJson(it) }
+
+    internal fun consentsToJson(consents: Map<Purpose, Consent>): String? =
+        consents.takeUnless { it.isEmpty() }?.let { vxConsentAdapter.toJson(it) }
 
     internal fun buildCustomFormTracking(
         aid: String,
@@ -193,8 +197,7 @@ internal class HttpHelper(
         PARAM_PAGEVIEW_ID to experienceIdsProvider.getPageViewId(Date()),
         PARAM_EVENT_TRACKING_ID to trackingId,
         PARAM_CUSTOM_FORM_NAME to customFormName,
-        PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-            ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
+        PARAM_EVENT_COOKIE_CONSENTS to consentsToJson(consents).orEmpty(),
     ).filterNotEmptyValues().toMap()
 
     internal fun buildShowTemplateParameters(
@@ -223,8 +226,7 @@ internal class HttpHelper(
             PARAM_TEMPLATE_VARIANT_ID to eventData.templateVariantId.orEmpty(),
             PARAM_ACTIVE_METERS to eventExecutionContext.activeMeters.takeUnless { it.isNullOrEmpty() }
                 ?.let { activeMetersAdapter.toJson(it) }.orEmpty(),
-            PARAM_EVENT_COOKIE_CONSENTS to consents.takeUnless { it.isEmpty() }
-                ?.let { vxConsentAdapter.toJson(it) }.orEmpty(),
+            PARAM_EVENT_COOKIE_CONSENTS to consentsToJson(consents).orEmpty(),
             PARAM_SESSIONS to eventExecutionContext.session?.let {
                 sessionStateAdapter.toJson(it.toTemplateSessionStats())
             }.orEmpty(),

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RestrictTo
 import com.squareup.moshi.Moshi
+import io.piano.android.api.anon.api.ExposureApi
 import io.piano.android.common.AidInterceptor
 import io.piano.android.common.CommonPrefsStorage
 import io.piano.android.common.DeviceIdInterceptor
@@ -71,12 +72,15 @@ internal class DependenciesProvider private constructor(
         .build()
         .create()
 
-    private val generalApi: GeneralApi = Retrofit.Builder()
+    private val apiRetrofit = Retrofit.Builder()
         .baseUrl(endpoint.apiHost)
         .client(okHttpClient)
         .addConverterFactory(moshiConverterFactory)
         .build()
-        .create()
+
+    private val generalApi: GeneralApi = apiRetrofit.create()
+
+    private val exposureApi: ExposureApi = apiRetrofit.create()
 
     private val edgeCookiesProvider = EdgeCookiesProvider(
         prefsStorage,
@@ -88,6 +92,7 @@ internal class DependenciesProvider private constructor(
     internal val composer: Composer = Composer(
         composerApi,
         generalApi,
+        exposureApi,
         HttpHelper(ExperienceIdsProvider(prefsStorage, PageViewIdProvider), prefsStorage, moshi, userAgent),
         prefsStorage,
         aid,
