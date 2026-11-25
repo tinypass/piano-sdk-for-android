@@ -26,12 +26,11 @@ public final class io/piano/android/composer/Composer {
 	public static final fun init (Landroid/content/Context;Ljava/lang/String;)V
 	public static final fun init (Landroid/content/Context;Ljava/lang/String;Lio/piano/android/composer/Composer$Endpoint;)V
 	public static final fun init (Landroid/content/Context;Ljava/lang/String;Lio/piano/android/composer/Composer$Endpoint;Lio/piano/android/consents/PianoConsents;)V
-	public final fun logExposure (Ljava/lang/String;)V
-	public final fun logExposure (Ljava/lang/String;Ljava/util/Map;)V
-	public final fun logExposure (Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;)V
-	public final fun logExposure (Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/String;)V
-	public final fun logExposure (Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
-	public static synthetic fun logExposure$default (Lio/piano/android/composer/Composer;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)V
+	public final fun logExposure (Lio/piano/android/composer/model/Event;)V
+	public final fun logExposure (Lio/piano/android/composer/model/Event;Ljava/lang/String;)V
+	public final fun logExposure (Lio/piano/android/composer/model/Event;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun logExposure (Lio/piano/android/composer/model/Event;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public static synthetic fun logExposure$default (Lio/piano/android/composer/Composer;Lio/piano/android/composer/model/Event;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)V
 	public final fun trackCloseEvent (Ljava/lang/String;)V
 	public final fun trackCustomFormImpression (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun trackCustomFormSubmission (Ljava/lang/String;Ljava/lang/String;)V

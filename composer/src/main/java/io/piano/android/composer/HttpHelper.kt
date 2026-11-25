@@ -139,9 +139,7 @@ internal class HttpHelper(
             PARAM_CUSTOM_VARIABLES to customVariables.takeUnless { it.isEmpty() }
                 ?.let { customVariablesAdapter.toJson(it) }
                 .orEmpty(),
-            PARAM_CUSTOM_PARAMS to customParameters?.takeUnless { it.isEmpty() }
-                ?.let { customParametersAdapter.toJson(it) }
-                .orEmpty(),
+            PARAM_CUSTOM_PARAMS to customParametersToJson(customParameters).orEmpty(),
             PARAM_CONSENT_MODES to consents.values
                 .flatMap { c ->
                     c.products.map {
@@ -181,6 +179,9 @@ internal class HttpHelper(
 
     internal fun customParametersToJson(customParameters: Map<String, String>): String? =
         customParameters.takeUnless { it.isEmpty() }?.let { mapAdapter.toJson(it) }
+
+    internal fun customParametersToJson(customParameters: CustomParameters?): String? =
+        customParameters?.takeUnless { it.isEmpty() }?.let { customParametersAdapter.toJson(it) }
 
     internal fun consentsToJson(consents: Map<Purpose, Consent>): String? =
         consents.takeUnless { it.isEmpty() }?.let { vxConsentAdapter.toJson(it) }

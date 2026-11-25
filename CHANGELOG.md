@@ -1,5 +1,8 @@
 # Piano SDK for Android
 
+## v2.13.4
+* Replaced `Composer.logExposure(trackingId, ...)` with `Composer.logExposure(event, ...)`. It sends the page context and custom parameters of the experience request that returned the event, and the browser ID and user token at the moment of the experience response.
+
 ## v2.13.3
 * Added `Composer.logExposure` for logging exposures of third-party templates and offers.
 * Added dependency on the Piano API client `io.piano:piano-android` 17.37.0 to `composer`.

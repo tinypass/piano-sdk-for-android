@@ -19,16 +19,21 @@ import io.piano.android.common.DeviceIdProvider
 import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.ExceptionListener
 import io.piano.android.composer.listeners.ExperienceExecuteListener
+import io.piano.android.composer.listeners.NonSiteListener
 import io.piano.android.composer.listeners.ShowTemplateListener
 import io.piano.android.composer.listeners.UserSegmentListener
+import io.piano.android.composer.model.CustomParameters
 import io.piano.android.composer.model.Data
 import io.piano.android.composer.model.EdgeCookies
 import io.piano.android.composer.model.Event
+import io.piano.android.composer.model.EventExecutionContext
 import io.piano.android.composer.model.EventsContainer
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
+import io.piano.android.composer.model.UserSegmentsContainer
 import io.piano.android.composer.model.events.EventType
 import io.piano.android.composer.model.events.ExperienceExecute
+import io.piano.android.composer.model.events.NonSite
 import io.piano.android.composer.model.events.ShowTemplate
 import io.piano.android.composer.model.events.UserSegment
 import io.piano.android.consents.PianoConsents
@@ -39,6 +44,7 @@ import retrofit2.Response
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
 
 class ComposerTest {
     private val experienceCall: Call<Data<ExperienceResponse>> = mock()
@@ -332,30 +338,21 @@ class ComposerTest {
     }
 
     @Test
-    fun logExposure() {
-        val call: Call<ResponseBody> = mock()
-        whenever(
-            exposureApi.log(
-                any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
-                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
-                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
-            ),
-        ).doReturn(call)
-
-        composer.logExposure(DUMMY_STRING)
+    fun logExposureWithoutContext() {
+        val call = stubExposureLog()
+        val event = createEvent()
+        composer.logExposure(event)
         verifyExposureLog(browserId = "")
 
         val termIds = listOf(DUMMY_STRING, DUMMY_STRING2)
-        whenever(httpHelper.customParametersToJson(Composer.CX_CUSTOM_PARAMS)).doReturn(DUMMY_JSON)
         whenever(httpHelper.consentsToJson(any())).doReturn(DUMMY_JSON2)
         composer.userToken(DUMMY_STRING2)
         composer.browserIdProvider { DUMMY_STRING2 }
-        composer.logExposure(DUMMY_STRING, Composer.CX_CUSTOM_PARAMS, DUMMY_STRING, DUMMY_STRING2, termIds)
+        composer.logExposure(event, DUMMY_STRING, DUMMY_STRING2, termIds)
         verifyExposureLog(
             browserId = DUMMY_STRING2,
             userToken = DUMMY_STRING2,
             cookieConsents = DUMMY_JSON2,
-            customParams = DUMMY_JSON,
             externalOfferId = DUMMY_STRING,
             externalTemplateId = DUMMY_STRING2,
             externalTermIds = termIds,
@@ -363,9 +360,112 @@ class ComposerTest {
         verify(call, times(2)).enqueue(any())
     }
 
+    @Test
+    fun logExposureWithExperienceContext() {
+        val call = stubExposureLog()
+        val customParameters = CustomParameters().content(DUMMY_STRING, DUMMY_STRING2)
+        val tags = listOf(DUMMY_STRING, DUMMY_STRING2)
+        val request = ExperienceRequest.Builder()
+            .url(DUMMY_URL)
+            .referer(DUMMY_REFERER)
+            .title(DUMMY_TITLE)
+            .contentAuthor(DUMMY_AUTHOR)
+            .contentCreated(DUMMY_CREATED)
+            .contentSection(DUMMY_SECTION)
+            .contentType(DUMMY_TYPE)
+            .tags(tags)
+            .customParams(customParameters)
+            .build()
+        whenever(httpHelper.customParametersToJson(customParameters)).doReturn(DUMMY_JSON)
+        composer.userToken(DUMMY_STRING2)
+        var receivedEvent: Event<NonSite>? = null
+        composer.processExperienceResponse(
+            request,
+            createExperienceResponse(DUMMY_BROWSER_ID, createEvent()),
+            listOf(NonSiteListener { receivedEvent = it }),
+            null,
+            exceptionListener,
+        )
+        // A parallel response and a new user token mustn't affect the exposure of the received event
+        composer.processExperienceResponse(
+            experienceRequest,
+            createExperienceResponse(DUMMY_STRING),
+            emptyList(),
+            null,
+            exceptionListener,
+        )
+        composer.userToken(null)
+
+        composer.logExposure(assertNotNull(receivedEvent))
+        verifyExposureLog(
+            browserId = DUMMY_BROWSER_ID,
+            userToken = DUMMY_STRING2,
+            pageTitle = DUMMY_TITLE,
+            url = DUMMY_URL,
+            referer = DUMMY_REFERER,
+            contentAuthor = DUMMY_AUTHOR,
+            contentCreated = DUMMY_CREATED,
+            contentSection = DUMMY_SECTION,
+            contentType = DUMMY_TYPE,
+            tags = tags,
+            customParams = DUMMY_JSON,
+        )
+        verify(call).enqueue(any())
+    }
+
+    private fun stubExposureLog(): Call<ResponseBody> = mock<Call<ResponseBody>>().also {
+        whenever(
+            exposureApi.log(
+                any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
+                anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
+            ),
+        ).doReturn(it)
+    }
+
+    private fun createEvent(): Event<NonSite> = Event(
+        mock(),
+        EventExecutionContext(
+            DUMMY_STRING2,
+            DUMMY_STRING2,
+            DUMMY_STRING,
+            null,
+            null,
+            null,
+            null,
+            DUMMY_STRING2,
+            UserSegmentsContainer(null, null),
+            null,
+            null,
+            null,
+            null,
+        ),
+        NonSite,
+    )
+
+    private fun createExperienceResponse(browserId: String, vararg events: Event<EventType>) = ExperienceResponse(
+        null,
+        null,
+        null,
+        0,
+        0,
+        browserId,
+        null,
+        null,
+        EventsContainer(events.toList()),
+    )
+
     private fun verifyExposureLog(
         browserId: String,
         userToken: String? = null,
+        pageTitle: String? = null,
+        url: String? = null,
+        referer: String? = null,
+        contentAuthor: String? = null,
+        contentCreated: String? = null,
+        contentSection: String? = null,
+        contentType: String? = null,
+        tags: List<String>? = null,
         cookieConsents: String? = null,
         customParams: String? = null,
         externalOfferId: String? = null,
@@ -377,14 +477,14 @@ class ComposerTest {
         browserId = eq(browserId),
         userToken = eq(userToken),
         externalAuthCookieName = isNull(),
-        pageTitle = isNull(),
-        url = isNull(),
-        referer = isNull(),
-        contentAuthor = isNull(),
-        contentCreated = isNull(),
-        contentSection = isNull(),
-        contentType = isNull(),
-        tags = isNull(),
+        pageTitle = eq(pageTitle),
+        url = eq(url),
+        referer = eq(referer),
+        contentAuthor = eq(contentAuthor),
+        contentCreated = eq(contentCreated),
+        contentSection = eq(contentSection),
+        contentType = eq(contentType),
+        tags = eq(tags),
         previousUserSegments = isNull(),
         userState = isNull(),
         clientHints = isNull(),
@@ -422,5 +522,13 @@ class ComposerTest {
         const val DUMMY_STRING2 = "DUMMY2"
         private const val DUMMY_JSON = """{"key":"value"}"""
         private const val DUMMY_JSON2 = """{"key2":"value2"}"""
+        private const val DUMMY_BROWSER_ID = "BID"
+        private const val DUMMY_URL = "https://example.com/article"
+        private const val DUMMY_REFERER = "https://example.com"
+        private const val DUMMY_TITLE = "Title"
+        private const val DUMMY_AUTHOR = "Author"
+        private const val DUMMY_CREATED = "2026-11-25T00:00:00Z"
+        private const val DUMMY_SECTION = "Section"
+        private const val DUMMY_TYPE = "article"
     }
 }

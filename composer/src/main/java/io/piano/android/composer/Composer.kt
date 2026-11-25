@@ -11,6 +11,7 @@ import io.piano.android.composer.model.EdgeCookies
 import io.piano.android.composer.model.Event
 import io.piano.android.composer.model.ExperienceRequest
 import io.piano.android.composer.model.ExperienceResponse
+import io.piano.android.composer.model.ExposureContext
 import io.piano.android.composer.model.events.EventType
 import io.piano.android.composer.model.events.ExperienceExecute
 import io.piano.android.composer.model.events.ShowTemplate
@@ -264,15 +265,16 @@ public class Composer internal constructor(
     )
 
     /**
-     * Logs an exposure: a display of a third-party template or offer, such as a paywall screen
+     * Logs an exposure of the event: a display of a third-party template or offer, such as a paywall screen
      * rendered by the app itself.
      *
-     * The SDK fills in the AID, browser ID, user token and consents. The browser ID comes from the
-     * latest experience execution, or from [browserIdProvider] if no execution has completed yet.
+     * The SDK sends the tracking ID of the event, the page context (URL, referer, title, content fields and tags)
+     * and the custom parameters of the experience request that returned it, as well as the AID, browser ID,
+     * user token and consents. The browser ID and the user token are taken at the moment of the experience
+     * response, so the exposure matches its experience even with several parallel requests.
      * Exposure logging must first be enabled for your application by your Piano Account representative.
      *
-     * @param trackingId The tracking ID from the experience event.
-     * @param customParameters Custom parameters of the exposure (will be serialized as custom_params).
+     * @param event The experience event, which the exposure is logged for.
      * @param externalOfferId ID of the offer in the third-party system.
      * @param externalTemplateId ID of the template in the third-party system.
      * @param externalTermIds IDs of the terms in the third-party system.
@@ -280,22 +282,34 @@ public class Composer internal constructor(
     @JvmOverloads
     @Suppress("unused") // Public API.
     public fun logExposure(
-        trackingId: String,
-        customParameters: Map<String, String> = emptyMap(),
+        event: Event<EventType>,
         externalOfferId: String? = null,
         externalTemplateId: String? = null,
         externalTermIds: List<String> = emptyList(),
-    ): Unit = exposureApi.log(
-        aid = aid,
-        trackingId = trackingId,
-        browserId = (browserId ?: browserIdProvider()).orEmpty(),
-        userToken = userToken?.ifEmpty { null },
-        cookieConsents = httpHelper.consentsToJson(pianoConsents?.consents.orEmpty()),
-        customParams = httpHelper.customParametersToJson(customParameters),
-        externalOfferId = externalOfferId,
-        externalTemplateId = externalTemplateId,
-        externalTermIds = externalTermIds.ifEmpty { null },
-    ).enqueue(emptyCallback)
+    ) {
+        // An event created by the app itself has no context, so the current state is used instead
+        val context = event.exposureContext
+        val request = context?.request
+        exposureApi.log(
+            aid = aid,
+            trackingId = event.eventExecutionContext.trackingId,
+            browserId = (context?.browserId ?: browserId ?: browserIdProvider()).orEmpty(),
+            userToken = (if (context != null) context.userToken else userToken)?.ifEmpty { null },
+            pageTitle = request?.title,
+            url = request?.url,
+            referer = request?.referer,
+            contentAuthor = request?.contentAuthor,
+            contentCreated = request?.contentCreated,
+            contentSection = request?.contentSection,
+            contentType = request?.contentType,
+            tags = request?.tags?.ifEmpty { null },
+            cookieConsents = httpHelper.consentsToJson(pianoConsents?.consents.orEmpty()),
+            customParams = httpHelper.customParametersToJson(request?.customParameters),
+            externalOfferId = externalOfferId,
+            externalTemplateId = externalTemplateId,
+            externalTermIds = externalTermIds.ifEmpty { null },
+        ).enqueue(emptyCallback)
+    }
 
     /**
      * Tracks a custom form impression by name.
@@ -449,7 +463,9 @@ public class Composer internal constructor(
         }
         return copy(
             eventData = data,
-        )
+        ).also {
+            it.exposureContext = ExposureContext(request, browserId ?: browserIdProvider(), userToken)
+        }
     }
 
     private fun <T> Response<T>.bodyOrThrow(): T {
