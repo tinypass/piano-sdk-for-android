@@ -127,6 +127,21 @@ class HttpHelperTest {
     }
 
     @Test
+    fun experienceCustomParametersToJson() {
+        assertNull(httpHelper.customParametersToJson(null))
+        assertNull(httpHelper.customParametersToJson(CustomParameters()))
+        assertEquals(
+            """{"content":{"source":"CX"},"user":{"tier":["gold","beta"]}}""",
+            httpHelper.customParametersToJson(
+                CustomParameters()
+                    .content("source", "CX")
+                    .user("tier", "gold")
+                    .user("tier", "beta"),
+            ),
+        )
+    }
+
+    @Test
     fun consentsToJson() {
         assertNull(httpHelper.consentsToJson(emptyMap()))
         assertEquals(
