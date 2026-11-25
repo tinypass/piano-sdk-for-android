@@ -29,6 +29,7 @@ okhttp = "4.12.0"
 moshi = "1.15.2"
 timber = "5.0.1"
 pianoConsents = "1.0.0"
+pianoApi = "17.37.0"
 cxense = "2.7.0"
 coroutines = "1.10.2"
 
@@ -66,6 +67,7 @@ moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 prefsKtx = { module = "androidx.preference:preference-ktx", version.ref = "prefsLibrary" }
 lifecycleKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleLibrary" }
 pianoConsents = { module = "io.piano.android:consents", version.ref = "pianoConsents" }
+pianoApi = { module = "io.piano:piano-android", version.ref = "pianoApi" }
 cxense = { module = "io.piano.android:cxense", version.ref = "cxense" }
 kotlinCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 

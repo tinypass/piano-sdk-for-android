@@ -1,6 +1,7 @@
 package io.piano.android.composer
 
 import android.content.Context
+import io.piano.android.api.anon.api.ExposureApi
 import io.piano.android.common.DeviceIdProvider
 import io.piano.android.composer.listeners.EventTypeListener
 import io.piano.android.composer.listeners.EventsListener
@@ -31,6 +32,7 @@ import retrofit2.Response
  *
  * @param composerApi The instance of [ComposerApi] for making API requests.
  * @param generalApi The instance of [GeneralApi] for making general API requests.
+ * @param exposureApi The instance of [ExposureApi] for logging exposures.
  * @param httpHelper The instance of [HttpHelper] for handling HTTP-related tasks.
  * @param prefsStorage The instance of [PrefsStorage] for handling shared preferences.
  * @param aid Your Application ID (AID).
@@ -41,6 +43,7 @@ import retrofit2.Response
 public class Composer internal constructor(
     private val composerApi: ComposerApi,
     private val generalApi: GeneralApi,
+    private val exposureApi: ExposureApi,
     private val httpHelper: HttpHelper,
     private val prefsStorage: PrefsStorage,
     private val aid: String,
@@ -259,6 +262,40 @@ public class Composer internal constructor(
         EVENT_GROUP_CLICK,
         url?.let { CX_CUSTOM_PARAMS + Pair("href", it) } ?: CX_CUSTOM_PARAMS,
     )
+
+    /**
+     * Logs an exposure: a display of a third-party template or offer, such as a paywall screen
+     * rendered by the app itself.
+     *
+     * The SDK fills in the AID, browser ID, user token and consents. The browser ID comes from the
+     * latest experience execution, or from [browserIdProvider] if no execution has completed yet.
+     * Exposure logging must first be enabled for your application by your Piano Account representative.
+     *
+     * @param trackingId The tracking ID from the experience event.
+     * @param customParameters Custom parameters of the exposure (will be serialized as custom_params).
+     * @param externalOfferId ID of the offer in the third-party system.
+     * @param externalTemplateId ID of the template in the third-party system.
+     * @param externalTermIds IDs of the terms in the third-party system.
+     */
+    @JvmOverloads
+    @Suppress("unused") // Public API.
+    public fun logExposure(
+        trackingId: String,
+        customParameters: Map<String, String> = emptyMap(),
+        externalOfferId: String? = null,
+        externalTemplateId: String? = null,
+        externalTermIds: List<String> = emptyList(),
+    ): Unit = exposureApi.log(
+        aid = aid,
+        trackingId = trackingId,
+        browserId = (browserId ?: browserIdProvider()).orEmpty(),
+        userToken = userToken?.ifEmpty { null },
+        cookieConsents = httpHelper.consentsToJson(pianoConsents?.consents.orEmpty()),
+        customParams = httpHelper.customParametersToJson(customParameters),
+        externalOfferId = externalOfferId,
+        externalTemplateId = externalTemplateId,
+        externalTermIds = externalTermIds.ifEmpty { null },
+    ).enqueue(emptyCallback)
 
     /**
      * Tracks a custom form impression by name.

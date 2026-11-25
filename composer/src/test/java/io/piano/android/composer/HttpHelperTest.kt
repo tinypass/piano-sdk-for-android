@@ -28,6 +28,7 @@ import io.piano.android.consents.models.Purpose
 import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class HttpHelperTest {
     private val experienceIdsProvider: ExperienceIdsProvider = mock {
@@ -117,6 +118,25 @@ class HttpHelperTest {
             assertEquals("", this[HttpHelper.PARAM_EVENT_CUSTOM_PARAMS])
             assertEquals("", this[HttpHelper.PARAM_EVENT_COOKIE_CONSENTS])
         }
+    }
+
+    @Test
+    fun customParametersToJson() {
+        assertNull(httpHelper.customParametersToJson(emptyMap()))
+        assertEquals("""{"source":"CX"}""", httpHelper.customParametersToJson(mapOf("source" to "CX")))
+    }
+
+    @Test
+    fun consentsToJson() {
+        assertNull(httpHelper.consentsToJson(emptyMap()))
+        assertEquals(
+            """{"CP":{"mode":"opt-out","products":["COMPOSER"]}}""",
+            httpHelper.consentsToJson(
+                mapOf(
+                    Purpose.CONTENT_PERSONALISATION to Consent(ConsentMode.OPT_OUT, listOf(Product.COMPOSER)),
+                ),
+            ),
+        )
     }
 
     @Test

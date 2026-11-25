@@ -19,6 +19,7 @@ dependencies {
     api(project(":common"))
     api(libs.pianoConsents)
 
+    implementation(libs.pianoApi)
     implementation(libs.okhttpLogging)
     implementation(libs.retrofit)
     implementation(libs.retrofitConverter)
